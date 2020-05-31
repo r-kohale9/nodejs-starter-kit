@@ -1,0 +1,72 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Row, Col, List, Divider, Spin } from 'antd';
+import PageLayout from './PageLayout';
+
+// import ListingItemComponent from './ListingItemComponent';
+import UserDisplayDetailComponent from './UserDisplayDetailComponent';
+// import ProfileComponenet from './ProfileComponenet';
+// import ProfileMenuItem from './ProfileMenuItem';
+// import UserDisplayComponent from './UserDisplayComponent';
+// import HomeSlick from './HomeSlick';
+// import CategoryIconSlick from './CategoryIconSlick';
+import CategorySlick from './CategorySlick';
+// import Cakes from '../Icons/cakes.svg';
+// import MenuBar from './MenuBar';
+import RelatedCardComponent from './ListingItemComponent';
+
+const Profile = styled.div`
+  font-family: Quicksand;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 42px;
+
+  /* Black */
+
+  color: #222222;
+`;
+
+const BakerView = props => {
+  const { loading, listings, t, users, user, homeSlick, categorySlick, profileList, history } = props;
+
+  return (
+    <PageLayout history={history}>
+      <UserDisplayDetailComponent user={user} />
+      <CategorySlick data={categorySlick} />
+      {console.log('props bkaerview', props)}
+      {listings && (
+        <List
+          grid={{
+            gutter: 24,
+            xxs: 1,
+            xs: 2,
+            sm: 3,
+            md: 4,
+            lg: 4,
+            xl: 6,
+            xxl: 6
+          }}
+          dataSource={listings}
+          renderItem={item => (
+            <List.Item key={item.id}>
+              <RelatedCardComponent key={item.id} listing={item} />
+            </List.Item>
+          )}
+        />
+      )}
+    </PageLayout>
+  );
+};
+
+BakerView.propTypes = {
+  t: PropTypes.func,
+  loading: PropTypes.bool,
+  listings: PropTypes.object
+};
+
+export default BakerView;
+
+const NoListingsMessage = ({ t }) => <div className="text-center">{t('listing.noListingsMsg')}</div>;
+NoListingsMessage.propTypes = { t: PropTypes.func };
