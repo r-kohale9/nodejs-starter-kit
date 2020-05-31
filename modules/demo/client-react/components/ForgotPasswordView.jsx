@@ -54,7 +54,7 @@ const ForgotPasswordView = ({ onSubmit, t, sent }) => {
   );
 
   return (
-    <div style={{ margin: '20px' }}>
+    <div style={{ margin: '16px' }}>
       {renderMetaData()}
       <LeftAction>
         <BackIcon>

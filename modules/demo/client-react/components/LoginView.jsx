@@ -116,7 +116,7 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
       {isRegistered ? (
         renderConfirmationModal()
       ) : (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '16px' }}>
           <LeftAction>
             <BackIcon>
               <Icon type="left" />

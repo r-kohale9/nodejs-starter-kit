@@ -130,7 +130,7 @@ const ListingItemComponent = props => {
       <>
         {currentUser && (
           <BookmarkComponent
-            handleBookark={() => bookmarkListing(listing.id, currentUser.id)}
+            handleBookmark={() => bookmarkListing(listing.id, currentUser.id)}
             listing={listing}
             currentUser={currentUser}
           />

@@ -48,10 +48,15 @@ const BookmarkComponent = props => {
     setStatus(listingBookmarkStatus);
   }, [listingBookmarkStatus]);
 
+  const handleEvent = () => {
+    handleBookmark();
+    setStatus(!status);
+  };
+
   console.log('status', status);
 
   return status && status ? (
-    <RectangleActive onClick={handleBookmark}>
+    <RectangleActive onClick={handleEvent}>
       <img
         alt=""
         src={HeartActive}
@@ -65,7 +70,7 @@ const BookmarkComponent = props => {
       />
     </RectangleActive>
   ) : (
-    <Rectangle onClick={handleBookmark}>
+    <Rectangle onClick={handleEvent}>
       <img
         alt=""
         src={Heart}
