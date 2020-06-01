@@ -9,10 +9,11 @@ import {
   updateListingsState,
   withCurrentUser
 } from '@gqlapp/listing-client-react/containers/ListingOperations';
+import { withUsers } from '@gqlapp/user-client-react/containers/UserOperations';
+
 import ListingCatalogueView from '../components/ListingCatalogueView';
 
 import Avatar from '../Icons/userimage.svg';
-import Product from '../Icons/product.svg';
 
 import Banner from '../Icons/MangoCakes.svg';
 import Cakes from '../Icons/cakes.svg';
@@ -20,104 +21,6 @@ import Cupcakes from '../Icons/cupcakes.svg';
 import Pastries from '../Icons/pastries.svg';
 import Bread from '../Icons/bread.svg';
 import Chocolate from '../Icons/chocolate.svg';
-
-const LISTINGS = [
-  {
-    id: 1,
-    userId: 1,
-    ratting: 3,
-    title: 'Barbie Floral Cake',
-    description: 'Custom Cake',
-    listingCost: {
-      id: 1,
-      cost: 1200
-    },
-    listingImages: [
-      {
-        imageUrl: Product
-      },
-      {
-        imageUrl: Product
-      }
-    ]
-  },
-  {
-    id: 2,
-    userId: 1,
-    ratting: 3,
-    title: 'Barbie Floral Cake',
-    description: 'Custom Cake',
-    listingCost: {
-      id: 1,
-      cost: 1200
-    },
-    listingImages: [
-      {
-        imageUrl: Product
-      },
-      {
-        imageUrl: Product
-      }
-    ]
-  },
-  {
-    id: 3,
-    userId: 1,
-    ratting: 3,
-    title: 'Barbie Floral Cake',
-    description: 'Custom Cake',
-    listingCost: {
-      id: 1,
-      cost: 1200
-    },
-    listingImages: [
-      {
-        imageUrl: Product
-      },
-      {
-        imageUrl: Product
-      }
-    ]
-  },
-  {
-    id: 4,
-    userId: 1,
-    ratting: 3,
-    title: 'Barbie Floral Cake',
-    description: 'Custom Cake',
-    listingCost: {
-      id: 1,
-      cost: 1200
-    },
-    listingImages: [
-      {
-        imageUrl: Product
-      },
-      {
-        imageUrl: Product
-      }
-    ]
-  },
-  {
-    id: 5,
-    userId: 1,
-    ratting: 3,
-    title: 'Barbie Floral Cake',
-    description: 'Custom Cake',
-    listingCost: {
-      id: 1,
-      cost: 1200
-    },
-    listingImages: [
-      {
-        imageUrl: Product
-      },
-      {
-        imageUrl: Product
-      }
-    ]
-  }
-];
 
 const HOMESLICK = [
   {
@@ -143,63 +46,6 @@ const USER = {
   details:
     "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
 };
-const USERS = [
-  {
-    id: 1,
-    name: 'Riya Rodriguez',
-    thumbnail: Avatar,
-    // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    ratting: 4.6,
-    distance: 3,
-    menu: ['Indian Desserts', 'Pastries', 'Cakes', 'Breads'],
-    details:
-      "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
-  },
-  {
-    id: 2,
-    name: 'Riya Rodriguez',
-    thumbnail: Avatar,
-    // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    ratting: 4.6,
-    distance: 3,
-    menu: ['Indian Desserts', 'Pastries', 'Cakes', 'Breads'],
-    details:
-      "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
-  },
-  {
-    id: 3,
-    name: 'Riya Rodriguez',
-    thumbnail: Avatar,
-    // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    ratting: 4.6,
-    distance: 3,
-    menu: ['Indian Desserts', 'Pastries', 'Cakes', 'Breads'],
-    details:
-      "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
-  },
-  {
-    id: 4,
-    name: 'Riya Rodriguez',
-    thumbnail: Avatar,
-    // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    ratting: 4.6,
-    distance: 3,
-    menu: ['Indian Desserts', 'Pastries', 'Cakes', 'Breads'],
-    details:
-      "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
-  },
-  {
-    id: 5,
-    name: 'Riya Rodriguez',
-    thumbnail: Avatar,
-    // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    ratting: 4.6,
-    distance: 3,
-    menu: ['Indian Desserts', 'Pastries', 'Cakes', 'Breads'],
-    details:
-      "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
-  }
-];
 
 const CATEGORYSLICK = [
   {
@@ -259,11 +105,10 @@ const PROFILELIST = [
 
 const ListingCatalogue = props => {
   console.log('props', props);
+
   return (
     <ListingCatalogueView
       {...props}
-      // listings={LISTINGS}
-      users={USERS}
       user={USER}
       homeSlick={HOMESLICK}
       categorySlick={CATEGORYSLICK}
@@ -272,4 +117,4 @@ const ListingCatalogue = props => {
   );
 };
 
-export default compose(withCurrentUser, withListings, translate('demo'))(ListingCatalogue);
+export default compose(withCurrentUser, withUsers, withListings, translate('demo'))(ListingCatalogue);

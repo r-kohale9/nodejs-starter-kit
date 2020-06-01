@@ -104,9 +104,9 @@ const UserDisplayDetailComponent = props => {
                   }}
                   count={1}
                   disabled
-                  defaultValue={user.ratting}
+                  defaultValue={user.rating}
                 />
-                <Number>{user.ratting}</Number>
+                <Number>{user.rating}</Number>
               </Col>
               <Col span={4}>
                 <Number>{user.distance}km</Number>

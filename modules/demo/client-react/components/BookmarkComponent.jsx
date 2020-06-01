@@ -53,8 +53,6 @@ const BookmarkComponent = props => {
     setStatus(!status);
   };
 
-  console.log('status', status);
-
   return status && status ? (
     <RectangleActive onClick={handleEvent}>
       <img

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { compose } from '@gqlapp/core-common';
 import { graphql } from 'react-apollo';
-import { Icon, Badge } from 'antd';
+import { Icon, Row, Col, Badge } from 'antd';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import update from 'immutability-helper';
@@ -11,24 +11,30 @@ import ORDERS_SUBSCRIPTION from '../graphql/OrdersSubscription.graphql';
 import GET_CART_QUERY from '../graphql/GetCartQuery.graphql';
 
 const NavItemCart = props => {
+  const { subscribeToMore, currentUserLoading, currentUser, refetch, getCart } = props;
+
   useEffect(() => {
-    console.log('use effect', props.subscribeToMore);
-    const subscribe = subscribeToOrders(props.subscribeToMore);
-    props.refetch();
+    console.log('use effect', subscribeToMore);
+    const subscribe = subscribeToOrders(subscribeToMore);
+    refetch();
     return () => subscribe();
   });
 
-  console.log('props nav', props);
+  console.log('props nav', getCart && getCart.orderDetails && getCart.orderDetails.length);
   return (
     <>
-      {!props.currentUserLoading && (
-        <>
-          <Icon type="shopping-cart" /> Cart{' '}
-          <Badge
-            style={{ marginTop: '-5px' }}
-            count={props.getCart && props.getCart.orderDetails && props.getCart.orderDetails.length}
-          />
-        </>
+      {!currentUserLoading && currentUser && (
+        <Row type="flex" align="middle">
+          <Col span={8}>
+            <Icon type="shopping-cart" /> Cart
+          </Col>
+          <Col span={16}>
+            <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} />
+            {/* <Badge>
+              <p>{getCart && getCart.orderDetails && getCart.orderDetails.length}</p>
+            </Badge> */}
+          </Col>
+        </Row>
       )}
     </>
   );
@@ -95,6 +101,11 @@ export default compose(
     }
   }),
   graphql(GET_CART_QUERY, {
+    options: props => {
+      return {
+        variables: { id: props.currentUser ? props.currentUser.id : null }
+      };
+    },
     props({ data: { loading, error, getCart, subscribeToMore, refetch } }) {
       if (error) {
         throw new Error(error);

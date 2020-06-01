@@ -74,11 +74,13 @@ export default new ClientModule({
   //   </MenuItem>
   // ],
   navItemUser: [
-    <MenuItem key="/checkout-cart">
-      <NavLink to="/checkout-cart" className="nav-link" activeClassName="active">
-        <NavItemCart />
-      </NavLink>
-    </MenuItem>,
+    <IfLoggedIn key="/checkout-cart">
+      <MenuItem>
+        <NavLink to="/checkout-cart" className="nav-link" activeClassName="active">
+          <NavItemCart />
+        </NavLink>
+      </MenuItem>
+    </IfLoggedIn>,
     <IfLoggedIn key="/my-orders">
       <MenuItem>
         <NavLinkMyOrdersWithI18n />
