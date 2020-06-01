@@ -8,5 +8,7 @@ fragment OrderInfo on Order {
         date
         title
         thumbnail
+        noteFromCustomer
+        additionalCustomization
     }
 }

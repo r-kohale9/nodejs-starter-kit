@@ -30,6 +30,8 @@ exports.up = function(knex, Promise) {
       table.string('title');
       table.string('thumbnail');
       table.string('date');
+      table.string('note_from_customer');
+      table.string('additional_customization');
 
       table
         .integer('order_id')

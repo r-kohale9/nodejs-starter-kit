@@ -39,6 +39,22 @@ const AddToCartCard = ({ currentUser, values, handleSubmit }) => {
           label="Quantity"
           value={values.quantity}
         />
+        <Field
+          name="noteFromCustomer"
+          component={RenderField}
+          placeholder="Note from customer"
+          type="textarea"
+          label="Note from customer"
+          value={values.noteFromCustomer}
+        />
+        <Field
+          name="additionalCustomization"
+          component={RenderField}
+          placeholder="Additional customization"
+          type="textarea"
+          label="Additional customization"
+          value={values.additionalCustomization}
+        />
         <Tooltip title={!currentUser ? 'SignIn To Continue' : 'Continue to Booking'}>
           <ButtonGroup>
             <Button
@@ -76,7 +92,9 @@ const AddToCartCardWithFormik = withFormik({
   mapPropsToValues: () => {
     return {
       date: '',
-      quantity: 0
+      quantity: 0,
+      noteFromCustomer: '',
+      additionalCustomization: ''
     };
   },
   async handleSubmit(values, { setErrors, props: { onSubmit } }) {

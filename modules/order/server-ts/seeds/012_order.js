@@ -2,7 +2,7 @@ import { returnId, truncateTables } from '@gqlapp/database-server-ts';
 import STATES from '../constants/order_states';
 
 export async function seed(knex, Promise) {
-  await truncateTables(knex, Promise, ['order', 'order_detail',]);
+  await truncateTables(knex, Promise, ['order', 'order_detail']);
   // Orders for Admin
 
   // Order STALE
@@ -22,8 +22,11 @@ export async function seed(knex, Promise) {
         cost: 1234,
         quantity: 5,
         title: 'some listing',
-        thumbnail: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU',
-        date: '14 march'
+        thumbnail:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU',
+        date: '14 march',
+        note_from_customer: 'some note',
+        additional_customization: 'something custom'
       });
     })
   );
@@ -45,10 +48,10 @@ export async function seed(knex, Promise) {
         cost: 1234,
         quantity: 5,
         title: 'some listing',
-        thumbnail: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU',
+        thumbnail:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU',
         date: '14 march'
       });
     })
   );
-
 }

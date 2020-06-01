@@ -20,6 +20,8 @@ type OrderDetail {
   title: String
   thumbnail: String
   quantity: Int
+  noteFromCustomer: String
+  additionalCustomization: String
 }
 
 
@@ -102,6 +104,9 @@ input OrderDetailInput {
   thumbnail: String
   title: String
   quantity: Int
+
+  noteFromCustomer: String
+  additionalCustomization: String
 }
 
 input AddOrderInput {

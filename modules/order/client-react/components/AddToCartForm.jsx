@@ -37,6 +37,22 @@ const AddToCartForm = props => {
           label="Quantity"
           value={values.quantity}
         />
+        <Field
+          name="noteFromCustomer"
+          component={RenderField}
+          placeholder="Note from customer"
+          type="textarea"
+          label="Note from customer"
+          value={values.noteFromCustomer}
+        />
+        <Field
+          name="additionalCustomization"
+          component={RenderField}
+          placeholder="Additional customization"
+          type="textarea"
+          label="Additional customization"
+          value={values.additionalCustomization}
+        />
       </Form>
     </Modal>
   );
@@ -56,6 +72,8 @@ const AddToCartWithFormik = withFormik({
       id: props.details && props.details.id,
       quantity: (props.details && props.details.quantity) || 0,
       thumbnail: props.details && props.details.thumbnail,
+      noteFromCustomer: props.details && props.details.noteFromCustomer,
+      additionalCustomization: props.details && props.details.additionalCustomization,
       title: props.details && props.details.title
     };
   },

@@ -161,12 +161,17 @@ class CartItemComponent extends Component {
               <strong>
                 <span>Amount</span> &#8377; {`${item.cost} X ${item.quantity} = ${item.cost * item.quantity}`}
               </strong>
-            </h4>{' '}
+            </h4>
             <br />
             <h4>
               <span>Date</span> {item.date}
+              <br />
+              <br />
+              <span>Note from customer</span> {item.noteFromCustomer}
+              <br />
+              <br />
+              <span>Additional customization</span> {item.additionalCustomization}
             </h4>
-            <br />
             {/* <Link
               target='_blank'
               className='listing-link'
