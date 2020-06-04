@@ -35,8 +35,8 @@ class AddToCart extends React.Component {
         cost: 491,
         title: 'Listing 50',
         quantity: values.quantity,
-        noteFromCustomer: 'some note from customer',
-        additionalCustomization: 'some additional cutomization',
+        noteFromCustomer: values.noteFromCustomer,
+        additionalCustomization: values.additionalCustomization,
         date: values.date,
         thumbnail:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU'

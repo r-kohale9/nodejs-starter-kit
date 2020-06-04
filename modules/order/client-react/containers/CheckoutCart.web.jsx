@@ -10,32 +10,25 @@ import update from 'immutability-helper';
 import { FormError } from '@gqlapp/forms-client-react';
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
 import GET_CART_QUERY from '../graphql/GetCartQuery.graphql';
+import DELETE_CART_ITEM from '../graphql/DeleteCartItem.graphql';
 import ORDERS_SUBSCRIPTION from '../graphql/OrdersSubscription.graphql';
 import EDIT_ORDER from '../graphql/EditOrder.graphql';
 
 import CheckoutCartView from '../components/CheckoutCartView';
 
 const CheckoutCart = props => {
-  const { getCart, editOrder } = props;
+  const { getCart, editOrder, deleteOrderDetail } = props;
   useEffect(() => {
-    console.log('use effect', props.subscribeToMore);
     const subscribe = subscribeToOrders(props.subscribeToMore);
     props.refetch();
     return () => subscribe();
   });
 
   const handleSubmit = async values => {
-    console.log('props', props, 'values', values);
     const index = getCart.orderDetails.indexOf(
       getCart.orderDetails.filter((order, index) => order.id === values.id)[0]
     );
     getCart.orderDetails[index] = values;
-    console.log('value', {
-      id: getCart.id,
-      state: getCart.state,
-      orderDetails: Object.values(removeTypename(getCart.orderDetails))
-    });
-
     try {
       await editOrder({
         id: getCart.id,
@@ -47,17 +40,13 @@ const CheckoutCart = props => {
     }
   };
 
-  // const onSubmit = async () => {
-  //   const { history, navigation } = props;
-
-  //   // Redirect
-  //   if (history) {
-  //     return history.push('/checkout-bill/');
-  //   }
-  //   if (navigation) {
-  //     return navigation.goBack();
-  //   }
-  // };
+  const handleDelete = async id => {
+    try {
+      await deleteOrderDetail(id);
+    } catch (e) {
+      throw Error(e);
+    }
+  };
 
   return (
     <>
@@ -67,8 +56,7 @@ const CheckoutCart = props => {
         <CheckoutCartView
           order={props.getCart}
           onSubmit={handleSubmit}
-          // deleteProduct={deleteProduct}
-          // onSubmit={onSubmit}
+          deleteProduct={handleDelete}
           // cart={props.cart}
           {...props}
         />
@@ -78,7 +66,6 @@ const CheckoutCart = props => {
 };
 
 const onAddOrder = (prev, node) => {
-  console.log('subscription add', prev, node);
   // ignore if duplicate
   // if (prev.blogs.some(item => node.id === item.id)) {
   //   return prev;
@@ -91,8 +78,6 @@ const onAddOrder = (prev, node) => {
 };
 
 const onDeleteOrder = (prev, node) => {
-  console.log('subscription deleted');
-
   // ignore if not found
   if (prev.id !== node.id) {
     return prev;
@@ -118,8 +103,8 @@ const subscribeToOrders = subscribeToMore =>
         }
       }
     ) => {
-      console.log('subscribed');
       let newResult = prev;
+      console.log('prev', prev, 'node', node);
       if (mutation === 'CREATED') {
         newResult = onAddOrder(prev, node);
       } else if (mutation === 'UPDATED') {
@@ -159,6 +144,48 @@ export default compose(
         });
 
         return editOrder;
+      }
+    })
+  }),
+  graphql(DELETE_CART_ITEM, {
+    props: ({ mutate }) => ({
+      deleteOrderDetail: id => {
+        mutate({
+          variables: { id },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            deleteOrderDetail: {
+              id: id,
+              __typename: 'Order'
+            }
+          },
+          update: (cache, { data: { deleteOrderDetail } }) => {
+            // Get previous getCart from cache
+            const prevCartItem = cache.readQuery({
+              query: GET_CART_QUERY
+            });
+
+            const node = {
+              id: prevCartItem.id,
+              state: prevCartItem.state,
+              orderDetails: prevCartItem.getCart.orderDetails.filter(item => item.id !== deleteOrderDetail.id)
+            };
+
+            const newCartItem = onDeleteOrder(prevCartItem, node);
+
+            // Write getCart to cache
+            cache.writeQuery({
+              query: GET_CART_QUERY,
+              data: {
+                getCart: {
+                  ...newCartItem,
+                  __typename: 'Order'
+                }
+              }
+            });
+          }
+        });
+        message.warning('Item deleted.');
       }
     })
   }),

@@ -104,7 +104,7 @@ class CartItemComponent extends Component {
   // }
 
   render() {
-    const { item, edit, onSubmit } = this.props;
+    const { item, edit, onSubmit, deleteProduct } = this.props;
     console.log('cart item', item);
 
     return (
@@ -116,36 +116,38 @@ class CartItemComponent extends Component {
         }}
         title={<h3>{item.title}</h3>}
         extra={
-          <>
-            {edit && (
-              <>
-                <Icon type="edit" onClick={() => this.setState({ visible: true })} />
-
-                <AddToCartForm
-                  onSubmit={onSubmit}
-                  details={item}
-                  visible={this.state.visible}
-                  handleVisible={() => this.setState({ visible: false })}
-                />
-              </>
-            )}
-            {this.props.deleteProduct && (
-              <Popconfirm
-                title="Are you sure to delete this order?"
-                onConfirm={() => this.props.deleteProduct(item.id)}
-                onCancel={this.cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <BorderListzero block>
-                  <Icon type="delete" />
-                </BorderListzero>
-              </Popconfirm>
-            )}
-          </>
+          <Row type="flex" align="middle" justify="space-between">
+            <Col span={12}>
+              {edit && (
+                <>
+                  <Icon type="edit" onClick={() => this.setState({ visible: true })} />
+                  <AddToCartForm
+                    onSubmit={onSubmit}
+                    details={item}
+                    visible={this.state.visible}
+                    handleVisible={() => this.setState({ visible: false })}
+                  />
+                </>
+              )}
+            </Col>
+            <Col span={12}>
+              {deleteProduct && (
+                <Popconfirm
+                  title="Are you sure to delete this order?"
+                  onConfirm={() => deleteProduct(item.id)}
+                  onCancel={this.cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <BorderListzero block>
+                    <Icon type="delete" />
+                  </BorderListzero>
+                </Popconfirm>
+              )}
+            </Col>
+          </Row>
         }
       >
-        {' '}
         <Row>
           <Col
             xs={{ span: 24 }}

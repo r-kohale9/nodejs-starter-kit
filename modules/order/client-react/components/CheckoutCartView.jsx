@@ -133,7 +133,7 @@ export default class CheckoutCartView extends React.Component {
   // }
 
   render() {
-    const { history, navigation, onSubmit } = this.props;
+    const { history, navigation, onSubmit, deleteProduct } = this.props;
     const getCart = this.props.order;
 
     const cartLength = getCart && getCart.length;
@@ -141,7 +141,7 @@ export default class CheckoutCartView extends React.Component {
     return (
       <PageLayout>
         {renderMetaData()}
-        {console.log('props', this.props)}
+        {console.log('props 1', this.props)}
         {// !this.props.loading &&
         getCart.orderDetails.length > 0 ? (
           <CheckoutDiv>
@@ -169,7 +169,7 @@ export default class CheckoutCartView extends React.Component {
                         item={cartItem}
                         edit={true}
                         onSubmit={onSubmit}
-                        // deleteProduct={this.props.deleteProduct}
+                        deleteProduct={deleteProduct}
                       />
                     ))}
                   </Col>
