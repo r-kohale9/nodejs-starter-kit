@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import { Form, Button, Row, Col } from 'antd';
 import { Modal } from 'antd-mobile';
@@ -7,7 +8,6 @@ import { withFormik } from 'formik';
 import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { RenderCheckBox, RenderField } from '@gqlapp/look-client-react';
-import { PropTypes } from 'prop-types';
 
 const AddCardbtn = styled(Button)`
   box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
@@ -128,7 +128,7 @@ const AddPaymentOptWithFormik = withFormik({
     // onSubmit();
   },
   validate: values => validate(values, AddPaymentOptFormSchema),
-  displayName: 'Forms' // helps with React DevTools
+  displayName: 'AddPaymentOptForms' // helps with React DevTools
 });
 
 export default AddPaymentOptWithFormik(AddPaymentOpt);

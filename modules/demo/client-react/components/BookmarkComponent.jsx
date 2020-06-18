@@ -9,11 +9,11 @@ import HeartActive from '../Icons/heartactive.svg';
 const RectangleActive = styled(Button)`
   /* Rectangle 85 */
 
-  position: absolute;
+  /* position: absolute; */
   width: 30px;
   height: 30px;
-  left: 93px;
-  top: 115px;
+  /* left: 93px;
+  top: 115px; */
 
   z-index: 1;
 
@@ -26,11 +26,11 @@ const RectangleActive = styled(Button)`
 const Rectangle = styled(Button)`
   /* Rectangle 85 */
 
-  position: absolute;
+  /* position: absolute; */
   width: 30px;
   height: 30px;
-  left: 93px;
-  top: 115px;
+  /* left: 93px;
+  top: 115px; */
 
   z-index: 1;
 

@@ -60,7 +60,7 @@ class PageLayout extends React.Component {
     // }
   }
   render() {
-    const { children, navBar, type, selectedTab, history } = this.props;
+    const { children, navBar, type, selectedTab, history, showMenuBar } = this.props;
     const contentStyle = layoutTypes.filter(item => item.type === type);
     console.log('isMobile', this.state.isMobile);
     const renderContent = () => {
@@ -81,7 +81,7 @@ class PageLayout extends React.Component {
             <style type="text/css">{styles._getCss()}</style>
           </Helmet>
         )}
-        {this.state.isMobile && <MenuBar selectedTab={selectedTab} history={history} />}
+        {this.state.isMobile && showMenuBar && <MenuBar selectedTab={selectedTab} history={history} />}
         {renderContent()}
         <BackTop>
           <Tooltip placement="left" title="Back to Top" autoAdjustOverflow={true}>
@@ -97,6 +97,7 @@ class PageLayout extends React.Component {
 PageLayout.propTypes = {
   history: PropTypes.object,
   children: PropTypes.node,
+  showMenuBar: PropTypes.bool,
   navBar: PropTypes.bool,
   selectedTab: PropTypes.string,
   type: PropTypes.string

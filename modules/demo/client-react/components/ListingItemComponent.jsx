@@ -98,12 +98,12 @@ const Number = styled.div`
 const ShoppingBag = styled(Button)`
   /* Rectangle 86 */
 
-  position: absolute;
+  /* position: absolute; */
   width: 30px;
   height: 30px;
   /* left: 129px; */
-  right: 19px;
-  top: 115px;
+  /* right: 19px;
+  top: 115px; */
 
   z-index: 1;
 
@@ -128,28 +128,52 @@ const ListingItemComponent = props => {
   return (
     !loading && (
       <>
-        {currentUser && (
-          <BookmarkComponent
-            handleBookmark={() => bookmarkListing(listing.id, currentUser.id)}
-            listing={listing}
-            currentUser={currentUser}
-          />
-        )}
-        <ShoppingBag>
-          <img
-            alt=""
-            src={Bag}
-            style={{
-              position: 'absolute',
-              left: '7px',
-              top: '6px',
-              height: '15px',
-              width: '15px'
-            }}
-          />
-          {/* <Icon style={{ position: 'absolute', left: '7px', top: '7px' }} type="shopping" /> */}
-        </ShoppingBag>
-        <Link className="listing-link" to={`/listing-detail/${listing.id}`}>
+        <Row type="flex" justify="center" style={{ width: '164px', position: 'absolute', top: '114px' }}>
+          <Col span={12} />
+          <Col span={6}>
+            <Row type="flex" justify="end">
+              {currentUser && (
+                <BookmarkComponent
+                  handleBookmark={() => bookmarkListing(listing.id, currentUser.id)}
+                  listing={listing}
+                  currentUser={currentUser}
+                />
+              )}
+            </Row>
+          </Col>
+          <Col span={6}>
+            <Row type="flex" justify="end">
+              <Link
+                to={{
+                  pathname: `/demo/listing-detail/${listing.id}`,
+                  preOrder: true // your data array of objects
+                }}
+              >
+                <ShoppingBag>
+                  <img
+                    alt=""
+                    src={Bag}
+                    style={{
+                      position: 'absolute',
+                      left: '7px',
+                      top: '6px',
+                      height: '15px',
+                      width: '15px'
+                    }}
+                  />
+                  {/* <Icon style={{ position: 'absolute', left: '7px', top: '7px' }} type="shopping" /> */}
+                </ShoppingBag>
+              </Link>
+            </Row>
+          </Col>
+        </Row>
+        <Link
+          className="listing-link"
+          to={{
+            pathname: `/demo/listing-detail/${listing.id}`,
+            preOrder: false // your data array of objects
+          }}
+        >
           <Card
             style={{
               marginBottom: '24px',

@@ -38,7 +38,7 @@ const ListingCatalogueView = props => {
         "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better";
       return user;
     });
-  console.log('props', props);
+  console.log('props1', props);
   return (
     <>
       <PageLayout selectedTab="HOME" history={history}>

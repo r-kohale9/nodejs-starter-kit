@@ -9,7 +9,7 @@ import { MenuItem } from '@gqlapp/look-client-react';
 import resources from './locales';
 
 const NavLinkWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
-  <NavLink to="/demo/payment-methods" className="nav-link" activeClassName="active">
+  <NavLink to="/demo/baker" className="nav-link" activeClassName="active">
     {t('demo:navLink')}
   </NavLink>
 ));
@@ -19,15 +19,20 @@ export default new ClientModule({
     <Route exact path="/demo" component={loadable(() => import('./containers/Demo').then(c => c.default))} />,
     <Route
       exact
-      path="/forgotpassword"
+      path="/demo/forgotpassword"
       component={loadable(() => import('./containers/PasswordReset').then(c => c.default))}
     />,
     <Route
       exact
-      path="/home"
+      path="/demo/home"
       component={loadable(() => import('./containers/ListingCatalogue').then(c => c.default))}
     />,
-    <Route exact path="/baker" component={loadable(() => import('./containers/Baker').then(c => c.default))} />,
+    <Route
+      exact
+      path="/demo/listing-detail/:id"
+      component={loadable(() => import('./containers/ListingDetails').then(c => c.default))}
+    />,
+    <Route exact path="/demo/baker" component={loadable(() => import('./containers/Baker').then(c => c.default))} />,
     <Route exact path="/demo/login" component={loadable(() => import('./containers/Login').then(c => c.default))} />,
     <Route
       exact
@@ -64,6 +69,11 @@ export default new ClientModule({
       path="/demo/settings"
       component={loadable(() => import('./containers/Settings').then(c => c.default))}
     />,
+    <Route
+      exact
+      path="/demo/promocodes"
+      component={loadable(() => import('./containers/Promocodes').then(c => c.default))}
+    />
   ],
   navItem: [
     <MenuItem key="/demo">

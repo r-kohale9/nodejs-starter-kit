@@ -93,7 +93,7 @@ const LoginForm = props => {
         <Row>
           <Col xs={12} md={18} lg={18} />
           <Col xs={12} md={6} lg={6}>
-            <ForgetPass to="/forgotpassword">Forget your password?</ForgetPass>
+            <ForgetPass to="/demo/forgotpassword">Forget your password?</ForgetPass>
             <Icon type="arrow-right" style={{ height: '6px', width: '15px' }} />
           </Col>
         </Row>
