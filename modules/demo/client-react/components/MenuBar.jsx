@@ -30,7 +30,7 @@ const MenuBar = props => {
           icon={<img src={HomeIsActive} alt="" />}
           selectedIcon={<img src={HomeActive} alt="" />}
           selected={selectedTab === 'HOME'}
-          onPress={() => history.push('./home')}
+          onPress={() => history.push('/demo/home')}
         />
         {/* {children ? children : <Home />} */}
         {/* {selectedTab === 'HOME' ? <Home /> : children} */}
@@ -41,7 +41,7 @@ const MenuBar = props => {
           title="Cart"
           key="Cart"
           selected={selectedTab === 'CART'}
-          onPress={() => history.push('./checkout-cart')}
+          onPress={() => history.push('/demo/checkout-cart')}
         />
         {/* <Cart /> */}
         {/* </TabBar.Item> */}
@@ -51,7 +51,7 @@ const MenuBar = props => {
           title="Favorites"
           key="Favorites"
           selected={selectedTab === 'FAVORITES'}
-          onPress={() => history.push('./my-listings-bookmark')}
+          onPress={() => history.push('/demo/favorites')}
         />
         {/* <Favorites /> */}
         {/* </TabBar.Item> */}
@@ -61,7 +61,7 @@ const MenuBar = props => {
           title="Profile"
           key="Profile"
           selected={selectedTab === 'PROFILE'}
-          onPress={() => history.push('./profile')}
+          onPress={() => history.push('/demo/profile')}
         />
         {/* <Profile /> */}
         {/* </TabBar.Item> */}

@@ -8,6 +8,7 @@ const HomeSlick = props => {
     speed: 500,
     slidesToShow: 1,
     arrows: false,
+    variableWidth: true,
     slidesToScroll: 1
   };
   return (

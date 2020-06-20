@@ -1,7 +1,8 @@
-import React from 'react';
-import { Card, Row, Col } from 'antd';
+import React, { useState } from 'react';
+import { Card, Row, Col, Button, Menu } from 'antd';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
+import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
 const Title = styled.div`
   font-family: Metropolis;
@@ -34,6 +35,7 @@ const Text = styled.div`
 
 const CartItemComponent = props => {
   const { item } = props;
+  const [units, setUnits] = useState(item.units);
   return (
     <Card
       style={{
@@ -43,7 +45,6 @@ const CartItemComponent = props => {
         borderWidth: '0px',
         borderRadius: '8px'
       }}
-      hoverable
       bodyStyle={{
         padding: '0px'
       }}
@@ -55,13 +56,24 @@ const CartItemComponent = props => {
           </div>
         </Col>
         <Col span={16} style={{ padding: '11px' }}>
-          <Row gutter={[0, 6]}>
-            <Col span={24}>
-              <Title>{item.title}</Title>
-            </Col>
-            <Col span={24}>
-              <Text>{item.category}</Text>
-            </Col>
+          <Row>
+            <Row>
+              <Col span={20}>
+                <Title>{item.title}</Title>
+              </Col>
+              <Col span={4}>
+                <Row type="flex" justify="end">
+                  <DropDown type="more">
+                    <Menu.Item key="0">
+                      <Button type="link">Add to favorites</Button>
+                    </Menu.Item>
+                    <Menu.Item key="1">
+                      <Button type="link">Delete from the list</Button>
+                    </Menu.Item>
+                  </DropDown>
+                </Row>
+              </Col>
+            </Row>
             <Row>
               <Col span={16}>
                 <p style={{ display: 'flex' }}>
@@ -75,22 +87,34 @@ const CartItemComponent = props => {
                 </p>
               </Col>
             </Row>
-            <Col span={24}>
-              <Row>
-                <Col span={12}>
-                  <Row type="flex" justify="start">
-                    <p style={{ display: 'flex' }}>
-                      <Text>Units:</Text> {item.unit}
-                    </p>
-                  </Row>
-                </Col>
-                <Col span={12}>
-                  <Row type="flex" justify="end">
-                    Rs. {item.price}
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
+            <Row type="flex" align="middle" style={{ paddingTop: '15px' }}>
+              <Col span={12}>
+                <Row type="flex" justify="space-between">
+                  <Col span={8}>
+                    <Button shape="circle" icon="minus" onClick={() => setUnits(units - 1)} />
+                  </Col>
+                  <Col span={8}>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        height: '100%',
+                        lineHeight: '32px'
+                      }}
+                    >
+                      {units}
+                    </div>
+                  </Col>
+                  <Col span={8}>
+                    <Button shape="circle" icon="plus" onClick={() => setUnits(units + 1)} />
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={12}>
+                <Row type="flex" justify="end">
+                  Rs. {item.price}
+                </Row>
+              </Col>
+            </Row>
           </Row>
         </Col>
       </Row>

@@ -30,8 +30,8 @@ const CategoryIconSlick = props => {
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 4.5,
     arrows: false,
+    variableWidth: true,
     slidesToScroll: 2
   };
   return (

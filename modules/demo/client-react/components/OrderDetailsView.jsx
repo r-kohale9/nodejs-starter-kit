@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Card, Button, Row, Col } from 'antd';
 import { PropTypes } from 'prop-types';
 
-import CartItemComponent from './CartItemComponent';
+import OrderDetailsItemComponent from './OrderDetailsItemComponent';
 import PageLayout from './PageLayout';
 
 const Text = styled.span`
@@ -117,7 +117,7 @@ const OrderDetailsView = props => {
             order.orderDetails &&
             order.orderDetails.length !== 0 &&
             order.orderDetails.map(item => {
-              return <CartItemComponent item={item} />;
+              return <OrderDetailsItemComponent item={item} />;
             })}
         </Col>
         Order information

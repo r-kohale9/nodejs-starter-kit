@@ -11,7 +11,7 @@ const Applybtn = styled(Button)`
 `;
 
 const PromoCardComponent = props => {
-  const { promocode } = props;
+  const { promocode, setValue } = props;
   return (
     <Card
       style={{
@@ -36,7 +36,7 @@ const PromoCardComponent = props => {
               </Row>
             </Col>
             <Col span={16}>
-              <Row type="flex" align="top">
+              <Row type="flex" justify="start" align="top">
                 <Col span={24}>{promocode.title}</Col>
                 <Col span={24}>{promocode.promocode}</Col>
               </Row>
@@ -44,7 +44,7 @@ const PromoCardComponent = props => {
             <Col span={8}>
               <Row type="flex" align="middle">
                 <Col span={24}>
-                  <Applybtn type="danger" block>
+                  <Applybtn type="danger" block onClick={() => setValue('promoCode', promocode.promocode)}>
                     Apply
                   </Applybtn>
                 </Col>
@@ -58,7 +58,8 @@ const PromoCardComponent = props => {
 };
 
 PromoCardComponent.propTypes = {
-  promocode: PropTypes.object
+  promocode: PropTypes.object,
+  setValue: PropTypes.func
 };
 
 export default PromoCardComponent;

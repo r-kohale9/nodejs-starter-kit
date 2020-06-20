@@ -25,21 +25,24 @@ const Text = styled.div`
   color: white;
 `;
 
+const PadR10 = styled.div`
+  padding-right: 10px;
+`;
+
 const CategoryIconSlick = props => {
   const { data } = props;
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3.5,
-    slidesToScroll: 2,
-    arrows: false
+    arrows: false,
+    variableWidth: true
   };
   return (
-    <div style={{ marginTop: '10px' }}>
-      <Slider {...settings}>
-        {data.map(slick => {
-          const { icon: Icon, category } = slick;
-          return (
+    <Slider {...settings}>
+      {data.map(slick => {
+        const { category } = slick;
+        return (
+          <PadR10>
             <Row align="middle" type="flex" justify="space-around">
               <Col span={24}></Col>
               <Col span={24}>
@@ -48,10 +51,10 @@ const CategoryIconSlick = props => {
                 </Rectangle>
               </Col>
             </Row>
-          );
-        })}
-      </Slider>
-    </div>
+          </PadR10>
+        );
+      })}
+    </Slider>
   );
 };
 

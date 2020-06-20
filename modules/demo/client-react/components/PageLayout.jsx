@@ -10,6 +10,8 @@ import Footer from '@gqlapp/look-client-react/ui-antd/components/Footer';
 
 import styles from '@gqlapp/look-client-react/ui-antd/styles/index.less';
 
+import MobNavBar from './MobNavBar';
+
 const layoutTypes = [
   {
     type: null,
@@ -76,6 +78,7 @@ class PageLayout extends React.Component {
     return (
       <Layout id="page-layout">
         {navBar !== false && !this.state.isMobile && <NavBar isMobile={this.state.isMobile} />}
+        {navBar !== false && this.state.isMobile && <MobNavBar histoyr={history} />}
         {__SERVER__ && __DEV__ && (
           <Helmet>
             <style type="text/css">{styles._getCss()}</style>

@@ -31,7 +31,7 @@ const OrderStatusSlick = props => {
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    variableWidth: true,
     slidesToScroll: 1,
     arrows: false
   };

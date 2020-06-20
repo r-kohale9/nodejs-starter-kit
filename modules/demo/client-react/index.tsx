@@ -9,7 +9,7 @@ import { MenuItem } from '@gqlapp/look-client-react';
 import resources from './locales';
 
 const NavLinkWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
-  <NavLink to="/demo/baker" className="nav-link" activeClassName="active">
+  <NavLink to="/demo/favorites" className="nav-link" activeClassName="active">
     {t('demo:navLink')}
   </NavLink>
 ));
@@ -73,6 +73,26 @@ export default new ClientModule({
       exact
       path="/demo/promocodes"
       component={loadable(() => import('./containers/Promocodes').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/demo/checkout-cart"
+      component={loadable(() => import('./containers/CheckoutCart').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/demo/checkout-order"
+      component={loadable(() => import('./containers/CheckoutOrder').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/demo/checkout-status"
+      component={loadable(() => import('./containers/CheckoutStatus').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/demo/favorites"
+      component={loadable(() => import('./containers/Favorites').then(c => c.default))}
     />
   ],
   navItem: [
