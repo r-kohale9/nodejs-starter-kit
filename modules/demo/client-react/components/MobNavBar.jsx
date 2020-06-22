@@ -42,7 +42,7 @@ class NavBar extends React.Component {
   };
 
   render() {
-    const { history } = this.props;
+    const { history, search, title } = this.props;
     console.log('props', this.props);
     return (
       <ScrollParallax
@@ -57,7 +57,7 @@ class NavBar extends React.Component {
           <Row className="navbar-wrapper">
             <Col span={24}>
               <Row>
-                <Col align="left" xs={12} md={12} lg={0}>
+                <Col align="left" span={2}>
                   <Icon
                     onClick={() => history.goBack()}
                     type="left"
@@ -116,22 +116,37 @@ class NavBar extends React.Component {
                     </LoggedIn>
                   </Menu>
                 </Col> */}
-                <Col xs={12} md={12} lg={0}>
-                  <div
-                    // onClick={this.showDrawer}
-                    className="navbar-drawer-logo"
-                  >
-                    <Icon
-                      type="search"
+                <Col span={20}>
+                  <Row type="flex" align="middle" justify="center">
+                    <h3
                       style={{
                         color: 'black',
-                        fontSize: '20px',
-                        position: 'absolute',
-                        top: '10px',
-                        right: '0px'
+                        lineHeight: '2',
+                        fontSize: '18px'
                       }}
-                    />
-                  </div>
+                    >
+                      {title && title}
+                    </h3>
+                  </Row>
+                </Col>
+                <Col span={2}>
+                  {search && (
+                    <div
+                      // onClick={this.showDrawer}
+                      className="navbar-drawer-logo"
+                    >
+                      <Icon
+                        type="search"
+                        style={{
+                          color: 'black',
+                          fontSize: '20px',
+                          position: 'absolute',
+                          top: '10px',
+                          right: '0px'
+                        }}
+                      />
+                    </div>
+                  )}
                 </Col>
               </Row>
             </Col>

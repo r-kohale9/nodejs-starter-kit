@@ -39,7 +39,7 @@ const ListingDetailsView = props => {
   };
   return (
     <>
-      <PageLayout history={history} showMenuBar={false}>
+      <PageLayout history={history} showMenuBar={false} title={listing.title}>
         <Row align="middle" type="flex" justify="space-between">
           <Col span={24}>
             <Slider {...settings}>

@@ -8,7 +8,7 @@ import PromoCardComponent from './PromoCardComponent';
 const PromocodesView = props => {
   const { promocodes, history } = props;
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} title="Promocodes">
       {promocodes.map(promocode => {
         return <PromoCardComponent promocode={promocode} />;
       })}

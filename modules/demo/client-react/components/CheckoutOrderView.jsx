@@ -72,7 +72,7 @@ const CheckoutOrderView = props => {
     history
   } = props;
   return (
-    <PageLayout history={history} showMenuBar={false}>
+    <PageLayout history={history} showMenuBar={false} title="Checkout">
       <h3>Shipping address</h3>
       <AddressCardComponent
         address={address}

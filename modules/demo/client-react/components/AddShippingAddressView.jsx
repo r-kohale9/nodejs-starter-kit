@@ -7,7 +7,7 @@ import AddressForm from './AddressForm';
 const AddShippingAddressView = props => {
   const { history } = props;
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} title="Adding Shipping Addresses">
       <AddressForm />
     </PageLayout>
   );

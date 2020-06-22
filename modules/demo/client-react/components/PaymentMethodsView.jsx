@@ -10,7 +10,7 @@ import RenderPaymentCards from './RenderPaymentCards';
 const PaymentMethodsView = props => {
   const { paymentOpts, history } = props;
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} title="Payment methods">
       <Row type="flex" justify="space-between" align="middle">
         <Col span={24}>
           <h2>Your payment cards</h2>

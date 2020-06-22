@@ -4,6 +4,9 @@ import { Rate, Icon, Button, Row, Col, Card, Avatar, Divider, Popconfirm, messag
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Write from '../Icons/write.svg';
+import Contact from '../Icons/contact.svg';
+
 const { Meta } = Card;
 
 const Name = styled.div`
@@ -59,7 +62,6 @@ const UserDisplayDetailComponent = props => {
         height: '100px',
         borderWidth: '0px'
       }}
-      hoverable
       bodyStyle={{
         padding: '0px'
       }}
@@ -95,7 +97,17 @@ const UserDisplayDetailComponent = props => {
         </Col>
         <Col span={15}>
           <div style={{ paddingLeft: '5px' }}>
-            <Name>{user.name}</Name>
+            <Col span={24}>
+              <Col span={20}>
+                <Name>{user.name}</Name>
+              </Col>
+              <Col span={2}>
+                <img alt="" src={Write} />
+              </Col>
+              <Col span={2}>
+                <img alt="" src={Contact} />
+              </Col>
+            </Col>
             <Row justify="space-around">
               <Col span={4}>
                 <Rate

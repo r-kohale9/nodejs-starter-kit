@@ -81,7 +81,7 @@ const OrderDetailsView = props => {
   const { order, history } = props;
   console.log('props', props);
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} title="Order Details">
       <Row type="flex" justify="space-between" align="middle" gutter={[0, 8]}>
         <Col span={24}>
           <Row>

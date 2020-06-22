@@ -8,7 +8,7 @@ import RenderAddress from './RenderAddress';
 const ShippingAddressView = props => {
   const { addresses, history } = props;
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} title="Shipping Addresses">
       <RenderAddress label="addresses" addresses={addresses} history={history} />
     </PageLayout>
   );
