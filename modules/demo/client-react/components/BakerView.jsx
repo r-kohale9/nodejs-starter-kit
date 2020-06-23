@@ -1,7 +1,9 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Row, Col, List, Divider, Spin } from 'antd';
+import settings from '@gqlapp/config';
 import PageLayout from './PageLayout';
 
 // import ListingItemComponent from './ListingItemComponent';
@@ -27,15 +29,23 @@ const Profile = styled.div`
 
   color: #222222;
 `;
+const renderMetaData = t => (
+  <Helmet
+    title={`${settings.app.name} - ${t('title')}`}
+    meta={[{ name: 'description', content: `${settings.app.name} - ${t('meta')}` }]}
+    link={[{ href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap', rel: 'stylesheet' }]}
+  />
+);
 
 const BakerView = props => {
   const { loading, listings, t, users, user, homeSlick, categorySlick, profileList, history } = props;
 
   return (
     <PageLayout history={history}>
-      <UserDisplayDetailComponent user={user} />
+      {renderMetaData(t)}
+      <UserDisplayDetailComponent history={history} user={user} />
       <CategorySlick data={categorySlick} />
-      {console.log('props bkaerview', props)}
+      <div style={{ height: '36px', width: '100%' }} />
       {listings && (
         <List
           grid={{
@@ -63,6 +73,7 @@ const BakerView = props => {
 BakerView.propTypes = {
   t: PropTypes.func,
   loading: PropTypes.bool,
+  history: PropTypes.object,
   listings: PropTypes.object
 };
 
