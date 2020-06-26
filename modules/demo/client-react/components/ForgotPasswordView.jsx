@@ -54,16 +54,13 @@ const ForgotPasswordView = ({ onSubmit, t, sent }) => {
   );
 
   return (
-    <div style={{ margin: '16px' }}>
-      {renderMetaData()}
-      <LeftAction>
-        <BackIcon>
-          <Icon type="left" />
-        </BackIcon>
-      </LeftAction>
-      <Login>Forgot Password</Login>
-      <ForgotPasswordForm onSubmit={onSubmit} sent={sent} />
-    </div>
+    <PageLayout showMobNav={true}>
+      <div style={{ margin: '16px' }}>
+        {renderMetaData()}
+        <Login>Forgot Password</Login>
+        <ForgotPasswordForm onSubmit={onSubmit} sent={sent} />
+      </div>
+    </PageLayout>
   );
 };
 

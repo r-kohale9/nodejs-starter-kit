@@ -9,7 +9,7 @@ import { MenuItem } from '@gqlapp/look-client-react';
 import resources from './locales';
 
 const NavLinkWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
-  <NavLink to="/demo/baker" className="nav-link" activeClassName="active">
+  <NavLink to="/demo" className="nav-link" activeClassName="active">
     {t('demo:navLink')}
   </NavLink>
 ));

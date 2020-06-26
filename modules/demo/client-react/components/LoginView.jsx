@@ -35,7 +35,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 
-import { PageLayout, Card, CardGroup, CardTitle, CardText, Button, Icon } from '@gqlapp/look-client-react';
+import { Card, CardGroup, CardTitle, CardText, Button, Icon } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
 import LoginForm from './LoginForm';
@@ -44,7 +44,7 @@ import LoginForm from './LoginForm';
 // import { Icon } from 'antd';
 
 // import settings from '@gqlapp/config';
-// import PageLayout from './PageLayout';
+import PageLayout from './PageLayout';
 // import LoginForm from './LoginForm';
 
 const Login = styled.div`
@@ -116,15 +116,12 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
       {isRegistered ? (
         renderConfirmationModal()
       ) : (
-        <div style={{ padding: '16px' }}>
-          <LeftAction>
-            <BackIcon>
-              <Icon type="left" />
-            </BackIcon>
-          </LeftAction>
-          <Login>Login</Login>
-          <LoginForm onSubmit={onSubmit} t={t} />
-        </div>
+        <PageLayout showMobNav={true}>
+          <div style={{ padding: '16px' }}>
+            <Login>Login</Login>
+            <LoginForm onSubmit={onSubmit} t={t} />
+          </div>
+        </PageLayout>
       )}
     </>
   );
