@@ -99,7 +99,12 @@ export default new ClientModule({
       path="/demo/filters"
       component={loadable(() => import('./containers/Filters').then(c => c.default))}
     />,
-    <Route exact path="/demo/contact" component={loadable(() => import('./containers/Contact').then(c => c.default))} />
+    <Route
+      exact
+      path="/demo/contact"
+      component={loadable(() => import('./containers/Contact').then(c => c.default))}
+    />,
+    <Route exact path="/demo/reviews" component={loadable(() => import('./containers/Reviews').then(c => c.default))} />
   ],
   navItem: [
     <MenuItem key="/demo">

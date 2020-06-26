@@ -27,6 +27,7 @@ const Details = styled.div`
   box-shadow: 0px 1px 25px rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   height: 400px;
+  width: 100%;
   padding: 10px 7px 0 7px;
 `;
 
@@ -72,29 +73,41 @@ const ContactView = props => {
           <Row gutter={[0, 16]}>
             <Col span={24}>
               <Col span={3}>
-                <img alt="" src={Location} />
+                <Row type="flex" justify="center" align="middle">
+                  <img alt="" src={Location} />
+                </Row>
               </Col>
-              <Col span={21}>
+              <Col span={1} />
+              <Col span={20}>
                 <p>{`${address.address}, ${address.city}, ${address.state}, ${address.pinCode}`}</p>
               </Col>
             </Col>
             <Col span={24}>
               <Col span={3}>
-                <img alt="" src={Mail} />
+                <Row type="flex" justify="center" align="middle">
+                  <img alt="" src={Mail} />
+                </Row>
               </Col>
-              <Col span={21}>{user.mail}</Col>
+              <Col span={1} />
+              <Col span={20}>{user.mail}</Col>
             </Col>
             <Col span={24}>
               <Col span={3}>
-                <img alt="" src={Phone} />
+                <Row type="flex" justify="center" align="middle">
+                  <img alt="" src={Phone} />
+                </Row>
               </Col>
-              <Col span={21}>{user.phone}</Col>
+              <Col span={1} />
+              <Col span={20}>{user.phone}</Col>
             </Col>
             <Col span={24}>
               <Col span={3}>
-                <img alt="" src={Whatsapp} />
+                <Row type="flex" justify="center" align="middle">
+                  <img alt="" src={Whatsapp} />
+                </Row>
               </Col>
-              <Col span={21}>{user.watsapp}</Col>
+              <Col span={1} />
+              <Col span={20}>{user.watsapp}</Col>
             </Col>
           </Row>
         </Details>
