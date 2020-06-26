@@ -3,43 +3,20 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 
-import { LayoutCenter, PageLayout, Card, CardTitle, Icon } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
+import PageLayout from './PageLayout';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
-const LeftAction = styled.div`
-  /* Left Action */
-  /* position: absolute; */
-  height: 44px;
-  /* left: 0%; */
-  /* right: 0%; */
-  /* top: 44px; */
-`;
 const Login = styled.div`
-  width: 283px;
-  height: 40px;
-
   font-family: Quicksand;
-  font-style: normal;
   font-weight: bold;
-  font-size: 34px;
-  line-height: 42px;
-
-  margin-bottom: 40px;
-
-  /* Black */
-
+  font-size: 10vw;
+  line-height: 13vw;
+  margin-bottom: 25vw;
   color: #222222;
 `;
 
-const BackIcon = styled.div`
-  /*icon */
-
-  position: relative;
-  width: 24px;
-  height: 24px;
-`;
 const ForgotPasswordView = ({ onSubmit, t, sent }) => {
   const renderMetaData = () => (
     <Helmet
@@ -50,6 +27,7 @@ const ForgotPasswordView = ({ onSubmit, t, sent }) => {
           content: `${settings.app.name} - ${t('forgotPass.meta')}`
         }
       ]}
+      link={[{ href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap', rel: 'stylesheet' }]}
     />
   );
 

@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { translate } from '@gqlapp/i18n-client-react';
-import { Form, RenderField, Button, Alert, Icon } from '@gqlapp/look-client-react';
+import { Form, RenderField, Button, Alert } from '@gqlapp/look-client-react';
 import { required, email, validate } from '@gqlapp/validation-common-react';
 
 const SendBtn = styled(Button)`
+  height: 48px;
+  color: white;
   background: #fc4c4c;
   box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
   border-radius: 25px;
@@ -15,14 +17,8 @@ const SendBtn = styled(Button)`
 
 const Text = styled.p`
   font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  /* or 143% */
-
-  /* Black */
-
+  font-size: 4vw;
+  line-height: 5vw;
   color: #222222;
 `;
 
@@ -43,9 +39,9 @@ const ForgotPasswordForm = ({ handleSubmit, errors, sent, values, t }) => {
         // label={t('forgotPass.form.fldEmail')}
         value={values.email}
       />
-      <div className="text-center">
+      <div style={{ padddingTop: '5vw' }} className="text-center">
         {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
-        <SendBtn block={true} size="lg" color="primary" type="submit">
+        <SendBtn block={true} size="lg" type="submit">
           Send
         </SendBtn>
       </div>
