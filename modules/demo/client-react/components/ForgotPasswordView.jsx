@@ -11,9 +11,9 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 const Login = styled.div`
   font-family: Quicksand;
   font-weight: bold;
-  font-size: 10vw;
-  line-height: 13vw;
-  margin-bottom: 25vw;
+  font-size: 35px;
+  line-height: 42px;
+  margin-bottom: 80px;
   color: #222222;
 `;
 

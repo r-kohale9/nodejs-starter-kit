@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
@@ -9,16 +10,14 @@ import { required, email, validate } from '@gqlapp/validation-common-react';
 
 const SendBtn = styled(Button)`
   height: 48px;
-  color: white;
-  background: #fc4c4c;
   box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
   border-radius: 25px;
 `;
 
 const Text = styled.p`
   font-family: Quicksand;
-  font-size: 4vw;
-  line-height: 5vw;
+  font-size: 14px;
+  line-height: 20px;
   color: #222222;
 `;
 
@@ -28,24 +27,34 @@ const forgotPasswordFormSchema = {
 
 const ForgotPasswordForm = ({ handleSubmit, errors, sent, values, t }) => {
   return (
-    <Form name="forgotPassword" onSubmit={handleSubmit}>
-      {sent && <Alert color="success">{t('forgotPass.form.submitMsg')}</Alert>}
-      <Text>Please, enter your email address. You will recieve a link to create a new password via email.</Text>
-      <Field
-        name="email"
-        component={RenderField}
-        type="email"
-        label="Email"
-        // label={t('forgotPass.form.fldEmail')}
-        value={values.email}
-      />
-      <div style={{ padddingTop: '5vw' }} className="text-center">
-        {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
-        <SendBtn block={true} size="lg" type="submit">
-          Send
-        </SendBtn>
-      </div>
-    </Form>
+    <Row type="flex" justify="center">
+      <Form name="forgotPassword" onSubmit={handleSubmit}>
+        <Col span={24}>
+          {sent && <Alert color="success">{t('forgotPass.form.submitMsg')}</Alert>}
+          <Text>Please, enter your email address. You will recieve a link to create a new password via email.</Text>
+          <Col span={24}>
+            <Row type="flex" justify="center">
+              <div style={{ maxWidth: '300px' }}>
+                <Field
+                  name="email"
+                  component={RenderField}
+                  type="email"
+                  label="Email"
+                  // label={t('forgotPass.form.fldEmail')}
+                  value={values.email}
+                />
+                <div style={{ padddingTop: '55px' }} className="text-center">
+                  {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
+                  <SendBtn color="danger" block={true} type="submit">
+                    Send
+                  </SendBtn>
+                </div>
+              </div>
+            </Row>
+          </Col>
+        </Col>
+      </Form>
+    </Row>
   );
 };
 
