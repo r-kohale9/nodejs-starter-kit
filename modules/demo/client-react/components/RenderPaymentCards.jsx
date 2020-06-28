@@ -1,44 +1,44 @@
 import React from 'react';
-import { Form, Row, Col, Radio } from 'antd';
+import { Col, List } from 'antd';
 import { PropTypes } from 'prop-types';
-import { FieldArray, withFormik } from 'formik';
+import { withFormik } from 'formik';
+
+import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
+import { RenderCheckBox } from '@gqlapp/look-client-react';
 
 import PaymentCardComponent from './PaymentCardComponent';
 
-const RadioGroup = Radio.Group;
-
 const RenderPaymentCards = props => {
   const { paymentOpts, values } = props;
-  console.log('props', props);
   return (
-    <RadioGroup
-      size="large"
-      buttonStyle="solid"
-      // defaultValue={paymentOpts.findIndex(pO => pO.defaultCard === true)}
-    >
-      {paymentOpts.map((payOpt, index) => {
-        return (
-          <Row>
-            <Col span={24}>
-              <Col span={24}>
-                <PaymentCardComponent card={payOpt} />
-              </Col>
-              <Col span={24}>
-                <Radio
-                  key={index}
+    <Col span={24}>
+      <List
+        grid={{
+          gutter: 16,
+          xs: 1,
+          sm: 1,
+          md: 2,
+          lg: 3
+        }}
+        dataSource={paymentOpts && paymentOpts.length !== 0 && paymentOpts}
+        renderItem={(payOpt, index) => (
+          <List.Item>
+            <PaymentCardComponent
+              card={payOpt}
+              extra={
+                <Field
                   name={`paymentOpts[${index}].defaultCard`}
+                  component={RenderCheckBox}
+                  labelText="Use as default payment method"
+                  // onChange={() => handlePaymentOption(index)}
                   checked={values.paymentOpts[index].defaultCard}
-                  value={index}
-                >
-                  {console.log('valeus', values)}
-                  Use as default payment method
-                </Radio>
-              </Col>
-            </Col>
-          </Row>
-        );
-      })}
-    </RadioGroup>
+                />
+              }
+            />
+          </List.Item>
+        )}
+      />
+    </Col>
   );
 };
 

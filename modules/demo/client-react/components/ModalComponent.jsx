@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Row, Col, Button, Icon } from 'antd';
+import React from 'react';
+import { Row, Col } from 'antd';
 import styled from 'styled-components';
 import { Modal } from 'antd-mobile';
 import { PropTypes } from 'prop-types';
@@ -33,9 +33,11 @@ const ModalComponent = props => {
             </Row>
           </Col>
           <Col span={24}>
-            <h3>{title && title}</h3>
+            <h3>
+              <strong>{title && title}</strong>
+            </h3>
           </Col>
-          <Col span={24} style={{ padding: '22px 16px 0px 16px' }}>
+          <Col span={24} style={{ padding: '22px 16px 0px 16px', maxWidth: '350px' }}>
             {children}
           </Col>
         </Row>

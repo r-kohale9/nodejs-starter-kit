@@ -27,7 +27,10 @@ const PAYMENT_OPTS = [
 ];
 
 const PaymentMethods = props => {
-  return <PaymentMethodsView {...props} paymentOpts={PAYMENT_OPTS} />;
+  const handleSubmit = values => {
+    console.log('values', values);
+  };
+  return <PaymentMethodsView {...props} paymentOpts={PAYMENT_OPTS} onSubmit={handleSubmit} />;
 };
 
 export default PaymentMethods;

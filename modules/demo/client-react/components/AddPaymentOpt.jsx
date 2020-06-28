@@ -1,27 +1,13 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import styled from 'styled-components';
 import { Form, Button, Row, Col } from 'antd';
-import { Modal } from 'antd-mobile';
 import { withFormik } from 'formik';
 
-import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
+import { required, validate } from '@gqlapp/validation-common-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { RenderCheckBox, RenderField } from '@gqlapp/look-client-react';
 
-const AddCardbtn = styled(Button)`
-  box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
-  border-radius: 25px;
-  height: 50px;
-`;
-
-const ModalBar = styled.div`
-  margin: 15px 0px 24px 0px;
-  width: 60px;
-  height: 6px;
-  background: #9b9b9b;
-  border-radius: 3px;
-`;
+import ModalComponent from './ModalComponent';
 
 const AddPaymentOptFormSchema = {
   nameOnCard: [required],
@@ -35,82 +21,71 @@ const AddPaymentOpt = props => {
   const { values, handleSubmit } = props;
   return (
     <>
-      <Button shape="circle" icon="plus" type="primary" onClick={() => setVisible(true)} />
-      <Modal
-        popup
-        // wrapClassName="modal paymentOpt-height"
+      <Button type="black" shape="circle" icon="plus" onClick={() => setVisible(true)} />
+      <ModalComponent
+        title="Add new card"
+        // visible={true}
         visible={visible}
-        onClose={() => setVisible(false)}
-        animationType="slide-up"
-        // afterClose={() => }
+        handleVisible={() => setVisible(false)}
       >
-        <Row type="flex" justify="center">
-          <Col span={24}>
-            <Row type="flex" justify="center">
-              <ModalBar />
+        <Col span={24}>
+          <Form onSubmit={handleSubmit}>
+            <Field
+              name="nameOnCard"
+              component={RenderField}
+              type="text"
+              placeholder="Name on card"
+              // label="Name on card"
+              value={values.nameOnCard}
+            />
+            <Field
+              name="cardNumber"
+              component={RenderField}
+              type="text"
+              placeholder="Card number"
+              // label="Card number"
+              value={values.cardNumber}
+            />
+            <Field
+              name="expireDate"
+              component={RenderField}
+              type="text"
+              placeholder="Expiry date"
+              // label="Expiry date"
+              value={values.expireDate}
+            />
+            <Field
+              name="cvv"
+              component={RenderField}
+              type="text"
+              placeholder="CVV"
+              // label="CVV"
+              value={values.cvv}
+            />
+            <Row type="flex" justify="start">
+              <Field
+                name="defaultCard"
+                component={RenderCheckBox}
+                labelText="Use as the shipping address"
+                // onChange={() => handleShippingAddress(index)}
+                checked={values.defaultCard}
+              />
             </Row>
-          </Col>
-          <Col span={24}>
-            <h3>Add new card</h3>
-          </Col>
-          <Col span={24} style={{ padding: '15px 16px 0px 16px' }}>
-            <Form onSubmit={handleSubmit}>
-              <Field
-                name="nameOnCard"
-                component={RenderField}
-                type="text"
-                placeholder="Name on card"
-                // label="Name on card"
-                value={values.nameOnCard}
-              />
-              <Field
-                name="cardNumber"
-                component={RenderField}
-                type="text"
-                placeholder="Card number"
-                // label="Card number"
-                value={values.cardNumber}
-              />
-              <Field
-                name="expireDate"
-                component={RenderField}
-                type="text"
-                placeholder="Expiry date"
-                // label="Expiry date"
-                value={values.expireDate}
-              />
-              <Field
-                name="cvv"
-                component={RenderField}
-                type="text"
-                placeholder="CVV"
-                // label="CVV"
-                value={values.cvv}
-              />
-              <Row type="flex" justify="start">
-                <Field
-                  name="defaultCard"
-                  component={RenderCheckBox}
-                  labelText="Use as the shipping address"
-                  // onChange={() => handleShippingAddress(index)}
-                  checked={values.defaultCard}
-                />
-              </Row>
-              <div style={{ paddingBottom: '50px' }}>
-                <AddCardbtn type="danger" block onClick={handleSubmit}>
-                  ADD CARD
-                </AddCardbtn>
-              </div>
-            </Form>
-          </Col>
-        </Row>
-      </Modal>
+            <div style={{ paddingBottom: '50px' }}>
+              <Button type="primary" size="lg" block onClick={handleSubmit}>
+                ADD CARD
+              </Button>
+            </div>
+          </Form>
+        </Col>
+      </ModalComponent>
     </>
   );
 };
 
 AddPaymentOpt.propTypes = {
-  values: PropTypes.object
+  values: PropTypes.object,
+  handleSubmit: PropTypes.func
 };
 
 const AddPaymentOptWithFormik = withFormik({
@@ -124,8 +99,8 @@ const AddPaymentOptWithFormik = withFormik({
     defaultCard: (props.paymentOpts && props.paymentOpts.defaultCard) || false
   }),
   handleSubmit(values, { props: { onSubmit } }) {
-    console.log('values1', values);
-    // onSubmit();
+    // console.log('values1', values);
+    onSubmit(values);
   },
   validate: values => validate(values, AddPaymentOptFormSchema),
   displayName: 'AddPaymentOptForms' // helps with React DevTools
