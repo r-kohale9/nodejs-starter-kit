@@ -1,22 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 
 import { Card, CardGroup, CardTitle, CardText, Button } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-
 import LoginForm from './LoginForm';
 import PageLayout from './PageLayout';
-
-const Login = styled.div`
-  font-family: Quicksand;
-  font-weight: bold;
-  font-size: 34px;
-  line-height: 42px;
-  padding-bottom: 58px;
-  color: #222222;
-`;
+import { PgTitle } from './StyledComponents';
 
 const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
   const renderMetaData = () => (
@@ -26,12 +16,6 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
         {
           name: 'description',
           content: `${settings.app.name} - ${t('login.meta')}`
-        }
-      ]}
-      link={[
-        {
-          href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap',
-          rel: 'stylesheet'
         }
       ]}
     />
@@ -57,8 +41,8 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
         renderConfirmationModal()
       ) : (
         <PageLayout showMobNav={true}>
+          <PgTitle>Login</PgTitle>
           <div style={{ padding: '16px' }}>
-            <Login>Login</Login>
             <LoginForm onSubmit={onSubmit} t={t} />
           </div>
         </PageLayout>

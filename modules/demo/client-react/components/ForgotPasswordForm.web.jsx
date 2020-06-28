@@ -8,19 +8,6 @@ import { translate } from '@gqlapp/i18n-client-react';
 import { Form, RenderField, Button, Alert } from '@gqlapp/look-client-react';
 import { required, email, validate } from '@gqlapp/validation-common-react';
 
-const SendBtn = styled(Button)`
-  height: 48px;
-  box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
-  border-radius: 25px;
-`;
-
-const Text = styled.p`
-  font-family: Quicksand;
-  font-size: 14px;
-  line-height: 20px;
-  color: #222222;
-`;
-
 const forgotPasswordFormSchema = {
   email: [required, email]
 };
@@ -29,29 +16,27 @@ const ForgotPasswordForm = ({ handleSubmit, errors, sent, values, t }) => {
   return (
     <Row type="flex" justify="center">
       <Form name="forgotPassword" onSubmit={handleSubmit}>
+        {sent && <Alert color="success">{t('forgotPass.form.submitMsg')}</Alert>}
+        <p>Please, enter your email address. You will recieve a link to create a new password via email.</p>
         <Col span={24}>
-          {sent && <Alert color="success">{t('forgotPass.form.submitMsg')}</Alert>}
-          <Text>Please, enter your email address. You will recieve a link to create a new password via email.</Text>
-          <Col span={24}>
-            <Row type="flex" justify="center">
-              <div style={{ maxWidth: '300px' }}>
-                <Field
-                  name="email"
-                  component={RenderField}
-                  type="email"
-                  label="Email"
-                  // label={t('forgotPass.form.fldEmail')}
-                  value={values.email}
-                />
-                <div style={{ padddingTop: '55px' }} className="text-center">
-                  {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
-                  <SendBtn color="danger" block={true} type="submit">
-                    Send
-                  </SendBtn>
-                </div>
+          <Row type="flex" justify="center">
+            <Col span={24} style={{ maxWidth: '300px' }}>
+              <Field
+                name="email"
+                component={RenderField}
+                type="email"
+                label="Email"
+                // label={t('forgotPass.form.fldEmail')}
+                value={values.email}
+              />
+              <div style={{ padddingTop: '55px' }} className="text-center">
+                {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
+                <Button size="lg" color="primary" block type="submit">
+                  <b>SEND</b>
+                </Button>
               </div>
-            </Row>
-          </Col>
+            </Col>
+          </Row>
         </Col>
       </Form>
     </Row>

@@ -1,29 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 import { Icon, Row, Col } from 'antd';
 import { withFormik } from 'formik';
-import { Link } from 'react-router-dom';
 
+import settings from '@gqlapp/config';
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, minLength, validate } from '@gqlapp/validation-common-react';
 import { Form, RenderField, Button } from '@gqlapp/look-client-react';
 import { GoogleButton, FacebookButton } from '@gqlapp/authentication-client-react';
-import settings from '@gqlapp/config';
-import { PropTypes } from 'prop-types';
 
-const LoginBtn = styled(Button)`
-  height: 48px;
-  box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
-  border-radius: 25px;
-`;
-
-const ForgetPass = styled(Link)`
-  font-family: Quicksand;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-  color: #222222;
-`;
+import { LinkBold } from './StyledComponents';
 
 const loginFormSchema = {
   usernameOrEmail: [required, minLength(3)],
@@ -59,49 +45,57 @@ const LoginForm = props => {
 
   return (
     <Row type="flex" justify="center">
-      <Form name="login" onSubmit={handleSubmit}>
-        <Col span={24}>
-          <Field
-            name="usernameOrEmail"
-            component={RenderField}
-            type="text"
-            label="Email"
-            // label={t('login.form.field.usernameOrEmail')}
-            value={values.usernameOrEmail}
-          />
-          <Field
-            name="password"
-            component={RenderField}
-            type="password"
-            label="Password"
-            // label={t('login.form.field.pass')}
-            value={values.password}
-          />
-          {/* <div className="text-center">{errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}</div> */}
-          <div style={{ paddingBottom: '20px' }}>
-            <Row type="flex" justify="end" align="middle">
-              <ForgetPass to="/demo/forgotpassword">Forget your password?</ForgetPass>
-              <Icon type="arrow-right" style={{ fontSize: '10px', paddingLeft: '5px', color: '#fc4c4c' }} />
-            </Row>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <LoginBtn block color="danger" type="submit" disabled={submitting}>
-              Login
-            </LoginBtn>
-            <div style={{ paddingTop: '75px' }}>
-              <p>Or login with social account</p>
-              {renderSocialButtons(buttonsLength, t)}
-            </div>
-          </div>
-        </Col>
-      </Form>
+      <Col span={24}>
+        <Row type="flex" justify="center">
+          <Col span={24} style={{ maxWidth: '300px' }}>
+            <Form name="login" onSubmit={handleSubmit}>
+              <Field
+                name="usernameOrEmail"
+                component={RenderField}
+                type="text"
+                label="Email"
+                // label={t('login.form.field.usernameOrEmail')}
+                value={values.usernameOrEmail}
+              />
+              <Field
+                name="password"
+                component={RenderField}
+                type="password"
+                label="Password"
+                // label={t('login.form.field.pass')}
+                value={values.password}
+              />
+              {/* <div className="text-center">{errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}</div> */}
+              <div style={{ paddingBottom: '20px' }}>
+                <Row type="flex" justify="end" align="middle">
+                  <LinkBold to="/demo/forgotpassword">
+                    Forget your password?
+                    <Icon type="arrow-right" style={{ fontSize: '10px', paddingLeft: '5px', color: '#fc4c4c' }} />
+                  </LinkBold>
+                </Row>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Button block color="primary" size="lg" type="submit" disabled={submitting}>
+                  <b>LOGIN</b>
+                </Button>
+                <div style={{ paddingTop: '75px', textAlign: 'center' }}>
+                  <p>
+                    <b>Or login with social account</b>
+                  </p>
+                  {renderSocialButtons(buttonsLength, t)}
+                </div>
+              </div>
+            </Form>
+          </Col>
+        </Row>
+      </Col>
     </Row>
   );
 };

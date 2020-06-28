@@ -24,12 +24,12 @@ const DemoView = (props: DemoViewProps) => {
       {renderMetaData(t)}
       <Row type="flex" justify="space-between" align="middle">
         <Col span={24}>
-          <Button type="primary" block onClick={() => history.push('/demo/forgotpassword')}>
+          <Button type="tertiary" block onClick={() => history.push('/demo/forgotpassword')}>
             Forget Pass
           </Button>
         </Col>
         <Col span={24}>
-          <Button block onClick={() => history.push('/demo/home')}>
+          <Button type="black" block onClick={() => history.push('/demo/home')}>
             ListingCatalogue
           </Button>
         </Col>

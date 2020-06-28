@@ -33,7 +33,6 @@ const renderMetaData = t => (
   <Helmet
     title={`${settings.app.name} - ${t('title')}`}
     meta={[{ name: 'description', content: `${settings.app.name} - ${t('meta')}` }]}
-    link={[{ href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap', rel: 'stylesheet' }]}
   />
 );
 
