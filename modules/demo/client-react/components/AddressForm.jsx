@@ -1,17 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Form, Card, Row, Col, Button } from 'antd';
 import { withFormik } from 'formik';
 import { RenderField } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
+import { required, validate } from '@gqlapp/validation-common-react';
 import { PropTypes } from 'prop-types';
-
-const FeedbackBtn = styled(Button)`
-  /* background: #fc4c4c; */
-  box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
-  border-radius: 25px;
-`;
 
 const addressFormSchema = {
   addressName: [required],
@@ -29,6 +22,8 @@ const AddressForm = props => {
         <Form onSubmit={handleSubmit}>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '70px',
               borderWidth: '0px',
@@ -49,6 +44,8 @@ const AddressForm = props => {
           </Card>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '100px',
               borderWidth: '0px',
@@ -62,6 +59,8 @@ const AddressForm = props => {
           </Card>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '100px',
               borderWidth: '0px',
@@ -75,6 +74,8 @@ const AddressForm = props => {
           </Card>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '100px',
               borderWidth: '0px',
@@ -94,6 +95,8 @@ const AddressForm = props => {
           </Card>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '100px',
               borderWidth: '0px',
@@ -113,6 +116,8 @@ const AddressForm = props => {
           </Card>
           <Card
             style={{
+              background: '#FFFFFF',
+              boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
               marginBottom: '20px',
               height: '100px',
               borderWidth: '0px',
@@ -122,15 +127,15 @@ const AddressForm = props => {
               padding: '14px 20px 14px 20px'
             }}
           >
-            <Field name="country" component={RenderField} type="text" label="Country" value={values.pinCode} />
+            <Field name="country" component={RenderField} type="text" label="Country" value={values.country} />
           </Card>
         </Form>
       </Col>
       <div style={{ padding: '20px 0px 80px 0px', width: '100%' }}>
         <Col span={24}>
-          <FeedbackBtn type="danger" block onClick={() => handleSubmit(values)}>
+          <Button type="primary" size="lg" block onClick={() => handleSubmit(values)}>
             SAVE ADDRESS
-          </FeedbackBtn>
+          </Button>
         </Col>
       </div>
     </Row>
@@ -155,8 +160,7 @@ const AddressFormWithFormik = withFormik({
     country: (props.address && props.address.country) || ''
   }),
   handleSubmit(values, { props: { onSubmit } }) {
-    console.log('values1', values);
-    // onSubmit();
+    onSubmit(values);
   },
   validate: values => validate(values, addressFormSchema),
   displayName: 'Forms' // helps with React DevTools

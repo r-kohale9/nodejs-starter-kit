@@ -2,8 +2,10 @@
 
 @primary-color: #fc4c4c;
 @secondary-color: #ff8235;
-
+@tertiary-color: #222222;
 @font-family: Quicksand;
+
+@checkbox-color: @tertiary-color;
 
 .ant-btn {
   font-size: 14px;
@@ -14,17 +16,26 @@
     border-radius: 25px;
   }
   &-tertiary {
-      color: #222222;
+      color: @tertiary-color;
     
-      border: 1px solid #222222;
+      border: 1px solid @tertiary-color;
       box-sizing: border-box;
       border-radius: 24px;
-  }
-  &-black {
-    color: #ffffff;
-  
-    background: #222222;
-    border-radius: 29px;
+      &:hover {
+        color: white;
+        background-color:@tertiary-color;
+        border: 1px solid @tertiary-color;
+      }
+    }
+    &-black {
+      color: #ffffff;
+      
+      background: @tertiary-color;
+      border-radius: 29px;
+      &:hover {
+        color: @tertiary-color;
+        border: 1px solid @tertiary-color;
+      }
   }
 }
 

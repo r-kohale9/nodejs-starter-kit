@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, NavLink } from 'react-router-dom';
-import { Drawer, Menu, Icon, Row, Col, Layout } from 'antd';
-import UserAvatar from '@gqlapp/user-client-react/containers/UserAvatar';
+import { withRouter } from 'react-router-dom';
+import { Icon, Row, Col, Layout } from 'antd';
+// import UserAvatar from '@gqlapp/user-client-react/containers/UserAvatar';
 import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
 
-import MenuItem from '@gqlapp/look-client-react/ui-antd/components/MenuItem';
-import LoggedIn from '@gqlapp/look-client-react/ui-antd/auth/LoggedIn';
-import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
+// import MenuItem from '@gqlapp/look-client-react/ui-antd/components/MenuItem';
+// import LoggedIn from '@gqlapp/look-client-react/ui-antd/auth/LoggedIn';
+// import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
 const ref = { modules: null };
 
@@ -121,11 +121,12 @@ class NavBar extends React.Component {
                     <h3
                       style={{
                         color: 'black',
-                        lineHeight: '2',
-                        fontSize: '18px'
+                        lineHeight: '2.35',
+                        fontSize: '18px',
+                        letterSpacing: '1px'
                       }}
                     >
-                      {title && title}
+                      <strong>{title && title}</strong>
                     </h3>
                   </Row>
                 </Col>
@@ -161,7 +162,9 @@ NavBar.propTypes = {
   history: PropTypes.object,
   extra: PropTypes.any,
   location: PropTypes.object.isRequired,
-  isMobile: PropTypes.bool
+  isMobile: PropTypes.bool,
+  search: PropTypes.bool,
+  title: PropTypes.string
 };
 
 export default withRouter(NavBar);

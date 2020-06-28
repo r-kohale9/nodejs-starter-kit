@@ -1,73 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Card, Button, Row, Col } from 'antd';
+import { List, Button, Row, Col } from 'antd';
 import { PropTypes } from 'prop-types';
 
-import OrderDetailsItemComponent from './OrderDetailsItemComponent';
 import PageLayout from './PageLayout';
+import OrderDetailsItemComponent from './OrderDetailsItemComponent';
 
-const Text = styled.span`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  padding-right: 10px;
+import { Text, StatusText } from './StyledComponents';
 
-  display: flex;
-  align-items: center;
-  text-align: right;
-
-  /* Gray */
-  color: #9b9b9b;
-`;
-
-const BoldText = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  /* Black */
-
-  color: #222222;
-`;
-
-const StatusText = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  /* or 143% */
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  /* Success */
-
-  color: ${props => props.status === 'Delivered' && '#2aa952'};
-  color: ${props => props.status === 'Processing' && '#F79E1B'};
-  color: ${props => props.status === 'Cancelled' && 'red'};
-`;
-
-const ReorderBtn = styled(Button)`
-  border: 1px solid #222222;
-  box-sizing: border-box;
-  border-radius: 24px;
-`;
-
-const FeedbackBtn = styled(Button)`
-  /* background: #fc4c4c; */
-  box-shadow: 0px 4px 8px rgba(252, 76, 76, 0.25);
-  border-radius: 25px;
-`;
+// const ReorderBtn = styled(Button)`
+//   border: 1px solid #222222;
+//   box-sizing: border-box;
+//   border-radius: 24px;
+// `;
 
 const totalAmount = orderDetails => {
   let price = 0;
@@ -81,13 +25,15 @@ const OrderDetailsView = props => {
   const { order, history } = props;
   console.log('props', props);
   return (
-    <PageLayout history={history} title="Order Details">
-      <Row type="flex" justify="space-between" align="middle" gutter={[0, 8]}>
+    <PageLayout history={history} title="Order Details" showMenuBar={true} selectedTab="PROFILE">
+      <Row type="flex" justify="center" align="middle" gutter={[0, 8]}>
         <Col span={24}>
           <Row>
             <Col span={12}>
               <Row type="flex" justify="start">
-                <BoldText>Order &#8470; {order.id}</BoldText>
+                <h3>
+                  <strong>Order &#8470; {order.id}</strong>
+                </h3>
               </Row>
             </Col>
             <Col span={12}>
@@ -99,12 +45,12 @@ const OrderDetailsView = props => {
         </Col>
         <Col span={24}>
           <Row type="flex" align="middle">
-            <Col span={16}>
+            <Col span={18}>
               <p style={{ display: '-webkit-box' }}>
                 <Text>Tracking number:</Text> {order.trackingNumber}
               </p>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Row type="flex" justify="end" align="middle">
                 <StatusText status={order.status}>{order.status}</StatusText>
               </Row>
@@ -113,23 +59,36 @@ const OrderDetailsView = props => {
         </Col>
         <Col span={24}>{order.quantity} items</Col>
         <Col span={24}>
-          {order &&
-            order.orderDetails &&
-            order.orderDetails.length !== 0 &&
-            order.orderDetails.map(item => {
-              return <OrderDetailsItemComponent item={item} />;
-            })}
+          <List
+            grid={{
+              gutter: 16,
+              xs: 1,
+              sm: 1,
+              md: 2,
+              lg: 3
+            }}
+            dataSource={order && order.orderDetails && order.orderDetails.length !== 0 && order.orderDetails}
+            renderItem={item => (
+              <List.Item>
+                <OrderDetailsItemComponent item={item} />
+              </List.Item>
+            )}
+          />
         </Col>
-        Order information
+        <Col span={24}>
+          <b>Order information</b>
+        </Col>
         <Col span={24}>
           <Row type="flex" align="middle" justify="center">
             <Col span={10}>
               <Text>Shipping address:</Text>
             </Col>
             <Col span={14}>
-              <p>
-                {`${order.shippingAddresses.streetAddress1}, ${order.shippingAddresses.streetAddress2}, ${order.shippingAddresses.city}, ${order.shippingAddresses.state}, ${order.shippingAddresses.pinCode}`}
-              </p>
+              <b>
+                <p>
+                  {`${order.shippingAddresses.streetAddress1}, ${order.shippingAddresses.streetAddress2}, ${order.shippingAddresses.city}, ${order.shippingAddresses.state}, ${order.shippingAddresses.pinCode}`}
+                </p>
+              </b>
             </Col>
           </Row>
         </Col>
@@ -138,7 +97,9 @@ const OrderDetailsView = props => {
             <Col span={10}>
               <Text>Payment method:</Text>
             </Col>
-            <Col span={14}>{order.paymentMethod}</Col>
+            <Col span={14}>
+              <b>{order.paymentMethod}</b>
+            </Col>
           </Row>
         </Col>
         <Col span={24}>
@@ -146,7 +107,9 @@ const OrderDetailsView = props => {
             <Col span={10}>
               <Text>Delivery method:</Text>
             </Col>
-            <Col span={14}>{order.deliveryMethod}</Col>
+            <Col span={14}>
+              <b>{order.deliveryMethod}</b>
+            </Col>
           </Row>
         </Col>
         <Col span={24}>
@@ -154,7 +117,9 @@ const OrderDetailsView = props => {
             <Col span={10}>
               <Text>Discount:</Text>
             </Col>
-            <Col span={14}>{order.discount}</Col>
+            <Col span={14}>
+              <b>{order.discount}</b>
+            </Col>
           </Row>
         </Col>
         <Col span={24}>
@@ -162,19 +127,23 @@ const OrderDetailsView = props => {
             <Col span={10}>
               <Text>Total Amount:</Text>
             </Col>
-            <Col span={14}>{totalAmount(order.orderDetails)}</Col>
+            <Col span={14}>
+              <b>{totalAmount(order.orderDetails)}</b>
+            </Col>
           </Row>
         </Col>
         <div style={{ padding: '24px 0px 50px 0px', width: '100%' }}>
           <Col span={24}>
             <Row type="flex" justify="center" gutter={16}>
               <Col span={12}>
-                <ReorderBtn block>Reorder</ReorderBtn>
+                <Button type="tertiary" block>
+                  Reorder
+                </Button>
               </Col>
               <Col span={12}>
-                <FeedbackBtn type="danger" block>
+                <Button type="primary" block>
                   Leave Feedback
-                </FeedbackBtn>
+                </Button>
               </Col>
             </Row>
           </Col>

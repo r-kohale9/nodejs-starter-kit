@@ -42,7 +42,7 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
       ) : (
         <PageLayout showMobNav={true}>
           <PgTitle>Login</PgTitle>
-          <div style={{ padding: '16px' }}>
+          <div style={{ padding: '16px', marginTop: '30px' }}>
             <LoginForm onSubmit={onSubmit} t={t} />
           </div>
         </PageLayout>

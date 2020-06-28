@@ -3,33 +3,12 @@ import { Card, Row, Col } from 'antd';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 
-const Title = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  /* identical to box height */
+import { Text } from './StyledComponents';
 
-  /* Black */
-
-  color: #222222;
-`;
-
-const Text = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: normal;
+const TextGrey = styled(Text)`
   font-size: 12px;
+  line-height: 20px;
   padding-right: 5px;
-  /* line-height: 11px; */
-  /* identical to box height */
-
-  /* letter-spacing: -0.0015em; */
-
-  /* Gray */
-
-  color: ${props => (props.color ? props.color : '#9b9b9b')};
 `;
 
 const OrderDetailsItemComponent = props => {
@@ -37,41 +16,43 @@ const OrderDetailsItemComponent = props => {
   return (
     <Card
       style={{
+        background: '#FFFFFF',
+        boxShadow: '0px 1px 25px rgba(0, 0, 0, 0.08)',
+        borderRadius: '8px',
         marginBottom: '24px',
-        // width: '164px',
-        height: '104px',
-        borderWidth: '0px',
-        borderRadius: '8px'
+        borderWidth: '0px'
       }}
       hoverable
       bodyStyle={{
         padding: '0px'
       }}
     >
-      <Row>
+      <Row type="flex" justify="" align="middle">
         <Col span={8}>
           <div style={{ height: '104px', overflow: 'hidden' }}>
             <img alt="example" src={item.imageUrl} />
           </div>
         </Col>
         <Col span={16} style={{ padding: '11px' }}>
-          <Row gutter={[0, 6]}>
+          <Row>
             <Col span={24}>
-              <Title>{item.title}</Title>
+              <h3>
+                <strong>{item.title}</strong>
+              </h3>
             </Col>
             <Col span={24}>
-              <Text>{item.category}</Text>
+              <TextGrey>{item.category}</TextGrey>
             </Col>
             <Row>
               <Col span={16}>
                 <p style={{ display: 'flex' }}>
-                  <Text>Flavour:</Text> <Text color="black">{item.flavour}</Text>
+                  <TextGrey>Flavour:</TextGrey> <strong>{item.flavour}</strong>
                 </p>
               </Col>
               <Col span={8}>
                 <p style={{ display: 'flex' }}>
-                  <Text>Weight:</Text>
-                  <Text color="black">{item.weight}</Text>
+                  <TextGrey>Weight:</TextGrey>
+                  <strong>{item.weight}</strong>
                 </p>
               </Col>
             </Row>
@@ -80,7 +61,8 @@ const OrderDetailsItemComponent = props => {
                 <Col span={12}>
                   <Row type="flex" justify="start">
                     <p style={{ display: 'flex' }}>
-                      <Text>Units:</Text> {item.unit}
+                      <TextGrey>Units:</TextGrey>
+                      <strong>{item.units}</strong>
                     </p>
                   </Row>
                 </Col>

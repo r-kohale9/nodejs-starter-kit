@@ -1,94 +1,66 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button } from 'antd';
-import Helmet from 'react-helmet';
+import { Row, Col, Button, List } from 'antd';
 import { PropTypes } from 'prop-types';
 
-import settings from '@gqlapp/config';
-
 import PageLayout from './PageLayout';
-// import OrderStatusSlick from './slickcomponents/OrderStatusSlick';
 import OrderItemComponent from './OrderItemComponent';
 
-const StatusActvBtn = styled(Button)`
-  background: #222222;
-  border-radius: 29px;
-`;
+import { PgTitle } from './StyledComponents';
 
 const StatusNtActvBtn = styled(Button)`
-  background: #222222;
-  border-radius: 29px;
+  color: #222;
+  & :hover {
+    color: white;
+    border-radius: 24px;
+    background-color: #222222;
+    border: 1px solid #222222;
+  }
 `;
 
 const MyOrdersView = props => {
-  const { orders, history, t, orderStatusSlick } = props;
+  const { orders, history, orderStatusSlick } = props;
   const [status, setStatus] = useState('Delivered');
-
-  const renderMetaData = () => (
-    <Helmet
-      title={`${settings.app.name} - ${t('forgotPass.title')}`}
-      meta={[
-        {
-          name: 'description',
-          content: `${settings.app.name} - ${t('forgotPass.meta')}`
-        }
-      ]}
-    />
-  );
 
   console.log('props', props);
   return (
-    <PageLayout history={history}>
-      {renderMetaData()}
-      <h1>My orders</h1>
-      <Row type="flex" justify="space-between" align="center">
-        {/* {orderStatusSlick &&
-          orderStatusSlick.length !== 0 &&
-          orderStatusSlick.map((ordStat, index) => (
-            <Col span={24 / orderStatusSlick && orderStatusSlick.length}>
-              {status === ordStat ? (
-                <StatusActvBtn block>{ordStat}</StatusActvBtn>
-              ) : (
-                <StatusNtActvBtn block type="link" onclick={() => setStatus(ordStat)}>
-                  {ordStat}
-                </StatusNtActvBtn>
-              )}
-            </Col>
-          ))} */}
-        <Col span={8}>
-          {status === 'Delivered' ? (
-            <StatusActvBtn block>Delivered</StatusActvBtn>
-          ) : (
-            <StatusNtActvBtn block type="link" onclick={() => setStatus('Delivered')}>
-              Delivered
-            </StatusNtActvBtn>
-          )}
-        </Col>
-        <Col span={8}>
-          {status === 'Processing' ? (
-            <StatusActvBtn block>Processing</StatusActvBtn>
-          ) : (
-            <StatusNtActvBtn block type="link" onclick={() => setStatus('Processing')}>
-              Processing
-            </StatusNtActvBtn>
-          )}
-        </Col>
-        <Col span={8}>
-          {status === 'Cancelled' ? (
-            <StatusActvBtn block>Cancelled</StatusActvBtn>
-          ) : (
-            <StatusNtActvBtn block type="link" onclick={() => setStatus('Cancelled')}>
-              Cancelled
-            </StatusNtActvBtn>
-          )}
-        </Col>
-      </Row>
-      {console.log('status', status)}
-      {/* <OrderStatusSlick data={orderStatusSlick} /> */}
-      {orders &&
-        orders.map(order => {
-          return <OrderItemComponent order={order} history={history} />;
-        })}
+    <PageLayout history={history} showMenuBar={true} selectedTab="PROFILE">
+      {/* {renderMetaData(t)} */}
+      <PgTitle>My orders</PgTitle>
+      <div style={{ marginTop: '24px', marginBottom: '30px', maxWidth: '300px' }}>
+        <Row type="flex" justify="space-between" align="center">
+          {orderStatusSlick &&
+            orderStatusSlick.length !== 0 &&
+            orderStatusSlick.map((ordStat, index) => (
+              <Col key={index} span={24 / orderStatusSlick && orderStatusSlick.length}>
+                {status === ordStat ? (
+                  <Button type="black" block>
+                    {ordStat}
+                  </Button>
+                ) : (
+                  <StatusNtActvBtn block type="link" onClick={() => setStatus(ordStat)}>
+                    {ordStat}
+                  </StatusNtActvBtn>
+                )}
+              </Col>
+            ))}
+        </Row>
+      </div>
+      <List
+        grid={{
+          gutter: 16,
+          xs: 1,
+          sm: 1,
+          md: 2,
+          lg: 3
+        }}
+        dataSource={orders && orders.filter(ord => ord.status === status)}
+        renderItem={item => (
+          <List.Item>
+            <OrderItemComponent order={item} history={history} />
+          </List.Item>
+        )}
+      />
     </PageLayout>
   );
 };

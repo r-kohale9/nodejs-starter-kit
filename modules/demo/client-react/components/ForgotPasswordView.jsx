@@ -25,7 +25,7 @@ const ForgotPasswordView = ({ onSubmit, t, sent }) => {
     <PageLayout showMobNav={true}>
       {renderMetaData()}
       <PgTitle>Forgot Password</PgTitle>
-      <div style={{ margin: '16px' }}>
+      <div style={{ margin: '16px', marginTop: '80px' }}>
         <ForgotPasswordForm onSubmit={onSubmit} sent={sent} />
       </div>
     </PageLayout>

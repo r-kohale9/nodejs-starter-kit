@@ -7,14 +7,14 @@ const PgTitle = styled.div`
   font-weight: bold;
   font-size: 35px;
   line-height: 42px;
-  margin-bottom: 80px;
   color: #222222;
 `;
 
-const Text = styled.p`
-  font-size: 14px;
-  line-height: 20px;
-  color: #222222;
+const Text = styled.span`
+  font-size: 16px;
+  line-height: 25px;
+  padding-right: 10px;
+  color: #9b9b9b;
 `;
 
 // Button component
@@ -38,6 +38,12 @@ const LinkTo = styled(Link)`
   color: #222222;
 `;
 
+const StatusText = styled.div`
+  color: ${props => props.status === 'Delivered' && '#2aa952'};
+  color: ${props => props.status === 'Processing' && '#F79E1B'};
+  color: ${props => props.status === 'Cancelled' && 'red'};
+`;
+
 export {
   PgTitle,
   Text,
@@ -45,5 +51,6 @@ export {
   SubmitBtn,
   // Link component
   LinkBold,
-  LinkTo
+  LinkTo,
+  StatusText
 };
