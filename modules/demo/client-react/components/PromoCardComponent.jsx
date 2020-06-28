@@ -1,22 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Card, Row, Col, Button } from 'antd';
 import { PropTypes } from 'prop-types';
-
-const Applybtn = styled(Button)`
-  height: 36px;
-  background: #fc4c4c;
-  box-shadow: 0px 4px 8px rgba(211, 38, 38, 0.25);
-  border-radius: 25px;
-`;
 
 const PromoCardComponent = props => {
   const { promocode, setValue } = props;
   return (
     <Card
       style={{
+        background: '#FFFFFF',
+        boxShadow: '0px 1px 24px rgba(0, 0, 0, 0.12)',
         marginBottom: '24px',
-        height: '80px',
         borderWidth: '0px',
         borderRadius: '8px'
       }}
@@ -28,27 +21,34 @@ const PromoCardComponent = props => {
         <Col span={6} align="center" style={{ height: '80px', width: '80px', overflow: 'hidden' }}>
           <img alt="" src={promocode.thumbnail} width="100%" />
         </Col>
-        <Col span={18}>
+        <Col span={17}>
           <Row style={{ padding: '12px 15px 11px 14px' }}>
             <Col span={24}>
               <Row type="flex" justify="end">
-                {promocode.validity}
+                <small>{promocode.validity}</small>
               </Row>
             </Col>
-            <Col span={16}>
-              <Row type="flex" justify="start" align="top">
-                <Col span={24}>{promocode.title}</Col>
-                <Col span={24}>{promocode.promocode}</Col>
-              </Row>
-            </Col>
-            <Col span={8}>
-              <Row type="flex" align="middle">
-                <Col span={24}>
-                  <Applybtn type="danger" block onClick={() => setValue('promoCode', promocode.promocode)}>
+            <Col span={24}>
+              <Col span={16}>
+                <Row type="flex" justify="start" align="top">
+                  <Col span={24}>{promocode.title}</Col>
+                  <Col span={24}>
+                    <small>{promocode.promocode}</small>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={8} style={{ paddingTop: '5px' }}>
+                <Row type="flex" align="bottom">
+                  <Button
+                    style={{ width: 'fit-content' }}
+                    type="primary"
+                    block
+                    onClick={() => setValue('promoCode', promocode.promocode)}
+                  >
                     Apply
-                  </Applybtn>
-                </Col>
-              </Row>
+                  </Button>
+                </Row>
+              </Col>
             </Col>
           </Row>
         </Col>

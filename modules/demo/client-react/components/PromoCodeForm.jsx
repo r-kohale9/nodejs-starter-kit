@@ -18,8 +18,6 @@ const PromoCodeForm = props => {
   const { values, handleSubmit, promocodes, setFieldValue } = props;
   const [visible, setVisible] = useState(false);
 
-  console.log('props', props);
-
   return (
     <>
       <Row type="flex" align="middle">

@@ -31,6 +31,11 @@ const LinkBold = styled(Link)`
   color: #222222;
 `;
 
+const LinkGrey = styled(Link)`
+  font-size: 14px;
+  color: #9b9b9b;
+`;
+
 const LinkTo = styled(Link)`
   font-size: 14px;
   line-height: 20px;
@@ -52,5 +57,6 @@ export {
   // Link component
   LinkBold,
   LinkTo,
+  LinkGrey,
   StatusText
 };

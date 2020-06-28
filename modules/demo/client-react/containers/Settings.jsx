@@ -9,7 +9,11 @@ const PERSONAL_INFO = {
 };
 
 const Settings = props => {
-  return <SettingsView {...props} personalInfo={PERSONAL_INFO} />;
+  const handleSubmit = values => {
+    console.log('values', values);
+  };
+
+  return <SettingsView {...props} personalInfo={PERSONAL_INFO} onSubmit={handleSubmit} />;
 };
 
 export default Settings;

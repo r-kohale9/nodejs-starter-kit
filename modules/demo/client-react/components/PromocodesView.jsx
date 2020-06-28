@@ -9,15 +9,17 @@ const PromocodesView = props => {
   const { promocodes, history } = props;
   return (
     <PageLayout history={history} title="Promocodes">
-      {promocodes.map(promocode => {
-        return <PromoCardComponent promocode={promocode} />;
-      })}
+      <div style={{ marginTop: '50px' }} />
+      {promocodes.map(promocode => (
+        <PromoCardComponent promocode={promocode} />
+      ))}
     </PageLayout>
   );
 };
 
 PromocodesView.propTypes = {
-  promocodes: PropTypes.array
+  promocodes: PropTypes.array,
+  history: PropTypes.func
 };
 
 export default PromocodesView;

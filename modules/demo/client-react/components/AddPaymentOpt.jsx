@@ -22,12 +22,7 @@ const AddPaymentOpt = props => {
   return (
     <>
       <Button type="black" shape="circle" icon="plus" onClick={() => setVisible(true)} />
-      <ModalComponent
-        title="Add new card"
-        // visible={true}
-        visible={visible}
-        handleVisible={() => setVisible(false)}
-      >
+      <ModalComponent title="Add new card" visible={visible} handleVisible={() => setVisible(false)}>
         <Col span={24}>
           <Form onSubmit={handleSubmit}>
             <Field

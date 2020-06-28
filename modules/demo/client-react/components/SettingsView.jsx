@@ -1,18 +1,19 @@
 import React from 'react';
 import moment from 'moment';
+import { PropTypes } from 'prop-types';
 import { Row, Col, Form, DatePicker, Switch } from 'antd';
 import { withFormik } from 'formik';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { RenderCheckBox, RenderField } from '@gqlapp/look-client-react';
-// import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
+import { RenderField } from '@gqlapp/look-client-react';
 
-import { PropTypes } from 'prop-types';
 import PageLayout from './PageLayout';
 import PasswordChangeModal from './PasswordChangeModal';
 
+import { PgTitle } from './StyledComponents';
+
 const SettingsView = props => {
-  const { values } = props;
+  const { values, onSubmit } = props;
   const onChange = value => {
     values.dateOfBirth = value.format('DD-MM-YYYY');
   };
@@ -24,10 +25,14 @@ const SettingsView = props => {
     <PageLayout>
       <Row type="flex">
         <Col span={24}>
-          <h1>Settings</h1>
+          <PgTitle>Settings</PgTitle>
         </Col>
         <Col span={24}>
-          <h3>Personal Information</h3>
+          <h3>
+            <strong>Personal Information</strong>
+          </h3>
+        </Col>
+        <Col span={24}>
           <Form>
             <Field
               name="fullName "
@@ -45,15 +50,17 @@ const SettingsView = props => {
               onOk={onOk}
               // defaultValue={moment(`${values.dateOfBirth}`, 'DD-MM-YYYY')}
             />
-            <Row>
+            <Row style={{ marginTop: '54px' }}>
               <Col span={12}>
                 <Row type="flex" justify="start">
-                  <h3>Password</h3>
+                  <h3>
+                    <strong>Password</strong>
+                  </h3>
                 </Row>
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  <PasswordChangeModal />
+                  <PasswordChangeModal onSubmit={onSubmit} />
                 </Row>
               </Col>
               <Col span={24}>
@@ -67,10 +74,12 @@ const SettingsView = props => {
                 />
               </Col>
             </Row>
-            <Col span={24}>
-              <h3>Notifications</h3>
+            <Col span={24} style={{ marginBottom: '24px' }}>
+              <h3>
+                <strong>Notifications</strong>
+              </h3>
             </Col>
-            <Col span={24}>
+            <Col span={24} style={{ marginBottom: '24px' }}>
               <Row>
                 <Col span={20}>
                   <Row type="flex" justify="start">
@@ -84,7 +93,7 @@ const SettingsView = props => {
                 </Col>
               </Row>
             </Col>
-            <Col span={24}>
+            <Col span={24} style={{ marginBottom: '24px' }}>
               <Row>
                 <Col span={20}>
                   <Row type="flex" justify="start">
@@ -98,7 +107,7 @@ const SettingsView = props => {
                 </Col>
               </Row>
             </Col>
-            <Col span={24}>
+            <Col span={24} style={{ marginBottom: '24px' }}>
               <Row>
                 <Col span={20}>
                   <Row type="flex" justify="start">
@@ -120,7 +129,8 @@ const SettingsView = props => {
 };
 
 SettingsView.propTypes = {
-  values: PropTypes.object
+  values: PropTypes.object,
+  onSubmit: PropTypes.func
 };
 
 const SettingsViewWithFormik = withFormik({
