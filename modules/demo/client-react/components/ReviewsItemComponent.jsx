@@ -4,6 +4,7 @@ import { Row, Col, Icon, Card, Rate } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import ImagesSlickComponent from './ImagesSlickComponent';
+import { Text } from './StyledComponents';
 
 const Avatar = styled.img`
   border-radius: 50%;
@@ -27,14 +28,17 @@ const ReviewsItemComponent = props => {
         }}
       >
         <Col span={24}>
-          <h3>{review.name}</h3>
+          <h3>
+            <strong>{review.name}</strong>
+          </h3>
         </Col>
         <Col span={12}>
           <Rate disabled defaultValue={review.rating} style={{ fontSize: '15px' }} />
+          <div style={{ margin: '10px 0px' }} />
         </Col>
         <Col span={12}>
           <Row type="flex" justify="end" align="middle">
-            {review.date}
+            <Text>{review.date}</Text>
           </Row>
         </Col>
         <Col span={24}>
@@ -47,16 +51,16 @@ const ReviewsItemComponent = props => {
         )}
         <Col span={24}>
           <Row type="flex" justify="end" align="middle">
-            Helpful{' '}
-            <Icon
-              type="like"
-              theme="filled"
-              style={{
-                fontSize: '15px',
-                lineHeight: '1.5',
-                paddingLeft: '4px'
-              }}
-            />
+            <Text>
+              Helpful
+              <Icon
+                type="like"
+                theme="filled"
+                style={{
+                  paddingLeft: '4px'
+                }}
+              />
+            </Text>
           </Row>
         </Col>
       </Card>
@@ -65,7 +69,8 @@ const ReviewsItemComponent = props => {
 };
 
 ReviewsItemComponent.propTypes = {
-  review: PropTypes.object
+  review: PropTypes.object,
+  showPhotos: PropTypes.bool
 };
 
 export default ReviewsItemComponent;

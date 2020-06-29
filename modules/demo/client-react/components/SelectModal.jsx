@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { Row, Col, Button, Icon, List } from 'antd';
-import styled from 'styled-components';
 
 import ModalComponent from './ModalComponent';
-
-const Divider = styled.div`
-  margin: 16px 0px 16px 0px;
-  width: 100%;
-  opacity: 0.25;
-  border: 0.4px solid #9b9b9b;
-`;
+import { Divider } from './StyledComponents';
 
 const SelectModal = props => {
   const { name, title, fields, info, value, handleField } = props;

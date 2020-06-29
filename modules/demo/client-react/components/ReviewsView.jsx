@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
-import { Row, Col, Checkbox, Button } from 'antd';
+import { Row, Col, Checkbox } from 'antd';
 
 import PageLayout from './PageLayout';
 import ReviewsItemComponent from './ReviewsItemComponent';
 import WriteReviewComponent from './WriteReviewComponent';
+import { PgTitle } from './StyledComponents';
 
 const BtnDiv = styled.div`
   position: fixed;
@@ -20,23 +21,27 @@ const BtnDiv = styled.div`
 `;
 
 const ReviewsView = props => {
-  const { reviews } = props;
+  const { reviews, onSubmit } = props;
   const [photo, setPhoto] = useState(false);
   return (
     <PageLayout showMenuBar={false} showNavBar={true} title={photo && 'Rating and reviews'}>
       <Row type="flex" align="middle">
         {!photo && (
           <Col span={24}>
-            <h1>{'Rating & Reviews'}</h1>
+            <PgTitle>{'Rating & Reviews'}</PgTitle>
           </Col>
         )}
         <Col span={24}>
           <Col span={12}>
-            <h1>{`${reviews && reviews.length} reviews`}</h1>
+            <h3>
+              <strong>{`${reviews && reviews.length} reviews`}</strong>
+            </h3>
           </Col>
           <Col span={12}>
             <Row type="flex" justify="end" align="bottom">
-              <Checkbox onChange={() => setPhoto(!photo)}>With photo</Checkbox>
+              <Checkbox onChange={() => setPhoto(!photo)}>
+                <strong>With photo</strong>
+              </Checkbox>
             </Row>
           </Col>
         </Col>
@@ -51,7 +56,7 @@ const ReviewsView = props => {
       </Row>
       <BtnDiv>
         <Col span={12} style={{ position: 'absolute', bottom: '10px', right: '17px' }}>
-          <WriteReviewComponent />
+          <WriteReviewComponent onSubmit={onSubmit} />
         </Col>
       </BtnDiv>
     </PageLayout>
@@ -59,7 +64,8 @@ const ReviewsView = props => {
 };
 
 ReviewsView.propTypes = {
-  reviews: PropTypes.array
+  reviews: PropTypes.array,
+  onSubmit: PropTypes.func
 };
 
 export default ReviewsView;

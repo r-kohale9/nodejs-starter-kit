@@ -49,6 +49,13 @@ const StatusText = styled.div`
   color: ${props => props.status === 'Cancelled' && 'red'};
 `;
 
+const Divider = styled.div`
+  margin: 16px 0px 16px 0px;
+  width: 100%;
+  opacity: 0.25;
+  border: 0.4px solid #9b9b9b;
+`;
+
 export {
   PgTitle,
   Text,
@@ -58,5 +65,6 @@ export {
   LinkBold,
   LinkTo,
   LinkGrey,
-  StatusText
+  StatusText,
+  Divider
 };

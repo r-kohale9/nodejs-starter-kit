@@ -1,21 +1,15 @@
 import React from 'react';
 import moment from 'moment';
 import { PropTypes } from 'prop-types';
-import styled from 'styled-components';
 import { withFormik } from 'formik';
-import { Row, Col, DatePicker, Button, Icon } from 'antd';
+import { Row, Col, DatePicker, Icon } from 'antd';
 
 import ModalComponent from './ModalComponent';
-
-const Divider = styled.div`
-  margin: 16px 0px 16px 0px;
-  width: 100%;
-  opacity: 0.25;
-  border: 0.4px solid #9b9b9b;
-`;
+import SelectModal from './SelectModal';
+import { Divider } from './StyledComponents';
 
 const PreOrderComponent = props => {
-  const { visible, handleVisible, values, info } = props;
+  const { visible, handleVisible, values, info, setFieldValue } = props;
   const onChange = value => {
     values.availability = value.format('DD-MM-YYYY');
   };
@@ -61,7 +55,14 @@ const PreOrderComponent = props => {
             </Col>
             <Col span={15}>
               <Row type="flex" justify="end">
-                <Button block>Select Cake Weight</Button>
+                <SelectModal
+                  name="weight"
+                  title="Select Cake Weight"
+                  fields={['.5 Kg', '1 Kg', '1.5 Kg', '2 Kg', '2.5 Kg']}
+                  value={values.weight}
+                  info="Weight info"
+                  handleField={setFieldValue}
+                />
               </Row>
             </Col>
           </Row>
@@ -89,19 +90,20 @@ const PreOrderComponent = props => {
 PreOrderComponent.propTypes = {
   visible: PropTypes.bool,
   handleVisible: PropTypes.func,
+  setFieldValue: PropTypes.func,
   values: PropTypes.object,
   info: PropTypes.string
 };
 
 const PreOrderComponentWithFormik = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ({
+  mapPropsToValues: () => ({
     availability: '',
     weight: ''
   }),
   handleSubmit(values, { props: { onSubmit } }) {
-    console.log('values1', values);
-    // onSubmit();
+    // console.log('values1', values);
+    onSubmit(values);
   },
   // validate: values => validate(values, PreOrderComponentFormSchema),
   displayName: 'PreOrderComponentForms' // helps with React DevTools

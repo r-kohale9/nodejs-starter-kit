@@ -46,7 +46,10 @@ const REVIEWS = [
 ];
 
 const Reviews = props => {
-  return <ReviewsView {...props} reviews={REVIEWS} />;
+  const handleSubmit = values => {
+    console.log('values', values);
+  };
+  return <ReviewsView {...props} reviews={REVIEWS} onSubmit={handleSubmit} />;
 };
 
 export default Reviews;
