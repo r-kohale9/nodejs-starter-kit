@@ -1,31 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 import PageLayout from './PageLayout';
 import Avatar from '../Icons/userimage.svg';
 
-// import ListingItemComponent from './ListingItemComponent';
-// import UserDisplayDetailComponent from './UserDisplayDetailComponent';
-import ProfileComponenet from './ProfileComponenet';
-import ProfileMenuItem from './ProfileMenuItem';
 import UserDisplayComponent from './UserDisplayComponent';
 import HomeSlick from './HomeSlick';
 import CategoryIconSlick from './CategoryIconSlick';
-// import MenuBar from './MenuBar';
-
-const Profile = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 34px;
-  line-height: 42px;
-
-  /* Black */
-
-  color: #222222;
-`;
 
 const ListingCatalogueView = props => {
-  const { listings, history, user, homeSlick, categorySlick, profileList } = props;
+  const { history, homeSlick, categorySlick } = props;
   const users =
     props.users &&
     props.users.map(user => {
@@ -41,16 +24,20 @@ const ListingCatalogueView = props => {
   console.log('props1', props);
   return (
     <>
-      <PageLayout selectedTab="HOME" history={history}>
+      <PageLayout showMenuBar={true} selectedTab="HOME" history={history}>
         <HomeSlick data={homeSlick} />
         <CategoryIconSlick data={categorySlick} />
-        {users &&
-          users.map(user => {
-            return <UserDisplayComponent user={user} />;
-          })}
+        {users && users.map(user => <UserDisplayComponent user={user} />)}
       </PageLayout>
     </>
   );
+};
+
+ListingCatalogueView.propTypes = {
+  users: PropTypes.object,
+  history: PropTypes.object,
+  homeSlick: PropTypes.array,
+  categorySlick: PropTypes.array
 };
 
 export default ListingCatalogueView;

@@ -62,9 +62,8 @@ class PageLayout extends React.Component {
     // }
   }
   render() {
-    const { children, navBar, type, selectedTab, history, showMenuBar, search, title } = this.props;
+    const { children, navBar, type, selectedTab, history, showMenuBar, showMobNav, search, title } = this.props;
     const contentStyle = layoutTypes.filter(item => item.type === type);
-    console.log('isMobile', this.state.isMobile);
     const renderContent = () => {
       return (
         <Content
@@ -78,7 +77,9 @@ class PageLayout extends React.Component {
     return (
       <Layout id="page-layout">
         {navBar !== false && !this.state.isMobile && <NavBar isMobile={this.state.isMobile} />}
-        {navBar !== false && this.state.isMobile && <MobNavBar histoyr={history} search={search} title={title} />}
+        {navBar !== false && this.state.isMobile && typeof showMobNav === 'undefined' && (
+          <MobNavBar histoyr={history} search={search} title={title} />
+        )}
         {__SERVER__ && __DEV__ && (
           <Helmet>
             <style type="text/css">{styles._getCss()}</style>
@@ -101,6 +102,7 @@ PageLayout.propTypes = {
   history: PropTypes.object,
   children: PropTypes.node,
   showMenuBar: PropTypes.bool,
+  showMobNav: PropTypes.bool,
   search: PropTypes.bool,
   navBar: PropTypes.bool,
   title: PropTypes.string,

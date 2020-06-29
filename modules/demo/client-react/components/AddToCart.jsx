@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import styled from 'styled-components';
+import { PropTypes } from 'prop-types';
 
 const Fixed = styled.div`
   width: 100%;
@@ -13,20 +14,19 @@ const Fixed = styled.div`
   box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const AddToCartbtn = styled(Button)`
-  height: 48px;
-  box-shadow: 0px 4px 8px rgba(211, 38, 38, 0.25);
-  border-radius: 25px;
-`;
-
 const AddToCart = props => {
+  const { onSubmit, disabled } = props;
   return (
     <Fixed>
-      <AddToCartbtn type="danger" block>
-        ADD TO CART
-      </AddToCartbtn>
+      <Button type="primary" size="lg" block onClick={onSubmit} disabled={disabled}>
+        <strong>ADD TO CART</strong>
+      </Button>
     </Fixed>
   );
 };
 
+AddToCart.propTypes = {
+  onSubmit: PropTypes.func,
+  disabled: PropTypes.bool
+};
 export default AddToCart;

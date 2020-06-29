@@ -2,28 +2,7 @@ import React from 'react';
 import { Row, Col, Button } from 'antd';
 import Slider from 'react-slick';
 import styled from 'styled-components';
-
-const Rectangle = styled(Button)`
-  /* Black */
-
-  background: #222222;
-  border-radius: 29px;
-`;
-
-const Text = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  /* or 143% */
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  color: white;
-`;
+import { PropTypes } from 'prop-types';
 
 const PadR10 = styled.div`
   padding-right: 10px;
@@ -44,11 +23,8 @@ const CategoryIconSlick = props => {
         return (
           <PadR10>
             <Row align="middle" type="flex" justify="space-around">
-              <Col span={24}></Col>
               <Col span={24}>
-                <Rectangle>
-                  <Text>{category}</Text>
-                </Rectangle>
+                <Button type="black">{category}</Button>
               </Col>
             </Row>
           </PadR10>
@@ -56,6 +32,10 @@ const CategoryIconSlick = props => {
       })}
     </Slider>
   );
+};
+
+CategoryIconSlick.propTypes = {
+  data: PropTypes.array
 };
 
 export default CategoryIconSlick;

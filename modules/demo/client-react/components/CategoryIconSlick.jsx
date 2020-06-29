@@ -1,4 +1,5 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import { Row, Col } from 'antd';
 import Slider from 'react-slick';
 import styled from 'styled-components';
@@ -11,17 +12,8 @@ const Rectangle = styled.div`
 `;
 
 const Text = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
   line-height: 20px;
-  /* or 143% */
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
   color: #6c6b6b;
 `;
 
@@ -40,14 +32,18 @@ const CategoryIconSlick = props => {
         {data.map(slick => {
           const { icon: Icon, category } = slick;
           return (
-            <Row align="middle" type="flex" justify="space-around">
+            <Row align="middle" type="flex" justify="center">
               <Col span={24}>
-                <Rectangle>
-                  <img src={Icon} alt="" style={{ position: 'relative', top: '5px', left: '5px' }} />
-                </Rectangle>
+                <Row align="middle" type="flex" justify="center">
+                  <Rectangle>
+                    <img src={Icon} alt="" style={{ position: 'relative', top: '5px', left: '5px' }} />
+                  </Rectangle>
+                </Row>
               </Col>
               <Col span={24}>
-                <Text>{category}</Text>
+                <Row align="middle" type="flex" justify="center">
+                  <Text>{category}</Text>
+                </Row>
               </Col>
             </Row>
           );
@@ -55,6 +51,10 @@ const CategoryIconSlick = props => {
       </Slider>
     </div>
   );
+};
+
+CategoryIconSlick.propTypes = {
+  data: PropTypes.array
 };
 
 export default CategoryIconSlick;

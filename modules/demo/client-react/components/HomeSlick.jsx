@@ -1,5 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
+import { PropTypes } from 'prop-types';
 
 const HomeSlick = props => {
   const { data } = props;
@@ -8,7 +9,6 @@ const HomeSlick = props => {
     speed: 500,
     slidesToShow: 1,
     arrows: false,
-    variableWidth: true,
     slidesToScroll: 1
   };
   return (
@@ -31,6 +31,10 @@ const HomeSlick = props => {
       })}
     </Slider>
   );
+};
+
+HomeSlick.propTypes = {
+  data: PropTypes.array
 };
 
 export default HomeSlick;

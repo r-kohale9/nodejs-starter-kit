@@ -43,7 +43,6 @@ class NavBar extends React.Component {
 
   render() {
     const { history, search, title } = this.props;
-    console.log('props', this.props);
     return (
       <ScrollParallax
         location="page-layout"

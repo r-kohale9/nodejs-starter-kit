@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import { compose } from '@gqlapp/core-common';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -13,7 +14,6 @@ import {
 import BakerView from '../components/BakerView';
 
 import Avatar from '../Icons/userimage.svg';
-import Product from '../Icons/product.svg';
 
 import Banner from '../Icons/MangoCakes.svg';
 import Cakes from '../Icons/cakes.svg';
@@ -181,6 +181,12 @@ const Baker = props => {
       categorySlick={CATEGORYSLICK}
     />
   );
+};
+
+Baker.propTypes = {
+  updateQuery: PropTypes.func,
+  subscribeToMore: PropTypes.func,
+  userListings: PropTypes.object
 };
 
 export default compose(withCurrentUser, withUserListing, translate('demo'))(Baker);

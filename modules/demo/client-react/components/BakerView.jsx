@@ -1,34 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Row, Col, List, Divider, Spin } from 'antd';
+import { List } from 'antd';
 import settings from '@gqlapp/config';
 import PageLayout from './PageLayout';
 
-// import ListingItemComponent from './ListingItemComponent';
 import UserDisplayDetailComponent from './UserDisplayDetailComponent';
-// import ProfileComponenet from './ProfileComponenet';
-// import ProfileMenuItem from './ProfileMenuItem';
-// import UserDisplayComponent from './UserDisplayComponent';
-// import HomeSlick from './HomeSlick';
-// import CategoryIconSlick from './CategoryIconSlick';
 import CategorySlick from './CategorySlick';
-// import Cakes from '../Icons/cakes.svg';
-// import MenuBar from './MenuBar';
 import RelatedCardComponent from './ListingItemComponent';
 
-const Profile = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 34px;
-  line-height: 42px;
-
-  /* Black */
-
-  color: #222222;
-`;
 const renderMetaData = t => (
   <Helmet
     title={`${settings.app.name} - ${t('title')}`}
@@ -37,13 +17,15 @@ const renderMetaData = t => (
 );
 
 const BakerView = props => {
-  const { loading, listings, t, users, user, homeSlick, categorySlick, profileList, history } = props;
+  const { listings, t, user, categorySlick, history } = props;
 
   return (
-    <PageLayout history={history}>
+    <PageLayout history={history} showMobNav={false} showMenuBar={true}>
       {renderMetaData(t)}
       <UserDisplayDetailComponent history={history} user={user} />
-      <CategorySlick data={categorySlick} />
+      <div style={{ margin: '35px 0px 27px 0px' }}>
+        <CategorySlick data={categorySlick} />
+      </div>
       <div style={{ height: '36px', width: '100%' }} />
       {listings && (
         <List
@@ -73,7 +55,9 @@ BakerView.propTypes = {
   t: PropTypes.func,
   loading: PropTypes.bool,
   history: PropTypes.object,
-  listings: PropTypes.object
+  listings: PropTypes.object,
+  user: PropTypes.object,
+  categorySlick: PropTypes.array
 };
 
 export default BakerView;

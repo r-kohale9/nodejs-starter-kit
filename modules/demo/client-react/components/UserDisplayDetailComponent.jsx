@@ -1,40 +1,34 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Rate, Row, Col } from 'antd';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Write from '../Icons/write.svg';
 import Contact from '../Icons/contact.svg';
 
 const Name = styled.div`
-  font-family: Quicksand;
   font-weight: bold;
   font-size: 16px;
-  /* line-height: 20px; */
-
   color: #fc4c4c;
 `;
 
 const Number = styled.div`
-  font-family: Quicksand;
-  font-size: 8px;
-  line-height: 20px;
-  color: #9b9b9b;
+  font-size: 10px;
+  line-height: 23px;
+  color: #6c6b6b;
 `;
 
 const Details = styled.p`
-  font-family: Quicksand;
-  font-size: 8px;
-  line-height: 10px;
+  font-size: 10px;
+  line-height: 12px;
 
-  color: #9b9b9b;
+  color: #6c6b6b;
 `;
 
 const UserDisplayDetailComponent = props => {
   const { user, history } = props;
   return (
-    <Row>
+    <Row type="flex" align="middle" justify="center">
       <Col
         span={6}
         align="center"
@@ -45,16 +39,17 @@ const UserDisplayDetailComponent = props => {
           borderRadius: '12px'
         }}
       >
-        <img alt="" src={user.thumbnail} width="93px" />
+        <img alt="" src={user.thumbnail} style={{ borderRadius: '8px' }} width="93px" />
       </Col>
       <Col span={15} style={{ margin: '0 0 0 17px' }}>
         <Row type="flex" justify="space-between" align="middle">
-          <Col span={18}>
+          <Col span={17}>
             <Name>{user.name}</Name>
           </Col>
           <Col span={2}>
             <img alt="" src={Write} onClick={() => history.push('/demo/reviews')} />
           </Col>
+          <Col span={3} />
           <Col span={2}>
             <img alt="" src={Contact} onClick={() => history.push('/demo/contact')} />
           </Col>
@@ -79,6 +74,11 @@ const UserDisplayDetailComponent = props => {
       </Col>
     </Row>
   );
+};
+
+UserDisplayDetailComponent.propTypes = {
+  user: PropTypes.object,
+  history: PropTypes.object
 };
 
 export default UserDisplayDetailComponent;

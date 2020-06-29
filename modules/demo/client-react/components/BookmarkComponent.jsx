@@ -3,18 +3,13 @@ import { compose } from '@gqlapp/core-common';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { withListingBookmarkStatus } from '@gqlapp/listing-client-react/containers/ListingOperations';
+import { PropTypes } from 'prop-types';
 import Heart from '../Icons/heart.svg';
 import HeartActive from '../Icons/heartactive.svg';
 
 const RectangleActive = styled(Button)`
-  /* Rectangle 85 */
-
-  /* position: absolute; */
   width: 30px;
   height: 30px;
-  /* left: 93px;
-  top: 115px; */
-
   z-index: 1;
 
   background: #f5f5f5;
@@ -24,14 +19,8 @@ const RectangleActive = styled(Button)`
 `;
 
 const Rectangle = styled(Button)`
-  /* Rectangle 85 */
-
-  /* position: absolute; */
   width: 30px;
   height: 30px;
-  /* left: 93px;
-  top: 115px; */
-
   z-index: 1;
 
   background: #f5f5f5;
@@ -82,6 +71,11 @@ const BookmarkComponent = props => {
       />
     </Rectangle>
   );
+};
+
+BookmarkComponent.propTypes = {
+  handleBookmark: PropTypes.func,
+  listingBookmarkStatus: PropTypes.bool
 };
 
 export default compose(withListingBookmarkStatus)(BookmarkComponent);

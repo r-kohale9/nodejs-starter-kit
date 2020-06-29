@@ -26,7 +26,10 @@ const LISTING = {
 const FLAVORS = ['Vanilla', 'Chocolate', 'Mango', 'Strawberry', 'Butterscotch'];
 
 const ListingDetails = props => {
-  return <ListingDetailsView {...props} listing={LISTING} flavors={FLAVORS} />;
+  const handleSubmit = values => {
+    console.log('values', values);
+  };
+  return <ListingDetailsView {...props} listing={LISTING} flavors={FLAVORS} onSubmit={handleSubmit} />;
 };
 
 export default ListingDetails;

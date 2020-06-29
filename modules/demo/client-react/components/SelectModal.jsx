@@ -12,25 +12,16 @@ const Divider = styled.div`
   border: 0.4px solid #9b9b9b;
 `;
 
-const WeightBtn = styled(Button)`
-  height: 40px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  &:hover {
-    border: 0.4px solid #f01f0e;
-  }
-`;
-
 const SelectModal = props => {
-  const { title, fields, info } = props;
+  const { name, title, fields, info, value, handleField } = props;
   const [visible, setVisible] = useState(false);
 
   return (
     <>
-      <WeightBtn block onClick={() => setVisible(true)}>
-        {title}
+      <Button block onClick={() => setVisible(true)}>
+        {value === '' ? title : value}
         <Icon type="down" style={{ fontSize: '11px' }} />
-      </WeightBtn>
+      </Button>
       <ModalComponent
         title={`Select ${title}`}
         // visible={true}
@@ -42,10 +33,15 @@ const SelectModal = props => {
           dataSource={fields}
           renderItem={f => (
             <List.Item>
-              <Button
-                // style={{ width: 'fit-content' }}
-                block
-              >{`${f}`}</Button>
+              {value === f ? (
+                <Button type="select" block onClick={() => handleField(name, '')}>{`${f}`}</Button>
+              ) : (
+                <Button
+                  style={{ width: 'fit-content' }}
+                  block
+                  onClick={() => handleField(name, `${f}`)}
+                >{`${f}`}</Button>
+              )}
             </List.Item>
           )}
         />
@@ -70,9 +66,12 @@ const SelectModal = props => {
 };
 
 SelectModal.propTypes = {
+  name: PropTypes.string,
   title: PropTypes.string,
+  value: PropTypes.string,
   fields: PropTypes.array,
-  info: PropTypes.string
+  info: PropTypes.string,
+  handleField: PropTypes.func
 };
 
 export default SelectModal;
