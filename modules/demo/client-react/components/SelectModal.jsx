@@ -16,31 +16,27 @@ const SelectModal = props => {
   const { name, title, fields, info, value, handleField } = props;
   const [visible, setVisible] = useState(false);
 
+  const handleSelect = value => {
+    handleField(name, value);
+    setVisible(false);
+  };
+
   return (
     <>
       <Button block onClick={() => setVisible(true)}>
         {value === '' ? title : value}
         <Icon type="down" style={{ fontSize: '11px' }} />
       </Button>
-      <ModalComponent
-        title={`Select ${title}`}
-        // visible={true}
-        visible={visible}
-        handleVisible={() => setVisible(false)}
-      >
+      <ModalComponent title={`Select ${title}`} visible={visible} handleVisible={() => setVisible(false)}>
         <List
           grid={{ gutter: 16, column: 3 }}
           dataSource={fields}
           renderItem={f => (
             <List.Item>
               {value === f ? (
-                <Button type="select" block onClick={() => handleField(name, '')}>{`${f}`}</Button>
+                <Button type="select" block onClick={() => handleSelect('')}>{`${f}`}</Button>
               ) : (
-                <Button
-                  style={{ width: 'fit-content' }}
-                  block
-                  onClick={() => handleField(name, `${f}`)}
-                >{`${f}`}</Button>
+                <Button style={{ width: 'fit-content' }} block onClick={() => handleSelect(`${f}`)}>{`${f}`}</Button>
               )}
             </List.Item>
           )}
