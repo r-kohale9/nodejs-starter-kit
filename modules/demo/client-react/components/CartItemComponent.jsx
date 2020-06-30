@@ -4,44 +4,39 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
-const Title = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-  /* identical to box height */
-
-  /* Black */
-
+const DropDownButton = styled(Button)`
   color: #222222;
 `;
 
 const Text = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: normal;
+  font-family: Metropolis, QuickSand;
   font-size: 12px;
+  line-height: 1.75;
   padding-right: 5px;
-  /* line-height: 11px; */
-  /* identical to box height */
+  color: '#9b9b9b';
+`;
 
-  /* letter-spacing: -0.0015em; */
-
-  /* Gray */
-
-  color: ${props => (props.color ? props.color : '#9b9b9b')};
+const IncremntBtn = styled(Button)`
+  border: 0px;
+  color: #9b9b9b;
+  background: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const CartItemComponent = props => {
-  const { item } = props;
+  const { name, item, onChange } = props;
   const [units, setUnits] = useState(item.units);
+  const handleChange = value => {
+    setUnits(value);
+    onChange(name, value);
+  };
+
   return (
     <Card
       style={{
+        background: '#FFFFFF',
+        boxShadow: '0px 1px 24px rgba(0, 0, 0, 0.12)',
         marginBottom: '24px',
-        // width: '164px',
-        height: '104px',
         borderWidth: '0px',
         borderRadius: '8px'
       }}
@@ -59,16 +54,18 @@ const CartItemComponent = props => {
           <Row>
             <Row>
               <Col span={20}>
-                <Title>{item.title}</Title>
+                <h3>
+                  <strong>{item.title}</strong>
+                </h3>
               </Col>
               <Col span={4}>
                 <Row type="flex" justify="end">
                   <DropDown type="more">
                     <Menu.Item key="0">
-                      <Button type="link">Add to favorites</Button>
+                      <DropDownButton type="link">Add to favorites</DropDownButton>
                     </Menu.Item>
                     <Menu.Item key="1">
-                      <Button type="link">Delete from the list</Button>
+                      <DropDownButton type="link">Delete from the list</DropDownButton>
                     </Menu.Item>
                   </DropDown>
                 </Row>
@@ -77,13 +74,13 @@ const CartItemComponent = props => {
             <Row>
               <Col span={16}>
                 <p style={{ display: 'flex' }}>
-                  <Text>Flavour:</Text> <Text color="black">{item.flavour}</Text>
+                  <Text>Flavour:</Text> <strong>{item.flavour}</strong>
                 </p>
               </Col>
               <Col span={8}>
                 <p style={{ display: 'flex' }}>
                   <Text>Weight:</Text>
-                  <Text color="black">{item.weight}</Text>
+                  <strong>{item.weight}</strong>
                 </p>
               </Col>
             </Row>
@@ -91,7 +88,7 @@ const CartItemComponent = props => {
               <Col span={12}>
                 <Row type="flex" justify="space-between">
                   <Col span={8}>
-                    <Button shape="circle" icon="minus" onClick={() => setUnits(units - 1)} />
+                    <IncremntBtn shape="circle" icon="minus" onClick={() => handleChange(units - 1)} />
                   </Col>
                   <Col span={8}>
                     <div
@@ -105,13 +102,13 @@ const CartItemComponent = props => {
                     </div>
                   </Col>
                   <Col span={8}>
-                    <Button shape="circle" icon="plus" onClick={() => setUnits(units + 1)} />
+                    <IncremntBtn shape="circle" icon="plus" onClick={() => handleChange(units + 1)} />
                   </Col>
                 </Row>
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  Rs. {item.price}
+                  <strong>Rs. {item.price * units}</strong>
                 </Row>
               </Col>
             </Row>

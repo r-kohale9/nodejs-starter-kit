@@ -18,6 +18,11 @@ const PromoCodeForm = props => {
   const { values, handleSubmit, promocodes, setFieldValue } = props;
   const [visible, setVisible] = useState(false);
 
+  const handleApply = value => {
+    setFieldValue('promoCode', value);
+    setVisible(false);
+  };
+
   return (
     <>
       <Row type="flex" align="middle">
@@ -26,7 +31,7 @@ const PromoCodeForm = props => {
             {values.promoCode !== '' ? values.promoCode : 'Enter your promocode'}
             <Button
               style={{ position: 'absolute', top: '-1px', right: '0' }}
-              type="primary"
+              type="black"
               shape="circle"
               icon="arrow-right"
               onClick={() => setVisible(true)}
@@ -49,7 +54,7 @@ const PromoCodeForm = props => {
                   />
                   <Button
                     style={{ position: 'absolute', top: '5px', right: '0px' }}
-                    type="primary"
+                    type="black"
                     shape="circle"
                     icon="arrow-right"
                     onClick={() => handleSubmit(values)}
@@ -60,9 +65,9 @@ const PromoCodeForm = props => {
                 <h3>Your Promo Codes</h3>
               </Col>
               <Col span={24}>
-                {promocodes.map(promocode => {
-                  return <PromoCardComponent promocode={promocode} setValue={setFieldValue} />;
-                })}
+                {promocodes.map(promocode => (
+                  <PromoCardComponent promocode={promocode} setValue={setFieldValue} onApply={handleApply} />
+                ))}
               </Col>
             </Row>
           </ModalComponent>

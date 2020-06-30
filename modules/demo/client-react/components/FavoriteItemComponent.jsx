@@ -20,9 +20,6 @@ const Title = styled.div`
   font-weight: 600;
   font-size: 16px;
   line-height: 16px;
-  /* identical to box height */
-
-  /* Black */
 
   color: #222222;
 `;
@@ -33,12 +30,6 @@ const Text = styled.div`
   font-weight: normal;
   font-size: 12px;
   padding-right: 5px;
-  /* line-height: 11px; */
-  /* identical to box height */
-
-  /* letter-spacing: -0.0015em; */
-
-  /* Gray */
 
   color: ${props => (props.color ? props.color : '#9b9b9b')};
 `;
@@ -79,7 +70,9 @@ const FavorteItemComponent = props => {
               </Col>
             </Row>
             <Col span={24}>
-              <Title>{item.title}</Title>
+              <h3>
+                <strong>{item.title}</strong>
+              </h3>
             </Col>
             <Row>
               <Col span={16}>

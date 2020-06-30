@@ -1,35 +1,32 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Row, Col, Button } from 'antd';
 
 import { PropTypes } from 'prop-types';
 import Bags from '../Icons/bags.svg';
 import PageLayout from './PageLayout';
 
-const Checkoutbtn = styled(Button)`
-  height: 48px;
-  box-shadow: 0px 4px 8px rgba(211, 38, 38, 0.25);
-  border-radius: 25px;
-`;
+import { PgTitle } from './StyledComponents';
 
 const CheckoutStatusView = props => {
   const { history } = props;
   return (
-    <PageLayout history={history} showMenuBar={false}>
+    <PageLayout history={history} showMobNav={false} showMenuBar={false}>
       <Row type="flex" justify="space-between" align="middle">
         <Col span={24}>
           <Row type="flex" justify="center">
             <img alt="" src={Bags} />
           </Row>
         </Col>
-        <Col span={24}>
+        <Col span={24} style={{ paddingTop: '50px' }}>
           <Row type="flex" justify="center">
-            <h1>Success!</h1>
+            <PgTitle>Success!</PgTitle>
           </Row>
         </Col>
         <Col span={24}>
           <Row type="flex" justify="center">
-            <Col span={16}>Your order will be delivered soon. Thank you for choosing HomeBakers!</Col>
+            <Col span={16}>
+              <strong>Your order will be delivered soon. Thank you for choosing HomeBakers!</strong>
+            </Col>
           </Row>
         </Col>
         <Col span={24}>
@@ -38,9 +35,9 @@ const CheckoutStatusView = props => {
         </Col>
       </Row>
       <Row type="flex" align="bottom" style={{ height: '55vw' }}>
-        <Checkoutbtn type="danger" block onClick={() => history.push('/demo/checkout-status')}>
+        <Button type="primary" size="large" block onClick={() => history.push('/demo/home')}>
           CONTINUE SHOPPING
-        </Checkoutbtn>
+        </Button>
       </Row>
     </PageLayout>
   );

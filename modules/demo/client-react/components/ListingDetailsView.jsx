@@ -17,7 +17,7 @@ const ListingDetailsViewFormSchema = {
 };
 
 const ListingDetailsView = props => {
-  const { listing, history, values, setFieldValue, handleSubmit, isValid } = props;
+  const { flavours, weights, listing, history, values, setFieldValue, handleSubmit, isValid } = props;
   const { preOrder } = props.location;
   const [preOrd, setPreOrd] = useState(preOrder);
 
@@ -52,7 +52,7 @@ const ListingDetailsView = props => {
                   <SelectModal
                     name="weight"
                     title="Weight"
-                    fields={['.5 Kg', '1 Kg', '1.5 Kg', '2 Kg', '2.5 Kg']}
+                    fields={weights}
                     value={values.weight}
                     info="Weight info"
                     handleField={setFieldValue}
@@ -64,7 +64,7 @@ const ListingDetailsView = props => {
                   <SelectModal
                     name="flavour"
                     title="Flavour"
-                    fields={['Vanilla', 'Chocolate', 'Mango', 'Strawberry', 'Butterscotch']}
+                    fields={flavours}
                     value={values.flavour}
                     info="Flavour info"
                     handleField={setFieldValue}
@@ -114,6 +114,8 @@ const ListingDetailsView = props => {
 
 ListingDetailsView.propTypes = {
   listing: PropTypes.object,
+  flavours: PropTypes.array,
+  weights: PropTypes.array,
   history: PropTypes.object,
   location: PropTypes.object,
   values: PropTypes.object,

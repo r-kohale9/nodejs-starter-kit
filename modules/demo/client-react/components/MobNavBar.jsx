@@ -42,7 +42,7 @@ class NavBar extends React.Component {
   };
 
   render() {
-    const { history, search, title } = this.props;
+    const { history, search, title, showMobNav } = this.props;
     return (
       <ScrollParallax
         location="page-layout"
@@ -53,22 +53,23 @@ class NavBar extends React.Component {
         }}
       >
         <Header className="no-print">
-          <Row className="navbar-wrapper">
-            <Col span={24}>
-              <Row>
-                <Col align="left" span={2}>
-                  <Icon
-                    onClick={() => history.goBack()}
-                    type="left"
-                    style={{
-                      color: 'black',
-                      position: 'absolute',
-                      top: '10px',
-                      fontSize: '20px'
-                    }}
-                  />
-                </Col>
-                {/* <Col xs={0} md={0} lg={2}>
+          {typeof showMobNav === 'undefined' && (
+            <Row className="navbar-wrapper">
+              <Col span={24}>
+                <Row>
+                  <Col align="left" span={2}>
+                    <Icon
+                      onClick={() => history.goBack()}
+                      type="left"
+                      style={{
+                        color: 'black',
+                        position: 'absolute',
+                        top: '10px',
+                        fontSize: '20px'
+                      }}
+                    />
+                  </Col>
+                  {/* <Col xs={0} md={0} lg={2}>
                   <Menu
                     onClick={this.handleClick}
                     selectedKeys={[this.props.location.pathname]}
@@ -95,7 +96,7 @@ class NavBar extends React.Component {
                   </Menu>
                 </Col> */}
 
-                {/* <Col xs={0} md={0} lg={15} align="right">
+                  {/* <Col xs={0} md={0} lg={15} align="right">
                   <Menu
                     onClick={this.handleClick}
                     selectedKeys={[this.props.location.pathname]}
@@ -115,42 +116,43 @@ class NavBar extends React.Component {
                     </LoggedIn>
                   </Menu>
                 </Col> */}
-                <Col span={20}>
-                  <Row type="flex" align="middle" justify="center">
-                    <h3
-                      style={{
-                        color: 'black',
-                        lineHeight: '2.35',
-                        fontSize: '18px',
-                        letterSpacing: '1px'
-                      }}
-                    >
-                      <strong>{title && title}</strong>
-                    </h3>
-                  </Row>
-                </Col>
-                <Col span={2}>
-                  {search && (
-                    <div
-                      // onClick={this.showDrawer}
-                      className="navbar-drawer-logo"
-                    >
-                      <Icon
-                        type="search"
+                  <Col span={20}>
+                    <Row type="flex" align="middle" justify="center">
+                      <h3
                         style={{
                           color: 'black',
-                          fontSize: '20px',
-                          position: 'absolute',
-                          top: '10px',
-                          right: '0px'
+                          lineHeight: '2.35',
+                          fontSize: '18px',
+                          letterSpacing: '1px'
                         }}
-                      />
-                    </div>
-                  )}
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+                      >
+                        <strong>{title && title}</strong>
+                      </h3>
+                    </Row>
+                  </Col>
+                  <Col span={2}>
+                    {search && (
+                      <div
+                        // onClick={this.showDrawer}
+                        className="navbar-drawer-logo"
+                      >
+                        <Icon
+                          type="search"
+                          style={{
+                            color: 'black',
+                            fontSize: '20px',
+                            position: 'absolute',
+                            top: '10px',
+                            right: '0px'
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          )}
         </Header>
       </ScrollParallax>
     );

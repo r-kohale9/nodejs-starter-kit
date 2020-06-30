@@ -21,7 +21,10 @@ const PROMOCODES = [
 ];
 
 const Promocodes = props => {
-  return <PromocodesView {...props} promocodes={PROMOCODES} />;
+  const handleSubmit = value => {
+    console.log('promo', value);
+  };
+  return <PromocodesView {...props} promocodes={PROMOCODES} onSubmit={handleSubmit} />;
 };
 
 export default Promocodes;

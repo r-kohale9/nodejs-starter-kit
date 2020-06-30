@@ -11,6 +11,7 @@ const PgTitle = styled.div`
 `;
 
 const Text = styled.span`
+  font-family: Metropolis, QuickSand;
   font-size: 16px;
   line-height: 25px;
   padding-right: 10px;

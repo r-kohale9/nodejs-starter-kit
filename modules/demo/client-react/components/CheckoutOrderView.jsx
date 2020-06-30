@@ -8,6 +8,7 @@ import PageLayout from './PageLayout';
 
 import Danzo from '../Icons/dunzo.svg';
 import Swiggy from '../Icons/swiggy.svg';
+import { Text } from './StyledComponents';
 
 const LogoCard = styled.div`
   width: 64px;
@@ -36,28 +37,6 @@ const DeliveryMetBtn = styled(Button)`
   padding: 10px 20px;
 `;
 
-const Text = styled.span`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  padding-right: 10px;
-
-  display: flex;
-  align-items: center;
-  text-align: right;
-
-  /* Gray */
-  color: #9b9b9b;
-`;
-
-const Checkoutbtn = styled(Button)`
-  height: 48px;
-  box-shadow: 0px 4px 8px rgba(211, 38, 38, 0.25);
-  border-radius: 25px;
-`;
-
 const totalAmount = orderDetails => {
   let price = 0;
   orderDetails.map(item => {
@@ -73,7 +52,9 @@ const CheckoutOrderView = props => {
   } = props;
   return (
     <PageLayout history={history} showMenuBar={false} title="Checkout">
-      <h3>Shipping address</h3>
+      <h3>
+        <strong>Shipping address</strong>
+      </h3>
       <AddressCardComponent
         address={address}
         btnTitle="Change"
@@ -81,7 +62,9 @@ const CheckoutOrderView = props => {
       />
       <Row type="flex" align="middle">
         <Col span={12}>
-          <h3>Payment</h3>
+          <h3>
+            <strong>Payment</strong>
+          </h3>
         </Col>
         <Col span={12}>
           <Row type="flex" justify="end">
@@ -102,8 +85,10 @@ const CheckoutOrderView = props => {
             </Col>
           </Row>
         </Col>
-        <Col span={24}>
-          <h3>Delivery method</h3>
+        <Col span={24} style={{ paddingTop: '50px' }}>
+          <h3>
+            <strong>Delivery method</strong>
+          </h3>
           <Col span={24}>
             <Row type="flex" justify="space-between">
               <DeliveryMetBtn>
@@ -128,7 +113,9 @@ const CheckoutOrderView = props => {
             </Col>
             <Col span={14}>
               <Row type="flex" align="end">
-                Rs. {totalAmount(orderDetails)}
+                <h3>
+                  <strong>Rs. {totalAmount(orderDetails)}</strong>
+                </h3>
               </Row>
             </Col>
           </Row>
@@ -140,7 +127,9 @@ const CheckoutOrderView = props => {
             </Col>
             <Col span={14}>
               <Row type="flex" align="end">
-                Rs. {delivery}
+                <h3>
+                  <strong>Rs. {delivery}</strong>
+                </h3>
               </Row>
             </Col>
           </Row>
@@ -154,16 +143,18 @@ const CheckoutOrderView = props => {
             </Col>
             <Col span={14}>
               <Row type="flex" align="end">
-                Rs. {totalAmount(orderDetails) + delivery}
+                <h3>
+                  <strong>Rs. {totalAmount(orderDetails) + delivery}</strong>
+                </h3>
               </Row>
             </Col>
           </Row>
         </Col>
         <Col span={24}>
           <div style={{ padding: '24px 0px 50px 0px' }}>
-            <Checkoutbtn type="danger" block onClick={() => history.push('/demo/checkout-status')}>
+            <Button type="primary" size="large" block onClick={() => history.push('/demo/checkout-status')}>
               SUBMIT ORDER
-            </Checkoutbtn>
+            </Button>
           </div>
         </Col>
       </Row>

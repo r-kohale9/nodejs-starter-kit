@@ -41,9 +41,11 @@ const AddressCardComponent = props => {
             <p>{`${address.address}, ${address.city}, ${address.state}, ${address.pinCode}`}</p>
           </strong>
         </Col>
-        <Col span={24} style={{ height: '35px' }}>
-          {extra && extra}
-        </Col>
+        {extra && (
+          <Col span={24} style={{ height: '35px' }}>
+            {extra && extra}
+          </Col>
+        )}
       </Row>
     </Card>
   );

@@ -28,7 +28,7 @@ const CART = {
       imageUrl: Product,
       category: 'Cakes',
       flavour: 'Chocolate',
-      weight: 1,
+      weight: '1kg',
       units: 1,
       price: 700
     },
@@ -38,7 +38,7 @@ const CART = {
       imageUrl: Product,
       category: 'Cakes',
       flavour: 'Chocolate',
-      weight: 1,
+      weight: '1kg',
       units: 3,
       price: 700
     },
@@ -48,7 +48,7 @@ const CART = {
       imageUrl: Product,
       category: 'Cakes',
       flavour: 'Chocolate',
-      weight: 1,
+      weight: '1kg',
       units: 6,
       price: 700
     }
@@ -72,7 +72,10 @@ const PROMOCODES = [
   }
 ];
 const CheckoutCart = props => {
-  return <CheckoutCartView {...props} getCart={CART} promocodes={PROMOCODES} />;
+  const handleSubmit = values => {
+    console.log('values', values);
+  };
+  return <CheckoutCartView {...props} getCart={CART} promocodes={PROMOCODES} onSubmit={handleSubmit} />;
 };
 
 export default CheckoutCart;

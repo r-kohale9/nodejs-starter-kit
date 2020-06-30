@@ -3,6 +3,8 @@ import React from 'react';
 import ListingDetailsView from '../components/ListingDetailsView';
 import Product from '../Icons/product.svg';
 
+import { FLAVORS, WEIGHTS } from './Constants';
+
 const LISTING = {
   id: 1,
   listingImages: [
@@ -23,13 +25,13 @@ const LISTING = {
   rating: 5
 };
 
-const FLAVORS = ['Vanilla', 'Chocolate', 'Mango', 'Strawberry', 'Butterscotch'];
-
 const ListingDetails = props => {
   const handleSubmit = values => {
     console.log('values', values);
   };
-  return <ListingDetailsView {...props} listing={LISTING} flavors={FLAVORS} onSubmit={handleSubmit} />;
+  return (
+    <ListingDetailsView {...props} listing={LISTING} flavors={FLAVORS} weights={WEIGHTS} onSubmit={handleSubmit} />
+  );
 };
 
 export default ListingDetails;

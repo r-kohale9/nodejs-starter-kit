@@ -77,8 +77,8 @@ class PageLayout extends React.Component {
     return (
       <Layout id="page-layout">
         {navBar !== false && !this.state.isMobile && <NavBar isMobile={this.state.isMobile} />}
-        {navBar !== false && this.state.isMobile && typeof showMobNav === 'undefined' && (
-          <MobNavBar histoyr={history} search={search} title={title} />
+        {navBar !== false && this.state.isMobile && (
+          <MobNavBar histoyr={history} showMobNav={showMobNav} search={search} title={title} />
         )}
         {__SERVER__ && __DEV__ && (
           <Helmet>

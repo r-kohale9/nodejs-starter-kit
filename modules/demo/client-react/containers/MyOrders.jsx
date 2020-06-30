@@ -1,8 +1,8 @@
 import React from 'react';
 
 import MyOrdersView from '../components/MyOrdersView';
+import { ORDER_STATUS } from './Constants';
 
-const ORDER_STATUS = ['Delivered', 'Processing', 'Cancelled'];
 const ORDERS = [
   {
     id: 1947034,

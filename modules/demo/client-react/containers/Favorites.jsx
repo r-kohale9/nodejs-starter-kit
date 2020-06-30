@@ -2,24 +2,7 @@ import React from 'react';
 
 import FavoritesView from '../components/FavoritesView';
 import Product from '../Icons/product1.svg';
-
-const CATEGORYSLICK = [
-  {
-    category: 'Cakes'
-  },
-  {
-    category: 'Cupcakes'
-  },
-  {
-    category: 'Pastries'
-  },
-  {
-    category: 'Bread'
-  },
-  {
-    category: 'Chocolate'
-  }
-];
+import { CATEGORYSLICK } from './Slick';
 
 const FAVORITES = [
   {

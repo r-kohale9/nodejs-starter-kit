@@ -3,7 +3,7 @@ import { Card, Row, Col, Button } from 'antd';
 import { PropTypes } from 'prop-types';
 
 const PromoCardComponent = props => {
-  const { promocode, setValue } = props;
+  const { promocode, onApply } = props;
   return (
     <Card
       style={{
@@ -43,7 +43,7 @@ const PromoCardComponent = props => {
                     style={{ width: 'fit-content' }}
                     type="primary"
                     block
-                    onClick={() => setValue('promoCode', promocode.promocode)}
+                    onClick={() => onApply(promocode.promocode)}
                   >
                     Apply
                   </Button>
@@ -59,7 +59,7 @@ const PromoCardComponent = props => {
 
 PromoCardComponent.propTypes = {
   promocode: PropTypes.object,
-  setValue: PropTypes.func
+  onApply: PropTypes.func
 };
 
 export default PromoCardComponent;

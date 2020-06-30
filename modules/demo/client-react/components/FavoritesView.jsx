@@ -6,6 +6,7 @@ import { PropTypes } from 'prop-types';
 import CategorySlick from './CategorySlick';
 import FavoriteItemComponent from './FavoriteItemComponent';
 import PageLayout from './PageLayout';
+import { PgTitle } from './StyledComponents';
 
 const Header = styled.div`
   width: 500%;
@@ -21,9 +22,11 @@ const FavoritesView = props => {
   return (
     <PageLayout history={history} showMenuBar={true}>
       <Header>
-        <h1>Favorites</h1>
-        <CategorySlick data={categorySlick} />
-        <div style={{ paddingTop: '5px' }} onClick={() => history.push('/demo/filters')}>
+        <PgTitle>Favorites</PgTitle>
+        <div style={{ margin: '12px 0px 24px 0px' }}>
+          <CategorySlick data={categorySlick} />
+        </div>
+        <div onClick={() => history.push('/demo/filters')}>
           <p style={{ display: 'inline-flex' }}>
             <Icon type="filter" style={{ fontSize: '20px', paddingRight: '5px' }} />
             Filters

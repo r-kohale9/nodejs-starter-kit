@@ -12,15 +12,9 @@ import {
 } from '@gqlapp/listing-client-react/containers/ListingOperations';
 
 import BakerView from '../components/BakerView';
-
 import Avatar from '../Icons/userimage.svg';
 
-import Banner from '../Icons/MangoCakes.svg';
-import Cakes from '../Icons/cakes.svg';
-import Cupcakes from '../Icons/cupcakes.svg';
-import Pastries from '../Icons/pastries.svg';
-import Bread from '../Icons/bread.svg';
-import Chocolate from '../Icons/chocolate.svg';
+import { CATEGORYICONSLICK, HOMESLICK } from './Slick';
 
 const USER = {
   id: 1,
@@ -33,18 +27,6 @@ const USER = {
   details:
     "Riya creates beautiful fondant cakes according to any theme of your choice. Her quirky cakes are known to stifle a giggle at the very least. If that isn't all her cakes taste just as good as it looks, if not better"
 };
-
-const HOMESLICK = [
-  {
-    thumbnail: Banner
-  },
-  {
-    thumbnail: Banner
-  },
-  {
-    thumbnail: Banner
-  }
-];
 
 const USERS = [
   {
@@ -104,29 +86,6 @@ const USERS = [
   }
 ];
 
-const CATEGORYSLICK = [
-  {
-    icon: Cakes,
-    category: 'Cakes'
-  },
-  {
-    icon: Cupcakes,
-    category: 'Cupcakes'
-  },
-  {
-    icon: Pastries,
-    category: 'Pastries'
-  },
-  {
-    icon: Bread,
-    category: 'Bread'
-  },
-  {
-    icon: Chocolate,
-    category: 'Chocolate'
-  }
-];
-
 const PROFILELIST = [
   {
     id: 1,
@@ -178,7 +137,7 @@ const Baker = props => {
       users={USERS}
       user={USER}
       profileList={PROFILELIST}
-      categorySlick={CATEGORYSLICK}
+      categorySlick={CATEGORYICONSLICK}
     />
   );
 };
