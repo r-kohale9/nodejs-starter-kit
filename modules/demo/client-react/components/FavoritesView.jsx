@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Icon } from 'antd';
+import { Row, Col, List, Icon } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import CategorySlick from './CategorySlick';
@@ -34,7 +34,21 @@ const FavoritesView = props => {
         </div>
       </Header>
       <div style={{ paddingTop: '16px' }}>
-        {favorites && favorites.map(item => <FavoriteItemComponent item={item} />)}
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 2,
+            lg: 3
+          }}
+          dataSource={favorites && favorites}
+          renderItem={item => (
+            <List.Item>
+              <FavoriteItemComponent item={item} />
+            </List.Item>
+          )}
+        />
       </div>
     </PageLayout>
   );

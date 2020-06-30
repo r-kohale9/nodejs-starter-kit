@@ -2,113 +2,113 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Card, Row, Col, Button, Rate, Icon } from 'antd';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import ShoppingBag from '../Icons/shoppingbag.svg';
 
-const BagBtn = styled(Button)`
+const BagBtn = styled(Link)`
   position: absolute;
-  right: -11px;
+  right: 7px;
+  bottom: 12px;
   height: 36px;
   width: 36px;
+  border-radius: 18px;
   background: #fc4c4c;
   box-shadow: 0px 4px 4px rgba(219, 48, 34, 0.16);
 `;
 
-const Title = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 16px;
-
-  color: #222222;
-`;
-
 const Text = styled.div`
-  font-family: Metropolis;
-  font-style: normal;
-  font-weight: normal;
+  font-family: Metropolis, QuickSand;
   font-size: 12px;
   padding-right: 5px;
-
-  color: ${props => (props.color ? props.color : '#9b9b9b')};
+  color: '#9b9b9b';
 `;
 
 const FavorteItemComponent = props => {
   const { item } = props;
   return (
-    <Card
-      style={{
-        marginBottom: '24px',
-        // width: '164px',
-        height: '104px',
-        borderWidth: '0px',
-        borderRadius: '8px'
-      }}
-      hoverable
-      bodyStyle={{
-        padding: '0px'
-      }}
-    >
-      <Row>
-        <Col span={8}>
-          <div style={{ height: '104px', overflow: 'hidden' }}>
-            <img alt="example" src={item.imageUrl} />
-          </div>
-        </Col>
-        <Col span={16} style={{ padding: '11px' }}>
-          <Row gutter={[0, 6]}>
-            <Row type="flex" align="middle">
-              <Col span={22}>
-                <Text>{item.category}</Text>
-              </Col>
-              <Col span={2}>
-                <Row>
-                  {/* <Button type="link" icon="close" /> */}
-                  <Icon type="close" onClick={() => console.log('called')} />
-                </Row>
-              </Col>
-            </Row>
-            <Col span={24}>
-              <h3>
-                <strong>{item.title}</strong>
-              </h3>
-            </Col>
-            <Row>
-              <Col span={16}>
-                <p style={{ display: 'flex' }}>
-                  <Text>Flavour:</Text> <Text color="black">{item.flavour}</Text>
-                </p>
-              </Col>
-              <Col span={8}>
-                <p style={{ display: 'flex' }}>
-                  <Text>Size:</Text>
-                  <Text color="black">{item.weight}</Text>
-                </p>
-              </Col>
-            </Row>
-            <Col span={24}>
-              <Row>
-                <Col span={8}>
-                  <Row type="flex" justify="start">
-                    Rs. {item.price}
-                  </Row>
+    <>
+      <Card
+        style={{
+          background: '#FFFFFF',
+          boxShadow: '0px 1px 24px rgba(0, 0, 0, 0.12)',
+          marginBottom: '24px',
+          borderWidth: '0px',
+          borderRadius: '8px'
+        }}
+        hoverable
+        bodyStyle={{
+          padding: '0px'
+        }}
+      >
+        <Row>
+          <Col span={8}>
+            <div style={{ height: '104px', overflow: 'hidden' }}>
+              <img alt="example" src={item.imageUrl} />
+            </div>
+          </Col>
+          <Col span={16} style={{ padding: '11px' }}>
+            <Row gutter={[0, 6]}>
+              <Row type="flex" align="middle">
+                <Col span={22}>
+                  <Text>{item.category}</Text>
                 </Col>
-                <Col span={16}>
-                  <Row type="flex" justify="center">
-                    <Rate style={{ fontSize: '13px' }} disabled defaultValue={item.rating} /> {`(${item.rating * 2})`}
+                <Col span={2}>
+                  <Row>
+                    {/* <Button type="link" icon="close" /> */}
+                    <Icon type="close" onClick={() => console.log('called')} />
                   </Row>
                 </Col>
               </Row>
-            </Col>
-            <BagBtn shape="circle">
-              <img style={{ width: '16px' }} alt="" src={ShoppingBag} />
-            </BagBtn>
-          </Row>
-        </Col>
-      </Row>
-    </Card>
+              <Col span={24}>
+                <h3>
+                  <strong>{item.title}</strong>
+                </h3>
+              </Col>
+              <Row>
+                <Col span={16}>
+                  <p style={{ display: 'flex' }}>
+                    <Text>Flavour:</Text> <Text color="black">{item.flavour}</Text>
+                  </p>
+                </Col>
+                <Col span={8}>
+                  <p style={{ display: 'flex' }}>
+                    <Text>Size:</Text>
+                    <Text color="black">{item.weight}</Text>
+                  </p>
+                </Col>
+              </Row>
+              <Col span={24}>
+                <Row>
+                  <Col span={7}>
+                    <Row type="flex" justify="start">
+                      Rs. {item.price}
+                    </Row>
+                  </Col>
+                  <Col span={16}>
+                    <Rate style={{ fontSize: '13px' }} disabled defaultValue={item.rating} />
+                    <small style={{ paddingLeft: '5px' }}>{`(${item.rating})`}</small>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Card>
+      <BagBtn
+        to={{
+          pathname: `/demo/listing-detail/${item.id}`,
+          preOrder: true // your data array of objects
+        }}
+      >
+        <img style={{ width: '16px', margin: '10px' }} alt="" src={ShoppingBag} />
+      </BagBtn>
+    </>
   );
+};
+
+FavorteItemComponent.propTypes = {
+  item: PropTypes.object
 };
 
 export default FavorteItemComponent;

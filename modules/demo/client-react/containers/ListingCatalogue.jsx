@@ -17,7 +17,7 @@ import ListingCatalogueView from '../components/ListingCatalogueView';
 
 import Avatar from '../Icons/userimage.svg';
 
-import { HOMESLICK, CATEGORYSLICK } from './Slick';
+import { HOMESLICK, CATEGORYICONSLICK } from './Slick';
 
 const USER = {
   id: 1,
@@ -73,7 +73,7 @@ const ListingCatalogue = props => {
       {...props}
       user={USER}
       homeSlick={HOMESLICK}
-      categorySlick={CATEGORYSLICK}
+      categorySlick={CATEGORYICONSLICK}
       profileList={PROFILELIST}
     />
   );
