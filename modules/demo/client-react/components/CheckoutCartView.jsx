@@ -107,9 +107,10 @@ const CheckoutCartFormWithFormik = withFormik({
       orderDetails: getCart && getCart.orderDetails.length !== 0 ? getCart.orderDetails.map(getOrderDetails) : []
     };
   },
-  handleSubmit(values, { props: { onSubmit } }) {
+  handleSubmit(values, { props: { onSubmit, history } }) {
     // console.log('values1', values);
     onSubmit(values);
+    history.push('/demo/checkout-order');
   },
   displayName: 'CheckoutCartForms' // helps with React DevTools
 });

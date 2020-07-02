@@ -3,7 +3,7 @@ import React from 'react';
 import ListingDetailsView from '../components/ListingDetailsView';
 import Product from '../Icons/product.svg';
 
-import { FLAVORS, WEIGHTS } from './Constants';
+import { FLAVOURS, WEIGHTS } from './Constants';
 
 const LISTING = {
   id: 1,
@@ -30,7 +30,7 @@ const ListingDetails = props => {
     console.log('values', values);
   };
   return (
-    <ListingDetailsView {...props} listing={LISTING} flavors={FLAVORS} weights={WEIGHTS} onSubmit={handleSubmit} />
+    <ListingDetailsView {...props} listing={LISTING} flavours={FLAVOURS} weights={WEIGHTS} onSubmit={handleSubmit} />
   );
 };
 

@@ -88,7 +88,9 @@ const FiltersView = props => {
                 dataSource={['.5', '1', '2', '3', '4']}
                 renderItem={f => (
                   <List.Item>
-                    <Button>{`${f}`}</Button>
+                    <Button
+                    // type="select"
+                    >{`${f}`}</Button>
                   </List.Item>
                 )}
               />
@@ -104,7 +106,10 @@ const FiltersView = props => {
                 dataSource={['Cakes', 'Pastries', 'Cookies', 'Break', 'Cupcakes']}
                 renderItem={f => (
                   <List.Item>
-                    <Button block>{`${f}`}</Button>
+                    <Button
+                      //  type="select"
+                      block
+                    >{`${f}`}</Button>
                   </List.Item>
                 )}
               />
@@ -115,12 +120,14 @@ const FiltersView = props => {
       <Fixed>
         <Row gutter={[23, 0]}>
           <Col span={12}>
-            <ChangeBtn block>Discard</ChangeBtn>
+            <Button type="tertiary" block>
+              Discard
+            </Button>
           </Col>
           <Col span={12}>
-            <ChangeBtn type="danger" block>
+            <Button type="primary" block>
               Apply
-            </ChangeBtn>
+            </Button>
           </Col>
         </Row>
       </Fixed>

@@ -19,7 +19,6 @@ const ModalComponent = props => {
     <>
       <Modal
         popup
-        // wrapClassName="modal paymentOpt-height"
         // visible={true}
         visible={visible}
         onClose={handleVisible}

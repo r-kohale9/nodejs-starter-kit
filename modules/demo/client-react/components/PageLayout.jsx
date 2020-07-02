@@ -68,7 +68,10 @@ class PageLayout extends React.Component {
       return (
         <Content
           id="content"
-          className={(contentStyle.length !== 0 && contentStyle[0].outerClassName) || 'content-layout'}
+          className={
+            (contentStyle.length !== 0 && contentStyle[0].outerClassName) ||
+            (typeof title === 'undefined' ? 'content-layout content-layout-white' : 'content-layout')
+          }
         >
           {children}
         </Content>

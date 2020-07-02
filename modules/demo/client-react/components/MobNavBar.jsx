@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Row, Col, Layout } from 'antd';
@@ -12,6 +13,17 @@ import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
 const ref = { modules: null };
 
 const { Header } = Layout;
+
+const HeaderMod = styled(Header)`
+  &&& {
+    height: 100% !important;
+    padding: 0 !important;
+    width: 100%;
+    background: ${props => props.color};
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+`;
 
 export const onAppCreate = async modules => (ref.modules = modules);
 
@@ -52,7 +64,8 @@ class NavBar extends React.Component {
           translateY: this.state.isMobile ? '' : '-40px'
         }}
       >
-        <Header className="no-print">
+        {console.log('typeof title === undefined', typeof title === 'undefined')}
+        <Header className={typeof title === 'undefined' ? 'no-print navbar-background' : 'no-print'}>
           {typeof showMobNav === 'undefined' && (
             <Row className="navbar-wrapper">
               <Col span={24}>
