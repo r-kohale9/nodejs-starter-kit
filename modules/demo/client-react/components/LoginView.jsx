@@ -4,11 +4,12 @@ import Helmet from 'react-helmet';
 
 import { Card, CardGroup, CardTitle, CardText, Button } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
+
 import LoginForm from './LoginForm';
 import PageLayout from './PageLayout';
 import { PgTitle } from './StyledComponents';
 
-const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
+const LoginView = ({ onSubmit, history, t, isRegistered, hideModal }) => {
   const renderMetaData = () => (
     <Helmet
       title={`${settings.app.name} - ${t('login.title')}`}
@@ -40,7 +41,7 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal }) => {
       {isRegistered ? (
         renderConfirmationModal()
       ) : (
-        <PageLayout showMobNav={true}>
+        <PageLayout history={history}>
           <PgTitle>Login</PgTitle>
           <div style={{ padding: '16px', marginTop: '30px' }}>
             <LoginForm onSubmit={onSubmit} t={t} />
@@ -62,7 +63,8 @@ LoginView.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   t: PropTypes.func,
   isRegistered: PropTypes.bool,
-  hideModal: PropTypes.func
+  hideModal: PropTypes.func,
+  history: PropTypes.object
 };
 
 export default LoginView;

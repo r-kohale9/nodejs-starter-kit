@@ -29,7 +29,7 @@ const ForgotPasswordForm = ({ handleSubmit, errors, sent, values, t }) => {
                 // label={t('forgotPass.form.fldEmail')}
                 value={values.email}
               />
-              <div style={{ padddingTop: '55px' }} className="text-center">
+              <div style={{ paddingTop: '55px' }} className="text-center">
                 {errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}
                 <Button size="lg" color="primary" block type="submit">
                   <b>SEND</b>

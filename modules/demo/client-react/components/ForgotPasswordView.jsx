@@ -8,7 +8,7 @@ import PageLayout from './PageLayout';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import { PgTitle } from './StyledComponents';
 
-const ForgotPasswordView = ({ onSubmit, t, sent }) => {
+const ForgotPasswordView = ({ onSubmit, history, t, sent }) => {
   const renderMetaData = () => (
     <Helmet
       title={`${settings.app.name} - ${t('forgotPass.title')}`}
@@ -22,7 +22,7 @@ const ForgotPasswordView = ({ onSubmit, t, sent }) => {
   );
 
   return (
-    <PageLayout showMobNav={true}>
+    <PageLayout history={history}>
       {renderMetaData()}
       <PgTitle>Forgot Password</PgTitle>
       <div style={{ margin: '16px', marginTop: '80px' }}>
@@ -36,6 +36,7 @@ ForgotPasswordView.propTypes = {
   onSubmit: PropTypes.func,
   forgotPassword: PropTypes.func,
   sent: PropTypes.bool,
+  history: PropTypes.object,
   t: PropTypes.func
 };
 

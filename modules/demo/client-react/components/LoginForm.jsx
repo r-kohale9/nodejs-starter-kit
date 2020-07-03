@@ -2,14 +2,13 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Icon, Row, Col } from 'antd';
 import { withFormik } from 'formik';
+import { Link } from 'react-router-dom';
 
 import settings from '@gqlapp/config';
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, minLength, validate } from '@gqlapp/validation-common-react';
 import { Form, RenderField, Button } from '@gqlapp/look-client-react';
 import { GoogleButton, FacebookButton } from '@gqlapp/authentication-client-react';
-
-import { LinkBold } from './StyledComponents';
 
 const loginFormSchema = {
   usernameOrEmail: [required, minLength(3)],
@@ -68,10 +67,12 @@ const LoginForm = props => {
               {/* <div className="text-center">{errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}</div> */}
               <div style={{ paddingBottom: '20px' }}>
                 <Row type="flex" justify="end" align="middle">
-                  <LinkBold to="/demo/forgotpassword">
-                    Forget your password?
-                    <Icon type="arrow-right" style={{ fontSize: '10px', paddingLeft: '5px', color: '#fc4c4c' }} />
-                  </LinkBold>
+                  <Link to="/demo/forgotpassword">
+                    <h4>
+                      <b>Forget your password?</b>
+                    </h4>
+                  </Link>
+                  <Icon type="arrow-right" style={{ fontSize: '10px', paddingLeft: '5px', color: '#fc4c4c' }} />
                 </Row>
               </div>
               <div

@@ -1,55 +1,42 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Row, Col, Icon } from 'antd';
+import { Link } from 'react-router-dom';
 
-const Head = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-
-  /* Black */
-
-  color: #222222;
-`;
-
-const Detail = styled.div`
-  font-family: Quicksand;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 11px;
-  line-height: 14px;
-
-  /* Gray */
-
-  color: #9b9b9b;
-`;
+import { PropTypes } from 'prop-types';
+import { Text } from './StyledComponents';
 
 const ProfileMenuItem = props => {
   const {
-    data: { title, details }
+    data: { title, details, link }
   } = props;
 
   return (
-    <div style={{ height: '72px' }}>
-      <Row justify="space-around" align="middle" type="flex">
-        <Col span={20}>
-          <Row>
-            <Col span={24}>
-              <Head>{title}</Head>
-            </Col>
-            <Col span={24}>
-              <Detail>{details}</Detail>
-            </Col>
-          </Row>
-        </Col>
-        <Col span={3}>
-          <Icon type="right" />
-        </Col>
-      </Row>
-    </div>
+    <Link to={link}>
+      <div style={{ height: '72px' }}>
+        <Row justify="space-around" align="middle" type="flex">
+          <Col span={20}>
+            <Row>
+              <Col span={24}>
+                <h3>
+                  <strong>{title}</strong>
+                </h3>
+              </Col>
+              <Col span={24}>
+                <Text>{details}</Text>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={3}>
+            <Icon type="right" />
+          </Col>
+        </Row>
+      </div>
+    </Link>
   );
+};
+
+ProfileMenuItem.propTypes = {
+  data: PropTypes.object
 };
 
 export default ProfileMenuItem;

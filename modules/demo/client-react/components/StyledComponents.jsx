@@ -12,7 +12,7 @@ const PgTitle = styled.div`
 
 const Text = styled.span`
   font-family: Metropolis, QuickSand;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 25px;
   padding-right: 10px;
   color: #9b9b9b;
@@ -24,13 +24,6 @@ const SubmitBtn = styled(Button)`
 `;
 
 // Link component
-const LinkBold = styled(Link)`
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-
-  color: #222222;
-`;
 
 const LinkGrey = styled(Link)`
   font-size: 14px;
@@ -63,7 +56,6 @@ export {
   // Button component
   SubmitBtn,
   // Link component
-  LinkBold,
   LinkTo,
   LinkGrey,
   StatusText,

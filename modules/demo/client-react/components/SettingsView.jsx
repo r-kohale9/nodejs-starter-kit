@@ -27,7 +27,7 @@ const SettingsView = props => {
         <Col span={24}>
           <PgTitle>Settings</PgTitle>
         </Col>
-        <Col span={24}>
+        <Col span={24} style={{ padding: '5px 0px 10px 0px' }}>
           <h3>
             <strong>Personal Information</strong>
           </h3>
