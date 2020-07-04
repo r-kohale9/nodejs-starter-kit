@@ -20,7 +20,7 @@ const Header = styled.div`
 const FavoritesView = props => {
   const { history, categorySlick, favorites } = props;
   return (
-    <PageLayout history={history} showMenuBar={true}>
+    <PageLayout history={history} showMenuBar={true} selectedTab="FAVORITES">
       <Header>
         <PgTitle>Favorites</PgTitle>
         <div style={{ margin: '12px 0px 24px 0px' }}>

@@ -29,7 +29,7 @@ const Text = styled.span`
 const CheckoutCartView = props => {
   const { getCart, history, promocodes, handleSubmit, setFieldValue, values } = props;
   return (
-    <PageLayout history={history} showMenuBar={true}>
+    <PageLayout history={history} showMenuBar={true} selectedTab="CART">
       <Col span={24}>
         <PgTitle>My Cart</PgTitle>
         <div style={{ margin: '12px 0px' }} />
