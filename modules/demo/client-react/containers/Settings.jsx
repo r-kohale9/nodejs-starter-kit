@@ -1,12 +1,7 @@
 import React from 'react';
 
 import SettingsView from '../components/SettingsView';
-
-const PERSONAL_INFO = {
-  id: 1,
-  fullName: 'Katrina',
-  dateOfBirth: '12/12/1989'
-};
+import { PERSONAL_INFO } from './Data';
 
 const Settings = props => {
   const handleSubmit = values => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TabBar } from 'antd-mobile';
 import { PropTypes } from 'prop-types';
 import HomeIsActive from '../Icons/homeinactive.svg';
@@ -11,7 +11,6 @@ import ProfileIsActive from '../Icons/profileinactive.svg';
 import ProfileActive from '../Icons/profileactive.svg';
 
 const MenuBar = props => {
-  // const [selectedTab, setSelectedTab] = useState(props.selectedTab);
   const { history, selectedTab } = props;
 
   return (
@@ -32,9 +31,6 @@ const MenuBar = props => {
           selected={selectedTab === 'HOME'}
           onPress={() => history.push('/demo/home')}
         />
-        {/* {children ? children : <Home />} */}
-        {/* {selectedTab === 'HOME' ? <Home /> : children} */}
-        {/* </TabBar.Item> */}
         <TabBar.Item
           icon={<img src={CartIsActive} alt="" />}
           selectedIcon={<img src={CartActive} alt="" />}
@@ -43,8 +39,6 @@ const MenuBar = props => {
           selected={selectedTab === 'CART'}
           onPress={() => history.push('/demo/checkout-cart')}
         />
-        {/* <Cart /> */}
-        {/* </TabBar.Item> */}
         <TabBar.Item
           icon={<img src={FavoritesIsActive} alt="" />}
           selectedIcon={<img src={FavoritesActive} alt="" />}
@@ -53,8 +47,6 @@ const MenuBar = props => {
           selected={selectedTab === 'FAVORITES'}
           onPress={() => history.push('/demo/favorites')}
         />
-        {/* <Favorites /> */}
-        {/* </TabBar.Item> */}
         <TabBar.Item
           icon={<img src={ProfileIsActive} alt="" />}
           selectedIcon={<img src={ProfileActive} alt="" />}
@@ -63,18 +55,14 @@ const MenuBar = props => {
           selected={selectedTab === 'PROFILE'}
           onPress={() => history.push('/demo/profile')}
         />
-        {/* <Profile /> */}
-        {/* </TabBar.Item> */}
       </TabBar>
     </div>
   );
 };
 
 MenuBar.propTypes = {
-  home: PropTypes.any,
-  cart: PropTypes.any,
-  favorites: PropTypes.any,
-  profile: PropTypes.any
+  history: PropTypes.object,
+  selectedTab: PropTypes.string
 };
 
 export default MenuBar;
