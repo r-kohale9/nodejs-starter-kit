@@ -1,8 +1,13 @@
 module.exports = Object.freeze({
-    // IN CART
-    STALE: 'STALE',
+  // IN CART
+  STALE: 'STALE',
+
+  // CHECKOUT PROCESS COMPLETED
+  PROCESSING: 'PROCESSING',
+
+  // Delivered
+  DELIVERED: 'DELIVERED',
   
-    // CHECKOUT PROCESS COMPLETED
-    INITIATED: 'INITIATED',
-  
-  });
+  STATESARRAY: ['STALE', 'PROCESSING', 'DELIVERED'],
+  DELIVERY: ['Self pickup', 'Danzo', 'Swiggy']
+});

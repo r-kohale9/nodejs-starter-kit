@@ -116,13 +116,13 @@ const ListingItemComponent = props => {
               />
               <Number>{`(${listing.rating})`}</Number>
             </div>
-            <small>{listing.description}</small>
-            <h3>
+            <small>{listing.category}</small>
+            <h4>
               <strong>{listing.title}</strong>
-            </h3>
-            <h3>
+            </h4>
+            <h4>
               <strong>Rs.{listing.listingCost.cost}</strong>
-            </h3>
+            </h4>
           </Card>
         </Link>
       </>

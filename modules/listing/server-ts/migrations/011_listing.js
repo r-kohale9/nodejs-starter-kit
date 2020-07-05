@@ -1,8 +1,60 @@
 exports.up = function(knex) {
   return Promise.all([
     knex.schema
+      // .createTable('listing', table => {
+      //   table.increments('id');
+      //   table
+      //     .integer('user_id')
+      //     .unsigned()
+      //     .references('id')
+      //     .inTable('user')
+      //     .onDelete('CASCADE');
+      //   table.string('title');
+      //   table.string('description');
+      //   table.boolean('is_active').defaultTo(true);
+      //   table.timestamps(false, true);
+      // })
+      // .createTable('listing_image', table => {
+      //   table.increments();
+      //   table
+      //     .integer('listing_id')
+      //     .unsigned()
+      //     .references('id')
+      //     .inTable('listing')
+      //     .onDelete('CASCADE');
+      //   table.string('image_url');
+      //   table.timestamps(false, true);
+      // })
+      // .createTable('listing_cost', table => {
+      //   table.increments();
+      //   table
+      //     .integer('listing_id')
+      //     .unsigned()
+      //     .references('id')
+      //     .inTable('listing')
+      //     .onDelete('CASCADE');
+      //   table.integer('cost');
+      //   table.timestamps(false, true);
+      // })
+      // .createTable('listing_bookmark', table => {
+      //   table.increments();
+      //   table
+      //     .integer('user_id')
+      //     .unsigned()
+      //     .references('id')
+      //     .inTable('user')
+      //     .onDelete('CASCADE');
+      //   table
+      //     .integer('listing_id')
+      //     .unsigned()
+      //     .references('id')
+      //     .inTable('listing')
+      //     .onDelete('CASCADE');
+      //   table.timestamps(false, true);
+      // })
+
       .createTable('listing', table => {
-        table.increments('id');
+        table.increments();
         table
           .integer('user_id')
           .unsigned()
@@ -11,9 +63,12 @@ exports.up = function(knex) {
           .onDelete('CASCADE');
         table.string('title');
         table.string('description');
+        table.string('category');
+        table.integer('rating');
         table.boolean('is_active').defaultTo(true);
         table.timestamps(false, true);
-      })
+      }),
+    knex.schema
       .createTable('listing_image', table => {
         table.increments();
         table
@@ -33,6 +88,7 @@ exports.up = function(knex) {
           .references('id')
           .inTable('listing')
           .onDelete('CASCADE');
+        table.string('weight');
         table.integer('cost');
         table.timestamps(false, true);
       })
