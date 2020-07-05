@@ -56,7 +56,7 @@ exports.up = function(knex) {
         table.string('promo_code');
         table.timestamps(false, true);
       })
-      .createTable('reviews', table => {
+      .createTable('review', table => {
         table.increments();
         table
           .integer('user_id')

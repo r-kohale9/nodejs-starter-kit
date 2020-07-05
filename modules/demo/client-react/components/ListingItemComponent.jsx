@@ -41,7 +41,8 @@ const ListingItemComponent = props => {
   };
 
   return (
-    !loading && (
+    !loading &&
+    listing && (
       <>
         <Row type="flex" justify="center" style={{ width: '164px', position: 'absolute', top: '114px' }}>
           <Col span={12} />
@@ -102,7 +103,10 @@ const ListingItemComponent = props => {
             }}
             cover={
               <div style={{ height: '130px', overflow: 'hidden' }}>
-                <img alt="example" src={listing.listingImages[0].imageUrl} />
+                <img
+                  alt="example"
+                  src={listing.listingImages && listing.listingImages[0] && listing.listingImages[0].imageUrl}
+                />
               </div>
             }
           >

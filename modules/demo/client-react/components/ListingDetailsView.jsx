@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Row, Col, Button, Rate } from 'antd';
+import { Spin, Row, Col, Button, Rate } from 'antd';
 import Slider from 'react-slick';
 import { withFormik } from 'formik';
 
@@ -17,11 +17,10 @@ const ListingDetailsViewFormSchema = {
 };
 
 const ListingDetailsView = props => {
-  const { flavours, weights, listing, history, values, setFieldValue, handleSubmit, isValid } = props;
+  const { flavours, loading, weights, listing, history, values, setFieldValue, handleSubmit, isValid } = props;
   const { preOrder } = props.location;
   const [preOrd, setPreOrd] = useState(preOrder);
 
-  console.log('props', props);
   const settings = {
     infinite: true,
     centreMode: true,
@@ -31,81 +30,87 @@ const ListingDetailsView = props => {
   };
   return (
     <>
-      <PageLayout history={history} showMenuBar={false} title={listing.title}>
-        <Row align="middle" type="flex" justify="space-between">
-          <Col span={24}>
-            <Slider {...settings}>
-              {listing &&
-                listing.listingImages.map(listImg => (
-                  <Row align="middle" type="flex" justify="center">
-                    <Col span={24}>
-                      <img style={{ width: '100%' }} alt="" src={listImg.imageUrl} />
-                    </Col>
+      <PageLayout history={history} showMenuBar={false} title={listing && listing.title}>
+        {!loading && listing ? (
+          <Row align="middle" type="flex" justify="space-between">
+            <Col span={24}>
+              <Slider {...settings}>
+                {listing &&
+                  listing.listingImages.map(listImg => (
+                    <Row align="middle" type="flex" justify="center">
+                      <Col span={24}>
+                        <img style={{ width: '100%' }} alt="" src={listImg.imageUrl} />
+                      </Col>
+                    </Row>
+                  ))}
+              </Slider>
+            </Col>
+            <Col span={24}>
+              <Row type="flex" align="middle" justify="space-between">
+                <Col span={10}>
+                  <Row type="flex" justify="start">
+                    <SelectModal
+                      name="weight"
+                      title="Weight"
+                      fields={weights}
+                      value={values.weight}
+                      info="Weight info"
+                      handleField={setFieldValue}
+                    />
                   </Row>
-                ))}
-            </Slider>
-          </Col>
-          <Col span={24}>
-            <Row type="flex" align="middle" justify="space-between">
-              <Col span={10}>
+                </Col>
+                <Col span={10}>
+                  <Row type="flex" justify="center">
+                    <SelectModal
+                      name="flavour"
+                      title="Flavour"
+                      fields={flavours}
+                      value={values.flavour}
+                      info="Flavour info"
+                      handleField={setFieldValue}
+                    />
+                  </Row>
+                </Col>
+                <Col span={2}>
+                  <Row type="flex" justify="end">
+                    <Button type="circle" icon="heart" />
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={24}>
+              <Col span={18}>
                 <Row type="flex" justify="start">
-                  <SelectModal
-                    name="weight"
-                    title="Weight"
-                    fields={weights}
-                    value={values.weight}
-                    info="Weight info"
-                    handleField={setFieldValue}
-                  />
+                  <h2>
+                    <strong>{listing.title}</strong>
+                  </h2>
                 </Row>
               </Col>
-              <Col span={10}>
-                <Row type="flex" justify="center">
-                  <SelectModal
-                    name="flavour"
-                    title="Flavour"
-                    fields={flavours}
-                    value={values.flavour}
-                    info="Flavour info"
-                    handleField={setFieldValue}
-                  />
-                </Row>
-              </Col>
-              <Col span={2}>
+              <Col span={6}>
                 <Row type="flex" justify="end">
-                  <Button type="circle" icon="heart" />
+                  <h2>
+                    <strong>Rs. {listing.listingCost.cost}</strong>
+                  </h2>
                 </Row>
               </Col>
-            </Row>
-          </Col>
-          <Col span={24}>
-            <Col span={18}>
-              <Row type="flex" justify="start">
-                <h2>
-                  <strong>{listing.title}</strong>
-                </h2>
-              </Row>
             </Col>
-            <Col span={6}>
-              <Row type="flex" justify="end">
-                <h2>
-                  <strong>Rs. {listing.price}</strong>
-                </h2>
-              </Row>
+            <Col span={24}>
+              <span>{listing.category}</span>
             </Col>
-          </Col>
-          <Col span={24}>
-            <span>{listing.category}</span>
-          </Col>
-          <Col span={24}>
-            <Rate style={{ fontSize: '15px' }} disabled defaultValue={listing.rating} /> {`(${listing.rating * 2})`}
-          </Col>
-          <Col span={24}>
-            <p>{listing.description}</p>
-          </Col>
-          {preOrd && <PreOrderComponent visible={preOrd} handleVisible={() => setPreOrd(false)} info="Flavour info" />}
-          <Col span={24} style={{ padding: '45px' }} />
-        </Row>
+            <Col span={24}>
+              <Rate style={{ fontSize: '15px' }} disabled defaultValue={listing.rating} /> {`(${listing.rating})`}
+            </Col>
+            <Col span={24}>
+              <p>{listing.description}</p>
+            </Col>
+            {preOrd && (
+              <PreOrderComponent visible={preOrd} handleVisible={() => setPreOrd(false)} info="Flavour info" />
+            )}
+            <Col span={24} style={{ padding: '45px' }} />
+          </Row>
+        ) : (
+          <Spin />
+        )}
       </PageLayout>
       <AddToCart onSubmit={() => handleSubmit(values)} disabled={!isValid} />
     </>

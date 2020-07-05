@@ -2,6 +2,8 @@ fragment ListingInfo on Listing {
   id
   userId
   title
+  category
+  rating
   description
   isActive
   createdAt
@@ -13,6 +15,7 @@ fragment ListingInfo on Listing {
   }
   listingCost {
     id
+    weight
     cost
   }
 }

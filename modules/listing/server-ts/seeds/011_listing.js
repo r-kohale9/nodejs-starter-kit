@@ -13,13 +13,13 @@ exports.seed = async function(knex) {
           1}. Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.`,
         is_active: Math.random() < 0.6 ? false : true,
         category: CATEGORY[Math.floor(Math.random() * CATEGORY.length)],
-        rating: (Math.random() * (10.0 - 1.0 + 1.0) + 1.0).toFixed(1)
+        rating: (Math.random() * (5.0 - 1.0 + 1.0) + 1.0).toFixed(1)
       });
       await Promise.all(
         [...Array(3).keys()].map(async () => {
           return returnId(knex('listing_image')).insert({
             listing_id: listing[0],
-            image_url: `https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQXZ8SesX28HePAR71L995TcEpkx91g6SudGMG9FSC97oCkKkSI&usqp=CAU`
+            image_url: 'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1593961377/wfouh2evldlk2otnxepx.svg'
           });
         })
       );
@@ -27,7 +27,7 @@ exports.seed = async function(knex) {
         [...Array(WEIGHTS.length).keys()].map(async w => {
           await returnId(knex('listing_cost')).insert({
             listing_id: listing[0],
-            weight: w,
+            weight: WEIGHTS[w],
             cost: Math.floor(Math.random() * (999 - 100 + 1) + 100)
           });
         })

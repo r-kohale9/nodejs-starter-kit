@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { List } from 'antd';
@@ -18,13 +18,18 @@ const renderMetaData = t => (
 
 const BakerView = props => {
   const { listings, t, user, categorySlick, history } = props;
-
+  const [items, setItems] = useState(listings);
+  const handleChange = category => {
+    setItems(listings.filter(item => item.category === category));
+  };
+  console.log('props view', props);
+  console.log('items', items);
   return (
     <PageLayout history={history} showMobNav={false} showMenuBar={true}>
       {renderMetaData(t)}
       <UserDisplayDetailComponent history={history} user={user} />
       <div style={{ margin: '35px 0px 27px 0px' }}>
-        <CategorySlick data={categorySlick} />
+        <CategorySlick data={categorySlick} setCategory={handleChange} />
       </div>
       <div style={{ height: '36px', width: '100%' }} />
       {listings && (
@@ -39,7 +44,7 @@ const BakerView = props => {
             xl: 6,
             xxl: 6
           }}
-          dataSource={listings}
+          dataSource={items || listings}
           renderItem={item => (
             <List.Item key={item.id}>
               <RelatedCardComponent key={item.id} listing={item} />

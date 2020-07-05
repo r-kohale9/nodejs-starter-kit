@@ -9,7 +9,7 @@ const PadR10 = styled.div`
 `;
 
 const CategoryIconSlick = props => {
-  const { data } = props;
+  const { data, setCategory } = props;
   const settings = {
     infinite: true,
     speed: 500,
@@ -24,7 +24,9 @@ const CategoryIconSlick = props => {
           <PadR10>
             <Row align="middle" type="flex" justify="space-around">
               <Col span={24}>
-                <Button type="black">{category}</Button>
+                <Button type="black" onClick={() => setCategory(category)}>
+                  {category}
+                </Button>
               </Col>
             </Row>
           </PadR10>
@@ -35,7 +37,8 @@ const CategoryIconSlick = props => {
 };
 
 CategoryIconSlick.propTypes = {
-  data: PropTypes.array
+  data: PropTypes.array,
+  setCategory: PropTypes.func
 };
 
 export default CategoryIconSlick;

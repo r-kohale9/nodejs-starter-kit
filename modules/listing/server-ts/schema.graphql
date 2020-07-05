@@ -3,6 +3,8 @@ type Listing {
   id: Int
   userId: Int!
   title: String!
+  category: String!
+  rating: String!
   description: String
   isActive: Boolean
   listingImages: [ListingImages]
@@ -19,6 +21,7 @@ type ListingImages {
 
 type ListingCost {
   id: Int
+  weight: Int
   listingId: Int
   cost: Int
 }

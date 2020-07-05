@@ -141,7 +141,7 @@ const updateMyListingsState = (ListingsUpdated, updateQuery) => {
 
 const onAddMyListing = (prev, node) => {
   // ignore if duplicate
-  console.log('prev', prev);
+  // console.log('prev', prev);
   if (prev.userListings.edges.some(listing => node.id === listing.node.id)) {
     return prev;
   }
@@ -199,7 +199,7 @@ const onDeleteListing = history => {
 const updateMyListingsBookmarkState = (ListingsUpdated, updateQuery) => {
   const { mutation, node } = ListingsUpdated;
   updateQuery(prev => {
-    console.log('prev', prev, 'node', node);
+    // console.log('prev', prev, 'node', node);
     switch (mutation) {
       case 'CREATED':
         return onAddMyListingsBookmark(prev, node);
@@ -215,7 +215,7 @@ const updateMyListingsBookmarkState = (ListingsUpdated, updateQuery) => {
 
 const onAddMyListingsBookmark = (prev, node) => {
   // ignore if duplicate
-  console.log('prev', prev, 'node', node);
+  // console.log('prev', prev, 'node', node);
   if (prev.myListingsBookmark.edges.some(listing => node.id === listing.node.id)) {
     return prev;
   }
@@ -243,7 +243,7 @@ const onAddMyListingsBookmark = (prev, node) => {
 
 const onDeleteMyListingBookmark = (prev, id) => {
   const index = prev.myListingsBookmark.edges.findIndex(list => list.node.id === id);
-  console.log('indes', index);
+  // console.log('indes', index);
   // ignore if not found
   if (index < 0) {
     return prev;
@@ -345,7 +345,7 @@ const withAddListing = Component =>
   graphql(ADD_LISTING, {
     props: ({ ownProps: { history }, mutate }) => ({
       addListing: async values => {
-        console.log('addlisting', values);
+        // console.log('addlisting', values);
         message.destroy();
         message.loading('Please wait...', 0);
         try {
@@ -411,7 +411,7 @@ const withEditListing = Component =>
           const input = removeTypename(values);
           input.listingImages = Object.values(input.listingImages);
 
-          console.log('input', input);
+          // console.log('input', input);
           await mutate({
             variables: {
               input: input
@@ -452,7 +452,7 @@ const withUserListing = Component =>
 const withMyListingsBookmark = Component =>
   graphql(MY_LISTINGS_BOOKMARK_QUERY, {
     options: props => {
-      console.log('props from operation', props.currentUser.id);
+      // console.log('props from operation', props.currentUser.id);
       return {
         variables: {
           userId: props.currentUser && props.currentUser.id,
@@ -526,7 +526,7 @@ const withListingBookmarkStatus = Component =>
       } else if (props.navigation) {
         id = props.navigation.state.params.id;
       }
-      console.log('props LO', props, 'id', id);
+      // console.log('props LO', props, 'id', id);
       return {
         variables: {
           listingId: Number(id || (props.listing && props.listing.id)),
