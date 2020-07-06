@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button, List } from 'antd';
+import { Row, Col, Button, Spin, List } from 'antd';
 import { withFormik } from 'formik';
 import { PropTypes } from 'prop-types';
 
@@ -14,7 +14,7 @@ import { PgTitle } from './StyledComponents';
 const totalAmount = (orderDetails, values) => {
   let price = 0;
   orderDetails.map((item, indx) => {
-    price = price + item.price * values.orderDetails[indx].units;
+    price = price + item.price * values && values.orderDetails[indx].unit;
   });
   return price;
 };
@@ -27,59 +27,65 @@ const Text = styled.span`
 `;
 
 const CheckoutCartView = props => {
-  const { getCart, history, promocodes, handleSubmit, setFieldValue, values } = props;
+  const { loading, getCart, history, promocodes, handleSubmit, setFieldValue, values } = props;
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="CART">
-      <Col span={24}>
-        <PgTitle>My Cart</PgTitle>
-        <div style={{ margin: '12px 0px' }} />
-      </Col>
-      <Col span={24}>
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 3
-          }}
-          dataSource={getCart && getCart.orderDetails && getCart.orderDetails.length !== 0 && getCart.orderDetails}
-          renderItem={(item, indx) => (
-            <List.Item>
-              <CartItemComponent name={`orderDetails[${indx}].units`} item={item} onChange={setFieldValue} />
-            </List.Item>
-          )}
-        />
-      </Col>
-
-      <Col span={24}>
-        <PromoCodeForm promocodes={promocodes} />
-      </Col>
-      <Col span={24} style={{ marginTop: '28px' }}>
-        <Row type="flex" align="middle" justify="center">
-          <Col span={10}>
-            <Text>Total Amount:</Text>
+      {!loading && getCart && getCart.orderDetails ? (
+        <>
+          <Col span={24}>
+            <PgTitle>My Cart</PgTitle>
+            <div style={{ margin: '12px 0px' }} />
           </Col>
-          <Col span={14}>
-            <Row type="flex" align="end">
-              Rs. {totalAmount(getCart.orderDetails, values)}
+          <Col span={24}>
+            <List
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 1,
+                md: 2,
+                lg: 3
+              }}
+              dataSource={getCart && getCart.orderDetails && getCart.orderDetails.length !== 0 && getCart.orderDetails}
+              renderItem={(item, indx) => (
+                <List.Item>
+                  <CartItemComponent name={`orderDetails[${indx}].unit`} item={item} onChange={setFieldValue} />
+                </List.Item>
+              )}
+            />
+          </Col>
+
+          <Col span={24}>
+            <PromoCodeForm promocodes={promocodes} />
+          </Col>
+          <Col span={24} style={{ marginTop: '28px' }}>
+            <Row type="flex" align="middle" justify="center">
+              <Col span={10}>
+                <Text>Total Amount:</Text>
+              </Col>
+              <Col span={14}>
+                <Row type="flex" align="end">
+                  Rs. {totalAmount(getCart.orderDetails, values)}
+                </Row>
+              </Col>
             </Row>
           </Col>
-        </Row>
-      </Col>
-      <Col span={24}>
-        <div style={{ padding: '24px 0px 50px 0px' }}>
-          <Button
-            type="primary"
-            size="large"
-            block
-            onClick={handleSubmit}
-            // onClick={() => history.push('/demo/checkout-order')}
-          >
-            CHECK OUT
-          </Button>
-        </div>
-      </Col>
+          <Col span={24}>
+            <div style={{ padding: '24px 0px 50px 0px' }}>
+              <Button
+                type="primary"
+                size="large"
+                block
+                onClick={handleSubmit}
+                // onClick={() => history.push('/demo/checkout-order')}
+              >
+                CHECK OUT
+              </Button>
+            </div>
+          </Col>
+        </>
+      ) : (
+        <Spin />
+      )}
     </PageLayout>
   );
 };
@@ -87,6 +93,7 @@ const CheckoutCartView = props => {
 CheckoutCartView.propTypes = {
   getCart: PropTypes.object,
   history: PropTypes.object,
+  loading: PropTypes.bool,
   promocodes: PropTypes.object,
   handleSubmit: PropTypes.func,
   setFieldValue: PropTypes.func,
@@ -99,7 +106,7 @@ const CheckoutCartFormWithFormik = withFormik({
     function getOrderDetails(item) {
       return {
         listingId: item.id,
-        units: item.units
+        unit: item.unit
       };
     }
 

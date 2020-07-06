@@ -30,7 +30,7 @@ const Rectangle = styled(Button)`
 `;
 
 const BookmarkComponent = props => {
-  const { handleBookmark, listingBookmarkStatus } = props;
+  const { handleBookmark, listingBookmarkStatus, custom } = props;
   const [status, setStatus] = useState(listingBookmarkStatus);
 
   useEffect(() => {
@@ -42,39 +42,46 @@ const BookmarkComponent = props => {
     setStatus(!status);
   };
 
-  return status && status ? (
-    <RectangleActive onClick={handleEvent}>
-      <img
-        alt=""
-        src={HeartActive}
-        style={{
-          position: 'absolute',
-          left: '7px',
-          top: '7px',
-          height: '15px',
-          width: '15px'
-        }}
-      />
-    </RectangleActive>
+  return custom && custom ? (
+    status && status ? (
+      <RectangleActive onClick={handleEvent}>
+        <img
+          alt=""
+          src={HeartActive}
+          style={{
+            position: 'absolute',
+            left: '7px',
+            top: '7px',
+            height: '15px',
+            width: '15px'
+          }}
+        />
+      </RectangleActive>
+    ) : (
+      <Rectangle onClick={handleEvent}>
+        <img
+          alt=""
+          src={Heart}
+          style={{
+            position: 'absolute',
+            left: '7px',
+            top: '7px',
+            height: '15px',
+            width: '15px'
+          }}
+        />
+      </Rectangle>
+    )
+  ) : status && status ? (
+    <Button type="primary" shape="circle" icon="heart" onClick={handleEvent} />
   ) : (
-    <Rectangle onClick={handleEvent}>
-      <img
-        alt=""
-        src={Heart}
-        style={{
-          position: 'absolute',
-          left: '7px',
-          top: '7px',
-          height: '15px',
-          width: '15px'
-        }}
-      />
-    </Rectangle>
+    <Button shape="circle" icon="heart" onClick={handleEvent} />
   );
 };
 
 BookmarkComponent.propTypes = {
   handleBookmark: PropTypes.func,
+  custom: PropTypes.bool,
   listingBookmarkStatus: PropTypes.bool
 };
 

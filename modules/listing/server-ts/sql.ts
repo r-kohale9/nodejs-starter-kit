@@ -3,7 +3,7 @@ import { Model, raw } from 'objection';
 import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
-// import { User } from '@gqlapp/user-server-ts/sql';
+import { OrderDetail } from '@gqlapp/order-server-ts/sql';
 
 Model.knex(knex);
 
@@ -76,6 +76,14 @@ export default class ListingDAO extends Model {
         join: {
           from: 'listing.id',
           to: 'listing_bookmark.listing_id'
+        }
+      },
+      order_details: {
+        relation: Model.HasManyRelation,
+        modelClass: OrderDetail,
+        join: {
+          from: 'listing.id',
+          to: 'order_detail.order_id'
         }
       }
     };

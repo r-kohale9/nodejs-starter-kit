@@ -1,14 +1,21 @@
+#import "@gqlapp/listing-client-react/graphql/Listing.graphql"
+
 fragment OrderInfo on Order {
     id
     state
     orderDetails {
         id
-        cost
-        quantity
-        date
-        title
-        thumbnail
-        noteFromCustomer
-        additionalCustomization
+        # cost
+        # quantity
+        # date
+        # title
+        # thumbnail
+        # noteFromCustomer
+        # additionalCustomization
+        unit
+        weight
+        listing {
+            ...ListingInfo
+        }
     }
 }

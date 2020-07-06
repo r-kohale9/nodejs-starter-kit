@@ -7,7 +7,7 @@ module.exports = Object.freeze({
 
   // Delivered
   DELIVERED: 'DELIVERED',
-  
-  STATESARRAY: ['STALE', 'PROCESSING', 'DELIVERED'],
-  DELIVERY: ['Self pickup', 'Danzo', 'Swiggy']
+
+  STATESARRAY: ['PROCESSING', 'DELIVERED'],
+  DELIVERY: ['Self pickup', 'Danzo', 'Swiggy'],
 });

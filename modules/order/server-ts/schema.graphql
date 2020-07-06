@@ -14,14 +14,17 @@ type Order {
 
 type OrderDetail {
   id: Int!
-  state: String
-  date: String
-  cost: Int
-  title: String
-  thumbnail: String
-  quantity: Int
-  noteFromCustomer: String
-  additionalCustomization: String
+  # state: String
+  # date: String
+  # cost: Int
+  # title: String
+  # thumbnail: String
+  # quantity: Int
+  # noteFromCustomer: String
+  # additionalCustomization: String
+  weight: String
+  unit: Int
+  listing: [Listing]
 }
 
 
@@ -93,20 +96,23 @@ input ChangeDateInCartInput {
 
 input AddToCartInput {
   consumerId: Int
-  vendorId: Int
+  # vendorId: Int
   orderDetail: OrderDetailInput!
 }
 
 input OrderDetailInput {
   id: Int
-  date: String
-  cost: Int
-  thumbnail: String
-  title: String
-  quantity: Int
+  # date: String
+  # cost: Int
+  # thumbnail: String
+  # title: String
+  # quantity: Int
 
-  noteFromCustomer: String
-  additionalCustomization: String
+  # noteFromCustomer: String
+  # additionalCustomization: String
+  weight: String
+  unit: Int
+  listingId: Int
 }
 
 input AddOrderInput {

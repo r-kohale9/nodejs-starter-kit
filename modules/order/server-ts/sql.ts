@@ -2,7 +2,8 @@ import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 import { Model } from 'objection';
 import { knex, returnId, orderedFor } from '@gqlapp/database-server-ts';
 // import { User, UserAddress } from '@gqlapp/user-server-ts/sql';
-import Listing from '@gqlapp/listing-server-ts/sql';
+
+import ListingDAO from '@gqlapp/listing-server-ts/sql';
 
 // import { has } from 'lodash';
 import STATES from './constants/order_states';
@@ -10,7 +11,7 @@ import STATES from './constants/order_states';
 // Give the knex object to objection.
 Model.knex(knex);
 
-interface OrderDetail {
+interface OrderDetails {
   orderId: number;
   date: string;
   cost: number;
@@ -19,13 +20,12 @@ interface OrderDetail {
   thumbnail: string;
 }
 
-
 export interface Order {
   id: number;
   userId: number;
   state: string;
   isActive: boolean;
-  orderDetails: OrderDetail[];
+  orderDetails: OrderDetails[];
 }
 
 export interface Identifier {
@@ -36,8 +36,7 @@ const eager_od = '[order]';
 // const eager =
 //   '[user.[profile], user_address, order_details.[extension.[order_detail], listing.[user.[profile], listing_images,  listing_detail.damages, listing_rental, listing_content]], order_payment, cards]';
 
-const eager =
-  '[order_details]';
+const eager = '[order_details.listing.[listing_images, listing_cost]]';
 
 export default class OrderDAO extends Model {
   // private id: any;
@@ -67,7 +66,7 @@ export default class OrderDAO extends Model {
           from: 'order.id',
           to: 'order_detail.order_id'
         }
-      },
+      }
     };
   }
 
@@ -132,7 +131,6 @@ export default class OrderDAO extends Model {
     return res;
   }
 
-
   public async userOrders(userId) {
     const res = camelizeKeys(
       await OrderDAO.query()
@@ -173,11 +171,13 @@ export default class OrderDAO extends Model {
     console.log(cart);
     if (!cart) {
       // Create a STALE order
-        input.orderId = await returnId(knex('order')).insert({
+      input.orderId = await returnId(knex('order')).insert({
         consumer_id: input.consumerId,
         state: STATES.STALE
       });
-    }else input.orderDetail.orderId = cart.id;
+    } else {
+      input.orderDetail.orderId = cart.id;
+    }
 
     console.log(input);
     const newOrderDetail = camelizeKeys(await OrderDetail.query().insert(decamelizeKeys(input.orderDetail)));
@@ -194,6 +194,7 @@ export default class OrderDAO extends Model {
         .eager(eager)
         .orderBy('id', 'desc')
     );
+    console.log('res', res);
 
     if (!res.length) {
       // Create a STALE order
@@ -288,11 +289,10 @@ export default class OrderDAO extends Model {
     );
     return res;
   }
-
 }
 
 // OrderDetail model.
-class OrderDetail extends Model {
+export class OrderDetail extends Model {
   static get tableName() {
     return 'order_detail';
   }
@@ -309,6 +309,14 @@ class OrderDetail extends Model {
         join: {
           from: 'order_detail.order_id',
           to: 'order.id'
+        }
+      },
+      listing: {
+        relation: Model.HasManyRelation,
+        modelClass: ListingDAO,
+        join: {
+          from: 'order_detail.listing_id',
+          to: 'listing.id'
         }
       }
     };

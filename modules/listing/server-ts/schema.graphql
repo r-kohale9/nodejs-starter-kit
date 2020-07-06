@@ -21,7 +21,7 @@ type ListingImages {
 
 type ListingCost {
   id: Int
-  weight: Int
+  weight: String
   listingId: Int
   cost: Int
 }

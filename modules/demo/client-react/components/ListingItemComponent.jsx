@@ -50,6 +50,7 @@ const ListingItemComponent = props => {
             <Row type="flex" justify="end">
               {currentUser && (
                 <BookmarkComponent
+                  custom={true}
                   handleBookmark={() => bookmarkListing(listing.id, currentUser.id)}
                   listing={listing}
                   currentUser={currentUser}

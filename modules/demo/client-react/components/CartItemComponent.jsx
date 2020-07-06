@@ -25,7 +25,8 @@ const IncremntBtn = styled(Button)`
 
 const CartItemComponent = props => {
   const { name, item, onChange } = props;
-  const [units, setUnits] = useState(item.units);
+  const listing = item.listing[0];
+  const [units, setUnits] = useState(item.unit);
   const handleChange = value => {
     setUnits(value);
     onChange(name, value);
@@ -47,7 +48,7 @@ const CartItemComponent = props => {
       <Row>
         <Col span={8}>
           <div style={{ height: '104px', overflow: 'hidden' }}>
-            <img alt="example" src={item.imageUrl} />
+            <img alt="example" src={listing.listingImages[0].imageUrl} />
           </div>
         </Col>
         <Col span={16} style={{ padding: '11px' }}>
@@ -55,7 +56,7 @@ const CartItemComponent = props => {
             <Row>
               <Col span={20}>
                 <h3>
-                  <strong>{item.title}</strong>
+                  <strong>{listing.title}</strong>
                 </h3>
               </Col>
               <Col span={4}>

@@ -62,16 +62,42 @@ exports.seed = async function(knex) {
 
   // Table: order
   await Promise.all(
-    [...Array(50).keys()].map(async () => {
+    [...Array(1).keys()].map(async () => {
       const order = await returnId(knex('order')).insert({
-        user_id: Math.floor(Math.random() * 2) + 1,
+        consumer_id: Math.floor(Math.random() * 2) + 1,
         tracking_number: Math.random()
           .toString(36)
           .substring(3)
           .toUpperCase(),
         // payment_method_id: Math.floor(Math.random() * 2) + 1,
         // shipping_address_id: Math.floor(Math.random() * 2) + 1,
-        status: STATES.STATESARRAY[Math.floor(Math.random() * STATES.STATESARRAY.length)],
+        state: 'STALE',
+        delivery_method: STATES.DELIVERY[Math.floor(Math.random() * STATES.DELIVERY.length)],
+        discount: '10% personal promo code'
+      });
+      await Promise.all(
+        [...Array(Math.floor(Math.random() * 4) + 1).keys()].map(async () => {
+          return returnId(knex('order_detail')).insert({
+            order_id: order[0],
+            listing_id: Math.floor(Math.random() * 50) + 1,
+            weight: WEIGHTS[Math.floor(Math.random() * WEIGHTS.length)],
+            unit: Math.floor(Math.random() * 7) + 1
+          });
+        })
+      );
+    })
+  );
+  await Promise.all(
+    [...Array(50).keys()].map(async () => {
+      const order = await returnId(knex('order')).insert({
+        consumer_id: Math.floor(Math.random() * 2) + 1,
+        tracking_number: Math.random()
+          .toString(36)
+          .substring(3)
+          .toUpperCase(),
+        // payment_method_id: Math.floor(Math.random() * 2) + 1,
+        // shipping_address_id: Math.floor(Math.random() * 2) + 1,
+        state: STATES.STATESARRAY[Math.floor(Math.random() * STATES.STATESARRAY.length)],
         delivery_method: STATES.DELIVERY[Math.floor(Math.random() * STATES.DELIVERY.length)],
         discount: '10% personal promo code'
       });

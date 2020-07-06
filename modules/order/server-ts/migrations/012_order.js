@@ -48,7 +48,7 @@ exports.up = function(knex, Promise) {
       .createTable('order', table => {
         table.increments();
         table
-          .integer('user_id')
+          .integer('consumer_id')
           .unsigned()
           .references('id')
           .inTable('user')
@@ -66,7 +66,7 @@ exports.up = function(knex, Promise) {
           .references('id')
           .inTable('address')
           .onDelete('CASCADE');
-        table.string('status').defaultTo(STALE);
+        table.string('state').defaultTo(STALE);
         table.string('delivery_method');
         table.string('discount');
         table.timestamps(false, true);
@@ -79,8 +79,9 @@ exports.up = function(knex, Promise) {
           .references('id')
           .inTable('order')
           .onDelete('CASCADE');
+        table.string('flavour');
         table.string('weight');
-        table.string('unit');
+        table.integer('unit').defaultTo('1');
         table
           .integer('listing_id')
           .unsigned()

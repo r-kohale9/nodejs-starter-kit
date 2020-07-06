@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Spin, Row, Col, Button, Rate } from 'antd';
+import { Spin, Row, Col, Rate } from 'antd';
 import Slider from 'react-slick';
 import { withFormik } from 'formik';
 
@@ -10,6 +10,7 @@ import PageLayout from './PageLayout';
 import SelectModal from './SelectModal';
 import AddToCart from './AddToCart';
 import PreOrderComponent from './PreOrderComponent';
+import BookmarkComponent from './BookmarkComponent';
 
 const ListingDetailsViewFormSchema = {
   weight: [required],
@@ -17,7 +18,19 @@ const ListingDetailsViewFormSchema = {
 };
 
 const ListingDetailsView = props => {
-  const { flavours, loading, weights, listing, history, values, setFieldValue, handleSubmit, isValid } = props;
+  const {
+    flavours,
+    currentUser,
+    loading,
+    handleBookmark,
+    weights,
+    listing,
+    history,
+    values,
+    setFieldValue,
+    handleSubmit,
+    isValid
+  } = props;
   const { preOrder } = props.location;
   const [preOrd, setPreOrd] = useState(preOrder);
 
@@ -73,7 +86,11 @@ const ListingDetailsView = props => {
                 </Col>
                 <Col span={2}>
                   <Row type="flex" justify="end">
-                    <Button type="circle" icon="heart" />
+                    <BookmarkComponent
+                      handleBookmark={() => handleBookmark(listing.id, currentUser.id)}
+                      listing={listing}
+                      currentUser={currentUser}
+                    />
                   </Row>
                 </Col>
               </Row>
@@ -127,7 +144,10 @@ ListingDetailsView.propTypes = {
   preOrder: PropTypes.bool,
   setFieldValue: PropTypes.func,
   handleSubmit: PropTypes.func,
-  isValid: PropTypes.bool
+  isValid: PropTypes.bool,
+  currentUser: PropTypes.object,
+  loading: PropTypes.bool,
+  handleBookmark: PropTypes.func
 };
 
 const ListingDetailsViewWithFormik = withFormik({
