@@ -1,0 +1,7 @@
+fragment PromoCodesInfo on PromoCode {
+  id
+  title
+  imageUrl
+  validity
+  promoCode
+}

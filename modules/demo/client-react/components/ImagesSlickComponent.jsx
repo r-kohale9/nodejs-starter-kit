@@ -19,7 +19,7 @@ const ImagesSlickComponent = props => {
           return (
             <Row align="middle" type="flex" justify="center">
               <Col span={24}>
-                <img style={{ height: '104px', paddingRight: '10px' }} alt="" src={img.image} />
+                <img style={{ height: '104px', paddingRight: '10px' }} alt="" src={img.imageUrl} />
               </Col>
             </Row>
           );

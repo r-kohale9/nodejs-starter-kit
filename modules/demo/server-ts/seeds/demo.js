@@ -52,7 +52,7 @@ exports.seed = async function(knex) {
             return returnId(knex('review_image')).insert({
               review_id: review[0],
               image_url:
-                'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1593955501/at2lzmozbojuhbpcqc4y.png'
+                'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1593961377/wfouh2evldlk2otnxepx.svg'
             });
           })
         );

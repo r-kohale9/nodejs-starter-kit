@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
-import { Row, Col, Checkbox } from 'antd';
+import { Row, Col, Checkbox, Spin } from 'antd';
 
 import PageLayout from './PageLayout';
 import ReviewsItemComponent from './ReviewsItemComponent';
 import WriteReviewComponent from './WriteReviewComponent';
 import { PgTitle } from './StyledComponents';
+
+import SuggestedListComponent from './SuggestedListComponent';
 
 const BtnDiv = styled.div`
   position: fixed;
@@ -21,7 +23,16 @@ const BtnDiv = styled.div`
 `;
 
 const ReviewsView = props => {
-  const { reviews, onSubmit } = props;
+  const RenderListings = () => (
+    <div>
+      {/* <h2 className="headingTop">
+        <strong>All Listings</strong>
+      </h2> */}
+      {/* <Divider style={{ margin: '5px 0px 10px' }} /> */}
+      <SuggestedListComponent {...props} />
+    </div>
+  );
+  const { reviews, onSubmit, loading } = props;
   const [photo, setPhoto] = useState(false);
   return (
     <PageLayout showMenuBar={false} showNavBar={true} title={photo && 'Rating and reviews'}>
@@ -46,12 +57,19 @@ const ReviewsView = props => {
           </Col>
         </Col>
         <Col span={24}>
-          {reviews &&
+          {reviews && reviews.totalCount ? <RenderListings /> : !loading ? <Spin /> : null}
+          {/* {!loading && reviews && reviews.totalCount ? (
+
+            <SuggestedListComponent {...props} listings={reviews} showPhotos={photo} />
+          ) : (
+            <Spin />
+          )} */}
+          {/* {reviews &&
             reviews.map(review => (
               <Col span={24}>
                 <ReviewsItemComponent review={review} showPhotos={photo} />
               </Col>
-            ))}
+            ))} */}
         </Col>
       </Row>
       <BtnDiv>

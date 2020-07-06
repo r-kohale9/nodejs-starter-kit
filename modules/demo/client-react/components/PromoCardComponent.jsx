@@ -19,13 +19,13 @@ const PromoCardComponent = props => {
     >
       <Row>
         <Col span={6} align="center" style={{ height: '80px', width: '80px', overflow: 'hidden' }}>
-          <img alt="" src={promocode.thumbnail} width="100%" />
+          <img alt="" src={promocode.imageUrl} width="100%" />
         </Col>
         <Col span={17}>
           <Row style={{ padding: '12px 15px 11px 14px' }}>
             <Col span={24}>
               <Row type="flex" justify="end">
-                <small>{promocode.validity}</small>
+                <small>{promocode.validity} days remaining</small>
               </Row>
             </Col>
             <Col span={24}>
@@ -33,7 +33,7 @@ const PromoCardComponent = props => {
                 <Row type="flex" justify="start" align="top">
                   <Col span={24}>{promocode.title}</Col>
                   <Col span={24}>
-                    <small>{promocode.promocode}</small>
+                    <small>{promocode.promoCode}</small>
                   </Col>
                 </Row>
               </Col>

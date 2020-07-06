@@ -17,6 +17,7 @@ const Avatar = styled.img`
 
 const ReviewsItemComponent = props => {
   const { review, showPhotos } = props;
+  // console.log('props', props);
   return (
     <Row type="flex" align="middle">
       <Avatar alt="" src={review.thumbnail} />
@@ -46,7 +47,7 @@ const ReviewsItemComponent = props => {
         </Col>
         {showPhotos && (
           <Col span={24}>
-            <ImagesSlickComponent images={review.images} />
+            <ImagesSlickComponent images={review.reviewImages} />
           </Col>
         )}
         <Col span={24}>

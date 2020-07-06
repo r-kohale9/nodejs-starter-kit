@@ -1,23 +1,28 @@
-import { PromoCode, Identifier } from './sql';
+import { Reviews, Identifier } from './sql';
 
 interface Edges {
   cursor: number;
-  node: PromoCode & Identifier;
+  node: Reviews & Identifier;
 }
 
 export default (pubsub: any) => ({
   Query: {
-    async getPromoCodes(obj: any, { limit, after, orderBy, filter }: any, context: any) {
+    async reviews(obj: any, { limit, after, orderBy, filter, userId }: any, context: any) {
       const edgesArray: Edges[] = [];
-      const { total, promoCodes } = await context.Demo.promoCodesPagination(limit, after, orderBy, filter);
-      // console.log(await context.Demo.promoCodesPagination(limit, after, orderBy, filter));
+      const { total, reviews } = await context.Review.reviewsPagination(
+        limit,
+        after,
+        orderBy,
+        filter,
+        userId || context.req.identity.id
+      );
 
       const hasNextPage = total > after + limit;
 
-      promoCodes.map((promoCode: PromoCode & Identifier, index: number) => {
+      reviews.map((listing: Reviews & Identifier, index: number) => {
         edgesArray.push({
           cursor: after + index,
-          node: promoCode
+          node: listing
         });
       });
       const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;

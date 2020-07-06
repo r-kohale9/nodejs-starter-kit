@@ -1,33 +1,40 @@
 # Entity
-type PromoCodes {
+type Reviews {
   totalCount: Int
-  edges: [PromoCodeEdges]
-  pageInfo: PromoCodePageInfo
+  edges: [ReviewEdges]
+  pageInfo: ReviewPageInfo
 }
-type PromoCodeEdges {
-  node: PromoCode
+type ReviewEdges {
+  node: Review
   cursor: Int
 }
-type PromoCodePageInfo {
+type ReviewPageInfo {
   endCursor: Int
   hasNextPage: Boolean
 }
 
-type PromoCode {
+type ReviewImage {
   id: Int
-  title: String
   imageUrl: String
-  validity: Int
-  promoCode: String
+}
+
+type Review {
+  id: Int
+  rating: Int
+  review: String
+  reviewImages: [ReviewImage]
+  createdAt: String!
+  updatedAt: String!
 }
 
 extend type Query {
-  getPromoCodes(
+  reviews(
+    userId: Int
     limit: Int
     after: Int
     orderBy: OrderByListInput
     filter: FilterListInput
-  ): PromoCodes
+  ): Reviews
 }
 
 # extend type Mutation {
