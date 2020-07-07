@@ -103,7 +103,7 @@ const ListingItemComponent = props => {
               padding: '0px'
             }}
             cover={
-              <div style={{ height: '130px', overflow: 'hidden' }}>
+              <div align="center" style={{ height: '130px', width: '100%', overflow: 'hidden' }}>
                 <img
                   alt="example"
                   src={listing.listingImages && listing.listingImages[0] && listing.listingImages[0].imageUrl}

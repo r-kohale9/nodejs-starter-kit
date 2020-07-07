@@ -3,7 +3,7 @@ import { Card, Row, Col, Button } from 'antd';
 import { PropTypes } from 'prop-types';
 
 const PromoCardComponent = props => {
-  const { promocode, onApply } = props;
+  const { promoCode, onApply } = props;
   return (
     <Card
       style={{
@@ -19,21 +19,21 @@ const PromoCardComponent = props => {
     >
       <Row>
         <Col span={6} align="center" style={{ height: '80px', width: '80px', overflow: 'hidden' }}>
-          <img alt="" src={promocode.imageUrl} width="100%" />
+          <img alt="" src={promoCode.imageUrl} width="100%" />
         </Col>
         <Col span={17}>
           <Row style={{ padding: '12px 15px 11px 14px' }}>
             <Col span={24}>
               <Row type="flex" justify="end">
-                <small>{promocode.validity} days remaining</small>
+                <small>{promoCode.validity} days remaining</small>
               </Row>
             </Col>
             <Col span={24}>
               <Col span={16}>
                 <Row type="flex" justify="start" align="top">
-                  <Col span={24}>{promocode.title}</Col>
+                  <Col span={24}>{promoCode.title}</Col>
                   <Col span={24}>
-                    <small>{promocode.promoCode}</small>
+                    <small>{promoCode.promoCode}</small>
                   </Col>
                 </Row>
               </Col>
@@ -43,7 +43,7 @@ const PromoCardComponent = props => {
                     style={{ width: 'fit-content' }}
                     type="primary"
                     block
-                    onClick={() => onApply(promocode.promocode)}
+                    onClick={() => onApply(promoCode.promoCode)}
                   >
                     Apply
                   </Button>
@@ -58,7 +58,7 @@ const PromoCardComponent = props => {
 };
 
 PromoCardComponent.propTypes = {
-  promocode: PropTypes.object,
+  promoCode: PropTypes.object,
   onApply: PropTypes.func
 };
 

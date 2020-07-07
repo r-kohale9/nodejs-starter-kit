@@ -37,7 +37,7 @@ class SuggestedCardListComponent extends Component {
       return;
     } else {
       const newData = await this.props.loadData(endCursor + 1, 'add');
-      console.log('newData', newData);
+      console.log('newData', newData.listings);
       this.setState({
         data: newData.listings,
         loading: false

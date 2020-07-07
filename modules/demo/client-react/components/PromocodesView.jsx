@@ -1,27 +1,27 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { List, Row, Col, Divider } from 'antd';
 
 import PageLayout from './PageLayout';
 import PromoCardComponent from './PromoCardComponent';
-import SuggestedPromoCodesListComponent from './SuggestedPromoCodesListComponent';
+import SuggestedListComponent from './SuggestedListComponent';
 
 const NoPromCodesMessage = ({ t }) => <div className="text-center">No promo codes</div>;
 NoPromCodesMessage.propTypes = { t: PropTypes.func };
 
 const PromocodesView = props => {
-  const { promocodes, getPromoCodes, loading, t, history, onSubmit } = props;
+  const { getPromoCodes, loading, t, history, onSubmit } = props;
+  const renderFunc = (key, promoCode) => <PromoCardComponent key={key} onApply={onSubmit} promoCode={promoCode} />;
+  const RenderPromoCodes = () => (
+    <div>
+      <SuggestedListComponent items={getPromoCodes} {...props} renderFunc={renderFunc} />
+    </div>
+  );
+
   return (
     <PageLayout history={history} title="Promocodes">
       <div style={{ marginTop: '50px' }} />
       {getPromoCodes && getPromoCodes.totalCount ? (
-        <div>
-          <h2 className="headingTop">
-            <strong>All PromoCodes</strong>
-          </h2>
-          <Divider style={{ margin: '5px 0px 10px' }} />
-          <SuggestedPromoCodesListComponent {...props} />
-        </div>
+        <RenderPromoCodes />
       ) : !loading ? (
         <NoPromCodesMessage t={t} />
       ) : null}
@@ -30,8 +30,10 @@ const PromocodesView = props => {
 };
 
 PromocodesView.propTypes = {
-  promocodes: PropTypes.array,
+  getPromoCodes: PropTypes.array,
+  loading: PropTypes.bool,
   history: PropTypes.object,
+  t: PropTypes.func,
   onSubmit: PropTypes.func
 };
 

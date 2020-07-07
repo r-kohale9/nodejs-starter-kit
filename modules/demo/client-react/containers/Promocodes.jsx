@@ -1,5 +1,5 @@
 import React from 'react';
-import { compose, removeTypename, PLATFORM } from '@gqlapp/core-common';
+import { compose, PLATFORM } from '@gqlapp/core-common';
 
 import { graphql } from 'react-apollo';
 
@@ -50,7 +50,7 @@ export default compose(
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Listings'
+                __typename: 'PromoCodes'
               }
             };
           }

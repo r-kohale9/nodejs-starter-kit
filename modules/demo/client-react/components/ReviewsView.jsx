@@ -23,17 +23,14 @@ const BtnDiv = styled.div`
 `;
 
 const ReviewsView = props => {
-  const RenderListings = () => (
-    <div>
-      {/* <h2 className="headingTop">
-        <strong>All Listings</strong>
-      </h2> */}
-      {/* <Divider style={{ margin: '5px 0px 10px' }} /> */}
-      <SuggestedListComponent {...props} />
-    </div>
-  );
   const { reviews, onSubmit, loading } = props;
   const [photo, setPhoto] = useState(false);
+  const renderFunc = (key, review) => <ReviewsItemComponent key={key} review={review} showPhotos={photo} />;
+  const RenderReviews = () => (
+    <div>
+      <SuggestedListComponent items={reviews} {...props} renderFunc={renderFunc} />
+    </div>
+  );
   return (
     <PageLayout showMenuBar={false} showNavBar={true} title={photo && 'Rating and reviews'}>
       <Row type="flex" align="middle">
@@ -56,21 +53,7 @@ const ReviewsView = props => {
             </Row>
           </Col>
         </Col>
-        <Col span={24}>
-          {reviews && reviews.totalCount ? <RenderListings /> : !loading ? <Spin /> : null}
-          {/* {!loading && reviews && reviews.totalCount ? (
-
-            <SuggestedListComponent {...props} listings={reviews} showPhotos={photo} />
-          ) : (
-            <Spin />
-          )} */}
-          {/* {reviews &&
-            reviews.map(review => (
-              <Col span={24}>
-                <ReviewsItemComponent review={review} showPhotos={photo} />
-              </Col>
-            ))} */}
-        </Col>
+        <Col span={24}>{reviews && reviews.totalCount ? <RenderReviews /> : !loading ? <Spin /> : null}</Col>
       </Row>
       <BtnDiv>
         <Col span={12} style={{ position: 'absolute', bottom: '10px', right: '17px' }}>
@@ -83,6 +66,7 @@ const ReviewsView = props => {
 
 ReviewsView.propTypes = {
   reviews: PropTypes.array,
+  loading: PropTypes.bool,
   onSubmit: PropTypes.func
 };
 
