@@ -36,7 +36,7 @@ const ModalComponent = props => {
               <strong>{title && title}</strong>
             </h3>
           </Col>
-          <Col span={24} style={{ padding: '22px 16px 0px 16px', maxWidth: '350px' }}>
+          <Col span={24} style={{ padding: '22px 16px 0px 16px', maxWidth: '350px', overFlowY: 'auto' }}>
             {children}
           </Col>
         </Row>

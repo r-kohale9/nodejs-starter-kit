@@ -41,7 +41,7 @@ export default class Demo extends Model {
   //   };
   // }
   public async promoCodesPagination(limit: number, after: number, orderBy: any, filter: any) {
-    const queryBuilder = PromoCode.query();
+    const queryBuilder = PromoCode.query().orderBy('id', 'desc');
 
     // if (orderBy && orderBy.column) {
     //   const column = orderBy.column;

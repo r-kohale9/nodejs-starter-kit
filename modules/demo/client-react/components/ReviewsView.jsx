@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
-import { Row, Col, Checkbox, Spin } from 'antd';
+import { Button, Row, Col, Checkbox, Spin } from 'antd';
 
 import PageLayout from './PageLayout';
 import ReviewsItemComponent from './ReviewsItemComponent';
@@ -9,6 +9,7 @@ import WriteReviewComponent from './WriteReviewComponent';
 import { PgTitle } from './StyledComponents';
 
 import SuggestedListComponent from './SuggestedListComponent';
+import Pen from '../Icons/pen.svg';
 
 const BtnDiv = styled.div`
   position: fixed;
@@ -25,7 +26,14 @@ const BtnDiv = styled.div`
 const ReviewsView = props => {
   const { reviews, onSubmit, loading } = props;
   const [photo, setPhoto] = useState(false);
-  const renderFunc = (key, review) => <ReviewsItemComponent key={key} review={review} showPhotos={photo} />;
+  const renderFunc = (key, review) => (
+    <ReviewsItemComponent key={key} review={review} showPhotos={photo} onSubmit={onSubmit} />
+  );
+  const renderBtn = setVisible => (
+    <Button type="primary" block onClick={setVisible}>
+      <img alt="" src={Pen} style={{ paddingRight: '5px' }} /> Write a review
+    </Button>
+  );
   const RenderReviews = () => (
     <div>
       <SuggestedListComponent items={reviews} {...props} renderFunc={renderFunc} />
@@ -57,7 +65,7 @@ const ReviewsView = props => {
       </Row>
       <BtnDiv>
         <Col span={12} style={{ position: 'absolute', bottom: '10px', right: '17px' }}>
-          <WriteReviewComponent onSubmit={onSubmit} />
+          <WriteReviewComponent onSubmit={onSubmit} renderBtn={renderBtn} type="ADD" />
         </Col>
       </BtnDiv>
     </PageLayout>

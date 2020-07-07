@@ -56,35 +56,6 @@ exports.up = function(knex) {
         table.string('promo_code');
         table.timestamps(false, true);
       })
-      .createTable('review', table => {
-        table.increments();
-        table
-          .integer('user_id')
-          .unsigned()
-          .references('id')
-          .inTable('user')
-          .onDelete('CASCADE');
-        table
-          .integer('listing_id')
-          .unsigned()
-          .references('id')
-          .inTable('listing')
-          .onDelete('CASCADE');
-        table.string('review');
-        table.integer('rating');
-        table.timestamps(false, true);
-      })
-      .createTable('review_image', table => {
-        table.increments();
-        table
-          .integer('review_id')
-          .unsigned()
-          .references('id')
-          .inTable('review')
-          .onDelete('CASCADE');
-        table.string('image_url');
-        table.timestamps(false, true);
-      })
   ]);
 };
 
@@ -95,8 +66,6 @@ exports.down = function(knex) {
     knex.schema.dropTable('payment_opt'),
     knex.schema.dropTable('order'),
     knex.schema.dropTable('order_detail'),
-    knex.schema.dropTable('promo_code'),
-    knex.schema.dropTable('reviews'),
-    knex.schema.dropTable('review_image')
+    knex.schema.dropTable('promo_code')
   ]);
 };

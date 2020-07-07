@@ -20,8 +20,8 @@ type ReviewImage {
 
 type Review {
   id: Int
-  rating: Int
-  review: String
+  rating: String
+  feedback: String
   reviewImages: [ReviewImage]
   createdAt: String!
   updatedAt: String!
@@ -37,10 +37,37 @@ extend type Query {
   ): Reviews
 }
 
-# extend type Mutation {
-#   mutationName(varName: Int!): TypeName
-# }
+extend type Mutation {
+ # Create new Review
+  addReview(input: AddReviewInput!): Review
+  # # Edit a review
+  editReview(input: EditReviewInput!): Boolean
+  # # Delete a review
+  deleteReview(id: Int!): Boolean
+}
 
+input AddReviewInput {
+  id: Int
+  userId: Int
+  listingId: Int
+  feedback: String
+  rating: Int
+  reviewImages: [ReviewImagesInput]
+}
+# Input for addReview Mutation
+input ReviewImagesInput {
+  id: Int
+  imageUrl: String!
+}
+
+# Input for editReview Mutation
+input EditReviewInput {
+  id: Int!
+  userId: Int
+  feedback: String
+  rating: Int
+  reviewImages: [ReviewImagesInput]
+}
 # extend type Subscription {
 #   subscriptionName: TypeName
 # }

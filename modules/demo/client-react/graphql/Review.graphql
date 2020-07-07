@@ -1,7 +1,7 @@
 fragment ReviewInfo on Review {
   id
-  # rating
-  review
+  rating
+  feedback
   reviewImages {
     id
     imageUrl

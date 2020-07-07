@@ -8,9 +8,9 @@ Model.knex(knex);
 
 export interface Reviews {
   userId: number;
-  title: string;
-  description: string;
-  isActive: boolean;
+  feedback: string;
+  rating: number;
+  listingId: number;
   reviewImages: ReviewImage[];
 }
 export interface Identifier {
@@ -20,6 +20,8 @@ const eager = '[review_images]';
 
 // Review model.
 export default class Review extends Model {
+  private id: any;
+
   static get tableName() {
     return 'review';
   }
@@ -43,6 +45,7 @@ export default class Review extends Model {
 
   public async reviewsPagination(limit: number, after: number, orderBy: any, filter: any, userId: number) {
     const queryBuilder = Review.query()
+      .orderBy('id', 'desc')
       .eager(eager)
       .where('user_id', userId);
 
@@ -79,8 +82,30 @@ export default class Review extends Model {
     const allReviews = camelizeKeys(await queryBuilder);
     const total = allReviews.length;
     const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
-    console.log(res);
     return { reviews: res, total };
+  }
+
+  public async addReview(params: Reviews) {
+    // console.log('pramas', decamelizeKeys(params));
+    const res = await Review.query().insert(decamelizeKeys(params));
+    // console.log('pramas2', res);
+    return res.id;
+  }
+  public async editReview(params: Reviews & Identifier) {
+    const res = await Review.query().upsertGraph(decamelizeKeys(params));
+    console.log('res', res);
+    return res.id;
+  }
+
+  public async review(id: number) {
+    const res = camelizeKeys(
+      await Review.query()
+        .findById(id)
+        .eager(eager)
+        .orderBy('id', 'desc')
+    );
+    // console.log(res);
+    return res;
   }
 }
 

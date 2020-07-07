@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button as Btn } from 'antd';
 import { Button } from '@gqlapp/look-client-react';
 import { Link } from 'react-router-dom';
 // import { Button } from 'antd';
@@ -50,6 +51,13 @@ const Divider = styled.div`
   border: 0.4px solid #9b9b9b;
 `;
 
+const DropDownButton = styled(Btn)`
+  /* &:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, #fc4c4c 77.6%);
+  } */
+  color: #222222;
+`;
+
 export {
   PgTitle,
   Text,
@@ -59,5 +67,6 @@ export {
   LinkTo,
   LinkGrey,
   StatusText,
-  Divider
+  Divider,
+  DropDownButton
 };

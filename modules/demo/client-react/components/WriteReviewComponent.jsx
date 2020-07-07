@@ -8,31 +8,33 @@ import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 
 import ModalComponent from './ModalComponent';
-import Pen from '../Icons/pen.svg';
 
 const WriteReviewComponentFormSchema = {
-  rate: [required],
-  review: [required]
+  rating: [required],
+  feedback: [required]
 };
 
 const WriteReviewComponent = props => {
-  const { values, handleSubmit, isValid, setFieldValue } = props;
+  const { values, handleSubmit, dirty, setFieldValue, renderBtn } = props;
   const [load, setLoad] = useState(true);
   const [visible, setVisible] = useState(false);
 
   return (
     <>
-      <Button type="primary" block onClick={() => setVisible(true)}>
-        <img alt="" src={Pen} style={{ paddingRight: '5px' }} /> Write a review
-      </Button>
+      {renderBtn(() => setVisible(true))}
       <ModalComponent
-        title="What is your rate?"
+        title="What is your rating?"
         // visible={true}
         visible={visible}
         handleVisible={() => setVisible(false)}
       >
         <Col span={24}>
-          <Rate allowHalf style={{ fontSize: '50px' }} onChange={e => setFieldValue('rate', e)} />
+          <Rate
+            allowHalf
+            defaultValue={values.rating}
+            style={{ fontSize: '50px' }}
+            onChange={e => setFieldValue('rating', Number(e))}
+          />
         </Col>
         <Col span={24}>
           <h3>Please share your opinion about the product</h3>
@@ -41,21 +43,21 @@ const WriteReviewComponent = props => {
           <Form onSubmit={handleSubmit}>
             <div style={{ paddingTop: '15px' }}>
               <Field
-                name="review"
+                name="feedback"
                 component={RenderField}
                 placeholder="Your review"
                 type="textarea"
-                value={values.review}
+                value={values.feedback}
               />
             </div>
             <FieldArray
-              name="images"
+              name="reviewImages"
               label={'Add photo'}
               render={arrayHelpers => (
                 <RenderUploadMultiple
                   setload={load => setLoad(load)}
                   arrayHelpers={arrayHelpers}
-                  values={values.images}
+                  values={values.reviewImages}
                   dictKey="imageUrl"
                 />
               )}
@@ -64,7 +66,7 @@ const WriteReviewComponent = props => {
         </Col>
         <Col span={24}>
           <div style={{ padding: '15px 0px' }}>
-            <Button type="primary" size="lg" block onClick={() => handleSubmit(values)} disabled={load && isValid}>
+            <Button type="primary" size="lg" block onClick={() => handleSubmit(values)} disabled={load && !dirty}>
               <strong>SEND REVIEW</strong>
             </Button>
           </div>
@@ -78,19 +80,30 @@ WriteReviewComponent.propTypes = {
   values: PropTypes.object,
   handleSubmit: PropTypes.func,
   setFieldValue: PropTypes.func,
-  isValid: PropTypes.bool
+  dirty: PropTypes.bool
 };
 
 const WriteReviewComponentWithFormik = withFormik({
-  mapPropsToValues: () => {
+  mapPropsToValues: props => {
+    function getImg(Img) {
+      return {
+        id: Img.id,
+        imageUrl: Img.imageUrl
+      };
+    }
     return {
-      rate: null,
-      review: '',
-      images: []
+      id: (props.review && props.review.id) || null,
+      userId: (props.review && props.review.userId) || null,
+      rating: (props.review && props.review.rating) || null,
+      feedback: (props.review && props.review.feedback) || '',
+      reviewImages:
+        props.review && props.review.reviewImages && props.review.reviewImages.length !== 0
+          ? props.review.reviewImages.map(getImg)
+          : []
     };
   },
-  async handleSubmit(values, { setErrors, props: { onSubmit } }) {
-    await onSubmit(values);
+  async handleSubmit(values, { setErrors, props: { onSubmit, type } }) {
+    await onSubmit(values, type);
     // .catch(e => {
     //   if (isFormError(e)) {
     //     setErrors(e.errors);

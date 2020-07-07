@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
-const DropDownButton = styled(Button)`
-  color: #222222;
-`;
+import { DropDownButton } from './StyledComponents';
 
 const Text = styled.div`
   font-family: Metropolis, QuickSand;
@@ -63,10 +61,14 @@ const CartItemComponent = props => {
                 <Row type="flex" justify="end">
                   <DropDown type="more">
                     <Menu.Item key="0">
-                      <DropDownButton type="link">Add to favorites</DropDownButton>
+                      <DropDownButton block type="link">
+                        Add to favorites
+                      </DropDownButton>
                     </Menu.Item>
                     <Menu.Item key="1">
-                      <DropDownButton type="link">Delete from the list</DropDownButton>
+                      <DropDownButton block type="link">
+                        Delete from the list
+                      </DropDownButton>
                     </Menu.Item>
                   </DropDown>
                 </Row>

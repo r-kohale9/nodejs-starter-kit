@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Icon, Card, Rate } from 'antd';
+import { Row, Col, Icon, Card, Rate, Menu } from 'antd';
 import { PropTypes } from 'prop-types';
+import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
+import WriteReviewComponent from './WriteReviewComponent';
 import ImagesSlickComponent from './ImagesSlickComponent';
-import { Text } from './StyledComponents';
+import { Text, DropDownButton } from './StyledComponents';
 
 const Avatar = styled.img`
   border-radius: 50%;
@@ -16,7 +18,7 @@ const Avatar = styled.img`
 `;
 
 const ReviewsItemComponent = props => {
-  const { review, showPhotos } = props;
+  const { review, showPhotos, onSubmit } = props;
   // console.log('props', props);
   return (
     <Row type="flex" align="middle">
@@ -28,11 +30,36 @@ const ReviewsItemComponent = props => {
           borderRadius: '8px'
         }}
       >
-        <Col span={24}>
-          <h3>
-            <strong>{review.name}</strong>
-          </h3>
-        </Col>
+        <Row>
+          <Col span={21}>
+            <h3>
+              <strong>{review.name}</strong>
+            </h3>
+          </Col>
+          <Col span={2}>
+            <Row type="flex" justify="end">
+              <DropDown type="more">
+                <Menu.Item key="0">
+                  <WriteReviewComponent
+                    type="EDIT"
+                    onSubmit={onSubmit}
+                    review={review}
+                    renderBtn={func => (
+                      <DropDownButton block type="link" onClick={func}>
+                        Edit
+                      </DropDownButton>
+                    )}
+                  />
+                </Menu.Item>
+                <Menu.Item key="1">
+                  <DropDownButton block type="link" onClick={() => onSubmit(review.id, 'DELETE')}>
+                    Delete
+                  </DropDownButton>
+                </Menu.Item>
+              </DropDown>
+            </Row>
+          </Col>
+        </Row>
         <Col span={12}>
           <Rate disabled defaultValue={review.rating} style={{ fontSize: '15px' }} />
           <div style={{ margin: '10px 0px' }} />
@@ -43,7 +70,7 @@ const ReviewsItemComponent = props => {
           </Row>
         </Col>
         <Col span={24}>
-          <p>{review.review}</p>
+          <p>{review.feedback}</p>
         </Col>
         {showPhotos && (
           <Col span={24}>
