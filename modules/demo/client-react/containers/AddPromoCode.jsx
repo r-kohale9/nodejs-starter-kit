@@ -5,22 +5,21 @@ import { message } from 'antd';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
-import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
-import ADD_REVIEW from '../graphql/AddReview.graphql';
+import ADD_PROMOCODE from '../graphql/AddPromoCode.graphql';
 
-import AddReviewView from '../components/AddReviewView.web';
-// import { withAddReview } from './ReviewOperations';
+import AddPromoCodeView from '../components/AddPromoCodeView.web';
+// import { withAddPromoCode } from './PromoCodeOperations';
 
-const AddReview = props => {
+const AddPromoCode = props => {
   console.log('props', props);
-  return <AddReviewView {...props} />;
+  return <AddPromoCodeView {...props} />;
 };
 
 export default compose(
-  // withAddReview,
-  graphql(ADD_REVIEW, {
+  // withAddPromoCode,
+  graphql(ADD_PROMOCODE, {
     props: ({ ownProps: { history }, mutate }) => ({
-      addReview: async values => {
+      addPromoCode: async values => {
         console.log('addreview', values);
 
         message.destroy();
@@ -32,17 +31,16 @@ export default compose(
             },
             optimisticResponse: {
               __typename: 'Mutation',
-              addReview: {
-                __typename: 'Review',
+              addPromoCode: {
+                __typename: 'PromoCode',
                 ...values
               }
             }
           });
 
           message.destroy();
-          message.success('Review added.');
-          // console.log('addreview', values);
-          history.push('/demo/reviews');
+          message.success('PromoCode added.');
+          history.push('/demo/promocodes');
         } catch (e) {
           message.destroy();
           message.error("Couldn't perform the action");
@@ -51,14 +49,5 @@ export default compose(
       }
     })
   }),
-  graphql(CURRENT_USER_QUERY, {
-    props({ data: { loading, error, currentUser } }) {
-      if (error) throw new Error(error);
-      return {
-        loading,
-        currentUser
-      };
-    }
-  }),
-  translate('review')
-)(AddReview);
+  translate('demo')
+)(AddPromoCode);

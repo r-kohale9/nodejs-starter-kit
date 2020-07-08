@@ -8,7 +8,6 @@ import { translate } from '@gqlapp/i18n-client-react';
 import ReviewsView from '../components/ReviewsView';
 
 import ALL_REVIEWS_QUERY from '../graphql/AllReviewsQuery.graphql';
-import ADD_REVIEW from '../graphql/AddReview.graphql';
 import DELETE_REVIEW from '../graphql/DeleteReview.graphql';
 
 // import { useReviewsWithSubscription } from './withSubscriptions';

@@ -1,0 +1,7 @@
+#import "./PromoCode.graphql"
+
+query promoCode($id: Int!) {
+  promoCode(id: $id) {
+    ...PromoCodesInfo
+  }
+}

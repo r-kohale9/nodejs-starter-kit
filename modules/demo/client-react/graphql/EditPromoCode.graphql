@@ -1,0 +1,3 @@
+mutation editPromoCode($input: EditPromoCodeInput!) {
+  editPromoCode(input: $input)
+}

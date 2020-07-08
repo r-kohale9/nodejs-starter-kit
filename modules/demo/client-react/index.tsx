@@ -7,9 +7,16 @@ import loadable from '@loadable/component';
 import { Route, NavLink } from 'react-router-dom';
 import { MenuItem } from '@gqlapp/look-client-react';
 import resources from './locales';
+import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 
 const NavLinkWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
   <NavLink to="/demo" className="nav-link" activeClassName="active">
+    {t('demo:navLink')}
+  </NavLink>
+));
+
+const NavLinkAdminWithI18n = translate('review')(({ t }: { t: TranslateFunction }) => (
+  <NavLink to="/demo/promocode" className="nav-link" activeClassName="active">
     {t('demo:navLink')}
   </NavLink>
 ));
@@ -104,8 +111,41 @@ export default new ClientModule({
       path="/demo/contact"
       component={loadable(() => import('./containers/Contact').then(c => c.default))}
     />,
-    <Route exact path="/demo/reviews" component={loadable(() => import('./containers/Reviews').then(c => c.default))} />,
-    <Route exact path="/demo/profile" component={loadable(() => import('./containers/Profile').then(c => c.default))} />
+    <Route
+      exact
+      path="/demo/reviews"
+      component={loadable(() => import('./containers/Reviews').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/demo/profile"
+      component={loadable(() => import('./containers/Profile').then(c => c.default))}
+    />,
+
+    // admin panel
+    <AuthRoute
+      exact
+      role={['admin']}
+      path="/demo/promocode"
+      component={loadable(() => import('./containers/PromoCodes.web').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/new/promocode"
+      component={loadable(() => import('./containers/AddPromoCode').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/edit/promocode/:id"
+      component={loadable(() => import('./containers/EditPromoCode').then(c => c.default))}
+    />
+  ],
+  navItemAdmin: [
+    <IfLoggedIn>
+      <MenuItem key="/listings">
+        <NavLinkAdminWithI18n />
+      </MenuItem>
+    </IfLoggedIn>
   ],
   navItem: [
     <MenuItem key="/demo">

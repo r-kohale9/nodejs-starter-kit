@@ -22,6 +22,7 @@ type PromoCode {
 }
 
 extend type Query {
+  promoCode(id: Int): PromoCode
   getPromoCodes(
     limit: Int
     after: Int
@@ -30,9 +31,29 @@ extend type Query {
   ): PromoCodes
 }
 
-# extend type Mutation {
-#   mutationName(varName: Int!): TypeName
-# }
+extend type Mutation {
+  # Create new PromoCode
+  addPromoCode(input: AddPromoCodeInput!): PromoCode
+  # # Edit a PromoCode
+  editPromoCode(input: EditPromoCodeInput!): Boolean
+  # # Delete a PromoCode
+  deletePromoCode(id: Int!): Boolean
+}
+input AddPromoCodeInput {
+  id: Int
+  title: String
+  imageUrl: String
+  validity: Int
+  promoCode: String
+}
+
+input EditPromoCodeInput {
+  id: Int!
+  title: String
+  imageUrl: String
+  validity: Int
+  promoCode: String
+}
 
 # extend type Subscription {
 #   subscriptionName: TypeName

@@ -9,7 +9,7 @@ import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQue
 import ADD_REVIEW from '@gqlapp/review-client-react/graphql/AddReview.graphql';
 import EDIT_REVIEW from '@gqlapp/review-client-react/graphql/EditReview.graphql';
 import DELETE_REVIEW from '@gqlapp/review-client-react/graphql/DeleteReview.graphql';
-import REVIEWS_QUERY from '../graphql/ReviewsQuery.graphql';
+import REVIEWS_QUERY from '@gqlapp/review-client-react/graphql/ReviewsQuery.graphql';
 
 import ReviewsView from '../components/ReviewsView';
 

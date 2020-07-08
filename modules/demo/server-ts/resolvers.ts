@@ -1,8 +1,22 @@
-import { PromoCode, Identifier } from './sql';
+import withAuth from 'graphql-auth';
+import { PromoCodes, Identifier } from './sql';
 
 interface Edges {
   cursor: number;
-  node: PromoCode & Identifier;
+  node: PromoCodes & Identifier;
+}
+
+interface PromoCodeInputWithId {
+  input: PromoCodes & Identifier;
+}
+
+interface PromoCodeInput {
+  input: PromoCodes;
+}
+
+interface Edges {
+  cursor: number;
+  node: PromoCodes & Identifier;
 }
 
 export default (pubsub: any) => ({
@@ -14,7 +28,7 @@ export default (pubsub: any) => ({
 
       const hasNextPage = total > after + limit;
 
-      promoCodes.map((promoCode: PromoCode & Identifier, index: number) => {
+      promoCodes.map((promoCode: PromoCodes & Identifier, index: number) => {
         edgesArray.push({
           cursor: after + index,
           node: promoCode
@@ -30,8 +44,44 @@ export default (pubsub: any) => ({
           hasNextPage
         }
       };
+    },
+    async promoCode(obj: any, { id }: Identifier, context: any) {
+      return context.Demo.promoCode(id);
     }
   },
-  Mutation: {},
+  Mutation: {
+    addPromoCode: withAuth(
+      // ["stripe:*"],
+      async (obj: any, { input }: PromoCodeInput, context: any) => {
+        try {
+          const id = await context.Demo.addPromoCode(input);
+          const promoCode = await context.Demo.promoCode(id);
+          return promoCode;
+        } catch (e) {
+          return e;
+        }
+      }
+    ),
+    editPromoCode: withAuth(async (obj: any, { input }: PromoCodeInputWithId, context: any) => {
+      try {
+        await context.Demo.editPromoCode(input);
+        // const promoCode = await context.Demo.promoCode(input.id);
+        return true;
+      } catch (e) {
+        return e;
+      }
+    }),
+    deletePromoCode: withAuth(async (obj: any, { id }: Identifier, context: any) => {
+      // const promoCode = await context.Demo.promoCode(id);
+      // promoCode.userId = null;
+      const isDeleted = await context.Demo.deletePromoCode(id);
+      if (isDeleted) {
+        return true;
+      } else {
+        // return { id: null };
+        return false;
+      }
+    })
+  },
   Subscription: {}
 });

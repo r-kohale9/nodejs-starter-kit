@@ -1,0 +1,7 @@
+#import "./PromoCode.graphql"
+
+mutation addPromoCode($input: AddPromoCodeInput!) {
+  addPromoCode(input: $input) {
+    ...PromoCodesInfo
+  }
+}
