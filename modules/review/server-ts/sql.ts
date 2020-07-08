@@ -43,6 +43,47 @@ export default class Review extends Model {
     };
   }
 
+  public async allReviewsPagination(limit: number, after: number, orderBy: any, filter: any) {
+    const queryBuilder = Review.query()
+      .orderBy('id', 'desc')
+      .eager(eager);
+
+    // if (orderBy && orderBy.column) {
+    //   const column = orderBy.column;
+    //   let order = 'asc';
+    //   if (orderBy.order) {
+    //     order = orderBy.order;
+    //   }
+
+    //   queryBuilder.orderBy(decamelize(column), order);
+    // } else {
+    //   queryBuilder.orderBy('id', 'desc');
+    // }
+
+    if (filter) {
+      // if (has(filter, 'isActive') && filter.isActive !== '') {
+      //   queryBuilder.where(function() {
+      //     this.where('is_active', filter.isActive);
+      //   });
+      // }
+      // if (has(filter, 'searchText') && filter.searchText !== '') {
+      //   queryBuilder
+      //     .from('listing')
+      //     .leftJoin('listing_cost AS ld', 'ld.listing_id', 'listing.id')
+      //     .where(function() {
+      //       this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.cost', `%${filter.searchText}%`]));
+      //     });
+      // }
+    }
+
+    const allReviews = camelizeKeys(await queryBuilder);
+    const total = allReviews.length;
+    const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
+    return { reviews: res, total };
+  }
+
   public async reviewsPagination(limit: number, after: number, orderBy: any, filter: any, userId: number) {
     const queryBuilder = Review.query()
       .orderBy('id', 'desc')
@@ -95,6 +136,12 @@ export default class Review extends Model {
     const res = await Review.query().upsertGraph(decamelizeKeys(params));
     console.log('res', res);
     return res.id;
+  }
+
+  public deleteReview(id: number) {
+    return knex('review')
+      .where('id', '=', id)
+      .del();
   }
 
   public async review(id: number) {

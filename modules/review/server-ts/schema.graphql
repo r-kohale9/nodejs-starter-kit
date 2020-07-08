@@ -28,6 +28,14 @@ type Review {
 }
 
 extend type Query {
+  review(id: Int): Review
+  allReviews(
+    userId: Int
+    limit: Int
+    after: Int
+    orderBy: OrderByListInput
+    filter: FilterListInput
+  ): Reviews
   reviews(
     userId: Int
     limit: Int

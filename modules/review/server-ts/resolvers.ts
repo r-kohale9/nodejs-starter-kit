@@ -43,6 +43,32 @@ export default (pubsub: any) => ({
           hasNextPage
         }
       };
+    },
+    async allReviews(obj: any, { limit, after, orderBy, filter }: any, context: any) {
+      const edgesArray: Edges[] = [];
+      const { total, reviews } = await context.Review.allReviewsPagination(limit, after, orderBy, filter);
+
+      const hasNextPage = total > after + limit;
+
+      reviews.map((review: Reviews & Identifier, index: number) => {
+        edgesArray.push({
+          cursor: after + index,
+          node: review
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+      return {
+        totalCount: total,
+        edges: edgesArray,
+        pageInfo: {
+          endCursor,
+          hasNextPage
+        }
+      };
+    },
+    async review(obj: any, { id }: Identifier, context: any) {
+      return context.Review.review(id);
     }
   },
   Mutation: {
@@ -71,9 +97,9 @@ export default (pubsub: any) => ({
       }
     }),
     deleteReview: withAuth(async (obj: any, { id }: Identifier, context: any) => {
-      const review = await context.Review.review(id);
-      review.userId = null;
-      const isDeleted = await context.Review.editReview(review);
+      // const review = await context.Review.review(id);
+      // review.userId = null;
+      const isDeleted = await context.Review.deleteReview(id);
       if (isDeleted) {
         return true;
       } else {

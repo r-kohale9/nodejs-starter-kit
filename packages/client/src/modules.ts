@@ -1,3 +1,4 @@
+import review from '@gqlapp/review-client-react';
 import demo from '@gqlapp/demo-client-react';
 import addresses from '@gqlapp/addresses-client-react';
 import order from '@gqlapp/order-client-react';
@@ -25,6 +26,7 @@ const pagination = require('@gqlapp/pagination-client-react').default;
 const user = require('@gqlapp/user-client-react').default;
 
 const modules = new ClientModule(
+  review,
   demo,
   addresses,
   order,

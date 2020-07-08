@@ -18,6 +18,7 @@ const WriteReviewComponent = props => {
   const { values, handleSubmit, dirty, setFieldValue, renderBtn } = props;
   const [load, setLoad] = useState(true);
   const [visible, setVisible] = useState(false);
+  console.log('props', props, load && !dirty);
 
   return (
     <>

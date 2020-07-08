@@ -6,10 +6,10 @@ import { graphql } from 'react-apollo';
 import { message } from 'antd';
 
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
+import ADD_REVIEW from '@gqlapp/review-client-react/graphql/AddReview.graphql';
+import EDIT_REVIEW from '@gqlapp/review-client-react/graphql/EditReview.graphql';
+import DELETE_REVIEW from '@gqlapp/review-client-react/graphql/DeleteReview.graphql';
 import REVIEWS_QUERY from '../graphql/ReviewsQuery.graphql';
-import ADD_REVIEW from '../graphql/AddReview.graphql';
-import EDIT_REVIEW from '../graphql/EditReview.graphql';
-import DELETE_REVIEW from '../graphql/DeleteReview.graphql';
 
 import ReviewsView from '../components/ReviewsView';
 
