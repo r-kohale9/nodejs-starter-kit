@@ -11,18 +11,18 @@ import settings from '../../../../settings';
 
 const { itemsNumber, type } = settings.pagination.web;
 
-const Loading = ({ t }) => <Spin text={t('review.loadMsg')} />;
+const Loading = ({ t }) => <Spin text={t('demo.loadMsg')} />;
 Loading.propTypes = { t: PropTypes.func };
 
-const NoReviewsMessage = ({ t }) => <div className="text-center">{t('review.noReviewsMsg')}</div>;
-NoReviewsMessage.propTypes = { t: PropTypes.func };
+const NoPaymentOptsMessage = ({ t }) => <div className="text-center">{t('demo.noPaymentOptsMsg')}</div>;
+NoPaymentOptsMessage.propTypes = { t: PropTypes.func };
 
 const cancel = () => {
   message.error('Click on No');
 };
 
-const ReviewListComponent = props => {
-  const { orderBy, onOrderBy, loading, allReviews, t, loadData, deleteReview } = props;
+const PaymentOptListComponent = props => {
+  const { orderBy, onOrderBy, loading, paymentOpts, t, loadData, deletePaymentOpt } = props;
 
   const renderOrderByArrow = name => {
     if (orderBy && orderBy.column === name) {
@@ -73,22 +73,32 @@ const ReviewListComponent = props => {
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'rating')} href="#">
-          Rating {renderOrderByArrow('rating')}
+        <a onClick={e => handleOrderBy(e, 'owner')} href="#">
+          Owner {renderOrderByArrow('owner')}
         </a>
       ),
-      dataIndex: 'rating',
-      key: 'rating',
+      dataIndex: 'owner',
+      key: 'owner',
       render: text => <div>{text}</div>
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'feedback')} href="#">
-          Review {renderOrderByArrow('feedback')}
+        <a onClick={e => handleOrderBy(e, 'cardNumber')} href="#">
+          Card Number {renderOrderByArrow('cardNumber')}
         </a>
       ),
-      dataIndex: 'feedback',
-      key: 'feedback',
+      dataIndex: 'cardNumber',
+      key: 'cardNumber',
+      render: text => <div>{text}</div>
+    },
+    {
+      title: (
+        <a onClick={e => handleOrderBy(e, 'expiryDate')} href="#">
+          Expiry Date {renderOrderByArrow('expiryDate')}
+        </a>
+      ),
+      dataIndex: 'expiryDate',
+      key: 'expiryDate',
       render: text => <div>{text}</div>
     },
 
@@ -98,14 +108,14 @@ const ReviewListComponent = props => {
       width: 200,
       render: (text, record) => (
         <div>
-          <Link className="review-link" to={`/edit/review/${record.id}`}>
+          <Link className="paymentopts-link" to={`/edit/paymentopts/${record.id}`}>
             <Button color="primary" size="sm">
               Edit
             </Button>
           </Link>
           <Popconfirm
-            title="Are you sure delete this review?"
-            onConfirm={() => deleteReview(record.id)}
+            title="Are you sure delete this paymentopts?"
+            onConfirm={() => deletePaymentOpt(record.id)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -122,19 +132,19 @@ const ReviewListComponent = props => {
   const handlePageChange = (pagination, pageNumber) => {
     const {
       pageInfo: { endCursor }
-    } = allReviews;
+    } = paymentOpts;
     pagination === 'relay' ? loadData(endCursor + 1, 'add') : loadData((pageNumber - 1) * itemsNumber, 'replace');
   };
 
-  const RenderReviews = () => (
+  const RenderPaymentOpts = () => (
     <Fragment>
-      <Table dataSource={allReviews.edges.map(({ node }) => node)} columns={columns} />
+      <Table dataSource={paymentOpts.edges.map(({ node }) => node)} columns={columns} />
       <Pagination
-        itemsPerPage={allReviews.edges.length}
+        itemsPerPage={paymentOpts.edges.length}
         handlePageChange={handlePageChange}
-        hasNextPage={allReviews.pageInfo.hasNextPage}
+        hasNextPage={paymentOpts.pageInfo.hasNextPage}
         pagination={type}
-        total={allReviews.totalCount}
+        total={paymentOpts.totalCount}
         loadMoreText={t('list.btn.more')}
         defaultPageSize={itemsNumber}
       />
@@ -144,22 +154,22 @@ const ReviewListComponent = props => {
   return (
     <div>
       {/* Render loader */}
-      {loading && !allReviews && <Loading t={t} />}
-      {/* Render main review content */}
-      {allReviews && allReviews.totalCount ? <RenderReviews /> : <NoReviewsMessage t={t} />}
+      {loading && !paymentOpts && <Loading t={t} />}
+      {/* Render main paymentopts content */}
+      {paymentOpts && paymentOpts.totalCount ? <RenderPaymentOpts /> : <NoPaymentOptsMessage t={t} />}
     </div>
   );
 };
 
-ReviewListComponent.propTypes = {
+PaymentOptListComponent.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadData: PropTypes.bool,
-  allReviews: PropTypes.object,
+  paymentOpts: PropTypes.object,
   orderBy: PropTypes.object,
   onOrderBy: PropTypes.func.isRequired,
-  deleteReview: PropTypes.func.isRequired,
+  deletePaymentOpt: PropTypes.func.isRequired,
   t: PropTypes.func,
   history: PropTypes.object
 };
 
-export default translate('review')(ReviewListComponent);
+export default translate('demo')(PaymentOptListComponent);

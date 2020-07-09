@@ -1,0 +1,7 @@
+#import "./PaymentOpt.graphql"
+
+mutation addPaymentOpt($input: AddPaymentOptInput!) {
+  addPaymentOpt(input: $input) {
+    ...PaymentOptInfo
+  }
+}

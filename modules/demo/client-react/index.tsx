@@ -25,11 +25,11 @@ const NavLinkAdminWithI18n1 = translate('demo')(({ t }: { t: TranslateFunction }
     Address
   </NavLink>
 ));
-// const NavLinkAdminWithI18n2 = translate('demo')(({ t }: { t: TranslateFunction }) => (
-//   <NavLink to="/demo/promocode" className="nav-link" activeClassName="active">
-//     Payment Opt
-//   </NavLink>
-// ));
+const NavLinkAdminWithI18n2 = translate('demo')(({ t }: { t: TranslateFunction }) => (
+  <NavLink to="/demo/paymentopts" className="nav-link" activeClassName="active">
+    Payment Opt
+  </NavLink>
+));
 
 export default new ClientModule({
   route: [
@@ -168,6 +168,24 @@ export default new ClientModule({
       exact
       path="/edit/address/:id"
       component={loadable(() => import('./containers/EditAddress').then(c => c.default))}
+    />,
+
+    // Payment Opt
+    <AuthRoute
+      exact
+      role={['admin']}
+      path="/demo/paymentopts"
+      component={loadable(() => import('./containers/PaymentOpts.web').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/new/paymentopts"
+      component={loadable(() => import('./containers/AddPaymentOpts').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/edit/paymentopts/:id"
+      component={loadable(() => import('./containers/EditPaymentOpts').then(c => c.default))}
     />
   ],
   navItemAdmin: [
@@ -179,6 +197,11 @@ export default new ClientModule({
     <IfLoggedIn>
       <MenuItem key="/address">
         <NavLinkAdminWithI18n1 />
+      </MenuItem>
+    </IfLoggedIn>,
+    <IfLoggedIn>
+      <MenuItem key="/paymentopts">
+        <NavLinkAdminWithI18n2 />
       </MenuItem>
     </IfLoggedIn>
   ],

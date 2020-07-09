@@ -1,0 +1,27 @@
+#import "./PaymentOpt.graphql"
+
+query paymentOpts(
+  $limit: Int!
+  $after: Int
+  $orderBy: OrderByListInput
+  $filter: FilterListInput
+) {
+  paymentOpts(
+    limit: $limit
+    after: $after
+    orderBy: $orderBy
+    filter: $filter
+  ) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...PaymentOptInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

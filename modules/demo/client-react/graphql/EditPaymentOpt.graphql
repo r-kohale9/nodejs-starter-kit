@@ -1,0 +1,3 @@
+mutation editPaymentOpt($input: EditPaymentOptInput!) {
+  editPaymentOpt(input: $input)
+}

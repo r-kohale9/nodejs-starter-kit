@@ -21,6 +21,32 @@ type PromoCode {
   promoCode: String
 }
 
+
+type PaymentOpts {
+  totalCount: Int
+  edges: [PaymentOptEdges]
+  pageInfo: PaymentOptPageInfo
+}
+type PaymentOptEdges {
+  node: PaymentOpt
+  cursor: Int
+}
+type PaymentOptPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
+type PaymentOpt {
+  id: Int
+  userId: Int
+  cardNumber: String
+  expiryDate: String
+  owner: String
+  default: Boolean
+  createdAt: String
+  updatedAt: String
+}
+
 extend type Query {
   promoCode(id: Int): PromoCode
   getPromoCodes(
@@ -29,6 +55,15 @@ extend type Query {
     orderBy: OrderByListInput
     filter: FilterListInput
   ): PromoCodes
+
+  # Payment Opt
+  paymentOpt(id: Int): PaymentOpt
+  paymentOpts(
+    limit: Int
+    after: Int
+    orderBy: OrderByListInput
+    filter: FilterListInput
+  ): PaymentOpts
 }
 
 extend type Mutation {
@@ -38,6 +73,15 @@ extend type Mutation {
   editPromoCode(input: EditPromoCodeInput!): Boolean
   # # Delete a PromoCode
   deletePromoCode(id: Int!): Boolean
+
+  
+  # Payment Opt
+  # Create new PaymentOpt
+  addPaymentOpt(input: AddPaymentOptInput!): PaymentOpt
+  # # Edit a PaymentOpt
+  editPaymentOpt(input: EditPaymentOptInput!): Boolean
+  # # Delete a PaymentOpt
+  deletePaymentOpt(id: Int!): Boolean
 }
 input AddPromoCodeInput {
   id: Int
@@ -53,6 +97,24 @@ input EditPromoCodeInput {
   imageUrl: String
   validity: Int
   promoCode: String
+}
+
+input AddPaymentOptInput {
+  id: Int
+  userId: Int
+  cardNumber: String
+  expiryDate: String
+  owner: String
+  default: Boolean
+}
+
+input EditPaymentOptInput {
+  id: Int!
+  userId: Int
+  cardNumber: String
+  expiryDate: String
+  owner: String
+  default: Boolean
 }
 
 # extend type Subscription {

@@ -1,0 +1,7 @@
+#import "./PaymentOpt.graphql"
+
+query paymentOpt($id: Int!) {
+  paymentOpt(id: $id) {
+    ...PaymentOptInfo
+  }
+}

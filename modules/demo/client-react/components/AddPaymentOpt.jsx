@@ -86,12 +86,12 @@ AddPaymentOpt.propTypes = {
 const AddPaymentOptWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
-    id: props.paymentOpts && props.paymentOpts.id ? props.paymentOpts.id : null,
-    nameOnCard: (props.paymentOpts && props.paymentOpts.nameOnCard) || '',
-    cardNumber: (props.paymentOpts && props.paymentOpts.cardNumber) || '',
-    expireDate: (props.paymentOpts && props.paymentOpts.expireDate) || '',
-    cvv: (props.paymentOpts && props.paymentOpts.cvv) || '',
-    defaultCard: (props.paymentOpts && props.paymentOpts.defaultCard) || false
+    id: props.paymentOpt && props.paymentOpt.id ? props.paymentOpt.id : null,
+    nameOnCard: (props.paymentOpt && props.paymentOpt.nameOnCard) || '',
+    cardNumber: (props.paymentOpt && props.paymentOpt.cardNumber) || '',
+    expireDate: (props.paymentOpt && props.paymentOpt.expireDate) || '',
+    cvv: (props.paymentOpt && props.paymentOpt.cvv) || '',
+    defaultCard: (props.paymentOpt && props.paymentOpt.defaultCard) || false
   }),
   handleSubmit(values, { props: { onSubmit } }) {
     // console.log('values1', values);

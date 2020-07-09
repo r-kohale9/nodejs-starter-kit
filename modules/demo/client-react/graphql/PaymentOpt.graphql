@@ -1,0 +1,10 @@
+fragment PaymentOptInfo on PaymentOpt {
+  id
+  userId
+  cardNumber
+  expiryDate
+  owner
+  default
+  createdAt
+  updatedAt
+}
