@@ -15,11 +15,21 @@ const NavLinkWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
   </NavLink>
 ));
 
-const NavLinkAdminWithI18n = translate('review')(({ t }: { t: TranslateFunction }) => (
+const NavLinkAdminWithI18n = translate('demo')(({ t }: { t: TranslateFunction }) => (
   <NavLink to="/demo/promocode" className="nav-link" activeClassName="active">
-    {t('demo:navLink')}
+    Promo Code
   </NavLink>
 ));
+const NavLinkAdminWithI18n1 = translate('demo')(({ t }: { t: TranslateFunction }) => (
+  <NavLink to="/demo/address" className="nav-link" activeClassName="active">
+    Address
+  </NavLink>
+));
+// const NavLinkAdminWithI18n2 = translate('demo')(({ t }: { t: TranslateFunction }) => (
+//   <NavLink to="/demo/promocode" className="nav-link" activeClassName="active">
+//     Payment Opt
+//   </NavLink>
+// ));
 
 export default new ClientModule({
   route: [
@@ -123,6 +133,8 @@ export default new ClientModule({
     />,
 
     // admin panel
+
+    // Promo Code
     <AuthRoute
       exact
       role={['admin']}
@@ -138,12 +150,35 @@ export default new ClientModule({
       exact
       path="/edit/promocode/:id"
       component={loadable(() => import('./containers/EditPromoCode').then(c => c.default))}
+    />,
+
+    // Address
+    <AuthRoute
+      exact
+      role={['admin']}
+      path="/demo/address"
+      component={loadable(() => import('./containers/Address.web').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/new/address"
+      component={loadable(() => import('./containers/AddAddress').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/edit/address/:id"
+      component={loadable(() => import('./containers/EditAddress').then(c => c.default))}
     />
   ],
   navItemAdmin: [
     <IfLoggedIn>
-      <MenuItem key="/listings">
+      <MenuItem key="/promocodes">
         <NavLinkAdminWithI18n />
+      </MenuItem>
+    </IfLoggedIn>,
+    <IfLoggedIn>
+      <MenuItem key="/address">
+        <NavLinkAdminWithI18n1 />
       </MenuItem>
     </IfLoggedIn>
   ],

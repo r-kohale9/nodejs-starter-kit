@@ -19,10 +19,10 @@ export default new ClientModule({
     <Route exact path="/addresses" component={loadable(() => import('./containers/Addresses').then(c => c.default))} />,
     <Route exact path="/address" component={loadable(() => import('./containers/Address').then(c => c.default))} />
   ],
-  navItemTest: [
-    <MenuItem key="/addresses">
-      <NavLinkWithI18n />
-    </MenuItem>
-  ],
+  // navItemTest: [
+  //   <MenuItem key="/addresses">
+  //     <NavLinkWithI18n />
+  //   </MenuItem>
+  // ],
   localization: [{ ns: 'addresses', resources }]
 });

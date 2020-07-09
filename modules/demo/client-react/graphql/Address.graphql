@@ -1,0 +1,12 @@
+fragment AddressInfo on Address {
+  id
+  userId
+  addressName
+  shippingAddress
+  city
+  state
+  pinCode
+  country
+  createdAt
+  updatedAt
+}

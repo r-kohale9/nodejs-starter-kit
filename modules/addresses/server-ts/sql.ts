@@ -27,10 +27,54 @@ export default class Addresses extends Model {
   static get idColumn() {
     return 'id';
   }
-  public async addresses(id: number) {
-    return camelizeKeys(await Addresses.query().where('user_id', '=', id));
-  }
 
+  public async addresses(limit: number, after: number, orderBy: any, filter: any) {
+    const queryBuilder = Addresses.query().orderBy('id', 'desc');
+
+    // if (orderBy && orderBy.column) {
+    //   const column = orderBy.column;
+    //   let order = 'asc';
+    //   if (orderBy.order) {
+    //     order = orderBy.order;
+    //   }
+
+    //   queryBuilder.orderBy(decamelize(column), order);
+    // } else {
+    //   queryBuilder.orderBy('id', 'desc');
+    // }
+
+    if (filter) {
+      // if (has(filter, 'isActive') && filter.isActive !== '') {
+      //   queryBuilder.where(function() {
+      //     this.where('is_active', filter.isActive);
+      //   });
+      // }
+      //   if (has(filter, 'searchText') && filter.searchText !== '') {
+      //     queryBuilder
+      //       .from('listing')
+      //       .leftJoin('listing_cost AS ld', 'ld.listing_id', 'listing.id')
+      //       .where(function() {
+      //         this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
+      //           .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`]))
+      //           .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.cost', `%${filter.searchText}%`]));
+      //       });
+      //   }
+    }
+
+    const allAddresses = camelizeKeys(await queryBuilder);
+    const total = allAddresses.length;
+    const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
+    return { addresses: res, total };
+  }
+  public async address(id: number) {
+    const res = camelizeKeys(
+      await Addresses.query()
+        .findById(id)
+        .orderBy('id', 'desc')
+    );
+    // console.log(res);
+    return res;
+  }
   public async addAddress(params: Address) {
     return Addresses.query().insertGraph(decamelizeKeys(params));
   }

@@ -43,7 +43,7 @@ export default new ClientModule({
   ],
   navItemAdmin: [
     <IfLoggedIn>
-      <MenuItem key="/listings">
+      <MenuItem key="/reviews">
         <NavLinkAdminWithI18n />
       </MenuItem>
     </IfLoggedIn>

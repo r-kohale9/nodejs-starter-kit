@@ -24,7 +24,6 @@ export default (pubsub: any) => ({
     async getPromoCodes(obj: any, { limit, after, orderBy, filter }: any, context: any) {
       const edgesArray: Edges[] = [];
       const { total, promoCodes } = await context.Demo.promoCodesPagination(limit, after, orderBy, filter);
-      // console.log(await context.Demo.promoCodesPagination(limit, after, orderBy, filter));
 
       const hasNextPage = total > after + limit;
 

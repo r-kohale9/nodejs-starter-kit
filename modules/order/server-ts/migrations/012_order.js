@@ -64,7 +64,7 @@ exports.up = function(knex, Promise) {
           .integer('shipping_address_id')
           .unsigned()
           .references('id')
-          .inTable('address')
+          .inTable('user_address')
           .onDelete('CASCADE');
         table.string('state').defaultTo(STALE);
         table.string('delivery_method');

@@ -1,15 +1,48 @@
+type Addresses {
+  totalCount: Int
+  edges: [AddressEdges]
+  pageInfo: AddressPageInfo
+}
+type AddressEdges {
+  node: Address
+  cursor: Int
+}
+type AddressPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
 type Address {
   id: Int
   userId: Int!
-  streetAddress1: String!
-  streetAddress2: String!
-  city: String!
-  state: String!
-  pinCode: Int!
+  addressName: String
+  shippingAddress: String
+  city: String
+  state: String
+  pinCode: Int
+  country: String
+  createdAt: String
+  updatedAt: String
 }
 
+# type Address {
+#   id: Int
+#   userId: Int!
+#   streetAddress1: String!
+#   streetAddress2: String!
+#   city: String!
+#   state: String!
+#   pinCode: Int!
+# }
+
 extend type Query {
-  addresses(id: Int): [Address]!
+  address(id: Int): Address
+  addresses(
+    limit: Int
+    after: Int
+    orderBy: OrderByListInput
+    filter: FilterListInput
+  ): Addresses
 }
 
 extend type Mutation {
@@ -24,9 +57,20 @@ extend type Mutation {
 input AddressInput {
   id: Int
   userId: Int!
-  streetAddress1: String!
-  streetAddress2: String!
-  city: String!
-  state: String!
-  pinCode: Int!
+  addressName: String
+  shippingAddress: String
+  city: String
+  state: String
+  pinCode: Int
+  country: String
 }
+
+# input AddressInput {
+#   id: Int
+#   userId: Int!
+#   streetAddress1: String!
+#   streetAddress2: String!
+#   city: String!
+#   state: String!
+#   pinCode: Int!
+# }

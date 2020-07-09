@@ -1,6 +1,5 @@
 import withAuth from 'graphql-auth';
-import { Address } from './sql';
-import { Identifier } from './sql';
+import { Address, Identifier } from './sql';
 
 interface AddressInput {
   input: Address;
@@ -8,9 +7,31 @@ interface AddressInput {
 
 export default (pubsub: any) => ({
   Query: {
-    async addresses(obj: any, { id }: Identifier, context: any) {
-      const addresses = await context.Addresses.addresses(id);
-      return addresses;
+    async addresses(obj: any, { limit, after, orderBy, filter }: any, context: any) {
+      const edgesArray: Edges[] = [];
+      const { total, addresses } = await context.Addresses.addresses(limit, after, orderBy, filter);
+
+      const hasNextPage = total > after + limit;
+
+      addresses.map((address: Address & Identifier, index: number) => {
+        edgesArray.push({
+          cursor: after + index,
+          node: address
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+      return {
+        totalCount: total,
+        edges: edgesArray,
+        pageInfo: {
+          endCursor,
+          hasNextPage
+        }
+      };
+    },
+    async address(obj: any, { id }: Identifier, context: any) {
+      return context.Addresses.address(id);
     }
   },
   Mutation: {

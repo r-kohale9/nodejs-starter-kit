@@ -1,0 +1,27 @@
+#import "./Address.graphql"
+
+query addresses(
+  $limit: Int!
+  $after: Int
+  $orderBy: OrderByListInput
+  $filter: FilterListInput
+) {
+  addresses(
+    limit: $limit
+    after: $after
+    orderBy: $orderBy
+    filter: $filter
+  ) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...AddressInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

@@ -8,7 +8,7 @@ import { PropTypes } from 'prop-types';
 
 const addressFormSchema = {
   addressName: [required],
-  address: [required],
+  shippingAddress: [required],
   city: [required],
   state: [required],
   pinCode: [required]
@@ -55,7 +55,13 @@ const AddressForm = props => {
               padding: '14px 20px 14px 20px'
             }}
           >
-            <Field name="address" component={RenderField} type="text" label="Address" value={values.address} />
+            <Field
+              name="shippingAddress"
+              component={RenderField}
+              type="text"
+              label="Address"
+              value={values.shippingAddress}
+            />
           </Card>
           <Card
             style={{
@@ -153,7 +159,7 @@ const AddressFormWithFormik = withFormik({
   mapPropsToValues: props => ({
     id: props.address && props.address.id ? props.address.id : null,
     addressName: (props.address && props.address.addressName) || '',
-    address: (props.address && props.address.address) || '',
+    shippingAddress: (props.address && props.address.shippingAddress) || '',
     city: (props.address && props.address.city) || '',
     state: (props.address && props.address.state) || '',
     pinCode: (props.address && props.address.pinCode) || '',

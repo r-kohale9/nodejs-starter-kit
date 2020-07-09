@@ -1,28 +1,23 @@
 import { returnId, truncateTables } from '@gqlapp/database-server-ts';
-import { decamelizeKeys } from 'humps';
 
-const ADDRESSES = [
-  {
-    id: 1,
-    userId: 1,
-    streetAddress1: 'Devgiri boys hostel',
-    streetAddress2: 'Sinhgad central library',
-    city: 'Pune',
-    state: 'Maharashtra',
-    pinCode: 411041
-  },
-  {
-    id: 2,
-    userId: 2,
-    streetAddress1: 'Devgiri boys hostel',
-    streetAddress2: 'Sinhgad central library',
-    city: 'Pune',
-    state: 'Maharashtra',
-    pinCode: 411041
-  }
-];
-
-exports.seed = async knex => {
+exports.seed = async function(knex) {
   await truncateTables(knex, Promise, ['user_address']);
-  await returnId(knex('user_address')).insert(decamelizeKeys(ADDRESSES));
+
+  await Promise.all(
+    [...Array(2).keys()].map(async i => {
+      await Promise.all(
+        [...Array(2).keys()].map(async () => {
+          await returnId(knex('user_address')).insert({
+            user_id: i + 1,
+            address_name: 'katrina',
+            shipping_address: '22nd Cross Rd Sector 2 HSR Layout',
+            city: 'Bengaluru',
+            state: 'Karnataka',
+            pin_code: '560102',
+            country: 'India'
+          });
+        })
+      );
+    })
+  );
 };

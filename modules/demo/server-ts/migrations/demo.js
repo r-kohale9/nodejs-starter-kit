@@ -17,23 +17,6 @@ exports.up = function(knex) {
         table.string('details');
         table.timestamps(false, true);
       })
-      .createTable('address', table => {
-        table.increments();
-        table
-          .integer('user_id')
-          .unsigned()
-          .references('id')
-          .inTable('user')
-          .onDelete('CASCADE');
-        table.string('address_name');
-        table.string('address');
-        table.string('city');
-        table.string('state');
-        table.string('pin_code');
-        table.string('country');
-        table.boolean('default').defaultTo(false);
-        table.timestamps(false, true);
-      })
       .createTable('payment_opt', table => {
         table.increments();
         table
@@ -62,7 +45,6 @@ exports.up = function(knex) {
 exports.down = function(knex) {
   return Promise.all([
     knex.schema.dropTable('profile'),
-    knex.schema.dropTable('address'),
     knex.schema.dropTable('payment_opt'),
     knex.schema.dropTable('order'),
     knex.schema.dropTable('order_detail'),
