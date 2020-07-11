@@ -1,0 +1,16 @@
+#import "@gqlapp/user-client-react/graphql/User.graphql"
+
+fragment AddressInfo on Address {
+  id
+  user {
+    ...UserInfo
+  }
+  addressName
+  shippingAddress
+  city
+  state
+  pinCode
+  country
+  createdAt
+  updatedAt
+}

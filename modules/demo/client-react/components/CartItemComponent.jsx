@@ -22,8 +22,8 @@ const IncremntBtn = styled(Button)`
 `;
 
 const CartItemComponent = props => {
-  const { name, item, onChange } = props;
-  const listing = item.listing[0];
+  const { name, item, onChange, onDelete } = props;
+  const listing = item.listing;
   const [units, setUnits] = useState(item.unit);
   const handleChange = value => {
     setUnits(value);
@@ -45,9 +45,11 @@ const CartItemComponent = props => {
     >
       <Row>
         <Col span={8}>
-          <div style={{ height: '104px', overflow: 'hidden' }}>
-            <img alt="example" src={listing.listingImages[0].imageUrl} />
-          </div>
+          <Row type="flex" justify="center" align="middle">
+            <div style={{ overflow: 'hidden' }}>
+              <img alt="example" src={listing.listingImages[0].imageUrl} />
+            </div>
+          </Row>
         </Col>
         <Col span={16} style={{ padding: '11px' }}>
           <Row>
@@ -66,7 +68,7 @@ const CartItemComponent = props => {
                       </DropDownButton>
                     </Menu.Item>
                     <Menu.Item key="1">
-                      <DropDownButton block type="link">
+                      <DropDownButton block type="link" onClick={() => onDelete(item.id)}>
                         Delete from the list
                       </DropDownButton>
                     </Menu.Item>
@@ -74,10 +76,13 @@ const CartItemComponent = props => {
                 </Row>
               </Col>
             </Row>
+            <Col span={24}>
+              <Text>{listing.category}</Text>
+            </Col>
             <Row>
               <Col span={16}>
                 <p style={{ display: 'flex' }}>
-                  <Text>Flavour:</Text> <strong>{item.flavour}</strong>
+                  <Text>Flavour:</Text> <strong>{listing.flavour}</strong>
                 </p>
               </Col>
               <Col span={8}>
@@ -111,7 +116,7 @@ const CartItemComponent = props => {
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  <strong>Rs. {item.price * units}</strong>
+                  <strong>Rs. {listing.listingCost.cost * units}</strong>
                 </Row>
               </Col>
             </Row>

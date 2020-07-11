@@ -4,7 +4,8 @@ import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
 
-import { User } from '@gqlapp/user-server-ts/sql';
+import User from '@gqlapp/user-server-ts/sql';
+import OrderDAO from '@gqlapp/order-server-ts/sql';
 
 Model.knex(knex);
 
@@ -217,6 +218,14 @@ export class PaymentOpt extends Model {
         join: {
           from: 'payment_opt.user_id',
           to: 'user.id'
+        }
+      },
+      order: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: OrderDAO,
+        join: {
+          from: 'payment_opt.id',
+          to: 'order.payment_method_id'
         }
       }
     };

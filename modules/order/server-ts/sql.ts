@@ -4,6 +4,8 @@ import { knex, returnId, orderedFor } from '@gqlapp/database-server-ts';
 // import { User, UserAddress } from '@gqlapp/user-server-ts/sql';
 
 import ListingDAO from '@gqlapp/listing-server-ts/sql';
+import Addresses from '@gqlapp/addresses-server-ts/sql';
+import { PaymentOpt } from '@gqlapp/demo-server-ts/sql';
 
 // import { has } from 'lodash';
 import STATES from './constants/order_states';
@@ -36,7 +38,7 @@ const eager_od = '[order]';
 // const eager =
 //   '[user.[profile], user_address, order_details.[extension.[order_detail], listing.[user.[profile], listing_images,  listing_detail.damages, listing_rental, listing_content]], order_payment, cards]';
 
-const eager = '[order_details.listing.[listing_images, listing_cost]]';
+const eager = '[shipping_address, payment_method, order_details.listing.[listing_images, listing_cost]]';
 
 export default class OrderDAO extends Model {
   // private id: any;
@@ -51,14 +53,22 @@ export default class OrderDAO extends Model {
 
   static get relationMappings() {
     return {
-      // user: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: User,
-      //   join: {
-      //     from: 'order.user_id',
-      //     to: 'user.id'
-      //   }
-      // },
+      shipping_address: {
+        relation: Model.HasOneRelation,
+        modelClass: Addresses,
+        join: {
+          from: 'order.shipping_address_id',
+          to: 'user_address.id'
+        }
+      },
+      payment_method: {
+        relation: Model.HasOneRelation,
+        modelClass: PaymentOpt,
+        join: {
+          from: 'order.payment_method_id',
+          to: 'payment_opt.id'
+        }
+      },
       order_details: {
         relation: Model.HasManyRelation,
         modelClass: OrderDetail,
@@ -312,7 +322,7 @@ export class OrderDetail extends Model {
         }
       },
       listing: {
-        relation: Model.HasManyRelation,
+        relation: Model.BelongsToOneRelation,
         modelClass: ListingDAO,
         join: {
           from: 'order_detail.listing_id',

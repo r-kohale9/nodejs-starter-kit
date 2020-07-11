@@ -38,7 +38,7 @@ const AddressCardComponent = props => {
         </Col>
         <Col span={24}>
           <strong>
-            <p>{`${address.address}, ${address.city}, ${address.state}, ${address.pinCode}`}</p>
+            <p>{`${address.shippingAddress}, ${address.city}, ${address.state}, ${address.pinCode}`}</p>
           </strong>
         </Col>
         {extra && (

@@ -5,6 +5,13 @@ type Order {
   # consumer: User
   # vendor: User
 
+  consumerId: Int
+  trackingNumber: String
+  paymentMethod: PaymentOpt
+  shippingAddress: Address
+  deliveryMethod: String
+  discount: String
+
   state: String
   orderDetails: [OrderDetail]
 
@@ -24,9 +31,8 @@ type OrderDetail {
   # additionalCustomization: String
   weight: String
   unit: Int
-  listing: [Listing]
+  listing: Listing
 }
-
 
 type OrderEdges {
   node: Order
@@ -45,12 +51,9 @@ type Orders {
 }
 
 extend type Query {
-  orders(
-    limit: Int!
-    after: Int!
-    # orderBy: OrderByListInput
-    # filter: FilterListInput
-  ): [Order]
+  orders(limit: Int!, after: Int!): # orderBy: OrderByListInput
+  # filter: FilterListInput
+  [Order]
 
   userOrders(userId: Int): [Order]
   userDeliveries(userId: Int): [Order]
@@ -86,7 +89,6 @@ extend type Mutation {
 
   deleteOrderDetail(id: Int!): Boolean
 }
-
 
 input ChangeDateInCartInput {
   id: Int!
@@ -131,10 +133,15 @@ input PatchOrderInput {
 # Input for editOrder Mutation
 input EditOrderInput {
   id: Int!
+  consumerId: Int
+  trackingNumber: String
+  paymentMethodId: Int
+  shippingAddressId: Int
+  deliveryMethod: String
+  discount: String
   state: String
   orderDetails: [OrderDetailInput]
 }
-
 
 extend type Subscription {
   # Subscription for when editing a order

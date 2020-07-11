@@ -1,0 +1,14 @@
+#import "@gqlapp/user-client-react/graphql/User.graphql"
+
+fragment PaymentInfo on PaymentOpt {
+  id
+  user {
+    ...UserInfo
+  }
+  cardNumber
+  expiryDate
+  owner
+  default
+  createdAt
+  updatedAt
+}

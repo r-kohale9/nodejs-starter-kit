@@ -64,13 +64,13 @@ exports.seed = async function(knex) {
   await Promise.all(
     [...Array(1).keys()].map(async () => {
       const order = await returnId(knex('order')).insert({
-        consumer_id: Math.floor(Math.random() * 2) + 1,
+        consumer_id: 1,
         tracking_number: Math.random()
           .toString(36)
           .substring(3)
           .toUpperCase(),
-        // payment_method_id: Math.floor(Math.random() * 2) + 1,
-        // shipping_address_id: Math.floor(Math.random() * 2) + 1,
+        // payment_method_id: 1,
+        // shipping_address_id: 1,
         state: 'STALE',
         delivery_method: STATES.DELIVERY[Math.floor(Math.random() * STATES.DELIVERY.length)],
         discount: '10% personal promo code'

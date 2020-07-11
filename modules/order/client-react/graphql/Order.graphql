@@ -1,21 +1,33 @@
 #import "@gqlapp/listing-client-react/graphql/Listing.graphql"
+#import "@gqlapp/addresses-client-react/graphql/Address.graphql"
+#import "@gqlapp/demo-client-react/graphql/Payment.graphql"
 
 fragment OrderInfo on Order {
+  id
+  consumerId
+  trackingNumber
+  paymentMethod {
+    ...PaymentInfo
+  }
+  shippingAddress {
+    ...AddressInfo
+  }
+  deliveryMethod
+  discount
+  state
+  orderDetails {
     id
-    state
-    orderDetails {
-        id
-        # cost
-        # quantity
-        # date
-        # title
-        # thumbnail
-        # noteFromCustomer
-        # additionalCustomization
-        unit
-        weight
-        listing {
-            ...ListingInfo
-        }
+    # cost
+    # quantity
+    # date
+    # title
+    # thumbnail
+    # noteFromCustomer
+    # additionalCustomization
+    unit
+    weight
+    listing {
+      ...ListingInfo
     }
+  }
 }

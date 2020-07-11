@@ -1,7 +1,8 @@
 import { knex } from '@gqlapp/database-server-ts';
 import { Model } from 'objection';
 import { camelizeKeys, decamelizeKeys } from 'humps';
-import { User } from '@gqlapp/user-server-ts/sql';
+import User from '@gqlapp/user-server-ts/sql';
+import OrderDAO from '@gqlapp/order-server-ts/sql';
 
 // Give the knex object to objection.
 Model.knex(knex);
@@ -38,6 +39,14 @@ export default class Addresses extends Model {
         join: {
           from: 'user_address.user_id',
           to: 'user.id'
+        }
+      },
+      order: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: OrderDAO,
+        join: {
+          from: 'user_address.id',
+          to: 'order.shipping_address_id'
         }
       }
     };

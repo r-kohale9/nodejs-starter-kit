@@ -12,37 +12,18 @@ import DELETE_CART_ITEM from '@gqlapp/order-client-react/graphql/DeleteCartItem.
 import ORDERS_SUBSCRIPTION from '@gqlapp/order-client-react/graphql/OrdersSubscription.graphql';
 import EDIT_ORDER from '@gqlapp/order-client-react/graphql/EditOrder.graphql';
 
+import { PropTypes } from 'prop-types';
 import CheckoutCartView from '../components/CheckoutCartView';
 
 import { CART, PROMOCODES } from './Data';
 
 const CheckoutCart = props => {
-  const { getCart, editOrder, deleteOrderDetail } = props;
+  const { getCart, editOrder, deleteOrderDetail, history } = props;
   useEffect(() => {
     const subscribe = subscribeToOrders(props.subscribeToMore);
     props.refetch();
     return () => subscribe();
   });
-
-  //  const handleSubmit = async (values) => {
-  //    const index = getCart.orderDetails.indexOf(
-  //      getCart.orderDetails.filter(
-  //        (order, index) => order.id === values.id
-  //      )[0]
-  //    );
-  //    getCart.orderDetails[index] = values;
-  //    try {
-  //      await editOrder({
-  //        id: getCart.id,
-  //        state: getCart.state,
-  //        orderDetails: Object.values(
-  //          removeTypename(getCart.orderDetails)
-  //        ),
-  //      });
-  //    } catch (e) {
-  //      throw Error(e);
-  //    }
-  //  };
 
   const handleDelete = async id => {
     try {
@@ -52,18 +33,33 @@ const CheckoutCart = props => {
     }
   };
 
-  const handleSubmit = values => {
-    console.log('values', values);
+  const handleSubmit = async values => {
+    console.log('values', Object.values(removeTypename(values.orderDetails)));
+    try {
+      await editOrder({
+        id: getCart.id,
+        consumerId: getCart.consumerId,
+        trackingNumber: getCart.trackingNumber,
+        paymentMethodId: 1,
+        shippingAddressId: 1,
+        deliveryMethod: getCart.deliveryMethod,
+        discount: getCart.discount,
+        state: getCart.state,
+        orderDetails: Object.values(removeTypename(values.orderDetails))
+      });
+    } catch (e) {
+      throw Error(e);
+    }
+    history.push('/demo/checkout-order');
   };
   console.log('props', props);
-  return (
-    <CheckoutCartView
-      {...props}
-      // getCart={CART}
-      promocodes={PROMOCODES}
-      onSubmit={handleSubmit}
-    />
-  );
+  return <CheckoutCartView {...props} onDelete={handleDelete} promocodes={PROMOCODES} onSubmit={handleSubmit} />;
+};
+
+CheckoutCart.propTypes = {
+  getCart: PropTypes.object,
+  deleteOrderDetail: PropTypes.func,
+  editOrder: PropTypes.func
 };
 
 const onAddOrder = (prev, node) => {

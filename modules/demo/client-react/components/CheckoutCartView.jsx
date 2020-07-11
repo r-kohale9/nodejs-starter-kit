@@ -14,7 +14,10 @@ import { PgTitle } from './StyledComponents';
 const totalAmount = (orderDetails, values) => {
   let price = 0;
   orderDetails.map((item, indx) => {
-    price = price + item.price * values && values.orderDetails[indx].unit;
+    price =
+      price +
+      Number(item && item.listing.listingCost.cost) *
+        Number(values && values.orderDetails[indx] && values.orderDetails[indx].unit);
   });
   return price;
 };
@@ -27,7 +30,7 @@ const Text = styled.span`
 `;
 
 const CheckoutCartView = props => {
-  const { loading, getCart, history, promocodes, handleSubmit, setFieldValue, values } = props;
+  const { loading, getCart, history, promocodes, onDelete, setFieldValue, values, onSubmit } = props;
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="CART">
       {!loading && getCart && getCart.orderDetails ? (
@@ -48,14 +51,19 @@ const CheckoutCartView = props => {
               dataSource={getCart && getCart.orderDetails && getCart.orderDetails.length !== 0 && getCart.orderDetails}
               renderItem={(item, indx) => (
                 <List.Item>
-                  <CartItemComponent name={`orderDetails[${indx}].unit`} item={item} onChange={setFieldValue} />
+                  <CartItemComponent
+                    name={`orderDetails[${indx}].unit`}
+                    item={item}
+                    onChange={setFieldValue}
+                    onDelete={onDelete}
+                  />
                 </List.Item>
               )}
             />
           </Col>
 
           <Col span={24}>
-            <PromoCodeForm promocodes={promocodes} />
+            <PromoCodeForm promocodes={promocodes} setValue={setFieldValue} value={values.discount} />
           </Col>
           <Col span={24} style={{ marginTop: '28px' }}>
             <Row type="flex" align="middle" justify="center">
@@ -64,20 +72,17 @@ const CheckoutCartView = props => {
               </Col>
               <Col span={14}>
                 <Row type="flex" align="end">
-                  Rs. {totalAmount(getCart.orderDetails, values)}
+                  {values &&
+                    values.orderDetails &&
+                    values.orderDetails !== 0 &&
+                    `Rs. ${totalAmount(getCart.orderDetails, values)}`}
                 </Row>
               </Col>
             </Row>
           </Col>
           <Col span={24}>
             <div style={{ padding: '24px 0px 50px 0px' }}>
-              <Button
-                type="primary"
-                size="large"
-                block
-                onClick={handleSubmit}
-                // onClick={() => history.push('/demo/checkout-order')}
-              >
+              <Button type="primary" size="large" block onClick={() => onSubmit(values)}>
                 CHECK OUT
               </Button>
             </div>
@@ -105,12 +110,15 @@ const CheckoutCartFormWithFormik = withFormik({
     const { getCart } = props;
     function getOrderDetails(item) {
       return {
-        listingId: item.id,
-        unit: item.unit
+        id: item.id,
+        weight: item.weight,
+        unit: item.unit,
+        listingId: item.listing.id
       };
     }
 
     return {
+      discount: '',
       orderDetails: getCart && getCart.orderDetails.length !== 0 ? getCart.orderDetails.map(getOrderDetails) : []
     };
   },
