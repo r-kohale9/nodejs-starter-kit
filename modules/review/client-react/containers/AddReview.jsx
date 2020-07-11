@@ -5,6 +5,7 @@ import { message } from 'antd';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
+import { withUsers } from '@gqlapp/user-client-react/containers/UserOperations';
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
 import ADD_REVIEW from '../graphql/AddReview.graphql';
 
@@ -18,6 +19,7 @@ const AddReview = props => {
 
 export default compose(
   // withAddReview,
+  withUsers,
   graphql(ADD_REVIEW, {
     props: ({ ownProps: { history }, mutate }) => ({
       addReview: async values => {

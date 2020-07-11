@@ -1,5 +1,8 @@
 fragment UserProfileInfo on UserProfile {
-  firstName
-  lastName
   fullName
+  mobile
+  imageUrl
+  dateOfBirth
+  watsapp
+  details
 }

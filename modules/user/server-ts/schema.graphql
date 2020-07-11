@@ -12,10 +12,12 @@ type User {
 }
 
 type UserProfile {
-  firstName: String
-  lastName: String
   fullName: String
   mobile: String
+  imageUrl: String
+  dateOfBirth: String
+  watsapp: String
+  details: String
 }
 
 type UserVerification {

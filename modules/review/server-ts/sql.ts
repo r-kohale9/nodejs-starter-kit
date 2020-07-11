@@ -1,8 +1,8 @@
-import { has } from 'lodash';
-import { Model, raw } from 'objection';
-import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
+import { Model } from 'objection';
+import { camelizeKeys, decamelizeKeys } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
+import { User } from '@gqlapp/user-server-ts/sql';
 
 Model.knex(knex);
 
@@ -16,7 +16,7 @@ export interface Reviews {
 export interface Identifier {
   id: number;
 }
-const eager = '[review_images]';
+const eager = '[review_images, user.[profile], baker.[profile]]';
 
 // Review model.
 export default class Review extends Model {
@@ -32,6 +32,22 @@ export default class Review extends Model {
 
   static get relationMappings() {
     return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'review.user_id',
+          to: 'user.id'
+        }
+      },
+      baker: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'review.baker_id',
+          to: 'user.id'
+        }
+      },
       review_images: {
         relation: Model.HasManyRelation,
         modelClass: ReviewImage,
@@ -88,7 +104,7 @@ export default class Review extends Model {
     const queryBuilder = Review.query()
       .orderBy('id', 'desc')
       .eager(eager)
-      .where('user_id', userId);
+      .where('baker_id', userId);
 
     // if (orderBy && orderBy.column) {
     //   const column = orderBy.column;
@@ -134,7 +150,6 @@ export default class Review extends Model {
   }
   public async editReview(params: Reviews & Identifier) {
     const res = await Review.query().upsertGraph(decamelizeKeys(params));
-    console.log('res', res);
     return res.id;
   }
 

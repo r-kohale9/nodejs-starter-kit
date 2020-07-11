@@ -38,7 +38,7 @@ type PaymentOptPageInfo {
 
 type PaymentOpt {
   id: Int
-  userId: Int
+  user: User
   cardNumber: String
   expiryDate: String
   owner: String

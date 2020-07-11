@@ -11,9 +11,12 @@ exports.up = function(knex) {
     }),
     knex.schema.createTable('user_profile', table => {
       table.increments();
-      table.string('first_name');
-      table.string('last_name');
+      table.string('full_name');
       table.string('mobile');
+      table.string('image_url');
+      table.string('date_of_birth');
+      table.string('watsapp');
+      table.string('details');
       table
         .integer('user_id')
         .unsigned()

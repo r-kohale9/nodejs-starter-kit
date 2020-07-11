@@ -4,6 +4,8 @@ import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
 
+import { User } from '@gqlapp/user-server-ts/sql';
+
 Model.knex(knex);
 
 export interface PaymentOpts {
@@ -23,6 +25,8 @@ export interface PromoCodes {
 export interface Identifier {
   id: number;
 }
+
+const eager = '[user.[profile]]';
 
 // Demo model.
 export default class Demo extends Model {
@@ -114,7 +118,9 @@ export default class Demo extends Model {
   }
 
   public async paymentOptsPagination(limit: number, after: number, orderBy: any, filter: any) {
-    const queryBuilder = PaymentOpt.query().orderBy('id', 'desc');
+    const queryBuilder = PaymentOpt.query()
+      .eager(eager)
+      .orderBy('id', 'desc');
 
     // if (orderBy && orderBy.column) {
     //   const column = orderBy.column;
@@ -173,6 +179,7 @@ export default class Demo extends Model {
   public async paymentOpt(id: number) {
     const res = camelizeKeys(
       await PaymentOpt.query()
+        .eager(eager)
         .findById(id)
         .orderBy('id', 'desc')
     );
@@ -190,23 +197,10 @@ class PromoCode extends Model {
   static get idColumn() {
     return 'id';
   }
-
-  static get relationMappings() {
-    return {
-      // listing: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: ListingDAO,
-      //   join: {
-      //     from: 'listing_bookmark.listing_id',
-      //     to: 'listing.id'
-      //   }
-      // }
-    };
-  }
 }
 
 // PaymentOpt Model
-class PaymentOpt extends Model {
+export class PaymentOpt extends Model {
   static get tableName() {
     return 'payment_opt';
   }
@@ -217,14 +211,14 @@ class PaymentOpt extends Model {
 
   static get relationMappings() {
     return {
-      // listing: {
-      //   relation: Model.BelongsToOneRelation,
-      //   modelClass: ListingDAO,
-      //   join: {
-      //     from: 'listing_bookmark.listing_id',
-      //     to: 'listing.id'
-      //   }
-      // }
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'payment_opt.user_id',
+          to: 'user.id'
+        }
+      }
     };
   }
 }

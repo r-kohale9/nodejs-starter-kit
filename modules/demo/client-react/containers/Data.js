@@ -3,7 +3,7 @@ import Product from '../Icons/product1.svg';
 import Discount from '../Icons/discount.png';
 
 const USER = {
-  id: 1,
+  id: 2,
   name: 'Riya Rodriguez',
   thumbnail: Avatar,
   // thumbnail: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',

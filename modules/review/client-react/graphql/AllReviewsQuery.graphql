@@ -1,14 +1,12 @@
 #import "./Review.graphql"
 
 query allReviews(
-  $userId: Int
   $limit: Int!
   $after: Int
   $orderBy: OrderByListInput
   $filter: FilterListInput
 ) {
   allReviews(
-    userId: $userId
     limit: $limit
     after: $after
     orderBy: $orderBy

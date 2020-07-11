@@ -52,25 +52,25 @@ const PromoCodeListComponent = props => {
   };
 
   const columns = [
-    {
-      title: (
-        <a
-          // onClick={e => handleOrderBy(e, "owner")}
-          href="#"
-        >
-          {'Owner'}
-          {/* {renderOrderByArrow("owner")} */}
-        </a>
-      ),
-      dataIndex: 'owner',
-      key: 'owner',
-      render: (text, record) => (
-        <Link to={`/public-profile/${record && record.userId}`}>
-          {console.log('record', record)}
-          {record && record.user && record.user.username}
-        </Link>
-      )
-    },
+    // {
+    //   title: (
+    //     <a
+    //       // onClick={e => handleOrderBy(e, "owner")}
+    //       href="#"
+    //     >
+    //       {'Owner'}
+    //       {/* {renderOrderByArrow("owner")} */}
+    //     </a>
+    //   ),
+    //   dataIndex: 'owner',
+    //   key: 'owner',
+    //   render: (text, record) => (
+    //     <Link to={`/public-profile/${record && record.userId}`}>
+    //       {console.log('record', record)}
+    //       {record && record.user && record.user.username}
+    //     </Link>
+    //   )
+    // },
     {
       title: (
         <a onClick={e => handleOrderBy(e, 'title')} href="#">

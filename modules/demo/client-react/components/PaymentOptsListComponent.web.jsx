@@ -74,7 +74,7 @@ const PaymentOptListComponent = props => {
     {
       title: (
         <a onClick={e => handleOrderBy(e, 'owner')} href="#">
-          Owner {renderOrderByArrow('owner')}
+          Name on card {renderOrderByArrow('owner')}
         </a>
       ),
       dataIndex: 'owner',

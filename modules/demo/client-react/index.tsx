@@ -123,7 +123,7 @@ export default new ClientModule({
     />,
     <Route
       exact
-      path="/demo/reviews"
+      path="/demo/reviews/:id"
       component={loadable(() => import('./containers/Reviews').then(c => c.default))}
     />,
     <Route

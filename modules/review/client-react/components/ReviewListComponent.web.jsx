@@ -73,6 +73,22 @@ const ReviewListComponent = props => {
     },
     {
       title: (
+        <a
+          // onClick={e => handleOrderBy(e, "baker")}
+          href="#"
+        >
+          {'Reviewed baker'}
+          {/* {renderOrderByArrow("baker")} */}
+        </a>
+      ),
+      dataIndex: 'baker',
+      key: 'baker',
+      render: (text, record) => (
+        <Link to={`/baker/${record && record.userId}`}>{record && record.baker && record.baker.username}</Link>
+      )
+    },
+    {
+      title: (
         <a onClick={e => handleOrderBy(e, 'rating')} href="#">
           Rating {renderOrderByArrow('rating')}
         </a>

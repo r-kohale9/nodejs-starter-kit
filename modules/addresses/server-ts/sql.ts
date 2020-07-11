@@ -1,6 +1,7 @@
 import { knex } from '@gqlapp/database-server-ts';
 import { Model } from 'objection';
 import { camelizeKeys, decamelizeKeys } from 'humps';
+import { User } from '@gqlapp/user-server-ts/sql';
 
 // Give the knex object to objection.
 Model.knex(knex);
@@ -19,6 +20,8 @@ export interface Identifier {
   id: number;
 }
 
+const eager = '[user.[profile]]';
+
 export default class Addresses extends Model {
   static get tableName() {
     return 'user_address';
@@ -27,9 +30,22 @@ export default class Addresses extends Model {
   static get idColumn() {
     return 'id';
   }
-
+  static get relationMappings() {
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'user_address.user_id',
+          to: 'user.id'
+        }
+      }
+    };
+  }
   public async addresses(limit: number, after: number, orderBy: any, filter: any) {
-    const queryBuilder = Addresses.query().orderBy('id', 'desc');
+    const queryBuilder = Addresses.query()
+      .eager(eager)
+      .orderBy('id', 'desc');
 
     // if (orderBy && orderBy.column) {
     //   const column = orderBy.column;
@@ -70,6 +86,7 @@ export default class Addresses extends Model {
     const res = camelizeKeys(
       await Addresses.query()
         .findById(id)
+        .eager(eager)
         .orderBy('id', 'desc')
     );
     // console.log(res);

@@ -4,16 +4,16 @@ exports.up = function(knex) {
       .createTable('review', table => {
         table.increments();
         table
-          .integer('user_id')
+          .integer('baker_id')
           .unsigned()
           .references('id')
           .inTable('user')
           .onDelete('CASCADE');
         table
-          .integer('listing_id')
+          .integer('user_id')
           .unsigned()
           .references('id')
-          .inTable('listing')
+          .inTable('user')
           .onDelete('CASCADE');
         table.string('feedback');
         table.integer('rating');

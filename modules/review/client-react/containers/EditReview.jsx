@@ -9,6 +9,7 @@ import { PropTypes } from 'prop-types';
 
 // import { withReview, withCurrentUser, withEditReview, updateReviewState } from './ReviewOperations';
 
+import { USERS_QUERY } from '@gqlapp/user-client-react/graphql/UsersQuery.graphql';
 import EditReviewView from '../components/EditReviewView.web';
 // import { useReviewWithSubscription } from './withSubscriptions';
 import REVIEW_QUERY from '../graphql/ReviewQuery.graphql';
@@ -35,6 +36,24 @@ EditReview.propTypes = {
 };
 
 export default compose(
+  // graphql(USERS_QUERY, {
+  //   options: ({ orderBy }) => {
+  //     return {
+  //       fetchPolicy: 'network-only',
+  //       variables: { orderBy, filter: { role: 'baker' } }
+  //     };
+  //   },
+  //   props({ data: { loading, users, refetch, error, updateQuery, subscribeToMore } }) {
+  //     return {
+  //       loading,
+  //       users,
+  //       refetch,
+  //       subscribeToMore,
+  //       updateQuery,
+  //       errors: error ? error.graphQLErrors : null
+  //     };
+  //   }
+  // }),
   graphql(REVIEW_QUERY, {
     options: props => {
       let id = 0;

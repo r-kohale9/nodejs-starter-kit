@@ -5,6 +5,9 @@ import bcrypt from 'bcryptjs';
 import { knex, returnId } from '@gqlapp/database-server-ts';
 
 import { Model } from 'objection';
+import { Review } from '@gqlapp/review-server-ts/sql';
+import { Addresses } from '@gqlapp/addresses-server-ts/sql';
+import { PaymentOpts } from '@gqlapp/demo-server-ts/sql';
 
 // Give the knex object to objection.
 Model.knex(knex);
@@ -13,7 +16,8 @@ Model.knex(knex);
 const user_eager = `[
   verification,
   mobile,
-  auth_linkedin, auth_github, auth_google, auth_facebook, auth_certificate
+  auth_linkedin, auth_github, auth_google, auth_facebook, auth_certificate, 
+  profile
 ]`;
 
 // Actual query fetching and transformation in DB
@@ -91,6 +95,38 @@ export class User extends Model {
           from: 'user.id',
           to: 'user_mobile.user_id'
         }
+      },
+      review: {
+        relation: Model.HasOneRelation,
+        modelClass: Review,
+        join: {
+          from: 'user.id',
+          to: 'review.user_id'
+        }
+      },
+      reviewe: {
+        relation: Model.HasOneRelation,
+        modelClass: Review,
+        join: {
+          from: 'user.id',
+          to: 'review.baker_id'
+        }
+      },
+      shipping_addresses: {
+        relation: Model.HasOneRelation,
+        modelClass: Addresses,
+        join: {
+          from: 'user.id',
+          to: 'user_address.user_id'
+        }
+      },
+      payment_opts: {
+        relation: Model.HasOneRelation,
+        modelClass: PaymentOpts,
+        join: {
+          from: 'user.id',
+          to: 'user_address.user_id'
+        }
       }
     };
   }
@@ -141,6 +177,7 @@ export class User extends Model {
       .findById(id)
       .eager(user_eager);
     const res = camelizeKeys(await queryBuilder);
+    console.log('res', res);
     return res;
   }
 
@@ -282,7 +319,6 @@ export class User extends Model {
     const mobile = await user.$relatedQuery('mobile').insert(params);
     return camelizeKeys(mobile);
   }
-
 
   async updateUserMobile(id, params) {
     const mobile = await UserMobile.query().patchAndFetchById(id, params);

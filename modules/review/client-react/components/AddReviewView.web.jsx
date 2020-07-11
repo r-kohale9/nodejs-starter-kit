@@ -14,7 +14,7 @@ const renderMetaData = t => (
     meta={[{ name: 'description', content: `${settings.app.name} - ${t('meta')}` }]}
   />
 );
-const AddReviewView = ({ t, loading, addReview, currentUser }) => {
+const AddReviewView = ({ t, users, loading, addReview, currentUser }) => {
   return (
     <PageLayout>
       {renderMetaData(t)}
@@ -23,7 +23,14 @@ const AddReviewView = ({ t, loading, addReview, currentUser }) => {
       ) : (
         <>
           <div align="center">
-            <ReviewFormComponent cardTitle="Add Review" t={t} onSubmit={addReview} currentUser={currentUser} />
+            {users &&
+            <ReviewFormComponent
+              cardTitle="Add Review"
+              t={t}
+              users={users}
+              onSubmit={addReview}
+              currentUser={currentUser}
+            />}
           </div>
         </>
       )}

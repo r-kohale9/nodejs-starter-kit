@@ -14,7 +14,7 @@ type AddressPageInfo {
 
 type Address {
   id: Int
-  userId: Int!
+  user: User
   addressName: String
   shippingAddress: String
   city: String

@@ -77,18 +77,23 @@ export default pubsub => ({
     }
   },
   UserProfile: {
-    firstName(obj) {
-      return obj.firstName;
-    },
-    lastName(obj) {
-      return obj.lastName;
-    },
     fullName(obj) {
-      if (obj.firstName && obj.lastName) {
-        return `${obj.firstName} ${obj.lastName}`;
-      } else {
-        return null;
-      }
+      return obj.profile.fullName;
+    },
+    mobile(obj) {
+      return obj.profile.mobile;
+    },
+    imageUrl(obj) {
+      return obj.profile.imageUrl;
+    },
+    dateOfBirth(obj) {
+      return obj.profile.dateOfBirth;
+    },
+    watsapp(obj) {
+      return obj.profile.watsapp;
+    },
+    details(obj) {
+      return obj.profile.details;
     }
   },
   Mutation: {

@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 import { Row, Col, Icon, Card, Rate, Menu } from 'antd';
 import { PropTypes } from 'prop-types';
@@ -22,7 +23,7 @@ const ReviewsItemComponent = props => {
   // console.log('props', props);
   return (
     <Row type="flex" align="middle">
-      <Avatar alt="" src={review.thumbnail} />
+      <Avatar alt="" src={review.user.profile.imageUrl} />
       <Card
         style={{
           margin: '28px 0px 0px 16px',
@@ -33,7 +34,7 @@ const ReviewsItemComponent = props => {
         <Row>
           <Col span={21}>
             <h3>
-              <strong>{review.name}</strong>
+              <strong>{review.user.profile.fullName}</strong>
             </h3>
           </Col>
           <Col span={2}>
@@ -66,7 +67,7 @@ const ReviewsItemComponent = props => {
         </Col>
         <Col span={12}>
           <Row type="flex" justify="end" align="middle">
-            <Text>{review.date}</Text>
+            <Text>{moment(`${review.createdAt}`).format('LL')}</Text>
           </Row>
         </Col>
         <Col span={24}>

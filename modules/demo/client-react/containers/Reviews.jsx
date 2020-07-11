@@ -62,10 +62,16 @@ export default compose(
     }
   }),
   graphql(REVIEWS_QUERY, {
-    options: ({ orderBy, filter, currentUser }) => {
+    options: ({ orderBy, filter, match, navigation }) => {
+      let id = 0;
+      if (match) {
+        id = match.params.id;
+      } else if (navigation) {
+        id = navigation.state.params.id;
+      }
       return {
         variables: {
-          userId: currentUser && currentUser.id,
+          userId: Number(id),
           limit: limit,
           after: 0,
           orderBy,
@@ -107,7 +113,6 @@ export default compose(
   graphql(ADD_REVIEW, {
     props: ({ ownProps: { history }, mutate }) => ({
       addReview: async values => {
-        console.log('addreivewq', values);
         message.destroy();
         message.loading('Please wait...', 0);
         try {

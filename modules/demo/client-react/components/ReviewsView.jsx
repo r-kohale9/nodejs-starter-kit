@@ -50,7 +50,7 @@ const ReviewsView = props => {
         <Col span={24}>
           <Col span={12}>
             <h3>
-              <strong>{`${reviews && reviews.length} reviews`}</strong>
+              <strong>{`${reviews && reviews.totalCount} reviews`}</strong>
             </h3>
           </Col>
           <Col span={12}>

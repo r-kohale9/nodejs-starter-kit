@@ -20,6 +20,8 @@ type ReviewImage {
 
 type Review {
   id: Int
+  user: User
+  baker: User
   rating: String
   feedback: String
   reviewImages: [ReviewImage]
@@ -30,7 +32,6 @@ type Review {
 extend type Query {
   review(id: Int): Review
   allReviews(
-    userId: Int
     limit: Int
     after: Int
     orderBy: OrderByListInput
