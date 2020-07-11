@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button, Spin, List } from 'antd';
+import { Row, Col, Button, Empty, List } from 'antd';
 import { withFormik } from 'formik';
 import { PropTypes } from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
 import CartItemComponent from './CartItemComponent';
@@ -33,7 +34,7 @@ const CheckoutCartView = props => {
   const { loading, getCart, history, promocodes, onDelete, setFieldValue, values, onSubmit } = props;
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="CART">
-      {!loading && getCart && getCart.orderDetails ? (
+      {!loading && getCart && getCart.orderDetails && getCart.orderDetails.length > 0 ? (
         <>
           <Col span={24}>
             <PgTitle>My Cart</PgTitle>
@@ -89,7 +90,15 @@ const CheckoutCartView = props => {
           </Col>
         </>
       ) : (
-        <Spin />
+        <div className="width100 centerAlign marginT30">
+          <Empty description="You have no items in your Cart">
+            <Link to="/demo/home">
+              <Button style={{ width: 'fit-content' }} type="primary">
+                Add some products
+              </Button>
+            </Link>
+          </Empty>
+        </div>
       )}
     </PageLayout>
   );
