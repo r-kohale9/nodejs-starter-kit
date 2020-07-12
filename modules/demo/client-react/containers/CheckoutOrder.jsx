@@ -16,7 +16,7 @@ const CheckoutOrder = props => {
     try {
       await props.patchOrder({
         id: props.getCart.id,
-        state: 'INITIATED'
+        state: 'Processing'
       });
       history.push('/demo/checkout-status');
     } catch (e) {
@@ -26,7 +26,7 @@ const CheckoutOrder = props => {
 
     // Redirect
     if (history) {
-      return history.push('/my-orders/');
+      return history.push('/demo/checkout-status');
     }
     if (navigation) {
       return navigation.goBack();

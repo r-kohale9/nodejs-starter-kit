@@ -58,6 +58,12 @@ const DropDownButton = styled(Btn)`
   color: #222222;
 `;
 
+const Number = styled.div`
+  font-family: Metropolis;
+  font-size: 14px;
+  letter-spacing: 3px;
+`;
+
 export {
   PgTitle,
   Text,
@@ -68,5 +74,6 @@ export {
   LinkGrey,
   StatusText,
   Divider,
-  DropDownButton
+  DropDownButton,
+  Number
 };

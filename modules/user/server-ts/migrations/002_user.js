@@ -11,6 +11,8 @@ exports.up = function(knex) {
     }),
     knex.schema.createTable('user_profile', table => {
       table.increments();
+      table.string('first_name');
+      table.string('last_name');
       table.string('full_name');
       table.string('mobile');
       table.string('image_url');

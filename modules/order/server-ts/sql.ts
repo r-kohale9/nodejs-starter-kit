@@ -166,7 +166,6 @@ export default class OrderDAO extends Model {
         .eager(eager)
         .orderBy('id', 'desc')
     );
-    // console.log(res);
     return res;
   }
 

@@ -3,11 +3,11 @@ module.exports = Object.freeze({
   STALE: 'STALE',
 
   // CHECKOUT PROCESS COMPLETED
-  PROCESSING: 'PROCESSING',
+  PROCESSING: 'Processing',
 
   // Delivered
-  DELIVERED: 'DELIVERED',
+  DELIVERED: 'Delivered',
 
-  STATESARRAY: ['PROCESSING', 'DELIVERED'],
-  DELIVERY: ['Self pickup', 'Danzo', 'Swiggy'],
+  STATESARRAY: ['Processing', 'Delivered', 'Cancelled'],
+  DELIVERY: ['Self pickup', 'Danzo', 'Swiggy']
 });

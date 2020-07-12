@@ -1,11 +1,20 @@
 import React from 'react';
+import moment from 'moment';
 import { Card, Row, Col, Button } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import { Text, StatusText } from './StyledComponents';
 
+const totalAmount = orderDetails => {
+  let price = 0;
+  orderDetails.map(item => {
+    price = price + (item && item.listing.listingCost.cost) * (item && item.unit);
+  });
+  return price;
+};
 const OrderItemComponent = props => {
   const { order, history } = props;
+  console.log('props', props);
   return (
     <Card
       style={{
@@ -17,7 +26,7 @@ const OrderItemComponent = props => {
       }}
       hoverable
       bodyStyle={{
-        padding: '20px 18px 20px 14px'
+        padding: '16px 18px 20px 14px'
       }}
     >
       <Row type="flex" justify="space-between" align="middle" gutter={[0, 8]}>
@@ -32,7 +41,7 @@ const OrderItemComponent = props => {
             </Col>
             <Col span={12}>
               <Row type="flex" justify="end" style={{ padding: '8px 0px 0px 0px' }}>
-                <Text>{order.date}</Text>
+                <Text>{moment(order.createdAt).format('DD-MM-YYYY')}</Text>
               </Row>
             </Col>
           </Row>
@@ -50,7 +59,7 @@ const OrderItemComponent = props => {
                 <p style={{ display: 'flex' }}>
                   <Text>Quantity:</Text>
                   <h3>
-                    <strong>{order.quantity}</strong>
+                    <strong>{order.orderDetails.length}</strong>
                   </h3>
                 </p>
               </Row>
@@ -60,7 +69,7 @@ const OrderItemComponent = props => {
                 <p style={{ display: 'flex' }}>
                   <Text>Total Amount:</Text>
                   <h3>
-                    <strong>{order.totalAmount}</strong>
+                    <strong>{totalAmount(order.orderDetails)}</strong>
                   </h3>
                 </p>
               </Row>
@@ -78,7 +87,7 @@ const OrderItemComponent = props => {
             </Col>
             <Col span={12}>
               <Row type="flex" justify="end" align="middle">
-                <StatusText status={order.status}>{order.status}</StatusText>
+                <StatusText status={order.state}>{order.state}</StatusText>
               </Row>
             </Col>
           </Row>

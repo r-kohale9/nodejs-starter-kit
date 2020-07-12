@@ -30,4 +30,6 @@ fragment OrderInfo on Order {
       ...ListingInfo
     }
   }
+  createdAt
+  updatedAt
 }

@@ -8,7 +8,7 @@ import PageLayout from './PageLayout';
 
 import Danzo from '../Icons/dunzo.svg';
 import Swiggy from '../Icons/swiggy.svg';
-import { Text } from './StyledComponents';
+import { Text, Number } from './StyledComponents';
 
 const LogoCard = styled.div`
   width: 64px;
@@ -22,12 +22,6 @@ const Logo = styled.img`
   width: 32px;
   height: 25px;
   margin: 5px 14px;
-`;
-
-const Number = styled.div`
-  font-family: Metropolis;
-  font-size: 14px;
-  letter-spacing: 3px;
 `;
 
 const DeliveryMetBtn = styled(Button)`

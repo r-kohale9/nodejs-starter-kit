@@ -10,6 +10,7 @@ import { PgTitle } from './StyledComponents';
 
 const StatusNtActvBtn = styled(Button)`
   color: #222;
+  width: fit-content;
   & :hover {
     color: white;
     border-radius: 24px;
@@ -19,10 +20,9 @@ const StatusNtActvBtn = styled(Button)`
 `;
 
 const MyOrdersView = props => {
-  const { orders, history, orderStatusSlick } = props;
+  const { userOrders, history, orderStatusSlick } = props;
   const [status, setStatus] = useState('Delivered');
 
-  console.log('props', props);
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="PROFILE">
       {/* {renderMetaData(t)} */}
@@ -32,9 +32,9 @@ const MyOrdersView = props => {
           {orderStatusSlick &&
             orderStatusSlick.length !== 0 &&
             orderStatusSlick.map((ordStat, index) => (
-              <Col key={index} span={24 / orderStatusSlick && orderStatusSlick.length}>
+              <Col key={index} span={24 / (orderStatusSlick && orderStatusSlick.length)}>
                 {status === ordStat ? (
-                  <Button type="black" block>
+                  <Button type="black" block style={{ width: 'fit-content' }}>
                     {ordStat}
                   </Button>
                 ) : (
@@ -46,27 +46,29 @@ const MyOrdersView = props => {
             ))}
         </Row>
       </div>
-      <List
-        grid={{
-          gutter: 16,
-          xs: 1,
-          sm: 1,
-          md: 2,
-          lg: 3
-        }}
-        dataSource={orders && orders.filter(ord => ord.status === status)}
-        renderItem={item => (
-          <List.Item>
-            <OrderItemComponent order={item} history={history} />
-          </List.Item>
-        )}
-      />
+      {userOrders && (
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 2,
+            lg: 3
+          }}
+          dataSource={userOrders && userOrders.filter(ord => ord.state === status)}
+          renderItem={item => (
+            <List.Item>
+              <OrderItemComponent order={item} history={history} />
+            </List.Item>
+          )}
+        />
+      )}
     </PageLayout>
   );
 };
 
 MyOrdersView.propTypes = {
-  orders: PropTypes.array,
+  userOrders: PropTypes.array,
   orderStatusSlick: PropTypes.array,
   history: PropTypes.object
 };
