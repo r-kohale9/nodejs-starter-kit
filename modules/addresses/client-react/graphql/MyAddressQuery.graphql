@@ -1,0 +1,7 @@
+#import "./Address.graphql"
+
+query userAddress {
+  userAddress {
+    ...AddressInfo
+  }
+}

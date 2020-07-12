@@ -6,10 +6,12 @@ import PageLayout from './PageLayout';
 import RenderAddress from './RenderAddress';
 
 const ShippingAddressView = props => {
-  const { addresses, history } = props;
+  const { loading, addresses, history, toggleDefault } = props;
   return (
     <PageLayout history={history} title="Shipping Addresses">
-      <RenderAddress label="addresses" addresses={addresses} history={history} />
+      {!loading && addresses.length > 0 && (
+        <RenderAddress label="addresses" addresses={addresses} history={history} toggleDefault={toggleDefault} />
+      )}
     </PageLayout>
   );
 };

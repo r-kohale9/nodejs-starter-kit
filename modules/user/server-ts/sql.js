@@ -177,7 +177,7 @@ export class User extends Model {
       .findById(id)
       .eager(user_eager);
     const res = camelizeKeys(await queryBuilder);
-    console.log('res', res);
+    // console.log('res', res);
     return res;
   }
 
@@ -226,12 +226,12 @@ export class User extends Model {
     const res = await User.query()
       .eager(user_eager)
       .insertGraph(decamelizeKeys(params));
-    console.log(res);
+    // console.log(res);
     // Add Profile
     const profile_id = await returnId(knex('user_profile')).insert({
       user_id: res.id
     });
-    console.log(profile_id);
+    // console.log(profile_id);
     return res.id;
   }
 
@@ -549,7 +549,7 @@ export class User extends Model {
       .leftJoin('auth_github AS gha', 'gha.user_id', 'u.id')
       .leftJoin('auth_linkedin AS lna', 'lna.user_id', 'u.id');
 
-    console.log('sql filters', filter);
+    // console.log('sql filters', filter);
 
     // add filter conditions
     if (filter) {
@@ -588,7 +588,7 @@ export class User extends Model {
     } else {
       res = camelizeKeys(await queryBuilder);
     }
-    console.log('sql userList', res);
+    // console.log('sql userList', res);
     return {
       userItems: res,
       total: total

@@ -158,6 +158,7 @@ const AddressFormWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
     id: props.address && props.address.id ? props.address.id : null,
+    userId: (props.address && props.address.user && props.address.user.id) || null,
     addressName: (props.address && props.address.addressName) || '',
     shippingAddress: (props.address && props.address.shippingAddress) || '',
     city: (props.address && props.address.city) || '',

@@ -5,10 +5,10 @@ import PageLayout from './PageLayout';
 import AddressForm from './AddressForm';
 
 const EditShippingAddressView = props => {
-  const { history, address } = props;
+  const { history, address, onSubmit } = props;
   return (
     <PageLayout history={history} title="Editing Shipping Addresses">
-      <AddressForm address={address} />
+      <AddressForm address={address} onSubmit={onSubmit} />
     </PageLayout>
   );
 };

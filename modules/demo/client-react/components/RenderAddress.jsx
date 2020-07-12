@@ -9,14 +9,15 @@ import { RenderCheckBox } from '@gqlapp/look-client-react';
 import AddressCardComponent from './AddressCardComponent';
 
 const RenderAddress = props => {
-  const { addresses, values, history } = props;
-  // const [visible, setVisible] = useState(addresses.map(() => false));
+  const { addresses, values, history, toggleDefault } = props;
 
-  // const handleShippingAddress = index => {
-  //   values.addresses.map(address => (address.shippingAddress = false));
-  //   console.log('index', values.addresses);
-  //   values.addresses[index].shippingAddress = true;
-  // };
+  const handleShippingAddress = id => {
+    try {
+      toggleDefault(id);
+    } catch (e) {
+      throw Error(e);
+    }
+  };
 
   return (
     <Row>
@@ -39,11 +40,11 @@ const RenderAddress = props => {
                 handleBtn={() => history.push(`/demo/edit-shipping-address/${address.id}`)}
                 extra={
                   <Field
-                    name={`addresses[${index}].shippingAddress`}
+                    name={`addresses[${index}].default`}
                     component={RenderCheckBox}
                     labelText="Use as the shipping address"
-                    // onChange={() => handleShippingAddress(index)}
-                    checked={values.addresses[index].shippingAddress}
+                    onChange={() => handleShippingAddress(address.id)}
+                    checked={values.addresses[index].default}
                   />
                 }
               />
@@ -74,7 +75,7 @@ const RenderAddressWithFormik = withFormik({
     const { addresses } = values;
     function getAddresses(address) {
       return {
-        shippingAddress: address.shippingAddress
+        default: address.default
       };
     }
 

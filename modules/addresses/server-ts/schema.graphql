@@ -20,6 +20,7 @@ type Address {
   city: String
   state: String
   pinCode: Int
+  default: Boolean
   country: String
   createdAt: String
   updatedAt: String
@@ -37,6 +38,7 @@ type Address {
 
 extend type Query {
   address(id: Int): Address
+  userAddress(userId: Int): [Address]
   addresses(
     limit: Int
     after: Int
@@ -48,6 +50,7 @@ extend type Query {
 extend type Mutation {
   addAddress(input: AddressInput!): Boolean!
   addOrEditAddress(input: AddressInput!): String!
+  toggleDefault(id: Int, userId: Int): Boolean
   deleteAddress(id: Int): Boolean!
 }
 

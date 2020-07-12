@@ -4,7 +4,7 @@ import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
 
-import User from '@gqlapp/user-server-ts/sql';
+import { User } from '@gqlapp/user-server-ts/sql';
 import OrderDAO from '@gqlapp/order-server-ts/sql';
 
 Model.knex(knex);

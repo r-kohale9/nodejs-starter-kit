@@ -1,7 +1,7 @@
 import { knex } from '@gqlapp/database-server-ts';
 import { Model } from 'objection';
 import { camelizeKeys, decamelizeKeys } from 'humps';
-import User from '@gqlapp/user-server-ts/sql';
+import { User } from '@gqlapp/user-server-ts/sql';
 import OrderDAO from '@gqlapp/order-server-ts/sql';
 
 // Give the knex object to objection.
@@ -101,6 +101,17 @@ export default class Addresses extends Model {
     // console.log(res);
     return res;
   }
+  public async userAddress(userId: number) {
+    const res = camelizeKeys(
+      await Addresses.query()
+        .where('user_id', '=', userId)
+        .eager(eager)
+        .orderBy('id', 'desc')
+    );
+    // console.log(res);
+    return res;
+  }
+
   public async addAddress(params: Address) {
     return Addresses.query().insertGraph(decamelizeKeys(params));
   }
@@ -116,7 +127,24 @@ export default class Addresses extends Model {
       return 'Address added';
     }
   }
-
+  public async toggleDefault(id: number, userId: number) {
+    const address = await Addresses.query()
+      .where('user_id', '=', userId)
+      .andWhere('default', '=', true);
+    if (address.length === 0) {
+      await knex('user_address')
+        .where('id', '=', id)
+        .update({ default: true });
+    } else {
+      await knex('user_address')
+        .where('id', '=', address[0].id)
+        .update({ default: false });
+      await knex('user_address')
+        .where('id', '=', id)
+        .update({ default: true });
+    }
+    return true;
+  }
   public deleteAddress(id: number) {
     return knex('user_address')
       .where('id', '=', id)

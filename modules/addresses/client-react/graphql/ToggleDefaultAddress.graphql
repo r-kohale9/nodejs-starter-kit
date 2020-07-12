@@ -1,0 +1,3 @@
+mutation toggleDefault($id: Int!, $userId: Int) {
+  toggleDefault(id: $id, userId: $userId)
+}

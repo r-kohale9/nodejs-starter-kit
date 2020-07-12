@@ -1,6 +1,11 @@
 import withAuth from 'graphql-auth';
 import { Address, Identifier } from './sql';
 
+interface Edges {
+  cursor: number;
+  node: Address & Identifier;
+}
+
 interface AddressInput {
   input: Address;
 }
@@ -30,6 +35,9 @@ export default (pubsub: any) => ({
         }
       };
     },
+    async userAddress(obj: any, { userId }: any, context: any) {
+      return context.Addresses.userAddress(userId || context.req.identity.id);
+    },
     async address(obj: any, { id }: Identifier, context: any) {
       return context.Addresses.address(id);
     }
@@ -38,7 +46,7 @@ export default (pubsub: any) => ({
     addAddress: withAuth(async (obj: any, { input }: AddressInput, context: any) => {
       try {
         if (!input.userId) {
-          input.userId = context.identity.id;
+          input.userId = context.req.identity.id;
         }
         await context.Addresses.addAddress(input);
         return true;
@@ -56,6 +64,14 @@ export default (pubsub: any) => ({
     deleteAddress: withAuth(async (obj: any, { id }: Identifier, context: any) => {
       try {
         await context.Addresses.deleteAddress(id);
+        return true;
+      } catch (e) {
+        return e;
+      }
+    }),
+    toggleDefault: withAuth(async (obj: any, { id, userId }: any, context: any) => {
+      try {
+        await context.Addresses.toggleDefault(id, userId || context.req.identity.id);
         return true;
       } catch (e) {
         return e;
