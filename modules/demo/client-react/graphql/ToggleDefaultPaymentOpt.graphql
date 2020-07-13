@@ -1,0 +1,3 @@
+mutation toggleDefaultPaymentOpt($id: Int!, $userId: Int) {
+  toggleDefaultPaymentOpt(id: $id, userId: $userId)
+}

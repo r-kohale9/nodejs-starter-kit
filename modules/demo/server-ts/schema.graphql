@@ -58,6 +58,7 @@ extend type Query {
 
   # Payment Opt
   paymentOpt(id: Int): PaymentOpt
+  userPaymentOpt(userId: Int): [PaymentOpt]
   paymentOpts(
     limit: Int
     after: Int
@@ -82,6 +83,7 @@ extend type Mutation {
   editPaymentOpt(input: EditPaymentOptInput!): Boolean
   # # Delete a PaymentOpt
   deletePaymentOpt(id: Int!): Boolean
+  toggleDefaultPaymentOpt(id: Int, userId: Int): Boolean
 }
 input AddPromoCodeInput {
   id: Int

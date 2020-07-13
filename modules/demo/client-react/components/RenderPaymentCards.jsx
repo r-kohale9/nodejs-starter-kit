@@ -9,7 +9,14 @@ import { RenderCheckBox } from '@gqlapp/look-client-react';
 import PaymentCardComponent from './PaymentCardComponent';
 
 const RenderPaymentCards = props => {
-  const { paymentOpts, values } = props;
+  const { paymentOpts, values, toggleDefaultPaymentOpt } = props;
+  const handlePaymentOption = id => {
+    try {
+      toggleDefaultPaymentOpt(id);
+    } catch (e) {
+      throw Error(e);
+    }
+  };
   return (
     <Col span={24}>
       <List
@@ -27,11 +34,11 @@ const RenderPaymentCards = props => {
               card={payOpt}
               extra={
                 <Field
-                  name={`paymentOpts[${index}].defaultCard`}
+                  name={`paymentOpts[${index}].default`}
                   component={RenderCheckBox}
                   labelText="Use as default payment method"
-                  // onChange={() => handlePaymentOption(index)}
-                  checked={values.paymentOpts[index].defaultCard}
+                  onChange={() => handlePaymentOption(payOpt.id)}
+                  checked={values.paymentOpts[index].default}
                 />
               }
             />
@@ -53,7 +60,7 @@ const RenderPaymentCardsWithFormik = withFormik({
     const { paymentOpts } = values;
     function getpayOpt(payOpt) {
       return {
-        defaultCard: payOpt.defaultCard
+        default: payOpt.default
       };
     }
 

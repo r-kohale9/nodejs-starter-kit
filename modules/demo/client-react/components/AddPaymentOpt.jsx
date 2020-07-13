@@ -10,10 +10,9 @@ import { RenderCheckBox, RenderField } from '@gqlapp/look-client-react';
 import ModalComponent from './ModalComponent';
 
 const AddPaymentOptFormSchema = {
-  nameOnCard: [required],
+  owner: [required],
   cardNumber: [required],
-  expireDate: [required],
-  cvv: [required]
+  expiryDate: [required]
 };
 
 const AddPaymentOpt = props => {
@@ -26,12 +25,12 @@ const AddPaymentOpt = props => {
         <Col span={24}>
           <Form onSubmit={handleSubmit}>
             <Field
-              name="nameOnCard"
+              name="owner"
               component={RenderField}
               type="text"
               placeholder="Name on card"
               // label="Name on card"
-              value={values.nameOnCard}
+              value={values.owner}
             />
             <Field
               name="cardNumber"
@@ -42,30 +41,22 @@ const AddPaymentOpt = props => {
               value={values.cardNumber}
             />
             <Field
-              name="expireDate"
+              name="expiryDate"
               component={RenderField}
               type="text"
               placeholder="Expiry date"
               // label="Expiry date"
-              value={values.expireDate}
+              value={values.expiryDate}
             />
-            <Field
-              name="cvv"
-              component={RenderField}
-              type="text"
-              placeholder="CVV"
-              // label="CVV"
-              value={values.cvv}
-            />
-            <Row type="flex" justify="start">
+            {/* <Row type="flex" justify="start">
               <Field
-                name="defaultCard"
+                name="default"
                 component={RenderCheckBox}
                 labelText="Use as the shipping address"
                 // onChange={() => handleShippingAddress(index)}
-                checked={values.defaultCard}
+                checked={values.default}
               />
-            </Row>
+            </Row> */}
             <div style={{ paddingBottom: '50px' }}>
               <Button type="primary" size="lg" block onClick={handleSubmit}>
                 ADD CARD
@@ -87,11 +78,11 @@ const AddPaymentOptWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
     id: props.paymentOpt && props.paymentOpt.id ? props.paymentOpt.id : null,
-    nameOnCard: (props.paymentOpt && props.paymentOpt.nameOnCard) || '',
+    userId: (props.currentUser && props.currentUser.id) || null,
+    owner: (props.paymentOpt && props.paymentOpt.owner) || '',
     cardNumber: (props.paymentOpt && props.paymentOpt.cardNumber) || '',
-    expireDate: (props.paymentOpt && props.paymentOpt.expireDate) || '',
-    cvv: (props.paymentOpt && props.paymentOpt.cvv) || '',
-    defaultCard: (props.paymentOpt && props.paymentOpt.defaultCard) || false
+    expiryDate: (props.paymentOpt && props.paymentOpt.expiryDate) || ''
+    // default: (props.paymentOpt && props.paymentOpt.default) || false
   }),
   handleSubmit(values, { props: { onSubmit } }) {
     // console.log('values1', values);

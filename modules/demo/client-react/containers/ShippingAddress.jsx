@@ -33,7 +33,7 @@ export default compose(
             __typename: 'Mutation',
             toggleDefault: {
               id,
-              __typename: 'Addresses'
+              __typename: 'Address'
             }
           },
           update: store => {

@@ -8,7 +8,7 @@ import PageLayout from './PageLayout';
 import RenderPaymentCards from './RenderPaymentCards';
 
 const PaymentMethodsView = props => {
-  const { paymentOpts, history, onSubmit } = props;
+  const { loading, paymentOpts, history, onSubmit, toggleDefaultPaymentOpt } = props;
   return (
     <PageLayout history={history} title="Payment methods">
       <Row type="flex" justify="center" align="middle">
@@ -18,7 +18,9 @@ const PaymentMethodsView = props => {
           </h3>
         </Col>
         <Col span={24}>
-          <RenderPaymentCards paymentOpts={paymentOpts} />
+          {!loading && paymentOpts && paymentOpts.length > 0 && (
+            <RenderPaymentCards paymentOpts={paymentOpts} toggleDefaultPaymentOpt={toggleDefaultPaymentOpt} />
+          )}
         </Col>
         <div style={{ padding: '2px 0px 100px 0px', width: '100%' }}>
           <Col span={24}>

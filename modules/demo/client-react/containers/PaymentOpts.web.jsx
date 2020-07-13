@@ -21,26 +21,8 @@ const limit =
     : settings.pagination.mobile.itemsNumber;
 
 const PaymentOpts = props => {
-  const handleSubmit = (values, type) => {
-    console.log('values', values, type);
-    try {
-      switch (type) {
-        case 'ADD':
-          values.userId = props.currentUser.id;
-          return props.addPaymentOpts(values);
-        case 'DELETE':
-          return props.deletePaymentOpts(values);
-        case 'EDIT':
-          return props.editPaymentOpts(values);
-        default:
-          return true;
-      }
-    } catch (e) {
-      throw Error(e);
-    }
-  };
   console.log('props', props);
-  return <PaymentOptsView {...props} onSubmit={handleSubmit} />;
+  return <PaymentOptsView {...props} />;
 };
 
 PaymentOpts.propTypes = {
@@ -173,18 +155,18 @@ export default compose(
   // }),
   graphql(DELETE_PAYMENT_OPT, {
     props: ({ mutate }) => ({
-      deletePaymentOpts: id => {
+      deletePaymentOpt: id => {
         mutate({
           variables: { id },
           optimisticResponse: {
             __typename: 'Mutation',
-            deletePaymentOpts: {
+            deletePaymentOpt: {
               id: id,
               __typename: 'PaymentOpts'
             }
           }
           //   ,
-          //   update: (cache, { data: { deletePaymentOpts } }) => {
+          //   update: (cache, { data: { deletePaymentOpt } }) => {
           //     // Get previous paymentOpts from cache
           //     const prevPaymentOpts = cache.readQuery({
           //       query: PAYMENT_OPTS_QUERY,

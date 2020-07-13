@@ -79,6 +79,9 @@ export default (pubsub: any) => ({
         }
       };
     },
+    async userPaymentOpt(obj: any, { userId }: any, context: any) {
+      return context.Demo.userPaymentOpt(userId || context.req.identity.id);
+    },
     async paymentOpt(obj: any, { id }: Identifier, context: any) {
       return context.Demo.paymentOpt(id);
     }
@@ -121,6 +124,9 @@ export default (pubsub: any) => ({
       // ["stripe:*"],
       async (obj: any, { input }: PaymentOptInput, context: any) => {
         try {
+          if (!input.userId) {
+            input.userId = context.req.identity.id;
+          }
           const id = await context.Demo.addPaymentOpt(input);
           const paymentOpt = await context.Demo.paymentOpt(id);
           return paymentOpt;
@@ -147,6 +153,14 @@ export default (pubsub: any) => ({
       } else {
         // return { id: null };
         return false;
+      }
+    }),
+    toggleDefaultPaymentOpt: withAuth(async (obj: any, { id, userId }: any, context: any) => {
+      try {
+        await context.Demo.toggleDefault(id, userId || context.req.identity.id);
+        return true;
+      } catch (e) {
+        return e;
       }
     })
   },

@@ -6,6 +6,7 @@ import { knex, returnId } from '@gqlapp/database-server-ts';
 
 import { User } from '@gqlapp/user-server-ts/sql';
 import OrderDAO from '@gqlapp/order-server-ts/sql';
+import Addresses from '@gqlapp/addresses-server-ts/sql';
 
 Model.knex(knex);
 
@@ -158,7 +159,16 @@ export default class Demo extends Model {
     const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
     return { paymentOpts: res, total };
   }
-
+  public async userPaymentOpt(userId: number) {
+    const res = camelizeKeys(
+      await PaymentOpt.query()
+        .where('user_id', '=', userId)
+        .eager(eager)
+        .orderBy('id', 'desc')
+    );
+    // console.log(res);
+    return res;
+  }
   public async addPaymentOpt(params: PromoCodes) {
     // console.log('pramas', decamelizeKeys(params));
     const res = await PaymentOpt.query().insert(decamelizeKeys(params));
@@ -171,8 +181,26 @@ export default class Demo extends Model {
     return res.id;
   }
 
+  public async toggleDefault(id: number, userId: number) {
+    const address = await PaymentOpt.query()
+      .where('user_id', '=', userId)
+      .andWhere('default', '=', true);
+    if (address.length === 0) {
+      await knex('payment_opt')
+        .where('id', '=', id)
+        .update({ default: true });
+    } else {
+      await knex('payment_opt')
+        .where('id', '=', address[0].id)
+        .update({ default: false });
+      await knex('payment_opt')
+        .where('id', '=', id)
+        .update({ default: true });
+    }
+    return true;
+  }
   public deletePaymentOpt(id: number) {
-    return knex('promo_code')
+    return knex('payment_opt')
       .where('id', '=', id)
       .del();
   }

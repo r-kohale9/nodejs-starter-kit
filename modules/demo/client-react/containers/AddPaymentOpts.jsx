@@ -6,7 +6,7 @@ import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
-import ADD_REVIEW from '../graphql/AddPaymentOpt.graphql';
+import ADD_PAYMENT_OPT from '../graphql/AddPaymentOpt.graphql';
 
 import AddPaymentOptView from '../components/AddPaymentOptView.web';
 // import { withAddPaymentOpt } from './PaymentOptOperations';
@@ -18,7 +18,7 @@ const AddPaymentOpt = props => {
 
 export default compose(
   // withAddPaymentOpt,
-  graphql(ADD_REVIEW, {
+  graphql(ADD_PAYMENT_OPT, {
     props: ({ ownProps: { history }, mutate }) => ({
       addPaymentOpt: async values => {
         console.log('adddemo', values);

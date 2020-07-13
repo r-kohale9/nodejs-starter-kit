@@ -1,0 +1,7 @@
+#import "./Payment.graphql"
+
+query userPaymentOpt {
+  userPaymentOpt {
+    ...PaymentInfo
+  }
+}
