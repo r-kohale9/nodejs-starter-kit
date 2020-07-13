@@ -5,18 +5,7 @@ import styled from 'styled-components';
 
 import Write from '../Icons/write.svg';
 import Contact from '../Icons/contact.svg';
-
-const Name = styled.div`
-  font-weight: bold;
-  font-size: 16px;
-  color: #fc4c4c;
-`;
-
-const Number = styled.div`
-  font-size: 10px;
-  line-height: 23px;
-  color: #6c6b6b;
-`;
+import { Name, Number } from './StyledComponents';
 
 const Details = styled.p`
   font-size: 10px;

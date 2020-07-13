@@ -1,6 +1,9 @@
 import React from 'react';
 import { TabBar } from 'antd-mobile';
+import { compose } from '@gqlapp/core-common';
 import { PropTypes } from 'prop-types';
+import { withCurrentUser } from '@gqlapp/listing-client-react/containers/ListingOperations';
+
 import HomeIsActive from '../Icons/homeinactive.svg';
 import HomeActive from '../Icons/homeactive.svg';
 import CartIsActive from '../Icons/cartinactive.svg';
@@ -11,8 +14,7 @@ import ProfileIsActive from '../Icons/profileinactive.svg';
 import ProfileActive from '../Icons/profileactive.svg';
 
 const MenuBar = props => {
-  const { history, selectedTab } = props;
-
+  const { history, selectedTab, currentUser } = props;
   return (
     <div
       style={{
@@ -45,7 +47,7 @@ const MenuBar = props => {
           title="Favorites"
           key="Favorites"
           selected={selectedTab === 'FAVORITES'}
-          onPress={() => history.push('/demo/favorites')}
+          onPress={() => history.push(`/demo/favorites/${currentUser.id}`)}
         />
         <TabBar.Item
           icon={<img src={ProfileIsActive} alt="" />}
@@ -62,7 +64,8 @@ const MenuBar = props => {
 
 MenuBar.propTypes = {
   history: PropTypes.object,
+  currentUser: PropTypes.object,
   selectedTab: PropTypes.string
 };
 
-export default MenuBar;
+export default compose(withCurrentUser)(MenuBar);

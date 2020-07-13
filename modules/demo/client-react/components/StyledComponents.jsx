@@ -64,6 +64,11 @@ const Number = styled.div`
   letter-spacing: 3px;
 `;
 
+const Name = styled.div`
+  font-weight: bold;
+  font-size: 16px;
+  color: #fc4c4c;
+`;
 export {
   PgTitle,
   Text,
@@ -75,5 +80,6 @@ export {
   StatusText,
   Divider,
   DropDownButton,
-  Number
+  Number,
+  Name
 };

@@ -13,7 +13,7 @@ import { withCurrentUser, withMyListingsBookmark, updateMyListingsBookmarkState 
 const MyListingsBookmark = props => {
   const { updateQuery, subscribeToMore } = props;
   const listingsUpdated = useMyListingBookmarkWithSubscription(subscribeToMore);
-  console.log('listingsUpdated', listingsUpdated);
+  // console.log('listingsUpdated', listingsUpdated);
 
   useEffect(() => {
     if (listingsUpdated) {

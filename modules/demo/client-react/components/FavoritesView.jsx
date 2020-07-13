@@ -7,6 +7,7 @@ import CategorySlick from './CategorySlick';
 import FavoriteItemComponent from './FavoriteItemComponent';
 import PageLayout from './PageLayout';
 import { PgTitle } from './StyledComponents';
+import SuggestedListComponent from './SuggestedListComponent';
 
 const Header = styled.div`
   width: 500%;
@@ -17,8 +18,17 @@ const Header = styled.div`
   padding: 200% 200% 0 200%;
 `;
 
+const NoMyListingsBookmarkMessage = ({ t }) => <div className="text-center">No Listing Bookmarked</div>;
+NoMyListingsBookmarkMessage.propTypes = { t: PropTypes.func };
+
 const FavoritesView = props => {
-  const { history, categorySlick, favorites } = props;
+  const { history, loading, categorySlick, t, myListingsBookmark, onBookmark } = props;
+  const renderFunc = (key, item) => <FavoriteItemComponent key={key} item={item} onBookmark={onBookmark} />;
+  const RenderMyListingsBookmarkCodes = () => (
+    <div>
+      <SuggestedListComponent items={myListingsBookmark} {...props} renderFunc={renderFunc} />
+    </div>
+  );
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="FAVORITES">
       <Header>
@@ -34,21 +44,11 @@ const FavoritesView = props => {
         </div>
       </Header>
       <div style={{ paddingTop: '16px' }}>
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 3
-          }}
-          dataSource={favorites && favorites}
-          renderItem={item => (
-            <List.Item>
-              <FavoriteItemComponent item={item} />
-            </List.Item>
-          )}
-        />
+        {myListingsBookmark && myListingsBookmark.totalCount ? (
+          <RenderMyListingsBookmarkCodes />
+        ) : !loading ? (
+          <NoMyListingsBookmarkMessage t={t} />
+        ) : null}
       </div>
     </PageLayout>
   );
@@ -57,7 +57,7 @@ const FavoritesView = props => {
 FavoritesView.propTypes = {
   history: PropTypes.object,
   categorySlick: PropTypes.array,
-  favorites: PropTypes.object
+  myListingsBookmark: PropTypes.object
 };
 
 export default FavoritesView;

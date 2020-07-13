@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import { Card, Row, Col, Button, Rate, Icon } from 'antd';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import { Text } from './StyledComponents';
 import ShoppingBag from '../Icons/shoppingbag.svg';
 
 const BagBtn = styled(Link)`
@@ -17,15 +17,8 @@ const BagBtn = styled(Link)`
   box-shadow: 0px 4px 4px rgba(219, 48, 34, 0.16);
 `;
 
-const Text = styled.div`
-  font-family: Metropolis, QuickSand;
-  font-size: 12px;
-  padding-right: 5px;
-  color: '#9b9b9b';
-`;
-
 const FavorteItemComponent = props => {
-  const { item } = props;
+  const { item, onBookmark } = props;
   return (
     <>
       <Card
@@ -44,19 +37,18 @@ const FavorteItemComponent = props => {
         <Row>
           <Col span={8}>
             <div style={{ height: '104px', overflow: 'hidden' }}>
-              <img alt="example" src={item.imageUrl} />
+              <img alt="example" src={item.listingImages[0].imageUrl} />
             </div>
           </Col>
           <Col span={16} style={{ padding: '11px' }}>
-            <Row gutter={[0, 6]}>
+            <Row gutter={[0, 3]}>
               <Row type="flex" align="middle">
                 <Col span={22}>
                   <Text>{item.category}</Text>
                 </Col>
                 <Col span={2}>
                   <Row>
-                    {/* <Button type="link" icon="close" /> */}
-                    <Icon type="close" onClick={() => console.log('called')} />
+                    <Icon type="close" onClick={() => onBookmark(item.id)} />
                   </Row>
                 </Col>
               </Row>
@@ -66,15 +58,15 @@ const FavorteItemComponent = props => {
                 </h3>
               </Col>
               <Row>
-                <Col span={16}>
+                <Col span={14}>
                   <p style={{ display: 'flex' }}>
                     <Text>Flavour:</Text> <Text color="black">{item.flavour}</Text>
                   </p>
                 </Col>
-                <Col span={8}>
+                <Col span={10}>
                   <p style={{ display: 'flex' }}>
                     <Text>Size:</Text>
-                    <Text color="black">{item.weight}</Text>
+                    <Text color="black">{item.listingCost.weight}</Text>
                   </p>
                 </Col>
               </Row>
@@ -82,7 +74,7 @@ const FavorteItemComponent = props => {
                 <Row>
                   <Col span={7}>
                     <Row type="flex" justify="start">
-                      Rs. {item.price}
+                      Rs. {item.listingCost.cost}
                     </Row>
                   </Col>
                   <Col span={16}>

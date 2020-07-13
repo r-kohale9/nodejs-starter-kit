@@ -108,7 +108,7 @@ export default new ClientModule({
     />,
     <Route
       exact
-      path="/demo/favorites"
+      path="/demo/favorites/:id"
       component={loadable(() => import('./containers/Favorites').then(c => c.default))}
     />,
     <Route

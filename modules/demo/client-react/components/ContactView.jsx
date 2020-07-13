@@ -8,20 +8,7 @@ import Location from '../Icons/location.svg';
 import Mail from '../Icons/mail.svg';
 import Phone from '../Icons/phone.svg';
 import Whatsapp from '../Icons/whatsapp.svg';
-import { Number } from './StyledComponents';
-
-const Name = styled.div`
-  font-family: Quicksand;
-  font-weight: bold;
-  font-size: 16px;
-
-  color: #fc4c4c;
-`;
-// const Number = styled.div`
-//   font-family: Quicksand;
-//   font-size: 15px;
-//   color: #9b9b9b;
-// `;
+import { Number, Name } from './StyledComponents';
 
 const Details = styled.div`
   background: #ffffff;
