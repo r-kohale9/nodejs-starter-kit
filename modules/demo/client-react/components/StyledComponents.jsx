@@ -59,7 +59,7 @@ const DropDownButton = styled(Btn)`
 `;
 
 const Number = styled.div`
-  font-family: Metropolis;
+  font-family: Metropolis, Quicksand;
   font-size: 14px;
   letter-spacing: 3px;
 `;

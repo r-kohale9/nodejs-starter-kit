@@ -51,7 +51,7 @@ const UserDisplayDetailComponent = props => {
           </Col>
           <Col span={3} />
           <Col span={2}>
-            <img alt="" src={Contact} onClick={() => history.push('/demo/contact')} />
+            <img alt="" src={Contact} onClick={() => history.push(`/demo/contact/${user.id}`)} />
           </Col>
         </Row>
         <Row>

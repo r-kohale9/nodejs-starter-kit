@@ -118,7 +118,7 @@ export default new ClientModule({
     />,
     <Route
       exact
-      path="/demo/contact"
+      path="/demo/contact/:id"
       component={loadable(() => import('./containers/Contact').then(c => c.default))}
     />,
     <Route
