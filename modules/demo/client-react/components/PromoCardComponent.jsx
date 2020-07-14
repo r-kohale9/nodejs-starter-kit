@@ -19,7 +19,7 @@ const PromoCardComponent = props => {
     >
       <Row>
         <Col span={6} align="center" style={{ height: '80px', width: '80px', overflow: 'hidden' }}>
-          <img alt="" src={promoCode.imageUrl} width="100%" />
+          <img alt="" src={promoCode.thumbnail} width="100%" />
         </Col>
         <Col span={17}>
           <Row style={{ padding: '12px 15px 11px 14px' }}>

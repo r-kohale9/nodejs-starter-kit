@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
 import CartItemComponent from './CartItemComponent';
-import PromoCodeForm from './PromoCodeForm';
+import PromoCodeFormComponent from '../containers/PromoCodeFormComponent';
 import PageLayout from './PageLayout';
 
 import { PgTitle } from './StyledComponents';
@@ -31,7 +31,7 @@ const Text = styled.span`
 `;
 
 const CheckoutCartView = props => {
-  const { loading, getCart, history, promocodes, onDelete, setFieldValue, values, onSubmit } = props;
+  const { loading, getCart, history, getPromoCodes, onDelete, loadData, setFieldValue, values, onSubmit } = props;
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="CART">
       {!loading && getCart && getCart.orderDetails && getCart.orderDetails.length > 0 ? (
@@ -56,7 +56,9 @@ const CheckoutCartView = props => {
                     name={`orderDetails[${indx}].unit`}
                     item={item}
                     onChange={setFieldValue}
-                    onDelete={onDelete}
+                    onDele
+                    t
+                    e={onDelete}
                   />
                 </List.Item>
               )}
@@ -64,7 +66,7 @@ const CheckoutCartView = props => {
           </Col>
 
           <Col span={24}>
-            <PromoCodeForm promocodes={promocodes} setValue={setFieldValue} value={values.discount} />
+            <PromoCodeFormComponent setValue={setFieldValue} value={values.discount} />
           </Col>
           <Col span={24} style={{ marginTop: '28px' }}>
             <Row type="flex" align="middle" justify="center">
@@ -108,7 +110,7 @@ CheckoutCartView.propTypes = {
   getCart: PropTypes.object,
   history: PropTypes.object,
   loading: PropTypes.bool,
-  promocodes: PropTypes.object,
+  getPromoCodes: PropTypes.object,
   handleSubmit: PropTypes.func,
   setFieldValue: PropTypes.func,
   values: PropTypes.object
@@ -127,7 +129,7 @@ const CheckoutCartFormWithFormik = withFormik({
     }
 
     return {
-      discount: '',
+      discount: (getCart && getCart.discount) || '',
       orderDetails: getCart && getCart.orderDetails.length !== 0 ? getCart.orderDetails.map(getOrderDetails) : []
     };
   },

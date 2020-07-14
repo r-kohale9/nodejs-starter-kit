@@ -1,4 +1,4 @@
-import { knex } from '@gqlapp/database-server-ts';
+import { knex, returnId } from '@gqlapp/database-server-ts';
 import { Model } from 'objection';
 import { camelizeKeys, decamelizeKeys } from 'humps';
 import { User } from '@gqlapp/user-server-ts/sql';
@@ -116,6 +116,17 @@ export default class Addresses extends Model {
     return Addresses.query().insertGraph(decamelizeKeys(params));
   }
 
+  public async defaultAddress(userId: number) {
+    const address = await Addresses.query()
+      .where('user_id', '=', userId)
+      .andWhere('default', '=', true);
+    if (address) {
+      return address[0].id;
+    } else {
+      const adres = await Addresses.query().where('user_id', '=', userId);
+      return adres[0].id;
+    }
+  }
   public async addOrEditAddress(params: Address) {
     if (params.id) {
       // const status = await this.addressStatus(params);

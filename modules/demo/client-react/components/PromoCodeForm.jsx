@@ -6,29 +6,39 @@ import { withFormik } from 'formik';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { RenderField } from '@gqlapp/look-client-react';
 import { minLength, required, validate, maxLength } from '@gqlapp/validation-common-react';
+import SuggestedListComponent from './SuggestedListComponent';
 
 import ModalComponent from './ModalComponent';
 import PromoCardComponent from './PromoCardComponent';
 
 const PromoCodeFormSchema = {
-  promoCode: []
+  discount: []
 };
 
+const NoPromCodesMessage = ({ t }) => <div className="text-center">No promo codes</div>;
+NoPromCodesMessage.propTypes = { t: PropTypes.func };
+
 const PromoCodeForm = props => {
-  const { values, handleSubmit, promocodes, setFieldValue } = props;
+  const { values, handleSubmit, getPromoCodes, loading, setValue, setFieldValue } = props;
   const [visible, setVisible] = useState(false);
 
   const handleApply = value => {
-    setFieldValue('promoCode', value);
+    setValue('discount', value);
+    setFieldValue('discount', value);
     setVisible(false);
   };
-
+  const renderFunc = (key, promoCode) => <PromoCardComponent key={key} onApply={handleApply} promoCode={promoCode} />;
+  const RenderPromoCodes = () => (
+    <div>
+      <SuggestedListComponent items={getPromoCodes} {...props} renderFunc={renderFunc} />
+    </div>
+  );
   return (
     <>
       <Row type="flex" align="middle">
         <Col span={24}>
           <Button style={{ textAlign: 'left' }} block onClick={() => setVisible(true)}>
-            {values.promoCode !== '' ? values.promoCode : 'Enter your promocode'}
+            {values.discount !== '' ? values.discount : 'Enter your promocode'}
             <Button
               style={{ position: 'absolute', top: '-1px', right: '0' }}
               type="black"
@@ -65,9 +75,11 @@ const PromoCodeForm = props => {
                 <h3>Your Promo Codes</h3>
               </Col>
               <Col span={24}>
-                {promocodes.map(promocode => (
-                  <PromoCardComponent promocode={promocode} setValue={setFieldValue} onApply={handleApply} />
-                ))}
+                {getPromoCodes && getPromoCodes.totalCount ? (
+                  <RenderPromoCodes />
+                ) : !loading ? (
+                  <NoPromCodesMessage />
+                ) : null}
               </Col>
             </Row>
           </ModalComponent>
@@ -80,14 +92,14 @@ const PromoCodeForm = props => {
 PromoCodeForm.propTypes = {
   values: PropTypes.object,
   handleSubmit: PropTypes.func,
-  promocodes: PropTypes.object,
-  setFieldValue: PropTypes.func
+  getPromoCodes: PropTypes.object,
+  setValue: PropTypes.func
 };
 
 const PromoCodeFormWithFormik = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: () => ({
-    promoCode: ''
+  mapPropsToValues: props => ({
+    discount: props.value || ''
   }),
   handleSubmit(values, { props: { onSubmit } }) {
     console.log('values1', values);

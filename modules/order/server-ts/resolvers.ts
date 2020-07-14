@@ -48,17 +48,19 @@ export default (pubsub: any) => ({
     }
   },
   Mutation: {
-    addToCart: withAuth(async (obj: any, { input }: any, { Order, req: { identity } }) => {
+    addToCart: withAuth(async (obj: any, { input }: any, { Order, Addresses, Demo, req: { identity } }) => {
       // To Do - Check if admin
       try {
         if (!input.consumerId) {
           input.consumerId = identity.id;
         }
+        input.paymentMethodeId = await Demo.defaultPaymentOpt(input.consumerId);
+        input.shippingAddressId = await Addresses.defaultAddress(input.consumerId);
         const id = await Order.addToCart(input);
         if (id) {
-          console.log('resolver2', id);
+          // console.log('resolver2', id);
           const orderItem = await Order.order(id);
-          console.log('resolver2', orderItem);
+          // console.log('resolver2', orderItem);
           pubsub.publish(ORDERS_SUBSCRIPTION, {
             ordersUpdated: {
               mutation: 'CREATED',
@@ -102,11 +104,11 @@ export default (pubsub: any) => ({
         await context.Order.editOrder(input);
         const order = await context.Order.order(input.id);
         pubsub.publish(ORDERS_SUBSCRIPTION, {
-            ordersUpdated: {
-              mutation: 'CREATED',
-              node: order
-            }
-          });
+          ordersUpdated: {
+            mutation: 'CREATED',
+            node: order
+          }
+        });
         return order;
       } catch (e) {
         return e;

@@ -181,17 +181,29 @@ export default class Demo extends Model {
     return res.id;
   }
 
-  public async toggleDefault(id: number, userId: number) {
-    const address = await PaymentOpt.query()
+  public async defaultPaymentOpt(userId: number) {
+    const paymentOpt = await PaymentOpt.query()
       .where('user_id', '=', userId)
       .andWhere('default', '=', true);
-    if (address.length === 0) {
+    if (paymentOpt) {
+      return paymentOpt[0].id;
+    } else {
+      const payOpt = await PaymentOpt.query().where('user_id', '=', userId);
+      return payOpt[0].id;
+    }
+  }
+
+  public async toggleDefault(id: number, userId: number) {
+    const paymentOpt = await PaymentOpt.query()
+      .where('user_id', '=', userId)
+      .andWhere('default', '=', true);
+    if (paymentOpt.length === 0) {
       await knex('payment_opt')
         .where('id', '=', id)
         .update({ default: true });
     } else {
       await knex('payment_opt')
-        .where('id', '=', address[0].id)
+        .where('id', '=', paymentOpt[0].id)
         .update({ default: false });
       await knex('payment_opt')
         .where('id', '=', id)

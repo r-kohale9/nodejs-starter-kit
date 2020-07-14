@@ -12,6 +12,16 @@ const ModalBar = styled.div`
   border-radius: 3px;
 `;
 
+const ModalChildren = styled(Col)`
+  padding: 0px 16px 0px 16px;
+  max-width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const ModalComponent = props => {
   const { title, children, visible, handleVisible } = props;
 
@@ -35,10 +45,14 @@ const ModalComponent = props => {
             <h3>
               <strong>{title && title}</strong>
             </h3>
+            <div style={{ paddingBottom: '20px' }} />
           </Col>
-          <Col span={24} style={{ padding: '22px 16px 0px 16px', maxWidth: '350px', overFlowY: 'auto' }}>
+          <ModalChildren
+            span={24}
+            // style={{ padding: '0px 16px 0px 16px', maxWidth: '350px', maxHeight: '400px', overflowY: 'auto' }}
+          >
             {children}
-          </Col>
+          </ModalChildren>
         </Row>
       </Modal>
     </>

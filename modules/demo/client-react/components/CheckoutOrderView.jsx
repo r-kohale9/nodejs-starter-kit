@@ -31,19 +31,6 @@ const DeliveryMetBtn = styled(Button)`
   padding: 10px 20px;
 `;
 
-// const totalAmount = (orderDetails, values) => {
-//   let price = 0;
-//   orderDetails.map((item, indx) => {
-//     price =
-//       price +
-//       Number(item && item.listing.listingCost.cost) *
-//         Number(
-//           values && values.orderDetails[indx] && values.orderDetails[indx].unit
-//         );
-//   });
-//   return price;
-// };
-
 const totalAmount = orderDetails => {
   let price = 0;
   orderDetails.map(item => {

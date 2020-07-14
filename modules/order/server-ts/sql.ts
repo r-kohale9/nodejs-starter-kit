@@ -177,11 +177,13 @@ export default class OrderDAO extends Model {
         .where('state', STATES.STALE)
     )[0];
 
-    console.log(cart);
+    console.log('input', input);
     if (!cart) {
       // Create a STALE order
       input.orderId = await returnId(knex('order')).insert({
         consumer_id: input.consumerId,
+        payment_method_id: input.paymentMethodeId,
+        shipping_address_id: input.shippingAddressId,
         state: STATES.STALE
       });
     } else {

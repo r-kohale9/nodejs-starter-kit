@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { compose, removeTypename } from '@gqlapp/core-common';
+import { compose, removeTypename, PLATFORM } from '@gqlapp/core-common';
 import { graphql } from 'react-apollo';
 import { message } from 'antd';
 
@@ -11,11 +11,9 @@ import GET_CART_QUERY from '@gqlapp/order-client-react/graphql/GetCartQuery.grap
 import DELETE_CART_ITEM from '@gqlapp/order-client-react/graphql/DeleteCartItem.graphql';
 import ORDERS_SUBSCRIPTION from '@gqlapp/order-client-react/graphql/OrdersSubscription.graphql';
 import EDIT_ORDER from '@gqlapp/order-client-react/graphql/EditOrder.graphql';
-
 import { PropTypes } from 'prop-types';
-import CheckoutCartView from '../components/CheckoutCartView';
 
-import { CART, PROMOCODES } from './Data';
+import CheckoutCartView from '../components/CheckoutCartView';
 
 const CheckoutCart = props => {
   const { getCart, editOrder, deleteOrderDetail, history } = props;
@@ -34,7 +32,7 @@ const CheckoutCart = props => {
   };
 
   const handleSubmit = async values => {
-    console.log('values', Object.values(removeTypename(values.orderDetails)));
+    console.log('values', values);
     try {
       await editOrder({
         id: getCart.id,
@@ -43,7 +41,7 @@ const CheckoutCart = props => {
         paymentMethodId: 1,
         shippingAddressId: 1,
         deliveryMethod: getCart.deliveryMethod,
-        discount: getCart.discount,
+        discount: values.discount,
         state: getCart.state,
         orderDetails: Object.values(removeTypename(values.orderDetails))
       });
@@ -53,7 +51,14 @@ const CheckoutCart = props => {
     history.push('/demo/checkout-order');
   };
   console.log('props', props);
-  return <CheckoutCartView {...props} onDelete={handleDelete} promocodes={PROMOCODES} onSubmit={handleSubmit} />;
+  return (
+    <CheckoutCartView
+      {...props}
+      onDelete={handleDelete}
+      // promocodes={PROMOCODES}
+      onSubmit={handleSubmit}
+    />
+  );
 };
 
 CheckoutCart.propTypes = {

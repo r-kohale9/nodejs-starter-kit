@@ -20,6 +20,7 @@ const SuggestedListComponent = props => {
     } else {
       const newData = await loadData(endCursor + 1, 'add');
       setData(newData.data.items);
+      console.log(newData);
       setLoad(false);
     }
   };

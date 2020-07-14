@@ -8,7 +8,6 @@ import GET_CART_QUERY from '@gqlapp/order-client-react/graphql/GetCartQuery.grap
 import PATCH_ORDER from '@gqlapp/order-client-react/graphql/PatchOrder.graphql';
 
 import CheckoutOrderView from '../components/CheckoutOrderView';
-import { CART } from './Data';
 
 const CheckoutOrder = props => {
   const onSubmit = async () => {
