@@ -36,7 +36,6 @@ const ReviewFormComponent = props => {
   const handleBakerSearch = value => {
     setBakerDataSource(value ? searchBakerResult(value) : []);
   };
-  console.log('props', props, load && !dirty);
   return (
     <Card
       title={

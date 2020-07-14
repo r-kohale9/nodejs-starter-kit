@@ -89,8 +89,12 @@ export default class ListingDAO extends Model {
     };
   }
 
-  public async listingsPagination(limit: number, after: number, orderBy: any, filter: any) {
-    const queryBuilder = ListingDAO.query().eager(eager);
+  public async listingsPagination(limit: number, after: number, orderBy: any, filter: any, userId: number) {
+    const queryBuilder = !userId
+      ? ListingDAO.query().eager(eager)
+      : ListingDAO.query()
+          .eager(eager)
+          .where('user_id', '=', userId);
 
     if (orderBy && orderBy.column) {
       const column = orderBy.column;

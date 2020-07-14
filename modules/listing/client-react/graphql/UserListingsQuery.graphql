@@ -1,7 +1,29 @@
 #import "./Listing.graphql"
 
-query userListings($userId: Int) {
-  userListings(userId: $userId) {
-    ...ListingInfo
+query userListings(
+  $userId: Int
+  $limit: Int!
+  $after: Int
+  $orderBy: OrderByListInput
+  $filter: FilterListInput
+) {
+  userListings(
+    limit: $limit
+    after: $after
+    orderBy: $orderBy
+    filter: $filter
+    userId: $userId
+  ) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...ListingInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }

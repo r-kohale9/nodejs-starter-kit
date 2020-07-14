@@ -78,6 +78,7 @@ export default pubsub => ({
   },
   UserProfile: {
     fullName(obj) {
+      console.log('object', obj);
       return obj.profile.fullName;
     },
     mobile(obj) {

@@ -50,7 +50,13 @@ extend type Query {
     filter: FilterListInput
   ): Listings
   listing(id: Int!): Listing
-  userListings(userId: Int): [Listing]
+  userListings(
+    userId: Int
+    limit: Int
+    after: Int
+    orderBy: OrderByListInput
+    filter: FilterListInput
+  ): Listings
 
   #Bookmark
   myListingsBookmark(

@@ -49,7 +49,11 @@ export default new ClientModule({
       path="/demo/listing-detail/:id"
       component={loadable(() => import('./containers/ListingDetails').then(c => c.default))}
     />,
-    <Route exact path="/demo/baker" component={loadable(() => import('./containers/Baker').then(c => c.default))} />,
+    <Route
+      exact
+      path="/demo/baker/:id"
+      component={loadable(() => import('./containers/Baker').then(c => c.default))}
+    />,
     <Route exact path="/demo/login" component={loadable(() => import('./containers/Login').then(c => c.default))} />,
     <Route
       exact

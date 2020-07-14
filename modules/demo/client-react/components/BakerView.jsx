@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { List } from 'antd';
+import { Spin } from 'antd';
 import settings from '@gqlapp/config';
 import PageLayout from './PageLayout';
 
 import UserDisplayDetailComponent from './UserDisplayDetailComponent';
 import CategorySlick from './CategorySlick';
 import RelatedCardComponent from './ListingItemComponent';
+import SuggestedListComponent from './SuggestedListComponent';
 
 const renderMetaData = t => (
   <Helmet
@@ -17,13 +18,30 @@ const renderMetaData = t => (
 );
 
 const BakerView = props => {
-  const { listings, t, user, categorySlick, history } = props;
+  const { listings, loading, t, user, categorySlick, history } = props;
   const [items, setItems] = useState(listings);
   const handleChange = category => {
     setItems(listings.filter(item => item.category === category));
   };
-  console.log('props view', props);
-  console.log('items', items);
+  const renderFunc = (key, item) => <RelatedCardComponent key={item.id} listing={item} />;
+  const RenderReviews = () => (
+    <div>
+      <SuggestedListComponent
+        grid={{
+          gutter: 24,
+          xs: 2,
+          sm: 3,
+          md: 4,
+          lg: 4,
+          xl: 6,
+          xxl: 6
+        }}
+        items={listings}
+        {...props}
+        renderFunc={renderFunc}
+      />
+    </div>
+  );
   return (
     <PageLayout history={history} showMobNav={false} showMenuBar={true}>
       {renderMetaData(t)}
@@ -32,26 +50,8 @@ const BakerView = props => {
         <CategorySlick data={categorySlick} setCategory={handleChange} />
       </div>
       <div style={{ height: '36px', width: '100%' }} />
-      {listings && (
-        <List
-          grid={{
-            gutter: 24,
-            xxs: 1,
-            xs: 2,
-            sm: 3,
-            md: 4,
-            lg: 4,
-            xl: 6,
-            xxl: 6
-          }}
-          dataSource={items || listings}
-          renderItem={item => (
-            <List.Item key={item.id}>
-              <RelatedCardComponent key={item.id} listing={item} />
-            </List.Item>
-          )}
-        />
-      )}
+      {console.log('listings', listings && listings.totalCount)}
+      {listings && listings.totalCount ? <RenderReviews /> : !loading ? <Spin /> : null}
     </PageLayout>
   );
 };

@@ -182,6 +182,26 @@ export class User extends Model {
   }
 
   async getUserWithPassword(id) {
+    // console.log(
+    //   'pass',
+    //   camelizeKeys(
+    //     await knex
+    //       .select(
+    //         'u.id',
+    //         'u.username',
+    //         'u.password_hash',
+    //         'u.role',
+    //         'u.is_active',
+    //         'u.email',
+    //         'up.first_name',
+    //         'up.last_name'
+    //       )
+    //       .from('user AS u')
+    //       .where('u.id', '=', id)
+    //       .leftJoin('user_profile AS up', 'up.user_id', 'u.id')
+    //       .first()
+    //   )
+    // );
     return camelizeKeys(
       await knex
         .select(
@@ -522,32 +542,33 @@ export class User extends Model {
   }
 
   async getUserItems(limit, after, orderBy, filter) {
-    const queryBuilder = knex
-      .select(
-        'u.id as id',
-        'u.username as username',
-        'u.role',
-        'u.is_active',
-        'u.email as email',
-        'up.first_name as first_name',
-        'up.last_name as last_name',
-        'ca.serial',
-        'fa.fb_id',
-        'fa.display_name AS fbDisplayName',
-        'lna.ln_id',
-        'lna.display_name AS lnDisplayName',
-        'gha.gh_id',
-        'gha.display_name AS ghDisplayName',
-        'ga.google_id',
-        'ga.display_name AS googleDisplayName'
-      )
-      .from('user AS u')
-      .leftJoin('user_profile AS up', 'up.user_id', 'u.id')
-      .leftJoin('auth_certificate AS ca', 'ca.user_id', 'u.id')
-      .leftJoin('auth_facebook AS fa', 'fa.user_id', 'u.id')
-      .leftJoin('auth_google AS ga', 'ga.user_id', 'u.id')
-      .leftJoin('auth_github AS gha', 'gha.user_id', 'u.id')
-      .leftJoin('auth_linkedin AS lna', 'lna.user_id', 'u.id');
+    // const queryBuilder = knex
+    //   .select(
+    //     'u.id as id',
+    //     'u.username as username',
+    //     'u.role',
+    //     'u.is_active',
+    //     'u.email as email',
+    //     'up.first_name as first_name',
+    //     'up.last_name as last_name',
+    //     'ca.serial',
+    //     'fa.fb_id',
+    //     'fa.display_name AS fbDisplayName',
+    //     'lna.ln_id',
+    //     'lna.display_name AS lnDisplayName',
+    //     'gha.gh_id',
+    //     'gha.display_name AS ghDisplayName',
+    //     'ga.google_id',
+    //     'ga.display_name AS googleDisplayName'
+    //   )
+    //   .from('user AS u')
+    //   .leftJoin('user_profile AS up', 'up.user_id', 'u.id')
+    //   .leftJoin('auth_certificate AS ca', 'ca.user_id', 'u.id')
+    //   .leftJoin('auth_facebook AS fa', 'fa.user_id', 'u.id')
+    //   .leftJoin('auth_google AS ga', 'ga.user_id', 'u.id')
+    //   .leftJoin('auth_github AS gha', 'gha.user_id', 'u.id')
+    //   .leftJoin('auth_linkedin AS lna', 'lna.user_id', 'u.id');
+    const queryBuilder = User.query().eager(user_eager);
 
     // console.log('sql filters', filter);
 
@@ -555,13 +576,13 @@ export class User extends Model {
     if (filter) {
       if (has(filter, 'role') && filter.role !== '') {
         queryBuilder.where(function() {
-          this.where('u.role', filter.role);
+          this.where('role', filter.role);
         });
       }
 
       if (has(filter, 'isActive') && filter.isActive !== null) {
         queryBuilder.where(function() {
-          this.where('u.is_active', filter.isActive);
+          this.where('is_active', filter.isActive);
         });
       }
 

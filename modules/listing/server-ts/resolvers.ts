@@ -47,9 +47,35 @@ export default (pubsub: any) => ({
     async listing(obj: any, { id }: Identifier, context: any) {
       return context.Listing.listing(id);
     },
-    userListings: withAuth(['user:view:self'], async (obj: any, { userId }: any, context: any) => {
-      return context.Listing.userListings(userId || context.req.identity.id);
-    }),
+    async userListings(obj: any, { limit, after, orderBy, filter, userId }: any, context: any) {
+      const edgesArray: Edges[] = [];
+      const { total, listings } = await context.Listing.listingsPagination(
+        limit,
+        after,
+        orderBy,
+        filter,
+        userId || context.req.identity.id
+      );
+
+      const hasNextPage = total > after + limit;
+
+      listings.map((listing: Listing & Identifier, index: number) => {
+        edgesArray.push({
+          cursor: after + index,
+          node: listing
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+      return {
+        totalCount: total,
+        edges: edgesArray,
+        pageInfo: {
+          endCursor,
+          hasNextPage
+        }
+      };
+    },
     myListingsBookmark: withAuth(async (obj: any, { userId, limit, after }: any, context: any) => {
       const edgesArray: Edges[] = [];
       const { total, listings } = await context.Listing.myListingBookmark(
@@ -187,9 +213,7 @@ export default (pubsub: any) => ({
       }
     }),
     addOrRemoveListingBookmark: withAuth(async (obj: any, { listingId, userId }: any, context: any) => {
-      console.log('listingId resolvers', listingId, 'userId', userId);
       const status = await context.Listing.addOrRemoveListingBookmark(listingId, userId);
-      console.log('status', status);
 
       const list = await context.Listing.listing(listingId);
       if (status) {

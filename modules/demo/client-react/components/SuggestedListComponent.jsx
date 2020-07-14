@@ -44,15 +44,17 @@ const SuggestedListComponent = props => {
       }
     >
       <List
-        grid={{
-          gutter: 24,
-          xs: 1,
-          sm: 2,
-          md: 2,
-          lg: 3,
-          xl: 4,
-          xxl: 4
-        }}
+        grid={
+          props.grid || {
+            gutter: 24,
+            xs: 1,
+            sm: 2,
+            md: 2,
+            lg: 3,
+            xl: 4,
+            xxl: 4
+          }
+        }
         dataSource={data.edges}
         renderItem={item => <List.Item key={item.node.id}>{renderFunc(item.node.id, item.node)}</List.Item>}
       />
@@ -62,6 +64,7 @@ const SuggestedListComponent = props => {
 
 SuggestedListComponent.propTypes = {
   items: PropTypes.array,
+  grid: PropTypes.object,
   loadData: PropTypes.func,
   renderFunc: PropTypes.func
 };

@@ -22,9 +22,10 @@ const Details = styled.p`
 
 const UserDisplayDetailComponent = props => {
   const { user } = props;
+  console.log(props);
   return (
     user && (
-      <Link className="listing-link" to="/demo/baker">
+      <Link className="listing-link" to={`/demo/baker/${user.id}`}>
         <Card
           style={{
             marginBottom: '24px',
@@ -40,15 +41,16 @@ const UserDisplayDetailComponent = props => {
             <Col span={6} align="center" style={{ width: '100px', overflow: 'hidden' }}>
               <img
                 alt=""
-                src={user && user.thumbnail}
-                // height="100px" width="100px"
+                src={user.profile && user.profile.imageUrl}
+                height="100px"
+                width="100px"
                 style={{ borderRadius: '50%' }}
               />
             </Col>
             <Col span={15}>
               <h3>
                 <span color="#6c6b6b">
-                  <strong>{user && user.name}</strong>
+                  <strong>{user.profile && user.profile.fullName}</strong>
                 </span>
               </h3>
               <Row>
@@ -71,12 +73,12 @@ const UserDisplayDetailComponent = props => {
                     }}
                     count={1}
                     disabled
-                    defaultValue={user && user.ratting}
+                    defaultValue={user.profile && user.profile.ratting}
                   />
-                  <Number>{user && user.rating}</Number>
+                  <Number>{user.profile && user.profile.rating}</Number>
                 </Col>
                 <Col span={4}>
-                  <Number>{user && user.distance}km</Number>
+                  <Number>{user.profile && user.profile.distance}km</Number>
                 </Col>
                 <Col span={4}>
                   <Number>Avg.Price</Number>

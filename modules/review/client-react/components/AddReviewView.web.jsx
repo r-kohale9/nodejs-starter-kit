@@ -23,14 +23,15 @@ const AddReviewView = ({ t, users, loading, addReview, currentUser }) => {
       ) : (
         <>
           <div align="center">
-            {users &&
-            <ReviewFormComponent
-              cardTitle="Add Review"
-              t={t}
-              users={users}
-              onSubmit={addReview}
-              currentUser={currentUser}
-            />}
+            {users && (
+              <ReviewFormComponent
+                cardTitle="Add Review"
+                t={t}
+                users={users}
+                onSubmit={addReview}
+                currentUser={currentUser}
+              />
+            )}
           </div>
         </>
       )}
