@@ -523,23 +523,11 @@ export class User extends Model {
 
   async getUserByUsernameOrEmail(usernameOrEmail) {
     return camelizeKeys(
-      await knex
-        .select(
-          'u.id',
-          'u.username',
-          'u.password_hash',
-          'u.role',
-          'u.is_active',
-          'u.email',
-          'up.first_name',
-          'up.last_name'
-        )
-        .from('user AS u')
-        .where('u.username', '=', usernameOrEmail)
-        .orWhere('u.email', '=', usernameOrEmail)
-        .leftJoin('user_profile AS up', 'up.user_id', 'u.id')
-        .first()
-    );
+      await User.query()
+        .where('username', '=', usernameOrEmail)
+        .orWhere('email', '=', usernameOrEmail)
+        .eager(user_eager)
+    )[0];
   }
 
   async getUserItems(limit, after, orderBy, filter) {

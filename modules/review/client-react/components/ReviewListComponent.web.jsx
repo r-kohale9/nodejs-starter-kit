@@ -65,10 +65,7 @@ const ReviewListComponent = props => {
       dataIndex: 'owner',
       key: 'owner',
       render: (text, record) => (
-        <Link to={`/public-profile/${record && record.userId}`}>
-          {console.log('record', record)}
-          {record && record.user && record.user.username}
-        </Link>
+        <Link to={`/public-profile/${record && record.userId}`}>{record && record.user && record.user.username}</Link>
       )
     },
     {
