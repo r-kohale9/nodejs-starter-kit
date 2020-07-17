@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import { PropTypes } from 'prop-types';
 
 import settings from '@gqlapp/config';
-import { PageLayout, LayoutCenter } from '@gqlapp/look-client-react';
+import { PageLayout } from '@gqlapp/look-client-react';
 
 import ReviewFormComponent from './ReviewFormComponent';
 
@@ -14,7 +14,8 @@ const renderMetaData = t => (
     meta={[{ name: 'description', content: `${settings.app.name} - ${t('meta')}` }]}
   />
 );
-const AddReviewView = ({ t, users, loading, addReview, currentUser }) => {
+const AddReviewView = props => {
+  const { t, loading, addReview } = props;
   return (
     <PageLayout>
       {renderMetaData(t)}
@@ -23,15 +24,7 @@ const AddReviewView = ({ t, users, loading, addReview, currentUser }) => {
       ) : (
         <>
           <div align="center">
-            {users && (
-              <ReviewFormComponent
-                cardTitle="Add Review"
-                t={t}
-                users={users}
-                onSubmit={addReview}
-                currentUser={currentUser}
-              />
-            )}
+            <ReviewFormComponent {...props} cardTitle="Add Review" t={t} onSubmit={addReview} />
           </div>
         </>
       )}

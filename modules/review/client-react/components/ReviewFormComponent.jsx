@@ -4,38 +4,17 @@ import { Form, Card, Rate } from 'antd';
 import { withFormik, FieldArray } from 'formik';
 
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { minLength, required, validate } from '@gqlapp/validation-common-react';
-import { RenderField, RenderAutoComplete, RenderUploadMultiple, Button } from '@gqlapp/look-client-react';
+import { required, validate } from '@gqlapp/validation-common-react';
+import { RenderField, RenderUploadMultiple, Button } from '@gqlapp/look-client-react';
+
+import UserAutoCompleteComponent from './UserAutoCompleteComponent';
 
 const ReviewFormSchema = { rating: [required], feedback: [required] };
 
 const ReviewFormComponent = props => {
-  const { dirty, cardTitle, values, handleSubmit, setFieldValue, users } = props;
+  const { dirty, cardTitle, values, onSearchTextChange, handleSubmit, setFieldValue } = props;
   const [load, setLoad] = useState(true);
-  const [userDataSource, setUserDataSource] = useState(users.filter(user => user.role === 'user'));
-  const [bakerDataSource, setBakerDataSource] = useState(users.filter(user => user.role === 'baker'));
-  function searchUserResult(query) {
-    var items = userDataSource.filter(
-      item =>
-        item.profile.fullName.toUpperCase().includes(query.toUpperCase()) ||
-        (item.profile && item.profile.fullName && item.profile.fullName.toUpperCase().includes(query.toUpperCase()))
-    );
-    return items;
-  }
-  function searchBakerResult(query) {
-    var items = userDataSource.filter(
-      item =>
-        item.profile.fullName.toUpperCase().includes(query.toUpperCase()) ||
-        (item.profile && item.profile.fullName && item.profile.fullName.toUpperCase().includes(query.toUpperCase()))
-    );
-    return items;
-  }
-  const handleUserSearch = value => {
-    setUserDataSource(value ? searchUserResult(value) : []);
-  };
-  const handleBakerSearch = value => {
-    setBakerDataSource(value ? searchBakerResult(value) : []);
-  };
+
   return (
     <Card
       title={
@@ -46,23 +25,21 @@ const ReviewFormComponent = props => {
     >
       <Form onSubmit={handleSubmit}>
         <div style={{ paddingTop: '15px' }}>
-          <Field
+          <UserAutoCompleteComponent
             name="username"
-            dataSource={userDataSource.map(item => item.profile.fullName)}
-            component={RenderAutoComplete}
             label="username"
-            value={values.username}
-            // onSelect={this.onSelect}
-            onSearch={handleUserSearch}
+            userType="user"
+            value={values.userId}
+            setValue={e => setFieldValue('userId', e)}
+            onSearchTextChange={onSearchTextChange}
           />
-          <Field
+          <UserAutoCompleteComponent
             name="baker"
-            dataSource={bakerDataSource.map(item => item.profile.fullName)}
-            component={RenderAutoComplete}
             label="baker"
-            value={values.baker}
-            // onSelect={this.onSelect}
-            onSearch={handleBakerSearch}
+            userType="baker"
+            value={values.bakerId}
+            setValue={e => setFieldValue('bakerId', e)}
+            onSearchTextChange={onSearchTextChange}
           />
           <Rate
             allowHalf
@@ -116,9 +93,8 @@ const ReviewWithFormik = withFormik({
     }
     return {
       id: (props.review && props.review.id) || null,
-      bakerId: (props.review && props.review.bakerId) || null,
-      username: '',
-      userId: (props.review && props.review.userId) || null,
+      bakerId: (props.review && props.review.baker && props.review.baker.id) || null,
+      userId: (props.review && props.review.user && props.review.user.id) || null,
       rating: (props.review && props.review.rating) || null,
       feedback: (props.review && props.review.feedback) || '',
       reviewImages:
@@ -128,7 +104,6 @@ const ReviewWithFormik = withFormik({
     };
   },
   async handleSubmit(values, { setErrors, props: { onSubmit } }) {
-    console.log('on submit called');
     await onSubmit(values).catch(e => {
       if (isFormError(e)) {
         setErrors(e.errors);

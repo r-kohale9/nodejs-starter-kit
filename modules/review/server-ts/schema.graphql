@@ -58,7 +58,7 @@ extend type Mutation {
 input AddReviewInput {
   id: Int
   userId: Int
-  listingId: Int
+  bakerId: Int
   feedback: String
   rating: Int
   reviewImages: [ReviewImagesInput]
@@ -73,6 +73,7 @@ input ReviewImagesInput {
 input EditReviewInput {
   id: Int!
   userId: Int
+  bakerId: Int
   feedback: String
   rating: Int
   reviewImages: [ReviewImagesInput]

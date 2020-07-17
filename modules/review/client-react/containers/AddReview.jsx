@@ -1,30 +1,32 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { message } from 'antd';
-
 import { compose } from '@gqlapp/core-common';
+
 import { translate } from '@gqlapp/i18n-client-react';
 
-import { withUsers } from '@gqlapp/user-client-react/containers/UserOperations';
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
 import ADD_REVIEW from '../graphql/AddReview.graphql';
-
 import AddReviewView from '../components/AddReviewView.web';
-// import { withAddReview } from './ReviewOperations';
 
 const AddReview = props => {
-  console.log('props', props);
   return <AddReviewView {...props} />;
 };
 
+AddReview.propTypes = {
+  usersUpdated: PropTypes.object,
+  updateQuery: PropTypes.func,
+  t: PropTypes.func,
+  subscribeToMore: PropTypes.func,
+  filter: PropTypes.object
+};
+
 export default compose(
-  // withAddReview,
-  withUsers,
   graphql(ADD_REVIEW, {
     props: ({ ownProps: { history }, mutate }) => ({
       addReview: async values => {
-        console.log('addreview', values);
-
+        values.rating = Number(values.rating);
         message.destroy();
         message.loading('Please wait...', 0);
         try {
@@ -63,4 +65,4 @@ export default compose(
     }
   }),
   translate('review')
-)(AddReview);
+)(translate('user')(AddReview));
