@@ -16,6 +16,8 @@ const Details = styled.p`
 
 const UserDisplayDetailComponent = props => {
   const { user, history } = props;
+  const { profile } = user && user;
+  console.log('object', user);
   return (
     <Row type="flex" align="middle" justify="center">
       <Col
@@ -28,12 +30,12 @@ const UserDisplayDetailComponent = props => {
           borderRadius: '12px'
         }}
       >
-        <img alt="" src={user.thumbnail} style={{ borderRadius: '8px' }} width="93px" />
+        <img alt="" src={profile.imageUrl} style={{ borderRadius: '8px' }} width="93px" />
       </Col>
       <Col span={15} style={{ margin: '0 0 0 17px' }}>
         <Row type="flex" justify="space-between" align="middle">
           <Col span={17}>
-            <Name>{user.name}</Name>
+            <Name>{profile.fullName}</Name>
           </Col>
           <Col span={2}>
             <img alt="" src={Write} onClick={() => history.push(`/demo/reviews/${user.id}`)} />
@@ -59,7 +61,7 @@ const UserDisplayDetailComponent = props => {
             <Number>{user.distance}km</Number>
           </Col>
         </Row>
-        <Details>{user.details}</Details>
+        <Details>{profile.details}</Details>
       </Col>
     </Row>
   );

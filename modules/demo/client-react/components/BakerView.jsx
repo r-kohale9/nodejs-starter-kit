@@ -18,10 +18,9 @@ const renderMetaData = t => (
 );
 
 const BakerView = props => {
-  const { listings, loading, t, user, categorySlick, history } = props;
-  const [items, setItems] = useState(listings);
+  const { listings, loading, t, baker, categorySlick, history } = props;
   const handleChange = category => {
-    setItems(listings.filter(item => item.category === category));
+    console.log('category called', category);
   };
   const renderFunc = (key, item) => <RelatedCardComponent key={item.id} listing={item} />;
   const RenderReviews = () => (
@@ -45,12 +44,11 @@ const BakerView = props => {
   return (
     <PageLayout history={history} showMobNav={false} showMenuBar={true}>
       {renderMetaData(t)}
-      <UserDisplayDetailComponent history={history} user={user} />
+      {baker && <UserDisplayDetailComponent history={history} user={baker} />}
       <div style={{ margin: '35px 0px 27px 0px' }}>
         <CategorySlick data={categorySlick} setCategory={handleChange} />
       </div>
       <div style={{ height: '36px', width: '100%' }} />
-      {console.log('listings', listings && listings.totalCount)}
       {listings && listings.totalCount ? <RenderReviews /> : !loading ? <Spin /> : null}
     </PageLayout>
   );
@@ -61,7 +59,7 @@ BakerView.propTypes = {
   loading: PropTypes.bool,
   history: PropTypes.object,
   listings: PropTypes.object,
-  user: PropTypes.object,
+  baker: PropTypes.object,
   categorySlick: PropTypes.array
 };
 
