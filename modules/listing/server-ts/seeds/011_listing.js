@@ -7,7 +7,7 @@ exports.seed = async function(knex) {
   await Promise.all(
     [...Array(50).keys()].map(async ii => {
       const listing = await returnId(knex('listing')).insert({
-        user_id: Math.floor(Math.random() * 2) + 1,
+        user_id: Math.floor(Math.random() * (16 - 2 + 1) + 2),
         title: `Listing ${ii + 1}`,
         description: `This is listing ${ii +
           1}. Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.`,

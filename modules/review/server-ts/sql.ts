@@ -144,15 +144,12 @@ export default class Review extends Model {
   }
 
   public async addRating(userId: any, rate: any) {
-    console.log('object', userId, rate);
     const rating = camelizeKeys(
       await Rating.query()
         .where('user_id', '=', userId)
         .orderBy('id', 'desc')
     )[0];
-    console.log('object', userId, rate, rating);
     if (rate && rating) {
-      console.log('object', userId, rate);
       switch (rate) {
         case 5:
           returnId(
@@ -169,7 +166,6 @@ export default class Review extends Model {
           );
           break;
         case 3:
-          console.log('object', userId, rate);
           returnId(
             await knex('rating')
               .where('user_id', '=', userId)

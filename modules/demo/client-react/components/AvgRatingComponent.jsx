@@ -13,7 +13,7 @@ const AvgRatingComponent = props => {
   const { one, two, three, four, five } = props.ratings;
   const totalRatings = one + two + three + four + five;
   function avgRating() {
-    return (totalRatings * 5) / totalRatings;
+    return ((5 * five + 4 * four + 3 * three + 2 * two + 1 * one) / totalRatings).toFixed(1);
   }
   // console.log('props', totalRatings * 5, one + two * 2 + three * 3 + four * 4 + five * 5);
   return (
