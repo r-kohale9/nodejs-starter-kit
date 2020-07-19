@@ -30,6 +30,21 @@ exports.up = function(knex) {
         table.string('image_url');
         table.timestamps(false, true);
       })
+      .createTable('rating', table => {
+        table.increments();
+        table
+          .integer('user_id')
+          .unsigned()
+          .references('id')
+          .inTable('user')
+          .onDelete('CASCADE');
+        table.integer('one').defaultTo(0);
+        table.integer('two').defaultTo(0);
+        table.integer('three').defaultTo(0);
+        table.integer('four').defaultTo(0);
+        table.integer('five').defaultTo(0);
+        table.timestamps(false, true);
+      })
   ]);
 };
 

@@ -10,6 +10,7 @@ import ADD_REVIEW from '@gqlapp/review-client-react/graphql/AddReview.graphql';
 import EDIT_REVIEW from '@gqlapp/review-client-react/graphql/EditReview.graphql';
 import DELETE_REVIEW from '@gqlapp/review-client-react/graphql/DeleteReview.graphql';
 import REVIEWS_QUERY from '@gqlapp/review-client-react/graphql/ReviewsQuery.graphql';
+import RATINGS_QUERY from '@gqlapp/review-client-react/graphql/RatingsQuery.graphql';
 
 import ReviewsView from '../components/ReviewsView';
 
@@ -111,8 +112,17 @@ export default compose(
     }
   }),
   graphql(ADD_REVIEW, {
-    props: ({ ownProps: { history }, mutate }) => ({
+    props: ({ ownProps: { match, navigation, history }, mutate }) => ({
       addReview: async values => {
+        let id = 0;
+        if (match) {
+          id = match.params.id;
+        } else if (navigation) {
+          id = navigation.state.params.id;
+        }
+        values.bakerId = Number(id);
+        values.rating = Number(values.rating);
+        console.log('values', values);
         message.destroy();
         message.loading('Please wait...', 0);
         try {
@@ -127,12 +137,43 @@ export default compose(
                 ...values
               }
             }
+            // ,
+            // update: (cache, { data: { addReview } }) => {
+            //   // Get previous listings from cache
+            //   const { reviews } = cache.readQuery({
+            //     query: REVIEWS_QUERY,
+            //     variables: {
+            //       userId: Number(id),
+            //       limit: limit,
+            //       after: 0
+            //     }
+            //   });
+            //   if (reviews.edges.some((review) => review.node.id === addReview.id)) {
+            //     return reviews;
+            //   }
+
+            //   // Write listings to cache
+            //   cache.writeQuery({
+            //     query: REVIEWS_QUERY,
+            //     variables: {
+            //       limit,
+            //       after: 0
+            //     },
+            //     data: {
+            //       reviews: {
+            //         node {
+
+            //         }
+            //       }
+            //     }
+            //   });
+            // }
           });
 
           message.destroy();
           message.success('Review added.');
           // console.log('addreview', values);
-          history.push('/demo/reviews');
+          history.push(`/demo/reviews/${id}`);
         } catch (e) {
           message.destroy();
           message.error("Couldn't perform the action");
@@ -225,5 +266,23 @@ export default compose(
         message.warning('Review deleted.');
       }
     })
+  }),
+  graphql(RATINGS_QUERY, {
+    options: props => {
+      let id = 0;
+      if (props.match) {
+        id = props.match.params.id;
+      } else if (props.navigation) {
+        id = props.navigation.state.params.id;
+      }
+
+      return {
+        variables: { bakerId: Number(id) }
+      };
+    },
+    props({ data: { loading, error, ratings, subscribeToMore, updateQuery } }) {
+      if (error) throw new Error(error);
+      return { loading, ratings, subscribeToMore, updateQuery };
+    }
   })
 )(Reviews);

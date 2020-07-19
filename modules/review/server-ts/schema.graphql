@@ -29,6 +29,18 @@ type Review {
   updatedAt: String!
 }
 
+type Rating {
+  id: Int
+  baker: User
+  one: Int
+  two: Int
+  three: Int
+  four: Int
+  five: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
 extend type Query {
   review(id: Int): Review
   allReviews(
@@ -44,10 +56,11 @@ extend type Query {
     orderBy: OrderByListInput
     filter: FilterListInput
   ): Reviews
+  ratings(bakerId: Int): Rating
 }
 
 extend type Mutation {
- # Create new Review
+  # Create new Review
   addReview(input: AddReviewInput!): Review
   # # Edit a review
   editReview(input: EditReviewInput!): Boolean

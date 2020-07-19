@@ -24,9 +24,12 @@ AddReview.propTypes = {
 
 export default compose(
   graphql(ADD_REVIEW, {
-    props: ({ ownProps: { history }, mutate }) => ({
+    props: ({ ownProps: { match, navigation, history }, mutate }) => ({
       addReview: async values => {
         values.rating = Number(values.rating);
+        console.log('values', values);
+        values.rating = Number(values.rating);
+        console.log('values', values);
         message.destroy();
         message.loading('Please wait...', 0);
         try {

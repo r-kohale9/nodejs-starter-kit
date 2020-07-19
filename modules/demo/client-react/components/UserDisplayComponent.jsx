@@ -22,7 +22,6 @@ const Details = styled.p`
 
 const UserDisplayDetailComponent = props => {
   const { user } = props;
-  console.log(props);
   return (
     user && (
       <Link className="listing-link" to={`/demo/baker/${user.id}`}>

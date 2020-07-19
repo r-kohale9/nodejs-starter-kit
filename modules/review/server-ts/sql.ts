@@ -8,6 +8,7 @@ Model.knex(knex);
 
 export interface Reviews {
   userId: number;
+  bakerId: number;
   feedback: string;
   rating: number;
   listingId: number;
@@ -142,8 +143,58 @@ export default class Review extends Model {
     return { reviews: res, total };
   }
 
+  public async addRating(userId: any, rate: any) {
+    console.log('object', userId, rate);
+    const rating = camelizeKeys(
+      await Rating.query()
+        .where('user_id', '=', userId)
+        .orderBy('id', 'desc')
+    )[0];
+    console.log('object', userId, rate, rating);
+    if (rate && rating) {
+      console.log('object', userId, rate);
+      switch (rate) {
+        case 5:
+          returnId(
+            await knex('rating')
+              .where('user_id', '=', userId)
+              .update({ five: rating.five + 1 })
+          );
+          break;
+        case 4:
+          returnId(
+            await knex('rating')
+              .where('user_id', '=', userId)
+              .update({ four: rating.four + 1 })
+          );
+          break;
+        case 3:
+          console.log('object', userId, rate);
+          returnId(
+            await knex('rating')
+              .where('user_id', '=', userId)
+              .update({ three: rating.three + 1 })
+          );
+          break;
+        case 2:
+          returnId(
+            await knex('rating')
+              .where('user_id', '=', userId)
+              .update({ two: rating.two + 1 })
+          );
+          break;
+        default:
+          returnId(
+            await knex('rating')
+              .where('user_id', '=', userId)
+              .update({ one: rating.one + 1 })
+          );
+      }
+    }
+  }
+
   public async addReview(params: Reviews) {
-    // console.log('pramas', decamelizeKeys(params));
+    await this.addRating(params.bakerId, parseInt(Number(params.rating)));
     const res = await Review.query().insert(decamelizeKeys(params));
     // console.log('pramas2', res);
     return res.id;
@@ -169,6 +220,16 @@ export default class Review extends Model {
     // console.log(res);
     return res;
   }
+
+  public async ratings(bakerId: number) {
+    const res = camelizeKeys(
+      await Rating.query()
+        .where('user_id', '=', bakerId)
+        .orderBy('id', 'desc')
+    );
+    // console.log(res);
+    return res[0];
+  }
 }
 
 // ReviewImage model.
@@ -193,4 +254,28 @@ class ReviewImage extends Model {
       }
     };
   }
+}
+
+// Rating model.
+class Rating extends Model {
+  static get tableName() {
+    return 'rating';
+  }
+
+  static get idColumn() {
+    return 'id';
+  }
+
+  // static get relationMappings() {
+  //   return {
+  //     review: {
+  //       relation: Model.BelongsToOneRelation,
+  //       modelClass: Review,
+  //       join: {
+  //         from: 'rating.user_id',
+  //         to: 'review.id'
+  //       }
+  //     }
+  //   };
+  // }
 }

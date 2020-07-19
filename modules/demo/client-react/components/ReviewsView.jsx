@@ -9,6 +9,7 @@ import WriteReviewComponent from './WriteReviewComponent';
 import { PgTitle } from './StyledComponents';
 
 import SuggestedListComponent from './SuggestedListComponent';
+import AvgRatingComponent from './AvgRatingComponent';
 import Pen from '../Icons/pen.svg';
 
 const BtnDiv = styled.div`
@@ -24,7 +25,7 @@ const BtnDiv = styled.div`
 `;
 
 const ReviewsView = props => {
-  const { reviews, onSubmit, loading } = props;
+  const { reviews, onSubmit, loading, ratings } = props;
   const [photo, setPhoto] = useState(false);
   const renderFunc = (key, review) => (
     <ReviewsItemComponent key={key} review={review} showPhotos={photo} onSubmit={onSubmit} />
@@ -43,9 +44,18 @@ const ReviewsView = props => {
     <PageLayout showMenuBar={false} showNavBar={true} title={photo && 'Rating and reviews'}>
       <Row type="flex" align="middle">
         {!photo && (
-          <Col span={24}>
-            <PgTitle>{'Rating & Reviews'}</PgTitle>
-          </Col>
+          <>
+            <Col span={24}>
+              <PgTitle>{'Rating & Reviews'}</PgTitle>
+            </Col>
+            <Col span={24}>
+              {ratings && (
+                <div style={{ paddingTop: '20px', paddingBottom: '20px' }}>
+                  <AvgRatingComponent ratings={ratings} />
+                </div>
+              )}
+            </Col>
+          </>
         )}
         <Col span={24}>
           <Col span={12}>

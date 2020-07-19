@@ -69,6 +69,9 @@ export default (pubsub: any) => ({
     },
     async review(obj: any, { id }: Identifier, context: any) {
       return context.Review.review(id);
+    },
+    async ratings(obj: any, { bakerId }: any, context: any) {
+      return context.Review.ratings(bakerId);
     }
   },
   Mutation: {
