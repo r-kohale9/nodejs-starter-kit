@@ -11,7 +11,7 @@ import User from '../sql';
 
 const createPasswordHash = (password) => bcrypt.hash(password, 12) || false;
 
-const validateUserPassword = async (user, password, t) => {
+export const validateUserPassword = async (user, password, t) => {
   if (!user) {
     // user with provided email not found
     return { usernameOrEmail: t('user:auth.password.validPasswordEmail') };

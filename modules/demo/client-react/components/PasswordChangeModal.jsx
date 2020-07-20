@@ -79,10 +79,10 @@ PasswordChangeModal.propTypes = {
 const PasswordChangeModalWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
-    id: props.paymentOpts && props.paymentOpts.id ? props.paymentOpts.id : null,
-    oldPassword: (props.paymentOpts && props.paymentOpts.oldPassword) || '',
-    newPassword: (props.paymentOpts && props.paymentOpts.newPassword) || '',
-    repeatOldPassword: (props.paymentOpts && props.paymentOpts.repeatOldPassword) || ''
+    username: props.currentUser && props.currentUser.username,
+    oldPassword: '',
+    newPassword: '',
+    repeatOldPassword: ''
   }),
   handleSubmit(values, { props: { onSubmit } }) {
     // console.log('values1', values);

@@ -183,26 +183,6 @@ export class User extends Model {
   }
 
   async getUserWithPassword(id) {
-    // console.log(
-    //   'pass',
-    //   camelizeKeys(
-    //     await knex
-    //       .select(
-    //         'u.id',
-    //         'u.username',
-    //         'u.password_hash',
-    //         'u.role',
-    //         'u.is_active',
-    //         'u.email',
-    //         'up.first_name',
-    //         'up.last_name'
-    //       )
-    //       .from('user AS u')
-    //       .where('u.id', '=', id)
-    //       .leftJoin('user_profile AS up', 'up.user_id', 'u.id')
-    //       .first()
-    //   )
-    // );
     return camelizeKeys(
       await knex
         .select(

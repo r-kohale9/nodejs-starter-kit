@@ -13,7 +13,7 @@ import PasswordChangeModal from './PasswordChangeModal';
 import { PgTitle } from './StyledComponents';
 
 const SettingsView = props => {
-  const { values, onSubmit } = props;
+  const { values, onSubmit, currentUser } = props;
   const onChange = value => {
     values.dateOfBirth = value.format('DD-MM-YYYY');
   };
@@ -60,7 +60,7 @@ const SettingsView = props => {
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  <PasswordChangeModal onSubmit={onSubmit} />
+                  <PasswordChangeModal onSubmit={onSubmit} currentUser={currentUser} />
                 </Row>
               </Col>
               <Col span={24}>
@@ -136,9 +136,9 @@ SettingsView.propTypes = {
 const SettingsViewWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => ({
-    id: props.personalInfo && props.personalInfo.id ? props.personalInfo.id : null,
-    fullName: (props.personalInfo && props.personalInfo.fullName) || '',
-    dateOfBirth: (props.personalInfo && props.personalInfo.dateOfBirth) || ''
+    id: props.currentUser && props.currentUser.id ? props.currentUser.id : null,
+    fullName: (props.currentUser && props.currentUser.profile && props.currentUser.profile.fullName) || '',
+    dateOfBirth: (props.currentUser && props.currentUser.profile && props.currentUser.profile.dateOfBirth) || ''
   }),
   handleSubmit(values, { props: { onSubmit } }) {
     console.log('values1', values);

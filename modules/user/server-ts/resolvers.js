@@ -11,6 +11,7 @@ import { log } from '@gqlapp/core-common';
 import settings from '@gqlapp/config';
 
 import OTPAPI from './helpers/OTPAPI';
+import { validateUserPassword } from './password/resolvers';
 
 const USERS_SUBSCRIPTION = 'users_subscription';
 const {
@@ -253,6 +254,30 @@ export default pubsub => ({
           return { user };
         } catch (e) {
           throw e;
+        }
+      }
+    ),
+    changePassword: withAuth(
+      (obj, args, { req: { identity } }) => {
+        return identity.id !== args.input.id ? ['user:update'] : ['user:update:self'];
+      },
+      async (obj, { input }, { User, req: { identity, t }, mailer }) => {
+        const errors = {};
+        if (input.newPassword && input.newPassword.length < password.minLength) {
+          errors.password = t('user:passwordLength', {
+            length: password.minLength
+          });
+        }
+
+        if (!isEmpty(errors)) throw new UserInputError('Failed to get events due to validation errors', { errors });
+        const user = await User.getUserByUsernameOrEmail(input.username);
+        const error = await validateUserPassword(user, input.oldPassword, t);
+        if (!isEmpty(error)) throw new UserInputError('Failed valid user password', { error });
+        const status = await User.updatePassword(user.id, input.newPassword);
+        if (status) {
+          return true;
+        } else {
+          return false;
         }
       }
     ),

@@ -109,6 +109,8 @@ extend type Mutation {
 
   # Add Mobile for a user
   addUserMobile(input: AddMobileInput!): UserMobile!
+
+  changePassword(input: ChangePasswordInput): Boolean
 }
 
 # Input for ordering users
@@ -183,6 +185,13 @@ input EditUserInput {
   password: String
   profile: ProfileInput
   auth: AuthInput
+}
+
+input ChangePasswordInput {
+  id: Int
+  username: String
+  oldPassword: String
+  newPassword: String
 }
 
 input ProfileInput {

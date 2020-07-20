@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
+import { Spin, Empty } from 'antd';
 import settings from '@gqlapp/config';
 import PageLayout from './PageLayout';
 
@@ -49,7 +49,8 @@ const BakerView = props => {
         <CategorySlick data={categorySlick} setCategory={handleChange} />
       </div>
       <div style={{ height: '36px', width: '100%' }} />
-      {listings && listings.totalCount ? <RenderReviews /> : !loading ? <Spin /> : null}
+      {loading && <Spin />}
+      {listings && listings.totalCount > 0 ? <RenderReviews /> : <Empty />}
     </PageLayout>
   );
 };
@@ -64,6 +65,3 @@ BakerView.propTypes = {
 };
 
 export default BakerView;
-
-const NoListingsMessage = ({ t }) => <div className="text-center">{t('listing.noListingsMsg')}</div>;
-NoListingsMessage.propTypes = { t: PropTypes.func };
