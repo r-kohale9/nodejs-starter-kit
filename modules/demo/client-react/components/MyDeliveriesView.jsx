@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button, List } from 'antd';
+import { Row, Col, Button, Empty, Spin } from 'antd';
 import { PropTypes } from 'prop-types';
+import SuggestedListComponent from './SuggestedListComponent';
 
 import PageLayout from './PageLayout';
+// import OrderItemComponent from './DeliveriesItemComponent';
 import OrderItemComponent from './OrderItemComponent';
 
 import { PgTitle } from './StyledComponents';
@@ -19,14 +21,21 @@ const StatusNtActvBtn = styled(Button)`
   }
 `;
 
-const MyOrdersView = props => {
-  const { userOrders, history, orderStatusSlick } = props;
+const MyDeliveriesView = props => {
+  const { userDeliveries, history, orderStatusSlick, loading } = props;
   const [status, setStatus] = useState('Delivered');
-
+  const renderFunc = (key, item) => (
+    <OrderItemComponent key={key} order={item} detailRoute={e => history.push(`/demo/delivery-details/${e}`)} />
+  );
+  const RenderDeliveries = () => (
+    <div>
+      <SuggestedListComponent items={userDeliveries} {...props} renderFunc={renderFunc} />
+    </div>
+  );
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="PROFILE">
       {/* {renderMetaData(t)} */}
-      <PgTitle>My orders</PgTitle>
+      <PgTitle>My deliveries</PgTitle>
       <div style={{ marginTop: '24px', marginBottom: '30px', maxWidth: '300px' }}>
         <Row type="flex" justify="space-between" align="center">
           {orderStatusSlick &&
@@ -46,7 +55,9 @@ const MyOrdersView = props => {
             ))}
         </Row>
       </div>
-      {userOrders && (
+      {loading ? <Spin /> : userDeliveries && userDeliveries.totalCount > 0 ? <RenderDeliveries /> : <Empty />}
+
+      {/* {userDeliveries && (
         <List
           grid={{
             gutter: 16,
@@ -55,22 +66,22 @@ const MyOrdersView = props => {
             md: 2,
             lg: 3
           }}
-          dataSource={userOrders && userOrders.filter(ord => ord.state === status)}
+          dataSource={userDeliveries && userDeliveries.filter(ord => ord.order && ord.order.state === status)}
           renderItem={item => (
             <List.Item>
-              <OrderItemComponent order={item} detailRoute={e => history.push(`/demo/order-details/${e}`)} />
+              <OrderItemComponent order={item.order} item={item} history={history} />
             </List.Item>
           )}
         />
-      )}
+      )} */}
     </PageLayout>
   );
 };
 
-MyOrdersView.propTypes = {
-  userOrders: PropTypes.array,
+MyDeliveriesView.propTypes = {
+  userDeliveries: PropTypes.array,
   orderStatusSlick: PropTypes.array,
   history: PropTypes.object
 };
 
-export default MyOrdersView;
+export default MyDeliveriesView;

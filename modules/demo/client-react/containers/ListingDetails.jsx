@@ -52,14 +52,13 @@ const ListingDetails = props => {
     };
     try {
       await props.addToCart(obj);
+      // Add Message
+      message.success('Success! Complete your Order.');
     } catch (e) {
       message.error('Failed!');
       console.log(e);
       // throw new FormError('Failed!', e);
     }
-
-    // Add Message
-    message.success('Success! Complete your Order.');
   };
   console.log('props', props);
   return (

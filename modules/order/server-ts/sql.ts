@@ -129,16 +129,37 @@ export default class OrderDAO extends Model {
     return res;
   }
 
-  public async userDeliveries(userId) {
-    const res = camelizeKeys(
-      await OrderDAO.query()
-        .where('vendor_id', userId)
-        .whereNot('state', STATES.STALE)
-        .eager(eager)
-        .orderBy('id', 'desc')
-    );
-    // console.log(res);
-    return res;
+  public async userDeliveries(userId: number, limit: number, after: number, filter: any) {
+    const userListingsIds = (await ListingDAO.query().where('user_id', userId)).map(({ id }) => id);
+
+    const orderDetails = await OrderDetail.query()
+      .whereIn('listing_id', userListingsIds)
+      // .whereNot('state', STATES.STALE)
+      .eager(`[order.${eager}]`)
+      .limit(limit)
+      .offset(after);
+
+    const orders_temp = orderDetails.map(({ order }) => order);
+
+    let total = 0;
+    function getUnique(arr, comp) {
+      const unique = arr
+        .map(e => e[comp])
+
+        // store the keys of the unique objects
+        .map((e, i, final) => final.indexOf(e) === i && i)
+
+        // eliminate the dead keys & store unique objects
+        .filter(e => arr[e])
+        .map(e => arr[e]);
+      total = unique.length;
+      return unique;
+    }
+
+    const orders = getUnique(orders_temp, 'id');
+    const res = camelizeKeys(orders);
+    // console.log(res[0]);
+    return { userDeliveries: res, total };
   }
 
   public async userOrders(userId) {
@@ -169,7 +190,7 @@ export default class OrderDAO extends Model {
     return res;
   }
 
-  public async addToCart(input) {
+  public async addToCart(input, ids) {
     // console.log(input);
     const cart = camelizeKeys(
       await OrderDAO.query()
@@ -182,11 +203,12 @@ export default class OrderDAO extends Model {
       // Create a STALE order
       input.orderId = await returnId(knex('order')).insert({
         consumer_id: input.consumerId,
-        payment_method_id: input.paymentMethodeId,
-        shipping_address_id: input.shippingAddressId,
+        payment_method_id: ids.paymentMethodeId,
+        shipping_address_id: ids.shippingAddressId,
         state: STATES.STALE
       });
     } else {
+      console.log('input', input, cart);
       input.orderDetail.orderId = cart.id;
     }
 

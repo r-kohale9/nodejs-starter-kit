@@ -123,6 +123,11 @@ const DemoView = (props: DemoViewProps) => {
             Reviews
           </Button>
         </Col>
+        <Col span={24}>
+          <Button block onClick={() => history.push('/demo/my-deliveries')}>
+            My Deliveries
+          </Button>
+        </Col>
       </Row>
     </PageLayout>
   );

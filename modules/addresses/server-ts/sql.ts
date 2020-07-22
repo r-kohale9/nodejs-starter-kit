@@ -120,7 +120,7 @@ export default class Addresses extends Model {
     const address = await Addresses.query()
       .where('user_id', '=', userId)
       .andWhere('default', '=', true);
-    if (address) {
+    if (address.length > 0) {
       return address[0].id;
     } else {
       const adres = await Addresses.query().where('user_id', '=', userId);

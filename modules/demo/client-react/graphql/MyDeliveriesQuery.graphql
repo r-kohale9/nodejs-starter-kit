@@ -1,0 +1,27 @@
+#import "@gqlapp/order-client-react/graphql/Order.graphql"
+
+query userDeliveries(
+  $userId: Int
+  $limit: Int!
+  $after: Int!
+  $filter: FilterListInput
+) {
+  userDeliveries(
+    userId: $userId
+    limit: $limit
+    after: $after
+    filter: $filter
+  ) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...OrderInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

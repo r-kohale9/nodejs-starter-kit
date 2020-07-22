@@ -185,7 +185,7 @@ export default class Demo extends Model {
     const paymentOpt = await PaymentOpt.query()
       .where('user_id', '=', userId)
       .andWhere('default', '=', true);
-    if (paymentOpt) {
+    if (paymentOpt.length > 0) {
       return paymentOpt[0].id;
     } else {
       const payOpt = await PaymentOpt.query().where('user_id', '=', userId);

@@ -1,12 +1,17 @@
 import { PubSub, withFilter } from 'graphql-subscriptions';
 import withAuth from 'graphql-auth';
 // import { knex, returnId, orderedFor } from '@gqlapp/database-server-ts';
-import { Identifier } from './sql';
+import { Identifier, Order } from './sql';
 
 // import { withFilter } from 'graphql-subscriptions';
 import moment from 'moment';
 
 const ORDERS_SUBSCRIPTION = 'orders_subscription';
+
+interface Edges {
+  cursor: number;
+  node: Order & Identifier;
+}
 
 export default (pubsub: any) => ({
   Query: {
@@ -26,14 +31,28 @@ export default (pubsub: any) => ({
         return null;
       }
     },
-    userDeliveries(obj, { userId }, { Order, req: { identity } }) {
+    async userDeliveries(obj: any, { userId, limit, after, filter }: any, { Order, req: { identity } }: any) {
       // To Do - Check if admin return with userId or identity.id
+      const edgesArray: Edges[] = [];
 
-      if (identity) {
-        return Order.userDeliveries(identity.id);
-      } else {
-        return null;
-      }
+      const { userDeliveries, total } = await Order.userDeliveries(userId || identity.id, limit, after, filter);
+      const hasNextPage = total > after + limit;
+      userDeliveries.map((order: Order & Identifier, index: number) => {
+        edgesArray.push({
+          cursor: after + index,
+          node: order
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+      return {
+        totalCount: total,
+        edges: edgesArray,
+        pageInfo: {
+          endCursor,
+          hasNextPage
+        }
+      };
     },
     order(obj: any, { id }: Identifier, { Order, req: { identity } }) {
       return Order.order(id);
@@ -50,13 +69,15 @@ export default (pubsub: any) => ({
   Mutation: {
     addToCart: withAuth(async (obj: any, { input }: any, { Order, Addresses, Demo, req: { identity } }) => {
       // To Do - Check if admin
+      console.log('input', input);
+      const ids = {};
       try {
         if (!input.consumerId) {
           input.consumerId = identity.id;
         }
-        input.paymentMethodeId = await Demo.defaultPaymentOpt(input.consumerId);
-        input.shippingAddressId = await Addresses.defaultAddress(input.consumerId);
-        const id = await Order.addToCart(input);
+        ids.paymentMethodeId = await Demo.defaultPaymentOpt(input.consumerId);
+        ids.shippingAddressId = await Addresses.defaultAddress(input.consumerId);
+        const id = await Order.addToCart(input, ids);
         if (id) {
           // console.log('resolver2', id);
           const orderItem = await Order.order(id);

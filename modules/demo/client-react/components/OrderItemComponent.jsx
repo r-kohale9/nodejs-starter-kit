@@ -13,7 +13,7 @@ const totalAmount = orderDetails => {
   return price;
 };
 const OrderItemComponent = props => {
-  const { order, history } = props;
+  const { order, detailRoute } = props;
   console.log('props', props);
   return (
     <Card
@@ -80,7 +80,7 @@ const OrderItemComponent = props => {
           <Row type="flex" align="middle">
             <Col span={12}>
               <Row type="flex" justify=", Buttonstart" align="middle">
-                <Button type="tertiary" onClick={() => history.push(`/demo/order-details/${order.id}`)}>
+                <Button type="tertiary" onClick={() => detailRoute(order.id)}>
                   Details
                 </Button>
               </Row>
@@ -98,8 +98,7 @@ const OrderItemComponent = props => {
 };
 
 OrderItemComponent.propTypes = {
-  order: PropTypes.object,
-  history: PropTypes.object
+  order: PropTypes.object
 };
 
 export default OrderItemComponent;

@@ -56,9 +56,7 @@ const CheckoutCartView = props => {
                     name={`orderDetails[${indx}].unit`}
                     item={item}
                     onChange={setFieldValue}
-                    onDele
-                    t
-                    e={onDelete}
+                    onDelete={onDelete}
                   />
                 </List.Item>
               )}

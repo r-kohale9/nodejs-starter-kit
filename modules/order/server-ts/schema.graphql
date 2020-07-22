@@ -56,7 +56,7 @@ extend type Query {
   [Order]
 
   userOrders(userId: Int): [Order]
-  userDeliveries(userId: Int): [Order]
+  userDeliveries(userId: Int, limit: Int!, after: Int!, filter: FilterListInput): Orders
   order(id: Int!): Order
   getCart(userId: Int): Order
 }
