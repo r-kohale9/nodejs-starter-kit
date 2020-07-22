@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Row, Col, Button, List } from 'antd';
+import { Row, Col, Button, Empty, Spin } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import PageLayout from './PageLayout';
 import OrderItemComponent from './OrderItemComponent';
+import SuggestedListComponent from './SuggestedListComponent';
 
 import { PgTitle } from './StyledComponents';
 
@@ -20,9 +21,20 @@ const StatusNtActvBtn = styled(Button)`
 `;
 
 const MyOrdersView = props => {
-  const { userOrders, history, orderStatusSlick } = props;
+  const { userOrders, loading, history, orderStatusSlick, onStateChange } = props;
   const [status, setStatus] = useState('Delivered');
-
+  const handleFilterChange = stat => {
+    onStateChange(stat);
+    setStatus(stat);
+  };
+  const renderFunc = (key, item) => (
+    <OrderItemComponent key={key} order={item} detailRoute={e => history.push(`/demo/order-details/${e}`)} />
+  );
+  const RenderOrders = () => (
+    <div>
+      <SuggestedListComponent items={userOrders} {...props} renderFunc={renderFunc} />
+    </div>
+  );
   return (
     <PageLayout history={history} showMenuBar={true} selectedTab="PROFILE">
       {/* {renderMetaData(t)} */}
@@ -38,7 +50,7 @@ const MyOrdersView = props => {
                     {ordStat}
                   </Button>
                 ) : (
-                  <StatusNtActvBtn block type="link" onClick={() => setStatus(ordStat)}>
+                  <StatusNtActvBtn block type="link" onClick={() => handleFilterChange(ordStat)}>
                     {ordStat}
                   </StatusNtActvBtn>
                 )}
@@ -46,22 +58,16 @@ const MyOrdersView = props => {
             ))}
         </Row>
       </div>
-      {userOrders && (
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 3
-          }}
-          dataSource={userOrders && userOrders.filter(ord => ord.state === status)}
-          renderItem={item => (
-            <List.Item>
-              <OrderItemComponent order={item} detailRoute={e => history.push(`/demo/order-details/${e}`)} />
-            </List.Item>
-          )}
-        />
+      {/* {userOrders && userOrders.totalCount ? <RenderOrders /> : !loading ? <Spin /> : null} */}
+
+      {loading ? (
+        <div align="center">
+          <Spin />
+        </div>
+      ) : userOrders && userOrders.totalCount > 0 ? (
+        <RenderOrders />
+      ) : (
+        <Empty />
       )}
     </PageLayout>
   );

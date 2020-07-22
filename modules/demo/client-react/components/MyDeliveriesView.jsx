@@ -22,8 +22,12 @@ const StatusNtActvBtn = styled(Button)`
 `;
 
 const MyDeliveriesView = props => {
-  const { userDeliveries, history, orderStatusSlick, loading } = props;
+  const { userDeliveries, history, orderStatusSlick, onStateChange, loading } = props;
   const [status, setStatus] = useState('Delivered');
+  const handleFilterChange = stat => {
+    onStateChange(stat);
+    setStatus(stat);
+  };
   const renderFunc = (key, item) => (
     <OrderItemComponent key={key} order={item} detailRoute={e => history.push(`/demo/delivery-details/${e}`)} />
   );
@@ -47,7 +51,7 @@ const MyDeliveriesView = props => {
                     {ordStat}
                   </Button>
                 ) : (
-                  <StatusNtActvBtn block type="link" onClick={() => setStatus(ordStat)}>
+                  <StatusNtActvBtn block type="link" onClick={() => handleFilterChange(ordStat)}>
                     {ordStat}
                   </StatusNtActvBtn>
                 )}
@@ -55,25 +59,15 @@ const MyDeliveriesView = props => {
             ))}
         </Row>
       </div>
-      {loading ? <Spin /> : userDeliveries && userDeliveries.totalCount > 0 ? <RenderDeliveries /> : <Empty />}
-
-      {/* {userDeliveries && (
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 3
-          }}
-          dataSource={userDeliveries && userDeliveries.filter(ord => ord.order && ord.order.state === status)}
-          renderItem={item => (
-            <List.Item>
-              <OrderItemComponent order={item.order} item={item} history={history} />
-            </List.Item>
-          )}
-        />
-      )} */}
+      {loading ? (
+        <div align="center">
+          <Spin />
+        </div>
+      ) : userDeliveries && userDeliveries.totalCount > 0 ? (
+        <RenderDeliveries />
+      ) : (
+        <Empty />
+      )}
     </PageLayout>
   );
 };

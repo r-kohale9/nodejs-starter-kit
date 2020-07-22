@@ -1,9 +1,11 @@
 import React from 'react';
-import { PLATFORM, compose } from '@gqlapp/core-common';
+import { PLATFORM, compose, removeTypename } from '@gqlapp/core-common';
 import { graphql } from 'react-apollo';
 
 import { translate } from '@gqlapp/i18n-client-react';
 
+import UPDATE_ORDER_FILTER from '@gqlapp/order-client-react/graphql/UpdateOrderFilter.client.graphql';
+import ORDERS_STATE_QUERY from '@gqlapp/order-client-react/graphql/OrdersStateQuery.client.graphql';
 import MY_DELIVERIES_QUERY from '../graphql/MyDeliveriesQuery.graphql';
 
 import MyDeliveriesView from '../components/MyDeliveriesView';
@@ -21,6 +23,22 @@ const MyDeliveries = props => {
 };
 
 export default compose(
+  graphql(ORDERS_STATE_QUERY, {
+    props({ data: { ordersState } }) {
+      return removeTypename(ordersState);
+    }
+  }),
+  graphql(UPDATE_ORDER_FILTER, {
+    props: ({ mutate }) => ({
+      onSearchTextChange(searchText) {
+        mutate({ variables: { filter: { searchText } } });
+      },
+      onStateChange(state) {
+        // console.log('state', state);
+        mutate({ variables: { filter: { state } } });
+      }
+    })
+  }),
   graphql(MY_DELIVERIES_QUERY, {
     options: ({ orderBy, filter, currentUser }) => {
       return {
@@ -29,7 +47,7 @@ export default compose(
           limit: limit,
           after: 0,
           orderBy,
-          filter
+          filter: filter.state === '' ? { state: 'Delivered' } : filter
         },
         fetchPolicy: 'network-only'
       };

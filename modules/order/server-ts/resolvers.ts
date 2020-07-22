@@ -4,8 +4,6 @@ import withAuth from 'graphql-auth';
 import { Identifier, Order } from './sql';
 
 // import { withFilter } from 'graphql-subscriptions';
-import moment from 'moment';
-
 const ORDERS_SUBSCRIPTION = 'orders_subscription';
 
 interface Edges {
@@ -22,14 +20,32 @@ export default (pubsub: any) => ({
         return null;
       }
     },
-    userOrders(obj, { userId }, { Order, req: { identity } }) {
+    async userOrders(obj: any, { userId, limit, after, filter }: any, { Order, req: { identity } }: any) {
       // To Do - Check if admin return with userId or identity.id
-
-      if (identity) {
-        return Order.userOrders(identity.id);
-      } else {
-        return null;
+      if (!userId) {
+        userId = identity.id;
       }
+
+      const edgesArray: Edges[] = [];
+      const { userOrders, total } = await Order.userOrders(userId, limit, after, filter);
+      const hasNextPage = total > after + limit;
+
+      userOrders.map((ord: Order & Identifier, index: number) => {
+        edgesArray.push({
+          cursor: after + index,
+          node: ord
+        });
+      });
+      const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+      return {
+        totalCount: total,
+        edges: edgesArray,
+        pageInfo: {
+          endCursor,
+          hasNextPage
+        }
+      };
     },
     async userDeliveries(obj: any, { userId, limit, after, filter }: any, { Order, req: { identity } }: any) {
       // To Do - Check if admin return with userId or identity.id

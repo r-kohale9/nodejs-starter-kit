@@ -14,7 +14,7 @@ const totalAmount = orderDetails => {
 };
 const OrderItemComponent = props => {
   const { order, detailRoute } = props;
-  console.log('props', props);
+  // console.log('props', props);
   return (
     <Card
       style={{

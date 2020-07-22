@@ -1,5 +1,5 @@
 import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
-import { Model } from 'objection';
+import { Model, raw } from 'objection';
 import { knex, returnId, orderedFor } from '@gqlapp/database-server-ts';
 // import { User, UserAddress } from '@gqlapp/user-server-ts/sql';
 
@@ -7,7 +7,7 @@ import ListingDAO from '@gqlapp/listing-server-ts/sql';
 import Addresses from '@gqlapp/addresses-server-ts/sql';
 import { PaymentOpt } from '@gqlapp/demo-server-ts/sql';
 
-// import { has } from 'lodash';
+import { has } from 'lodash';
 import STATES from './constants/order_states';
 
 // Give the knex object to objection.
@@ -131,20 +131,28 @@ export default class OrderDAO extends Model {
 
   public async userDeliveries(userId: number, limit: number, after: number, filter: any) {
     const userListingsIds = (await ListingDAO.query().where('user_id', userId)).map(({ id }) => id);
-
-    const orderDetails = await OrderDetail.query()
+    const queryBuilder = OrderDetail.query();
+    const orderDetails = await queryBuilder
       .whereIn('listing_id', userListingsIds)
-      // .whereNot('state', STATES.STALE)
-      .eager(`[order.${eager}]`)
+      .eager(`[order(states).${eager}]`, {
+        states: query => {
+          if (filter) {
+            if (has(filter, 'state') && filter.state !== '') {
+              query.where('state', filter.state);
+            }
+          } else {
+            query.whereNot('state', STATES.STALE);
+          }
+        }
+      })
       .limit(limit)
       .offset(after);
 
-    const orders_temp = orderDetails.map(({ order }) => order);
-
+    const ordersTemp = orderDetails.map(({ order }) => order);
     let total = 0;
     function getUnique(arr, comp) {
       const unique = arr
-        .map(e => e[comp])
+        .map(e => e && e[comp])
 
         // store the keys of the unique objects
         .map((e, i, final) => final.indexOf(e) === i && i)
@@ -156,22 +164,46 @@ export default class OrderDAO extends Model {
       return unique;
     }
 
-    const orders = getUnique(orders_temp, 'id');
+    const orders = getUnique(ordersTemp, 'id');
     const res = camelizeKeys(orders);
     // console.log(res[0]);
     return { userDeliveries: res, total };
   }
 
-  public async userOrders(userId) {
+  public async userOrders(userId: number, limit: number, after: number, filter: any) {
+    const queryBuilder = OrderDAO.query().eager(eager);
+
+    if (filter) {
+      if (has(filter, 'state') && filter.state !== '') {
+        queryBuilder.where(function() {
+          this.where('state', filter.state);
+        });
+      }
+
+      // if (has(filter, 'searchText') && filter.searchText !== '') {
+      //   queryBuilder
+      //     .from('order')
+      //     .leftJoin('order_detail AS ld', 'ld.order_id', 'order.id')
+      //     .where(function() {
+      //       this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.model', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.gear', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.brand', `%${filter.searchText}%`]));
+      //     });
+    }
+    const total = camelizeKeys(await queryBuilder.where('consumer_id', userId).whereNot('state', STATES.STALE)).length;
+
     const res = camelizeKeys(
-      await OrderDAO.query()
+      await queryBuilder
         .where('consumer_id', userId)
         .whereNot('state', STATES.STALE)
-        .eager(eager)
         .orderBy('id', 'desc')
+        .limit(limit)
+        .offset(after)
     );
-    // console.log(res);
-    return res;
+
+    // console.log('res', res);
+    return { userOrders: res, total };
   }
 
   public getTotal() {

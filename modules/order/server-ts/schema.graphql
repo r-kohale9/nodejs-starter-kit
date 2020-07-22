@@ -52,18 +52,19 @@ type Orders {
 
 extend type Query {
   orders(limit: Int!, after: Int!): # orderBy: OrderByListInput
-  # filter: FilterListInput
+  # filter: FilterOrderInput
   [Order]
 
-  userOrders(userId: Int): [Order]
-  userDeliveries(userId: Int, limit: Int!, after: Int!, filter: FilterListInput): Orders
+  userOrders(userId: Int, limit: Int!, after: Int!, filter: FilterOrderInput): Orders
+  userDeliveries(userId: Int, limit: Int!, after: Int!, filter: FilterOrderInput): Orders
   order(id: Int!): Order
   getCart(userId: Int): Order
 }
 
-# input FilterOrderInput {
-#   searchText: String
-# }
+input FilterOrderInput {
+  state: String
+  searchText: String
+}
 
 # # Input for ordering orders
 # input OrderByInput {
@@ -147,7 +148,7 @@ extend type Subscription {
   # Subscription for when editing a order
   orderUpdated(id: Int!): UpdateOrderPayload
   # Subscription for order list
-  ordersUpdated(endCursor: Int, filter: FilterListInput): UpdateOrderPayload
+  ordersUpdated(endCursor: Int, filter: FilterOrderInput): UpdateOrderPayload
 }
 
 # Payload for ordersUpdated Subscription

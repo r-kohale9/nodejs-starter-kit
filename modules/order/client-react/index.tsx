@@ -7,6 +7,7 @@ import loadable from '@loadable/component';
 import { Route, NavLink } from 'react-router-dom';
 import { MenuItem } from '@gqlapp/look-client-react';
 import { AuthRoute, IfLoggedIn } from '@gqlapp/user-client-react';
+import resolvers from './resolvers';
 import resources from './locales';
 
 import NavItemCart from './containers/NavItemCart.web';
@@ -99,5 +100,6 @@ export default new ClientModule({
       </MenuItem>
     </IfLoggedIn>
   ],
+  resolver: [resolvers],
   localization: [{ ns: 'order', resources }]
 });
