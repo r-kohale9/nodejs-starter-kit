@@ -109,6 +109,11 @@ export default class ListingDAO extends Model {
     }
 
     if (filter) {
+      if (has(filter, 'category') && filter.category !== '') {
+        queryBuilder.where(function() {
+          this.where('category', filter.category);
+        });
+      }
       if (has(filter, 'isActive') && filter.isActive !== '') {
         queryBuilder.where(function() {
           this.where('is_active', filter.isActive);
@@ -170,12 +175,8 @@ export default class ListingDAO extends Model {
   }
 
   public async userListings(userId: number) {
-    const res = camelizeKeys(
-      await ListingDAO.query()
-        .where('user_id', userId)
-        .eager(eager)
-        .orderBy('id', 'desc')
-    );
+    const queryBuilder = ListingDAO.query().eager(eager);
+    const res = camelizeKeys(await queryBuilder.where('user_id', userId).orderBy('id', 'desc'));
     // console.log(query[0]);
     return res;
   }

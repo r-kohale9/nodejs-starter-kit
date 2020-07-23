@@ -1,0 +1,10 @@
+fragment ListingsStateInfo on ListingsState {
+  # orderBy {
+  #   column
+  #   order
+  # }
+  filter {
+    category
+    searchText
+  }
+}

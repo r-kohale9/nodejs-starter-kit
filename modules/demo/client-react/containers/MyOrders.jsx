@@ -8,7 +8,7 @@ import { translate } from '@gqlapp/i18n-client-react';
 
 import MY_ORDERS_QUERY from '@gqlapp/order-client-react/graphql/MyOrdersQuery.graphql';
 // import ORDERS_SUBSCRIPTION from '@gqlapp/order-client-react/graphql/OrdersSubscription.graphql';
-import UPDATE_ORDER_FILTER from '@gqlapp/order-client-react/graphql/UpdateOrderFilter.client.graphql';
+import UPDATE_ORDERS_FILTER from '@gqlapp/order-client-react/graphql/UpdateOrdersFilter.client.graphql';
 import ORDERS_STATE_QUERY from '@gqlapp/order-client-react/graphql/OrdersStateQuery.client.graphql';
 
 import MyOrdersView from '../components/MyOrdersView';
@@ -97,7 +97,7 @@ export default compose(
       return removeTypename(ordersState);
     }
   }),
-  graphql(UPDATE_ORDER_FILTER, {
+  graphql(UPDATE_ORDERS_FILTER, {
     props: ({ mutate }) => ({
       onSearchTextChange(searchText) {
         mutate({ variables: { filter: { searchText } } });

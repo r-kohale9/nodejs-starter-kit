@@ -17,7 +17,7 @@ const Details = styled.p`
 const UserDisplayDetailComponent = props => {
   const { user, history } = props;
   const { profile } = user && user;
-  console.log('object', user);
+  // console.log('object', user);
   return (
     <Row type="flex" align="middle" justify="center">
       <Col

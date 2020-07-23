@@ -4,7 +4,7 @@ import { graphql } from 'react-apollo';
 
 import { translate } from '@gqlapp/i18n-client-react';
 
-import UPDATE_ORDER_FILTER from '@gqlapp/order-client-react/graphql/UpdateOrderFilter.client.graphql';
+import UPDATE_ORDERS_FILTER from '@gqlapp/order-client-react/graphql/UpdateOrdersFilter.client.graphql';
 import ORDERS_STATE_QUERY from '@gqlapp/order-client-react/graphql/OrdersStateQuery.client.graphql';
 import MY_DELIVERIES_QUERY from '../graphql/MyDeliveriesQuery.graphql';
 
@@ -28,7 +28,7 @@ export default compose(
       return removeTypename(ordersState);
     }
   }),
-  graphql(UPDATE_ORDER_FILTER, {
+  graphql(UPDATE_ORDERS_FILTER, {
     props: ({ mutate }) => ({
       onSearchTextChange(searchText) {
         mutate({ variables: { filter: { searchText } } });

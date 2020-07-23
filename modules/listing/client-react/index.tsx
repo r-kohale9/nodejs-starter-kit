@@ -9,7 +9,9 @@ import { Route, NavLink } from 'react-router-dom';
 import { MenuItem } from '@gqlapp/look-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 
+import resolvers from './resolvers';
 import resources from './locales';
+
 const MyListingsNavItemAccount = () => {
   return (
     <NavLink to="/my-listings">
@@ -125,5 +127,6 @@ export default new ClientModule({
       </MenuItem>
     </IfLoggedIn>
   ],
+  resolver: [resolvers],
   localization: [{ ns: 'listing', resources }]
 });

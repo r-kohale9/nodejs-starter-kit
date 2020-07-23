@@ -6,7 +6,12 @@ import { compose, PLATFORM, removeTypename } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
 import { useListingListWithSubscription } from '@gqlapp/listing-client-react/containers/withSubscriptions';
-import { updateMyListingsState, withCurrentUser } from '@gqlapp/listing-client-react/containers/ListingOperations';
+import {
+  updateMyListingsState,
+  withCurrentUser,
+  withListingStateQuery,
+  withUpdateListingFilter
+} from '@gqlapp/listing-client-react/containers/ListingOperations';
 
 import USER_QUERY from '@gqlapp/user-client-react/graphql/UserQuery.graphql';
 import USER_LISTINGS from '@gqlapp/listing-client-react/graphql/UserListingsQuery.graphql';
@@ -14,8 +19,6 @@ import USER_LISTINGS from '@gqlapp/listing-client-react/graphql/UserListingsQuer
 import BakerView from '../components/BakerView';
 
 import { CATEGORYICONSLICK, HOMESLICK } from './Slick';
-
-import { USER, USERS, PROFILELIST } from './Data';
 
 import settings from '../../../../settings';
 
@@ -46,6 +49,8 @@ Baker.propTypes = {
 
 export default compose(
   withCurrentUser,
+  withListingStateQuery,
+  withUpdateListingFilter,
   graphql(USER_QUERY, {
     options: props => {
       let id = 0;
@@ -71,6 +76,7 @@ export default compose(
       } else if (navigation) {
         id = navigation.state.params.id;
       }
+      console.log('filter', filter);
       return {
         variables: {
           limit: limit,

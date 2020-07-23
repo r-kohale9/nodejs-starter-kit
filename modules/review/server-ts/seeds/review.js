@@ -4,7 +4,7 @@ exports.seed = async function(knex) {
   await truncateTables(knex, Promise, ['review', 'review_image']);
 
   await Promise.all(
-    [...Array(100).keys()].map(async ii => {
+    [...Array(50).keys()].map(async ii => {
       const review = await returnId(knex('review')).insert({
         baker_id: Math.floor(Math.random() * (16 - 2 + 1) + 2),
         user_id: Math.floor(Math.random() * (22 - 17 + 1) + 17),

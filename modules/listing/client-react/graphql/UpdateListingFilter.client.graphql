@@ -1,0 +1,5 @@
+#import "./ListingsState.client.graphql"
+
+mutation updateListingsFilter($filter: FilterOrderInput!) {
+  updateListingsFilter(filter: $filter) @client
+}

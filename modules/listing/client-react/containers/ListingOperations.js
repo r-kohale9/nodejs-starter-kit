@@ -19,6 +19,10 @@ import DELETE_LISTING from '../graphql/DeleteListing.graphql';
 import TOGGLE_LISTING_IS_ACTIVE from '../graphql/ToggleListingIsActive.graphql';
 import TOOGLE_LISTING_BOOKMARK from '../graphql/ToggleListingBookmark.graphql';
 
+// Fiter
+import LISTINGS_STATE_QUERY from '../graphql/ListingsStateQuery.client.graphql';
+import UPDATE_LISTINGS_FILTER from '../graphql/UpdateListingFilter.client.graphql';
+
 import settings from '../../../../settings';
 
 const limit =
@@ -541,6 +545,24 @@ const withListingBookmarkStatus = Component =>
     }
   })(Component);
 
+const withListingStateQuery = Component =>
+  graphql(LISTINGS_STATE_QUERY, {
+    props({ data: { listingsState } }) {
+      return removeTypename(listingsState);
+    }
+  })(Component);
+
+const withUpdateListingFilter = Component =>
+  graphql(UPDATE_LISTINGS_FILTER, {
+    props: ({ mutate }) => ({
+      onSearchTextChange(searchText) {
+        mutate({ variables: { filter: { searchText } } });
+      },
+      onCategoryChange(category) {
+        mutate({ variables: { filter: { category } } });
+      }
+    })
+  })(Component);
 export {
   withCurrentUser,
   withListing,
@@ -557,5 +579,7 @@ export {
   withUserListing,
   withMyListingsBookmark,
   withToogleListingBookmark,
-  withListingBookmarkStatus
+  withListingBookmarkStatus,
+  withListingStateQuery,
+  withUpdateListingFilter
 };
