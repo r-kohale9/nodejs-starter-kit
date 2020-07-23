@@ -7,19 +7,21 @@ import { graphql } from 'react-apollo';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import { Button, PageLayout } from '@gqlapp/look-client-react';
-
 import settings from '@gqlapp/config';
+import { withOrdersStateQuery, withUpdateOrdersFilter, withOrders } from './OrdersOperations';
+
 import OrdersListView from '../components/OrdersListView';
-import ORDERS_QUERY from '../graphql/OrdersQuery.graphql';
+import OrdersFilterView from '../components/OrdersFilterView';
 
 const Orders = props => {
   // const { t, updateQuery, subscribeToMore } = props;
+  const filter = {};
   // const filter = { isActive: true };
-  // const usersUpdated = useUsersWithSubscription(subscribeToMore, filter);
+  // const usersUpdated = useOrdersWithSubscription(subscribeToMore, filter);
   // console.log('users', props);
   // useEffect(() => {
   //   if (usersUpdated) {
-  //     updateUsersState(usersUpdated, updateQuery);
+  //     updateOrdersState(usersUpdated, updateQuery);
   //   }
   // });
 
@@ -34,7 +36,7 @@ const Orders = props => {
       ]}
     />
   );
-  console.log('admin blog', props);
+  console.log('props', props);
   return (
     <PageLayout>
       {renderMetaData()}
@@ -43,8 +45,8 @@ const Orders = props => {
         <Button color="primary">{t('users.btn.add')}</Button>
       </Link> */}
       <hr />
-      {/* <UsersFilterView {...props} filter={filter} />
-      <hr /> */}
+      <OrdersFilterView {...props} filter={filter} />
+      <hr />
       <OrdersListView {...props} />
     </PageLayout>
   );
@@ -58,17 +60,4 @@ const Orders = props => {
 //   filter: PropTypes.object
 // };
 
-export default compose(graphql(ORDERS_QUERY, {
-  options: ({ orderBy, filter }) => {
-    return {
-      variables: { limit: 20, after: 0 },
-      fetchPolicy: 'network-only'
-    };
-  },
-  props({ data: { loading, error, orders } }) {
-    if (error) {
-      throw new Error(error);
-    }
-    return { loading, orders };
-  }
-}),translate('order'))(Orders);
+export default compose(withOrdersStateQuery, withUpdateOrdersFilter, withOrders, translate('order'))(Orders);

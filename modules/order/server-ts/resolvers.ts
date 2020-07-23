@@ -13,9 +13,28 @@ interface Edges {
 
 export default (pubsub: any) => ({
   Query: {
-    orders(obj, { limit, after, orderBy, filter }, { Order, req: { identity } }) {
+    async orders(obj: any, { limit, after, orderBy, filter }: any, { Order, req: { identity } }: any) {
       if (identity) {
-        return Order.getOrders(limit, after, orderBy, filter);
+        const edgesArray: Edges[] = [];
+        const { orders, total } = await Order.getOrders(limit, after, orderBy, filter);
+        const hasNextPage = total > after + limit;
+
+        orders.map((ord: Order & Identifier, index: number) => {
+          edgesArray.push({
+            cursor: after + index,
+            node: ord
+          });
+        });
+        const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
+
+        return {
+          totalCount: total,
+          edges: edgesArray,
+          pageInfo: {
+            endCursor,
+            hasNextPage
+          }
+        };
       } else {
         return null;
       }

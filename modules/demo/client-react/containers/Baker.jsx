@@ -9,8 +9,8 @@ import { useListingListWithSubscription } from '@gqlapp/listing-client-react/con
 import {
   updateMyListingsState,
   withCurrentUser,
-  withListingStateQuery,
-  withUpdateListingFilter
+  withListingsStateQuery,
+  withUpdateListingsFilter
 } from '@gqlapp/listing-client-react/containers/ListingOperations';
 
 import USER_QUERY from '@gqlapp/user-client-react/graphql/UserQuery.graphql';
@@ -49,8 +49,8 @@ Baker.propTypes = {
 
 export default compose(
   withCurrentUser,
-  withListingStateQuery,
-  withUpdateListingFilter,
+  withListingsStateQuery,
+  withUpdateListingsFilter,
   graphql(USER_QUERY, {
     options: props => {
       let id = 0;

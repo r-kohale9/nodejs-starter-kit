@@ -1,10 +1,17 @@
 #import "./Order.graphql"
 
-query orders(
-  $limit: Int!
-  $after: Int!
-) {
-  orders(limit: $limit, after: $after) {
+query orders($limit: Int!, $after: Int!, $filter: FilterOrderInput) {
+  orders(limit: $limit, after: $after, filter: $filter) {
+    totalCount
+    edges {
+      cursor
+      node {
         ...OrderInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
   }
 }

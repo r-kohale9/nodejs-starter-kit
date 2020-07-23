@@ -545,14 +545,14 @@ const withListingBookmarkStatus = Component =>
     }
   })(Component);
 
-const withListingStateQuery = Component =>
+const withListingsStateQuery = Component =>
   graphql(LISTINGS_STATE_QUERY, {
     props({ data: { listingsState } }) {
       return removeTypename(listingsState);
     }
   })(Component);
 
-const withUpdateListingFilter = Component =>
+const withUpdateListingsFilter = Component =>
   graphql(UPDATE_LISTINGS_FILTER, {
     props: ({ mutate }) => ({
       onSearchTextChange(searchText) {
@@ -563,6 +563,7 @@ const withUpdateListingFilter = Component =>
       }
     })
   })(Component);
+
 export {
   withCurrentUser,
   withListing,
@@ -580,6 +581,6 @@ export {
   withMyListingsBookmark,
   withToogleListingBookmark,
   withListingBookmarkStatus,
-  withListingStateQuery,
-  withUpdateListingFilter
+  withListingsStateQuery,
+  withUpdateListingsFilter
 };

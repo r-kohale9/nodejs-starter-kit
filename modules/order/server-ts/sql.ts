@@ -98,35 +98,31 @@ export default class OrderDAO extends Model {
       queryBuilder.orderBy('id', 'desc');
     }
 
-    // if (filter) {
-    //   if (has(filter, 'gearCategory') && filter.gearCategory !== '') {
-    //     queryBuilder.where(function() {
-    //       this.where('gear_category', filter.gearCategory);
-    //     });
-    //   }
+    if (filter) {
+      if (has(filter, 'state') && filter.state !== '') {
+        queryBuilder.where(function() {
+          this.where('state', filter.state);
+        });
+      }
 
-    //   if (has(filter, 'gearSubcategory') && filter.gearSubcategory !== '') {
-    //     queryBuilder.where(function() {
-    //       this.where('gear_subcategory', filter.gearSubcategory);
-    //     });
-    //   }
+      // if (has(filter, 'searchText') && filter.searchText !== '') {
+      //   queryBuilder
+      //     .from('order')
+      //     .leftJoin('order_content AS ld', 'ld.order_id', 'order.id')
+      //     .where(function() {
+      //       this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.model', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.gear', `%${filter.searchText}%`]))
+      //         .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.brand', `%${filter.searchText}%`]));
+      //     });
+      // }
+    }
 
-    //   if (has(filter, 'searchText') && filter.searchText !== '') {
-    //     queryBuilder
-    //       .from('order')
-    //       .leftJoin('order_content AS ld', 'ld.order_id', 'order.id')
-    //       .where(function() {
-    //         this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
-    //           .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.model', `%${filter.searchText}%`]))
-    //           .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.gear', `%${filter.searchText}%`]))
-    //           .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.brand', `%${filter.searchText}%`]));
-    //       });
-    //   }
-    // }
-
+    const allOrder = camelizeKeys(await queryBuilder);
+    const total = allOrder.length;
     const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
     console.log(OrderDAO.query());
-    return res;
+    return { orders: res, total };
   }
 
   public async userDeliveries(userId: number, limit: number, after: number, filter: any) {

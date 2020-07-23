@@ -1,16 +1,25 @@
 /* eslint-disable react/display-name */
-
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Card, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import { translate } from '@gqlapp/i18n-client-react';
-import { Table, Button, Avatar } from '@gqlapp/look-client-react';
-import ListingDrawerComponent from './ListingDrawerComponent';
+import { Table, Button, Pagination } from '@gqlapp/look-client-react';
+import ListingDrawerComponent from '@gqlapp/demo-client-react/components/ListingDrawerComponent';
+// import ListingDrawerComponent from './ListingDrawerComponent';
 
+import settings from '../../../../settings';
+
+const { itemsNumber, type } = settings.pagination.web;
 const { Meta } = Card;
 
-const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggleFeatured }) => {
+const NoOrderssMessage = ({ t }) => <div className="text-center">{t('order.noListingsMsg')}</div>;
+NoOrderssMessage.propTypes = { t: PropTypes.func };
+
+const Loading = ({ t }) => <Spin text={t('order.loadMsg')} />;
+Loading.propTypes = { t: PropTypes.func };
+
+const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggleFeatured, loadData }) => {
   // const renderOrderByArrow = name => {
   //   if (orderBy && orderBy.column === name) {
   //     if (orderBy.order === 'desc') {
@@ -68,6 +77,12 @@ const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggl
           {console.log(record)}
         </>
       )
+    },
+    {
+      title: <>State</>,
+      dataIndex: 'state',
+      key: 'state',
+      render: (text, record) => <>{record.state}</>
     },
     // {
     //   title: (
@@ -170,24 +185,38 @@ const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggl
       )
     }
   ];
+
+  const handlePageChange = (pagination, pageNumber) => {
+    const {
+      pageInfo: { endCursor }
+    } = orders;
+    pagination === 'relay' ? loadData(endCursor + 1, 'add') : loadData((pageNumber - 1) * itemsNumber, 'replace');
+  };
+
+  const RenderOrders = () => (
+    <Fragment>
+      <Table dataSource={orders.edges.map(({ node }) => node)} columns={columns} />
+      <Pagination
+        itemsPerPage={orders.edges.length}
+        handlePageChange={handlePageChange}
+        hasNextPage={orders.pageInfo.hasNextPage}
+        pagination={type}
+        total={orders.totalCount}
+        loadMoreText={t('list.btn.more')}
+        defaultPageSize={itemsNumber}
+      />
+    </Fragment>
+  );
+
   return (
     <>
-      {/* {loading && !orders ? (
-        <div className="text-center">{t('orders.loadMsg')}</div>
-      ) : ( */}
-      <>
-        {/* {errors &&
-          errors.map(error => (
-            <div className="alert alert-danger" role="alert" key={error.field}>
-              {error.message}
-            </div>
-          ))} */}
-        {/* for horizontal table responsive on smaller screens */}
-        <div style={{ overflowX: 'auto' }}>
+      {/* Render loader */}
+      {loading && !orders && <Loading t={t} />}
+      {/* Render main listing content */}
+      {orders && orders.totalCount ? <RenderOrders /> : <NoOrderssMessage t={t} />}
+      {/* <div style={{ overflowX: 'auto' }}>
           <Table dataSource={orders} columns={columns} />
-        </div>
-      </>
-      {/* )} */}
+        </div> */}
     </>
   );
 };
