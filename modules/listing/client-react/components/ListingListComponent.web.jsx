@@ -22,7 +22,7 @@ const cancel = () => {
 };
 
 const ListingListComponent = props => {
-  const { orderBy, onOrderBy, loading, listings, t, loadData, deleteListing, toggleListingIsActive } = props;
+  const { orderBy, onListingsOrderBy, loading, listings, t, loadData, deleteListing, toggleListingIsActive } = props;
 
   const renderOrderByArrow = name => {
     if (orderBy && orderBy.column === name) {
@@ -42,13 +42,13 @@ const ListingListComponent = props => {
       if (orderBy.order === 'asc') {
         order = 'desc';
       } else if (orderBy.order === 'desc') {
-        return onOrderBy({
+        return onListingsOrderBy({
           column: '',
           order: ''
         });
       }
     }
-    return onOrderBy({ column: name, order });
+    return onListingsOrderBy({ column: name, order });
   };
 
   const handleToggleisActive = async (event, record, isActive) => {
@@ -88,6 +88,16 @@ const ListingListComponent = props => {
       ),
       dataIndex: 'title',
       key: 'title',
+      render: text => <div>{text}</div>
+    },
+    {
+      title: (
+        <a onClick={e => handleOrderBy(e, 'category')} href="#">
+          Category {renderOrderByArrow('category')}
+        </a>
+      ),
+      dataIndex: 'category',
+      key: 'category',
       render: text => <div>{text}</div>
     },
     {
@@ -166,7 +176,7 @@ ListingListComponent.propTypes = {
   loadData: PropTypes.bool,
   listings: PropTypes.object,
   orderBy: PropTypes.object,
-  onOrderBy: PropTypes.func.isRequired,
+  onListingsOrderBy: PropTypes.func.isRequired,
   deleteListing: PropTypes.func.isRequired,
   toggleListingIsActive: PropTypes.func,
   t: PropTypes.func,

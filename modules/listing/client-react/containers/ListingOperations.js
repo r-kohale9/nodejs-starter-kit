@@ -22,6 +22,7 @@ import TOOGLE_LISTING_BOOKMARK from '../graphql/ToggleListingBookmark.graphql';
 // Fiter
 import LISTINGS_STATE_QUERY from '../graphql/ListingsStateQuery.client.graphql';
 import UPDATE_LISTINGS_FILTER from '../graphql/UpdateListingFilter.client.graphql';
+import UPDATE_LISTINGS_ORDER_BY from '../graphql/UpdateListingsOrderBy.client.graphql';
 
 import settings from '../../../../settings';
 
@@ -545,6 +546,7 @@ const withListingBookmarkStatus = Component =>
     }
   })(Component);
 
+// Filter
 const withListingsStateQuery = Component =>
   graphql(LISTINGS_STATE_QUERY, {
     props({ data: { listingsState } }) {
@@ -560,6 +562,19 @@ const withUpdateListingsFilter = Component =>
       },
       onCategoryChange(category) {
         mutate({ variables: { filter: { category } } });
+      },
+      onIsActiveChange(isActive) {
+        console.log('object', isActive);
+        mutate({ variables: { filter: { isActive } } });
+      }
+    })
+  })(Component);
+
+const withListingsOrderByUpdating = Component =>
+  graphql(UPDATE_LISTINGS_ORDER_BY, {
+    props: ({ mutate }) => ({
+      onListingsOrderBy: orderBy => {
+        mutate({ variables: { orderBy } });
       }
     })
   })(Component);
@@ -582,5 +597,6 @@ export {
   withToogleListingBookmark,
   withListingBookmarkStatus,
   withListingsStateQuery,
-  withUpdateListingsFilter
+  withUpdateListingsFilter,
+  withListingsOrderByUpdating
 };

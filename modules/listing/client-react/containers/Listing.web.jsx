@@ -6,7 +6,15 @@ import { translate } from '@gqlapp/i18n-client-react';
 import ListingView from '../components/ListingView';
 
 import { useListingsWithSubscription } from './withSubscriptions';
-import { withListings, withListingsDeleting, updateListingsState, withToogleListingActive } from './ListingOperations';
+import {
+  withListings,
+  withListingsDeleting,
+  updateListingsState,
+  withToogleListingActive,
+  withListingsStateQuery,
+  withUpdateListingsFilter,
+  withListingsOrderByUpdating
+} from './ListingOperations';
 
 const Listing = props => {
   const { updateQuery, subscribeToMore, filter } = props;
@@ -17,7 +25,7 @@ const Listing = props => {
       updateListingsState(listingsUpdated, updateQuery);
     }
   });
-
+  console.log('props', props);
   return <ListingView {...props} />;
 };
 
@@ -27,4 +35,12 @@ Listing.propTypes = {
   updateQuery: PropTypes.func
 };
 
-export default compose(withListings, withListingsDeleting, withToogleListingActive, translate('listing'))(Listing);
+export default compose(
+  withListingsStateQuery,
+  withListingsOrderByUpdating,
+  withUpdateListingsFilter,
+  withListings,
+  withListingsDeleting,
+  withToogleListingActive,
+  translate('listing')
+)(Listing);

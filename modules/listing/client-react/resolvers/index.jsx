@@ -4,15 +4,15 @@ import LISTINGS_STATE_QUERY from '../graphql/ListingsStateQuery.client.graphql';
 
 const TYPE_LISTINGS_STATE = 'ListingsState';
 const TYPE_LISTINGS_STATE_FILTER = 'FilterListInput';
-// const TYPE_LISTINGS_STATE_ORDER_BY = 'OrderByListInput';
+const TYPE_LISTINGS_STATE_ORDER_BY = 'OrderByListInput';
 
 const defaults = {
   listingsState: {
-    // orderBy: {
-    //   column: '',
-    //   order: '',
-    //   __typename: TYPE_LISTINGS_STATE_ORDER_BY
-    // },
+    orderBy: {
+      column: '',
+      order: '',
+      __typename: TYPE_LISTINGS_STATE_ORDER_BY
+    },
     filter: {
       searchText: '',
       isActive: true,
@@ -25,22 +25,21 @@ const defaults = {
 
 const resolvers = {
   Mutation: {
-    // updateListingsListBy: (_, { orderBy }, { cache }) => {
-    //   const { listingsState } = cache.readQuery({ query: LISTINGS_STATE_QUERY });
+    updateListingsOrderBy: (_, { orderBy }, { cache }) => {
+      const { listingsState } = cache.readQuery({ query: LISTINGS_STATE_QUERY });
+      const newListingsState = update(listingsState, {
+        orderBy: { $merge: orderBy }
+      });
 
-    //   const newListingsState = update(listingsState, {
-    //     orderBy: { $merge: orderBy }
-    //   });
+      cache.writeData({
+        data: {
+          listingsState: newListingsState,
+          __type: TYPE_LISTINGS_STATE
+        }
+      });
 
-    //   cache.writeData({
-    //     data: {
-    //       listingsState: newListingsState,
-    //       __type: TYPE_LISTINGS_STATE
-    //     }
-    //   });
-
-    //   return null;
-    // },
+      return null;
+    },
     updateListingsFilter: (_, { filter }, { cache }) => {
       const { listingsState } = cache.readQuery({ query: LISTINGS_STATE_QUERY });
 

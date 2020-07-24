@@ -1,7 +1,7 @@
 #import "./Order.graphql"
 
-query orders($limit: Int!, $after: Int!, $filter: FilterOrderInput) {
-  orders(limit: $limit, after: $after, filter: $filter) {
+query orders($limit: Int!, $after: Int!, $filter: FilterOrderInput, $orderBy: OrderByListInput) {
+  orders(limit: $limit, after: $after, filter: $filter, orderBy: $orderBy) {
     totalCount
     edges {
       cursor

@@ -1,8 +1,8 @@
 fragment ListingsStateInfo on ListingsState {
-  # orderBy {
-  #   column
-  #   order
-  # }
+  orderBy {
+    column
+    order
+  }
   filter {
     category
     searchText

@@ -1,0 +1,3 @@
+mutation updateOrdersOrderBy($orderBy: OrderByListInput!) {
+  updateOrdersOrderBy(orderBy: $orderBy) @client
+}

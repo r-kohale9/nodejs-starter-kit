@@ -19,164 +19,78 @@ NoOrderssMessage.propTypes = { t: PropTypes.func };
 const Loading = ({ t }) => <Spin text={t('order.loadMsg')} />;
 Loading.propTypes = { t: PropTypes.func };
 
-const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggleFeatured, loadData }) => {
-  // const renderOrderByArrow = name => {
-  //   if (orderBy && orderBy.column === name) {
-  //     if (orderBy.order === 'desc') {
-  //       return <span className="badge badge-primary">&#8595;</span>;
-  //     } else {
-  //       return <span className="badge badge-primary">&#8593;</span>;
-  //     }
-  //   } else {
-  //     return <span className="badge badge-secondary">&#8645;</span>;
-  //   }
-  // };
-
-  // const handleOrderBy = (e, name) => {
-  //   e.preventDefault();
-
-  //   let order = 'asc';
-  //   if (orderBy && orderBy.column === name) {
-  //     if (orderBy.order === 'asc') {
-  //       order = 'desc';
-  //     } else if (orderBy.order === 'desc') {
-  //       return onOrderBy({
-  //         column: '',
-  //         order: ''
-  //       });
-  //     }
-  //   }
-
-  //   return onOrderBy({ column: name, order });
-  // };
-  const getName = (firstName, lastName) => {
-    if (firstName && lastName) {
-      return `${firstName} ${lastName}`;
-    } else if (firstName && !lastName) {
-      return firstName;
+const OrdersView = ({ deleteOrder, onOrdersOrderBy, orderBy, loading, orders, t, loadData }) => {
+  const renderOrderByArrow = name => {
+    if (orderBy && orderBy.column === name) {
+      if (orderBy.order === 'desc') {
+        return <span className="badge badge-primary">&#8595;</span>;
+      } else {
+        return <span className="badge badge-primary">&#8593;</span>;
+      }
     } else {
-      return 'Name Not Available';
+      return <span className="badge badge-secondary">&#8645;</span>;
     }
+  };
+  const handleOrderBy = (e, name) => {
+    e.preventDefault();
+    let order = 'asc';
+    if (orderBy && orderBy.column === name) {
+      if (orderBy.order === 'asc') {
+        order = 'desc';
+      } else if (orderBy.order === 'desc') {
+        return onOrdersOrderBy({
+          column: '',
+          order: ''
+        });
+      }
+    }
+    return onOrdersOrderBy({ column: name, order });
   };
 
   const columns = [
     {
       title: (
-        <>
+        <a onClick={e => handleOrderBy(e, 'id')} href="#">
           OrderId
-          {/* <a onClick={e => handleOrderBy(e, 'username')} href="#">
-          {t('orders.column.name')} {renderOrderByArrow('username')}
-        </a> */}
-        </>
+          {renderOrderByArrow('id')}
+        </a>
       ),
       dataIndex: 'id',
       key: 'id',
       render: (text, record) => (
         <>
           {record.id}
-          {console.log(record)}
+          {/* {console.log(record)} */}
         </>
       )
     },
     {
-      title: <>State</>,
+      title: (
+        <a onClick={e => handleOrderBy(e, 'state')} href="#">
+          State
+          {renderOrderByArrow('state')}
+        </a>
+      ),
       dataIndex: 'state',
       key: 'state',
       render: (text, record) => <>{record.state}</>
     },
-    // {
-    //   title: (
-    //     <>
-    //       {'title'}
-    //       {/* <a onClick={e => handleOrderBy(e, 'fullName')} href="#">
-    //       {'Name'} {renderOrderByArrow('fullName')}
-    //     </a> */}
-    //     </>
-    //   ),
-    //   dataIndex: 'title',
-    //   key: 'title',
-    //   render: (text, record) => (
-    //     <>
-    //       {record && record.title}
-    //       {text}
-    //     </>
-    //     // <Link className="user-link" to={`/public-profile/${record.user && record.user.id}`}>
-    //     //   <Card style={{ width: 'fit-content', maxWidth: '300px' }} bodyStyle={{ padding: '5px' }}>
-    //     //     <Meta
-    //     //       avatar={<Avatar src={record.user && record.user.profile && record.user.profile.avatar} />}
-    //     //       title={getName(
-    //     //         record.user && record.user.profile && record.user.profile.firstName,
-    //     //         record.user && record.user.profile && record.user.profile.lastName
-    //     //       )}
-    //     //       description={<h4 style={{ marginTop: '-10px' }}>{record.user && record.user.username}</h4>}
-    //     //     />
-    //     //   </Card>
-    //     // </Link>
-    //   )
-    // },
-    // {
-    //   title: (
-    //     <a onClick={e => handleOrderBy(e, 'email')} href="#">
-    //       {t('orders.column.email')} {renderOrderByArrow('email')}
-    //     </a>
-    //   ),
-    //   dataIndex: 'email',
-    //   key: 'email'
-    // },
-    // {
-    //   title: (
-    //     <a onClick={e => handleOrderBy(e, 'role')} href="#">
-    //       {t('orders.column.role')} {renderOrderByArrow('role')}
-    //     </a>
-    //   ),
-    //   dataIndex: 'role',
-    //   key: 'role'
-    // },
-    // {
-    //   title: (
-    //     <a onClick={e => handleOrderBy(e, 'isActive')} href="#">
-    //       {t('orders.column.active')} {renderOrderByArrow('isActive')}
-    //     </a>
-    //   ),
-    //   dataIndex: 'isActive',
-    //   key: 'isActive',
-    //   render: text => text.toString()
-    // },
-    // {
-    //   title: (
-    //     <a
-    //       // onClick={e => handleOrderBy(e, "isActive")}
-    //       href="#"
-    //     >
-    //       Type
-    //     </a>
-    //   ),
-    //   dataIndex: 'profile',
-    //   key: 'profile',
-    //   render: (text, record) => record.profile && record.profile.userType && record.profile.userType.toString()
-    // },
-    // {
-    //   title: (
-    //     <a onClick={e => handleOrderBy(e, 'isFeatured')} href="#">
-    //       {'Is Featured'} {renderOrderByArrow('isFeatured')}
-    //     </a>
-    //   ),
-    //   dataIndex: 'isFeatured',
-    //   key: 'isFeatured',
-    //   render: (text, record) => (
-    //     <Button onClick={() => toggleFeatured(record.id)}>
-    //       {record.profile && record.profile.isFeatured ? 'Featured' : 'UnFeatured'}
-    //     </Button>
-    //   )
-    // },
+    {
+      title: (
+        <a onClick={e => handleOrderBy(e, 'createdAt')} href="#">
+          State
+          {renderOrderByArrow('createdAt')}
+        </a>
+      ),
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text, record) => <>{record.createdAt}</>
+    },
     {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
         <>
-          {/* <Button color="primary" size="sm" onClick={() => deleteOrder(record.id)}>
-            View
-          </Button> */}
           <ListingDrawerComponent listing={record.orderDetails} />
           <Button color="primary" size="sm" onClick={() => deleteOrder(record.id)}>
             Delete
@@ -212,11 +126,8 @@ const OrdersView = ({ deleteOrder, orderBy, onOrderBy, loading, orders, t, toggl
     <>
       {/* Render loader */}
       {loading && !orders && <Loading t={t} />}
-      {/* Render main listing content */}
+      {/* Render main orders content */}
       {orders && orders.totalCount ? <RenderOrders /> : <NoOrderssMessage t={t} />}
-      {/* <div style={{ overflowX: 'auto' }}>
-          <Table dataSource={orders} columns={columns} />
-        </div> */}
     </>
   );
 };

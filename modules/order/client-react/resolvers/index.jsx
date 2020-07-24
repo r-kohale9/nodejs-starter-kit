@@ -4,15 +4,15 @@ import ORDERS_STATE_QUERY from '../graphql/OrdersStateQuery.client.graphql';
 
 const TYPE_ORDERS_STATE = 'OrdersState';
 const TYPE_ORDERS_STATE_FILTER = 'FilterOrderInput';
-// const TYPE_ORDERS_STATE_ORDER_BY = 'OrderByOrderInput';
+const TYPE_ORDERS_STATE_ORDER_BY = 'OrderByOrderInput';
 
 const defaults = {
   ordersState: {
-    // orderBy: {
-    //   column: '',
-    //   order: '',
-    //   __typename: TYPE_ORDERS_STATE_ORDER_BY
-    // },
+    orderBy: {
+      column: '',
+      order: '',
+      __typename: TYPE_ORDERS_STATE_ORDER_BY
+    },
     filter: {
       searchText: '',
       state: '',
@@ -24,22 +24,22 @@ const defaults = {
 
 const resolvers = {
   Mutation: {
-    // updateOrdersOrderBy: (_, { orderBy }, { cache }) => {
-    //   const { ordersState } = cache.readQuery({ query: ORDERS_STATE_QUERY });
+    updateOrdersOrderBy: (_, { orderBy }, { cache }) => {
+      const { ordersState } = cache.readQuery({ query: ORDERS_STATE_QUERY });
 
-    //   const newOrdersState = update(ordersState, {
-    //     orderBy: { $merge: orderBy }
-    //   });
+      const newOrdersState = update(ordersState, {
+        orderBy: { $merge: orderBy }
+      });
 
-    //   cache.writeData({
-    //     data: {
-    //       ordersState: newOrdersState,
-    //       __type: TYPE_ORDERS_STATE
-    //     }
-    //   });
+      cache.writeData({
+        data: {
+          ordersState: newOrdersState,
+          __type: TYPE_ORDERS_STATE
+        }
+      });
 
-    //   return null;
-    // },
+      return null;
+    },
     updateOrdersFilter: (_, { filter }, { cache }) => {
       const { ordersState } = cache.readQuery({ query: ORDERS_STATE_QUERY });
 

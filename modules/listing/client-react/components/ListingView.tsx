@@ -7,6 +7,7 @@ import { PageLayout } from '@gqlapp/look-client-react';
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 
+import ListingFilterComponent from './ListingFilterComponent.web.jsx';
 import ListingListComponent from './ListingListComponent.web';
 
 const renderMetaData = (t: TranslateFunction) => (
@@ -18,24 +19,17 @@ const renderMetaData = (t: TranslateFunction) => (
 
 const ListingView = props => {
   const { t } = props;
+  const filter = { isActive: true };
+
   return (
     <PageLayout>
       {renderMetaData(t)}
-      <Helmet
-        title={`${settings.app.name} - ${t('list.title')}`}
-        meta={[
-          {
-            name: 'description',
-            content: `${settings.app.name} - ${t('list.meta')}`
-          }
-        ]}
-      />
       <h2>{t('list.subTitle')}</h2>
       <Link to="/new/listing">
         <Button color="primary">{t('list.btn.add')}</Button>
       </Link>
-      {/* <hr />
-      <ListingFilterComponent {...props} /> */}
+      <hr />
+      <ListingFilterComponent {...props} filter={filter} />
       <hr />
       <ListingListComponent {...props} />
     </PageLayout>

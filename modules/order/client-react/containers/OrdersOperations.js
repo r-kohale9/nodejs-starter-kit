@@ -7,6 +7,7 @@ import ORDERS_QUERY from '../graphql/OrdersQuery.graphql';
 // Filter
 import UPDATE_ORDERS_FILTER from '../graphql/UpdateOrdersFilter.client.graphql';
 import ORDERS_STATE_QUERY from '../graphql/OrdersStateQuery.client.graphql';
+import UPDATE_ORDERS_ORDER_BY from '../graphql/UpdateOrdersOrderBy.client.graphql';
 
 import settings from '../../../../settings';
 
@@ -43,7 +44,7 @@ const withOrders = Component =>
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Listings'
+                __typename: 'Orders'
               }
             };
           }
@@ -54,6 +55,7 @@ const withOrders = Component =>
     }
   })(Component);
 
+// Filter
 const withOrdersStateQuery = Component =>
   graphql(ORDERS_STATE_QUERY, {
     props({ data: { ordersState } }) {
@@ -73,4 +75,20 @@ const withUpdateOrdersFilter = Component =>
     })
   })(Component);
 
-export { withOrdersStateQuery, withUpdateOrdersFilter, withOrders };
+const withOrdersOrderByUpdating = Component =>
+  graphql(UPDATE_ORDERS_ORDER_BY, {
+    props: ({ mutate }) => ({
+      onOrdersOrderBy: orderBy => {
+        console.log('orderBy', orderBy);
+        mutate({ variables: { orderBy } });
+      }
+    })
+  })(Component);
+
+export {
+  withOrders,
+  //Filter
+  withOrdersStateQuery,
+  withUpdateOrdersFilter,
+  withOrdersOrderByUpdating
+};

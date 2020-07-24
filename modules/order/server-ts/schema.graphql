@@ -51,9 +51,7 @@ type Orders {
 }
 
 extend type Query {
-  orders(limit: Int!, after: Int!, 
-  # orderBy: OrderByListInput,
-   filter: FilterOrderInput): Orders
+  orders(limit: Int!, after: Int!, orderBy: OrderByListInput, filter: FilterOrderInput): Orders
 
   userOrders(userId: Int, limit: Int!, after: Int!, filter: FilterOrderInput): Orders
   userDeliveries(userId: Int, limit: Int!, after: Int!, filter: FilterOrderInput): Orders

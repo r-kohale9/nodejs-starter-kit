@@ -123,11 +123,12 @@ export default class ListingDAO extends Model {
       if (has(filter, 'searchText') && filter.searchText !== '') {
         queryBuilder
           .from('listing')
-          .leftJoin('listing_cost AS ld', 'ld.listing_id', 'listing.id')
+          // .leftJoin('listing_cost AS ld', 'ld.listing_id', 'listing.id')
           .where(function() {
-            this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`]))
-              .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`]))
-              .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.cost', `%${filter.searchText}%`]));
+            this.where(raw('LOWER(??) LIKE LOWER(?)', ['category', `%${filter.searchText}%`])).orWhere(
+              raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`])
+            );
+            // .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.cost', `%${filter.searchText}%`]));
           });
       }
     }

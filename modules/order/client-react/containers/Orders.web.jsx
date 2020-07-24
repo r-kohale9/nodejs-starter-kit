@@ -8,7 +8,12 @@ import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import { Button, PageLayout } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-import { withOrdersStateQuery, withUpdateOrdersFilter, withOrders } from './OrdersOperations';
+import {
+  withOrdersOrderByUpdating,
+  withOrdersStateQuery,
+  withUpdateOrdersFilter,
+  withOrders
+} from './OrdersOperations';
 
 import OrdersListView from '../components/OrdersListView';
 import OrdersFilterView from '../components/OrdersFilterView';
@@ -60,4 +65,10 @@ const Orders = props => {
 //   filter: PropTypes.object
 // };
 
-export default compose(withOrdersStateQuery, withUpdateOrdersFilter, withOrders, translate('order'))(Orders);
+export default compose(
+  withOrdersStateQuery,
+  withOrdersOrderByUpdating,
+  withUpdateOrdersFilter,
+  withOrders,
+  translate('order')
+)(Orders);

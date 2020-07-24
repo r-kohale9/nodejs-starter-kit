@@ -22,13 +22,13 @@ const OrdersFilterView = ({ filter: { searchText, state }, onSearchTextChange, o
         <Option key={1} value="">
           {t('orders.list.item.state.all')}
         </Option>
-        <Option key={1} value="Delivered">
+        <Option key={2} value="Delivered">
           {t('orders.list.item.state.delivered')}
         </Option>
-        <Option key={2} value="Processing">
+        <Option key={3} value="Processing">
           {t('orders.list.item.state.processing')}
         </Option>
-        <Option key={3} value="Cancelled">
+        <Option key={4} value="Cancelled">
           {t('orders.list.item.state.cancelled')}
         </Option>
       </Select>
