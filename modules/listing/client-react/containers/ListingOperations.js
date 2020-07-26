@@ -32,6 +32,28 @@ const limit =
     ? settings.pagination.web.itemsNumber
     : settings.pagination.mobile.itemsNumber;
 
+const getFilter = filter => {
+  filter &&
+    (filter.weights = Array.isArray(filter && filter.weights)
+      ? filter && filter.weights
+      : _.isEmpty(filter && filter.weights)
+      ? []
+      : Object.values(filter && filter.weights));
+  filter &&
+    (filter.categories = Array.isArray(filter && filter.categories)
+      ? filter && filter.categories
+      : _.isEmpty(filter && filter.categories)
+      ? []
+      : Object.values(filter && filter.categories));
+  filter &&
+    (filter.flavours = Array.isArray(filter && filter.flavours)
+      ? filter && filter.flavours
+      : _.isEmpty(filter && filter.flavours)
+      ? []
+      : Object.values(filter && filter.flavours));
+  return filter;
+};
+
 const withCurrentUser = Component =>
   graphql(CURRENT_USER_QUERY, {
     props({ data: { loading, error, currentUser } }) {
@@ -43,32 +65,12 @@ const withCurrentUser = Component =>
 const withListings = Component =>
   graphql(LISTINGS_QUERY, {
     options: ({ orderBy, filter }) => {
-      filter &&
-        (filter.weights = Array.isArray(filter && filter.weights)
-          ? filter && filter.weights
-          : _.isEmpty(filter && filter.weights)
-          ? []
-          : Object.values(filter && filter.weights));
-      filter &&
-        (filter.categories = Array.isArray(filter && filter.categories)
-          ? filter && filter.categories
-          : _.isEmpty(filter && filter.categories)
-          ? []
-          : Object.values(filter && filter.categories));
-      filter &&
-        (filter.flavours = Array.isArray(filter && filter.flavours)
-          ? filter && filter.flavours
-          : _.isEmpty(filter && filter.flavours)
-          ? []
-          : Object.values(filter && filter.flavours));
-
-      console.log('filter', filter);
       return {
         variables: {
           limit: limit,
           after: 0,
           orderBy,
-          filter
+          filter: getFilter(filter)
         },
         fetchPolicy: 'network-only'
       };
@@ -480,6 +482,65 @@ const withUserListing = Component =>
     }
   })(Component);
 
+const withUserListingPagination = Component =>
+  graphql(USER_LISTINGS, {
+    options: ({ orderBy, filter, match, navigation }) => {
+      let id = 0;
+      if (match) {
+        id = match.params.id;
+      } else if (navigation) {
+        id = navigation.state.params.id;
+      }
+
+      return {
+        variables: {
+          limit: limit,
+          after: 0,
+          orderBy,
+          filter: getFilter(filter),
+          userId: Number(id)
+        },
+        fetchPolicy: 'network-only'
+      };
+    },
+    props: ({ data }) => {
+      const { loading, error, userListings, fetchMore, subscribeToMore, updateQuery } = data;
+      const loadData = (after, dataDelivery) => {
+        return fetchMore({
+          variables: {
+            after: after
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            const totalCount = fetchMoreResult.userListings.totalCount;
+            const newEdges = fetchMoreResult.userListings.edges;
+            const pageInfo = fetchMoreResult.userListings.pageInfo;
+            const displayedEdges =
+              dataDelivery === 'add' ? [...previousResult.userListings.edges, ...newEdges] : newEdges;
+
+            return {
+              // By returning `cursor` here, we update the `fetchMore` function
+              // to the new cursor.
+              userListings: {
+                totalCount,
+                edges: displayedEdges,
+                pageInfo,
+                __typename: 'Listings'
+              }
+            };
+          }
+        });
+      };
+      if (error) throw new Error(error);
+      return {
+        loading,
+        listings: userListings,
+        subscribeToMore,
+        loadData,
+        updateQuery
+      };
+    }
+  })(Component);
+
 const withMyListingsBookmark = Component =>
   graphql(MY_LISTINGS_BOOKMARK_QUERY, {
     options: props => {
@@ -652,6 +713,7 @@ export {
   updateMyListingsState,
   updateListingsState,
   withUserListing,
+  withUserListingPagination,
   withMyListingsBookmark,
   withToogleListingBookmark,
   withListingBookmarkStatus,

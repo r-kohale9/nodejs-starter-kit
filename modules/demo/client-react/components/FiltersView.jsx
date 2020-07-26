@@ -175,8 +175,9 @@ const FiltersWithFormik = withFormik({
     weights: (props.filter && props.filter.weights) || [],
     flavours: (props.filter && props.filter.flavours) || []
   }),
-  async handleSubmit(values, { props: { onFilterChange } }) {
+  async handleSubmit(values, { props: { onFilterChange, history } }) {
     onFilterChange(values);
+    history.push('/demo/home');
   },
   displayName: 'Filters Form' // helps with React DevTools
 });
