@@ -1,5 +1,6 @@
-import { has } from 'lodash';
+import { has, groupBy, after } from 'lodash';
 import { Model, raw } from 'objection';
+import _ from 'lodash';
 import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex, returnId } from '@gqlapp/database-server-ts';
@@ -63,7 +64,7 @@ export default class ListingDAO extends Model {
         }
       },
       listing_cost: {
-        relation: Model.HasOneRelation,
+        relation: Model.HasManyRelation,
         modelClass: ListingCost,
         join: {
           from: 'listing.id',
@@ -107,19 +108,27 @@ export default class ListingDAO extends Model {
     } else {
       queryBuilder.orderBy('id', 'desc');
     }
-
     if (filter) {
       if (has(filter, 'category') && filter.category !== '') {
         queryBuilder.where(function() {
           this.where('category', filter.category);
         });
       }
+      if (has(filter, 'categories') && Array.isArray(filter.categories) && filter.categories.length > 0) {
+        queryBuilder
+          .where(function() {
+            this.whereIn(
+              'category',
+              filter.categories.map(w => w.category)
+            );
+          })
+          .groupBy('listing.id');
+      }
       if (has(filter, 'isActive') && filter.isActive !== '') {
         queryBuilder.where(function() {
           this.where('is_active', filter.isActive);
         });
       }
-
       if (has(filter, 'searchText') && filter.searchText !== '') {
         queryBuilder
           .from('listing')
@@ -131,12 +140,70 @@ export default class ListingDAO extends Model {
             // .orWhere(raw('LOWER(??) LIKE LOWER(?)', ['ld.cost', `%${filter.searchText}%`]));
           });
       }
+      // if (has(filter, 'priceRange') && filter.priceRange.min !== 0 && filter.priceRange.max !== 0) {
+      //   queryBuilder
+      //     .withGraphJoined('listing_cost')
+      //     .where(function() {
+      //       this.where('listing_cost.cost', '>', filter.priceRange.min).andWhere(
+      //         'listing_cost.cost',
+      //         '<',
+      //         filter.priceRange.max
+      //       );
+      //     })
+      //     .groupBy('listing.id');
+      // }
+      if (has(filter, 'priceRange') && filter.priceRange.min !== 0) {
+        queryBuilder
+          .where(function() {
+            this.where('listing_cost.cost', '>', filter.priceRange.min);
+          })
+          .groupBy('listing.id');
+      }
+      if (has(filter, 'priceRange') && filter.priceRange.max !== 0) {
+        queryBuilder
+          .where(function() {
+            this.where('listing_cost.cost', '<', filter.priceRange.max);
+          })
+          .groupBy('listing.id');
+      }
+      // if (has(filter, 'weights') && filter.weights.length > 0) {
+      //   queryBuilder
+      //     .withGraphJoined('listing_cost')
+      //     .where(function() {
+      //       this.whereIn('listing_cost.weight', filter.weights);
+      //     })
+      //     .groupBy('listing.id');
+      // }
+      if (has(filter, 'weights') && Array.isArray(filter.weights) && filter.weights.length > 0) {
+        queryBuilder
+          .where(function() {
+            this.whereIn(
+              'listing_cost.weight',
+              filter.weights.map(w => w.weight)
+            );
+          })
+          .groupBy('listing.id');
+      }
+      if (has(filter, 'flavours') && Array.isArray(filter.flavours) && filter.flavours.length > 0) {
+        queryBuilder
+          .where(function() {
+            this.whereIn(
+              'listing_cost.flavour',
+              filter.flavours.map(w => w.flavour)
+            );
+          })
+          .groupBy('listing.id');
+      }
     }
+    queryBuilder
+      .from('listing')
+      .leftJoin('listing_cost', 'listing_cost.listing_id', 'listing.id')
+      .groupBy('listing.id');
 
     const allListings = camelizeKeys(await queryBuilder);
     const total = allListings.length;
     const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
-    console.log(res);
+    // console.log(res);
     return { listings: res, total };
   }
 
@@ -215,7 +282,6 @@ export default class ListingDAO extends Model {
 
   public async addOrRemoveListingBookmark(listingId: number, userId: number) {
     const status = await this.listingBookmarkStatus(listingId, userId);
-    console.log('status1', status);
     if (status) {
       await ListingBookmark.query()
         .where('listing_id', '=', listingId)

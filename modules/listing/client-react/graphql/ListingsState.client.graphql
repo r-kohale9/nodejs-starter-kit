@@ -4,6 +4,19 @@ fragment ListingsStateInfo on ListingsState {
     order
   }
   filter {
+    priceRange {
+      min
+      max
+    }
+    weights {
+      weight
+    }
+    categories {
+      category
+    }
+    flavours {
+      flavours
+    }
     category
     searchText
   }

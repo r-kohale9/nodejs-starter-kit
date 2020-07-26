@@ -8,7 +8,7 @@ type Listing {
   description: String
   isActive: Boolean
   listingImages: [ListingImages]
-  listingCost: ListingCost
+  listingCost: [ListingCost]
   createdAt: String!
   updatedAt: String!
 }
@@ -21,6 +21,7 @@ type ListingImages {
 
 type ListingCost {
   id: Int
+  flavour: String
   weight: String
   listingId: Int
   cost: Int
@@ -74,7 +75,25 @@ input OrderByListInput {
   order: String
 }
 
+input PriceRangeInput {
+  min: Int
+  max: Int
+}
+input WeightInput {
+  weight: String
+}
+input FlavourInput {
+  flavour: String
+}
+input CatogriesInput {
+  category: String
+}
+
 input FilterListInput {
+  priceRange: PriceRangeInput
+  weights: [WeightInput]
+  flavours: [FlavourInput]
+  categories: [CatogriesInput]
   category: String
   isActive: Boolean
   searchText: String

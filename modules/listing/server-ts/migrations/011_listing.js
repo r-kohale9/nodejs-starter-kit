@@ -89,6 +89,7 @@ exports.up = function(knex) {
           .inTable('listing')
           .onDelete('CASCADE');
         table.string('weight');
+        table.string('flavour');
         table.integer('cost');
         table.timestamps(false, true);
       })

@@ -6,10 +6,12 @@ import { Form, FormItem, Select, Option, Label, Input } from '@gqlapp/look-clien
 import { CATEGORY } from '@gqlapp/demo-client-react/containers/Constants';
 
 const ListingsFilterView = ({
-  filter: { searchText, state, isActive },
+  filter: { searchText, state, isActive, priceRange },
   onIsActiveChange,
   onSearchTextChange,
   onCategoryChange,
+  onPriceRangeMinChange,
+  onPriceRangeMaxChange,
   t
 }) => (
   <Form layout="inline">
@@ -45,6 +47,26 @@ const ListingsFilterView = ({
         {t('users.list.item.active')}
       </Label>
     </FormItem>
+    <FormItem label={t('listings.list.item.filter.range.min')}>
+      <DebounceInput
+        minLength={2}
+        debounceTimeout={300}
+        placeholder={t('listings.list.item.search.range.min')}
+        element={Input}
+        value={priceRange && priceRange.min}
+        onChange={e => onPriceRangeMinChange(e.target.value)}
+      />
+    </FormItem>
+    <FormItem label={t('listings.list.item.filter.range.max')}>
+      <DebounceInput
+        minLength={2}
+        debounceTimeout={300}
+        placeholder={t('listings.list.item.search.range.max')}
+        element={Input}
+        value={priceRange && priceRange.max}
+        onChange={e => onPriceRangeMaxChange(e.target.value)}
+      />
+    </FormItem>
   </Form>
 );
 
@@ -53,6 +75,8 @@ ListingsFilterView.propTypes = {
   onSearchTextChange: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   onIsActiveChange: PropTypes.func.isRequired,
+  onPriceRangeMinChange: PropTypes.func.isRequired,
+  onPriceRangeMaxChange: PropTypes.func.isRequired,
   t: PropTypes.func
 };
 

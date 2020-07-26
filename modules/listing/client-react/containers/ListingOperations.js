@@ -1,5 +1,6 @@
 import { graphql } from 'react-apollo';
 import { PLATFORM, removeTypename } from '@gqlapp/core-common';
+import _ from 'lodash';
 import update from 'immutability-helper';
 import { message } from 'antd';
 
@@ -42,8 +43,33 @@ const withCurrentUser = Component =>
 const withListings = Component =>
   graphql(LISTINGS_QUERY, {
     options: ({ orderBy, filter }) => {
+      filter &&
+        (filter.weights = Array.isArray(filter && filter.weights)
+          ? filter && filter.weights
+          : _.isEmpty(filter && filter.weights)
+          ? []
+          : Object.values(filter && filter.weights));
+      filter &&
+        (filter.categories = Array.isArray(filter && filter.categories)
+          ? filter && filter.categories
+          : _.isEmpty(filter && filter.categories)
+          ? []
+          : Object.values(filter && filter.categories));
+      filter &&
+        (filter.flavours = Array.isArray(filter && filter.flavours)
+          ? filter && filter.flavours
+          : _.isEmpty(filter && filter.flavours)
+          ? []
+          : Object.values(filter && filter.flavours));
+
+      console.log('filter', filter);
       return {
-        variables: { limit: limit, after: 0, orderBy, filter },
+        variables: {
+          limit: limit,
+          after: 0,
+          orderBy,
+          filter
+        },
         fetchPolicy: 'network-only'
       };
     },
@@ -564,8 +590,41 @@ const withUpdateListingsFilter = Component =>
         mutate({ variables: { filter: { category } } });
       },
       onIsActiveChange(isActive) {
-        console.log('object', isActive);
         mutate({ variables: { filter: { isActive } } });
+      },
+      onPriceRangeMinChange(min) {
+        mutate({
+          variables: {
+            filter: {
+              priceRange: { min: Number(min), __typename: 'PriceRangeInput' }
+            }
+          }
+        });
+      },
+      onPriceRangeMaxChange(max) {
+        mutate({
+          variables: {
+            filter: {
+              priceRange: { max: Number(max), __typename: 'PriceRangeInput' }
+            }
+          }
+        });
+      },
+      onFilterChange(filter) {
+        mutate({
+          variables: {
+            filter: {
+              flavours: filter.flavours,
+              weights: filter.weights,
+              categories: filter.categories,
+              priceRange: {
+                min: Number(filter.priceRange.min),
+                max: Number(filter.priceRange.max),
+                __typename: 'PriceRangeInput'
+              }
+            }
+          }
+        });
       }
     })
   })(Component);

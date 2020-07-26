@@ -1,5 +1,7 @@
 import { returnId, truncateTables } from '@gqlapp/database-server-ts';
-import { CATEGORY, WEIGHTS } from '@gqlapp/demo-client-react/containers/Constants';
+import { CATEGORY, WEIGHTS, FLAVOURS, MINVAL, MAXVAL } from '@gqlapp/demo-client-react/containers/Constants';
+
+const LENGTH = WEIGHTS.length > FLAVOURS.length ? FLAVOURS.length : WEIGHTS.length;
 
 exports.seed = async function(knex) {
   await truncateTables(knex, Promise, ['listing', 'listing_image', 'listing_cost']);
@@ -23,12 +25,16 @@ exports.seed = async function(knex) {
           });
         })
       );
+      const pick = Math.floor(Math.random() * LENGTH) + 1;
+      const RANDOMWEIGHTS = WEIGHTS.sort(() => 0.5 - Math.random()).slice(0, pick + 1);
+      const RANDOMFLAVOURS = FLAVOURS.sort(() => 0.5 - Math.random()).slice(0, pick + 1);
       await Promise.all(
-        [...Array(WEIGHTS.length).keys()].map(async w => {
+        [...Array(RANDOMWEIGHTS.length).keys()].map(async w => {
           await returnId(knex('listing_cost')).insert({
             listing_id: listing[0],
-            weight: WEIGHTS[w],
-            cost: Math.floor(Math.random() * (999 - 100 + 1) + 100)
+            weight: RANDOMWEIGHTS[w],
+            flavour: RANDOMFLAVOURS[w],
+            cost: Math.floor(Math.random() * (MAXVAL - MINVAL + 1) + MINVAL)
           });
         })
       );
