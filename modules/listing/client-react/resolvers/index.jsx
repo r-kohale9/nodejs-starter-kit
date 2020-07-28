@@ -15,9 +15,10 @@ const defaults = {
       __typename: TYPE_LISTINGS_STATE_ORDER_BY
     },
     filter: {
+      default: true,
       priceRange: {
-        min: 0,
-        max: 0,
+        min: 100,
+        max: 1000,
         __typename: TYPE_LISTINGS_STATE_FILTER_PRICE_RANGE
       },
       weights: [],

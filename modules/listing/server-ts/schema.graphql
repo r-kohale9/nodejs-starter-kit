@@ -90,6 +90,7 @@ input CatogriesInput {
 }
 
 input FilterListInput {
+  default: Boolean
   priceRange: PriceRangeInput
   weights: [WeightInput]
   flavours: [FlavourInput]

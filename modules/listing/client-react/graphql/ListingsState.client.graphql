@@ -4,6 +4,8 @@ fragment ListingsStateInfo on ListingsState {
     order
   }
   filter {
+    isActive
+    default
     priceRange {
       min
       max

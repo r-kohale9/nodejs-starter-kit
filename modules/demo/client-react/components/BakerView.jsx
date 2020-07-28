@@ -18,7 +18,7 @@ const renderMetaData = t => (
 );
 
 const BakerView = props => {
-  const { listings, loading, t, baker, categorySlick, history, onCategoryChange } = props;
+  const { listings, loading, t, baker, filter, categorySlick, history, onCategoryChange } = props;
 
   const renderFunc = (key, item) => <RelatedCardComponent key={item.id} listing={item} />;
   const RenderReviews = () => (
@@ -44,7 +44,7 @@ const BakerView = props => {
       {renderMetaData(t)}
       {baker && <UserDisplayDetailComponent history={history} user={baker} />}
       <div style={{ margin: '35px 0px 27px 0px' }}>
-        <CategorySlick data={categorySlick} setCategory={onCategoryChange} />
+        <CategorySlick data={categorySlick} setCategory={onCategoryChange} filter={filter} />
       </div>
       <div style={{ height: '36px', width: '100%' }} />
       {loading && <Spin />}

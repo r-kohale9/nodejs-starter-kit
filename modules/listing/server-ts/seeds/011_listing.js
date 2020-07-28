@@ -13,7 +13,7 @@ exports.seed = async function(knex) {
         title: `Listing ${ii + 1}`,
         description: `This is listing ${ii +
           1}. Short dress in soft cotton jersey with decorative buttons down the front and a wide, frill-trimmed square neckline with concealed elastication. Elasticated seam under the bust and short puff sleeves with a small frill trim.`,
-        is_active: Math.random() < 0.6 ? false : true,
+        is_active: Math.random() < 0.8 ? true : false,
         category: CATEGORY[Math.floor(Math.random() * CATEGORY.length)],
         rating: (Math.random() * (5.0 - 1.0 + 1.0) + 1.0).toFixed(1)
       });

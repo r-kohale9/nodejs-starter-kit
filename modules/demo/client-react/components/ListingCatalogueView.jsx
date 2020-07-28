@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spin, Icon } from 'antd';
+import { Row, Col, Spin, Icon } from 'antd';
 import { PropTypes } from 'prop-types';
 import PageLayout from './PageLayout';
 import SuggestedListComponent from './SuggestedListComponent';
@@ -19,15 +19,25 @@ const ListingCatalogueView = props => {
   return (
     <>
       <PageLayout showMenuBar={true} selectedTab="HOME" history={history}>
-        <HomeSlick data={homeSlick} />
-        <CategoryIconSlick data={categorySlick} />
-        <div onClick={() => history.push('/demo/filters')}>
-          <p style={{ display: 'inline-flex' }}>
-            <Icon type="filter" style={{ fontSize: '20px', paddingRight: '5px' }} />
-            Filters
-          </p>
-        </div>
-        {users && users.totalCount ? <RenderUsers /> : !loading ? <Spin /> : null}
+        <Row type="flex">
+          <Col span={24}>
+            <HomeSlick data={homeSlick} />
+          </Col>
+          <Col span={24}>
+            <CategoryIconSlick data={categorySlick} />
+          </Col>
+          <Col span={24}>
+            <div onClick={() => history.push('/demo/filters')}>
+              <Row type="flex" justify="end">
+                <p style={{ display: 'inline-flex' }}>
+                  <Icon type="filter" style={{ fontSize: '20px', paddingRight: '5px' }} />
+                  Filters
+                </p>
+              </Row>
+            </div>
+          </Col>
+          <Col span={24}>{users && users.totalCount ? <RenderUsers /> : !loading ? <Spin /> : null}</Col>
+        </Row>
       </PageLayout>
     </>
   );

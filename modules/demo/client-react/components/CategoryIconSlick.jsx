@@ -23,11 +23,12 @@ const CategoryIconSlick = props => {
     infinite: true,
     speed: 500,
     arrows: false,
-    variableWidth: true,
+    // variableWidth: true,
+    slidesToShow: 4.2,
     slidesToScroll: 2
   };
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div style={{ marginTop: '10px', marginBottom: '20px' }}>
       <Slider {...settings}>
         {data.map(slick => {
           const { icon: Icon, category } = slick;

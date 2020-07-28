@@ -30,7 +30,7 @@ const OptDiv = styled.div`
 `;
 
 const FiltersView = props => {
-  const { history, values, setFieldValue, onFilterChange, handleSubmit } = props;
+  const { history, values, setFieldValue, onFilterChange, handleSubmit, onFilterReset } = props;
   const [minVal, setMinVal] = useState(values && values.priceRange && values.priceRange.min);
   const [maxVal, setMaxVal] = useState(MAXVAL);
 
@@ -60,6 +60,11 @@ const FiltersView = props => {
   //     ? setFieldValue('flavours', [...values.flavours, { flavour: flavour, __typename: 'FlavourInput' }])
   //     : setFieldValue('flavours', values.flavours.splice(index, 0));
   // };
+
+  const handleDiscard = () => {
+    onFilterReset();
+    history.push('/demo/home');
+  };
 
   const marks = {
     100: {
@@ -144,7 +149,7 @@ const FiltersView = props => {
       <Fixed>
         <Row gutter={[23, 0]}>
           <Col span={12}>
-            <Button type="tertiary" block onClick={() => history.push('/demo/home')}>
+            <Button type="tertiary" block onClick={handleDiscard}>
               Discard
             </Button>
           </Col>
@@ -171,7 +176,7 @@ const FiltersWithFormik = withFormik({
       min: (props.filter && props.filter.priceRange && props.filter.priceRange.min) || MINVAL,
       max: (props.filter && props.filter.priceRange && props.filter.priceRange.max) || MAXVAL
     },
-    categories: (props.filter && props.filter.category) || [],
+    categories: (props.filter && props.filter.categories) || [],
     weights: (props.filter && props.filter.weights) || [],
     flavours: (props.filter && props.filter.flavours) || []
   }),
