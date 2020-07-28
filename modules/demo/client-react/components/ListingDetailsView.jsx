@@ -6,7 +6,6 @@ import { withFormik } from 'formik';
 
 import { required, validate } from '@gqlapp/validation-common-react';
 
-import PageLayout from './PageLayout';
 import SelectModal from './SelectModal';
 import AddToCart from './AddToCart';
 import PreOrderComponent from './PreOrderComponent';
@@ -19,11 +18,9 @@ const ListingDetailsViewFormSchema = {
 
 const ListingDetailsView = props => {
   const {
-    flavours,
     currentUser,
     loading,
     handleBookmark,
-    weights,
     listing,
     history,
     values,
@@ -33,6 +30,21 @@ const ListingDetailsView = props => {
   } = props;
   const { preOrder } = props.location;
   const [preOrd, setPreOrd] = useState(preOrder);
+  const [weights, setWeights] = useState(listing.listingCost.map(lc => lc.weight));
+  const [flavours, setFlavours] = useState(listing.listingCost.map(lc => lc.flavour));
+
+  const handleSelect = (name, value) => {
+    value !== '' &&
+      (name === 'weight' && setFlavours(listing.listingCost.filter(lc => lc.weight === value).map(lc => lc.flavour)),
+      name === 'flavour' && setWeights(listing.listingCost.filter(lc => lc.flavour === value).map(lc => lc.weight)));
+    value === '' &&
+      (name === 'weight' &&
+        values.flavour === '' &&
+        (setWeights(listing.listingCost.map(lc => lc.weight)), setFlavours(listing.listingCost.map(lc => lc.flavour))),
+      name === 'flavour' &&
+        values.weight === '' &&
+        (setWeights(listing.listingCost.map(lc => lc.weight)), setFlavours(listing.listingCost.map(lc => lc.flavour))));
+  };
 
   const settings = {
     infinite: true,
@@ -43,92 +55,99 @@ const ListingDetailsView = props => {
   };
   return (
     <>
-      <PageLayout history={history} showMenuBar={false} title={listing && listing.title}>
-        {!loading && listing ? (
-          <Row align="middle" type="flex" justify="space-between">
-            <Col span={24}>
-              <Slider {...settings}>
-                {listing &&
-                  listing.listingImages.map(listImg => (
-                    <Row align="middle" type="flex" justify="center">
-                      <Col span={24}>
-                        <img style={{ width: '100%' }} alt="" src={listImg.imageUrl} />
-                      </Col>
-                    </Row>
-                  ))}
-              </Slider>
-            </Col>
-            <Col span={24}>
-              <Row type="flex" align="middle" justify="space-between">
-                <Col span={10}>
-                  <Row type="flex" justify="start">
-                    <SelectModal
-                      name="weight"
-                      title="Weight"
-                      fields={weights}
-                      value={values.weight}
-                      info="Weight info"
-                      handleField={setFieldValue}
-                    />
-                  </Row>
-                </Col>
-                <Col span={10}>
-                  <Row type="flex" justify="center">
-                    <SelectModal
-                      name="flavour"
-                      title="Flavour"
-                      fields={flavours}
-                      value={values.flavour}
-                      info="Flavour info"
-                      handleField={setFieldValue}
-                    />
-                  </Row>
-                </Col>
-                <Col span={2}>
-                  <Row type="flex" justify="end">
-                    <BookmarkComponent
-                      handleBookmark={() => handleBookmark(listing.id, currentUser.id)}
-                      listing={listing}
-                      currentUser={currentUser}
-                    />
-                  </Row>
-                </Col>
+      <Row align="middle" type="flex" justify="space-between">
+        <Col span={24}>
+          <Slider {...settings}>
+            {listing &&
+              listing.listingImages.map(listImg => (
+                <Row align="middle" type="flex" justify="center">
+                  <Col span={24}>
+                    <img style={{ width: '100%' }} alt="" src={listImg.imageUrl} />
+                  </Col>
+                </Row>
+              ))}
+          </Slider>
+        </Col>
+        <Col span={24}>
+          <Row type="flex" align="middle" justify="space-between">
+            <Col span={10}>
+              <Row type="flex" justify="start">
+                <SelectModal
+                  name="weight"
+                  title="Weight"
+                  fields={weights}
+                  value={values.weight}
+                  info="Weight info"
+                  onSelect={handleSelect}
+                  handleField={setFieldValue}
+                />
               </Row>
             </Col>
-            <Col span={24}>
-              <Col span={18}>
-                <Row type="flex" justify="start">
-                  <h2>
-                    <strong>{listing.title}</strong>
-                  </h2>
-                </Row>
-              </Col>
-              <Col span={6}>
-                <Row type="flex" justify="end">
-                  <h2>
-                    <strong>Rs. {listing.listingCost.cost}</strong>
-                  </h2>
-                </Row>
-              </Col>
+            <Col span={10}>
+              <Row type="flex" justify="center">
+                <SelectModal
+                  name="flavour"
+                  title="Flavour"
+                  fields={flavours}
+                  value={values.flavour}
+                  info="Flavour info"
+                  onSelect={handleSelect}
+                  handleField={setFieldValue}
+                />
+              </Row>
             </Col>
-            <Col span={24}>
-              <span>{listing.category}</span>
+            <Col span={2}>
+              <Row type="flex" justify="end">
+                <BookmarkComponent
+                  handleBookmark={() => handleBookmark(listing.id, currentUser.id)}
+                  listing={listing}
+                  currentUser={currentUser}
+                />
+              </Row>
             </Col>
-            <Col span={24}>
-              <Rate style={{ fontSize: '15px' }} disabled defaultValue={listing.rating} /> {`(${listing.rating})`}
-            </Col>
-            <Col span={24}>
-              <p>{listing.description}</p>
-            </Col>
-            {preOrd && (
-              <PreOrderComponent visible={preOrd} handleVisible={() => setPreOrd(false)} info="Flavour info" />
-            )}
-            <Col span={24} style={{ padding: '45px' }} />
           </Row>
-        ) : (
-          <Spin />
+        </Col>
+        <Col span={24}>
+          <Col span={18}>
+            <Row type="flex" justify="start">
+              <h2>
+                <strong>{listing.title}</strong>
+              </h2>
+            </Row>
+          </Col>
+          <Col span={6}>
+            <Row type="flex" justify="end">
+              <h2>
+                <strong>
+                  Rs.{' '}
+                  {values.weight !== '' && values.flavour !== ''
+                    ? listing.listingCost.filter(lc => lc.weight === values.weight && lc.flavour === values.flavour)[0]
+                        .cost
+                    : listing.listingCost[0].cost}
+                </strong>
+              </h2>
+            </Row>
+          </Col>
+        </Col>
+        <Col span={24}>
+          <span>{listing.category}</span>
+        </Col>
+        <Col span={24}>
+          <Rate style={{ fontSize: '15px' }} disabled defaultValue={listing.rating} /> {`(${listing.rating})`}
+        </Col>
+        <Col span={24}>
+          <p>{listing.description}</p>
+        </Col>
+        {preOrd && (
+          <PreOrderComponent
+            visible={preOrd}
+            onSelect={handleSelect}
+            handleVisible={() => setPreOrd(false)}
+            info="Flavour info"
+          />
         )}
-      </PageLayout>
+        <Col span={24} style={{ padding: '45px' }} />
+      </Row>
       <AddToCart onSubmit={() => handleSubmit(values)} disabled={!isValid} />
     </>
   );

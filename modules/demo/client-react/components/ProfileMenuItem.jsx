@@ -14,7 +14,7 @@ const ProfileMenuItem = props => {
     <Link to={link}>
       <div style={{ height: '72px' }}>
         <Row justify="space-around" align="middle" type="flex">
-          <Col span={20}>
+          <Col span={23}>
             <Row>
               <Col span={24}>
                 <h3>
@@ -26,7 +26,7 @@ const ProfileMenuItem = props => {
               </Col>
             </Row>
           </Col>
-          <Col span={3}>
+          <Col span={1}>
             <Icon type="right" />
           </Col>
         </Row>

@@ -225,8 +225,8 @@ export default class OrderDAO extends Model {
         .where('consumer_id', input.consumerId)
         .where('state', STATES.STALE)
     )[0];
-
-    console.log('input', input);
+    console.log('ids', ids);
+    // console.log('input', input);
     if (!cart) {
       // Create a STALE order
       input.orderId = await returnId(knex('order')).insert({
@@ -235,14 +235,15 @@ export default class OrderDAO extends Model {
         shipping_address_id: ids.shippingAddressId,
         state: STATES.STALE
       });
+      console.log('input', input);
     } else {
-      console.log('input', input, cart);
+      // console.log('input', input, cart);
       input.orderDetail.orderId = cart.id;
     }
 
-    console.log(input);
+    console.log('bleh', input);
     const newOrderDetail = camelizeKeys(await OrderDetail.query().insert(decamelizeKeys(input.orderDetail)));
-    console.log('coooooooooooooooooooooooooooooooooooo', newOrderDetail);
+    // console.log('coooooooooooooooooooooooooooooooooooo', newOrderDetail);
     return true;
   }
 

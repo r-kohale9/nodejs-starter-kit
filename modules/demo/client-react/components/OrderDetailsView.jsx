@@ -16,7 +16,7 @@ import { Text, StatusText, Number } from './StyledComponents';
 const totalAmount = orderDetails => {
   let price = 0;
   orderDetails.map(item => {
-    price = price + (item && item.listing.listingCost.cost) * (item && item.unit);
+    price = price + (item && item.listing.listingCost[0].cost) * (item && item.unit);
   });
   return price;
 };
@@ -38,7 +38,7 @@ const OrderDetailsView = props => {
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  <Text>{order.date}</Text>
+                  <Text>{order.createdAt}</Text>
                 </Row>
               </Col>
             </Row>

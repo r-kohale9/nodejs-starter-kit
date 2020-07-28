@@ -21,8 +21,8 @@ const StatusNtActvBtn = styled(Button)`
 `;
 
 const MyOrdersView = props => {
-  const { userOrders, loading, history, orderStatusSlick, onStateChange } = props;
-  const [status, setStatus] = useState('Delivered');
+  const { userOrders, loading, history, filter, orderStatusSlick, onStateChange } = props;
+  const [status, setStatus] = useState(filter && filter.state !== '' ? filter.state : 'Delivered');
   const handleFilterChange = stat => {
     onStateChange(stat);
     setStatus(stat);

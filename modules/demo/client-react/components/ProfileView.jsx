@@ -7,11 +7,11 @@ import PageLayout from './PageLayout';
 import { PgTitle } from './StyledComponents';
 
 const ProfileView = props => {
-  const { history, user, menu } = props;
+  const { history, currentUser, menu } = props;
   return (
-    <PageLayout history={history} showMenuBar={true}>
+    <PageLayout history={history} showMenuBar={true} selectedTab="PROFILE">
       <PgTitle>My profile</PgTitle>
-      <ProfileComponenet user={user} />
+      <ProfileComponenet user={currentUser} />
       {menu && menu.map(data => <ProfileMenuItem data={data} />)}
     </PageLayout>
   );
@@ -19,7 +19,7 @@ const ProfileView = props => {
 
 ProfileView.propTypes = {
   history: PropTypes.object,
-  user: PropTypes.object,
+  currentUser: PropTypes.object,
   menu: PropTypes.array
 };
 

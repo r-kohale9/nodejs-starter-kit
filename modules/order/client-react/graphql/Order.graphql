@@ -26,6 +26,7 @@ fragment OrderInfo on Order {
     # additionalCustomization
     unit
     weight
+    flavour
     listing {
       ...ListingInfo
     }

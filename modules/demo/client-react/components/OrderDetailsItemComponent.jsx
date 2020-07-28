@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 
 import { Text } from './StyledComponents';
+import { getListingCost } from './CalcFunc';
 
 const TextGrey = styled(Text)`
   font-size: 12px;
@@ -28,7 +29,6 @@ const OrderDetailsItemComponent = props => {
         padding: '0px'
       }}
     >
-      {console.log('props', props)}
       <Row type="flex" justify="" align="middle">
         <Col span={8}>
           <div style={{ height: '104px', overflow: 'hidden' }}>
@@ -70,7 +70,7 @@ const OrderDetailsItemComponent = props => {
                 </Col>
                 <Col span={12}>
                   <Row type="flex" justify="end">
-                    Rs. {listing.listingCost.cost}
+                    Rs. {getListingCost(item)}
                   </Row>
                 </Col>
               </Row>

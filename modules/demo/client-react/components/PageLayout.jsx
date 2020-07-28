@@ -70,7 +70,13 @@ class PageLayout extends React.Component {
           id="content"
           className={
             (contentStyle.length !== 0 && contentStyle[0].outerClassName) ||
-            (typeof title === 'undefined' ? 'content-layout content-layout-white' : 'content-layout')
+            (typeof title === 'undefined'
+              ? showMenuBar
+                ? 'content-layout content-layout-white padBot60'
+                : 'content-layout content-layout-white'
+              : showMenuBar
+              ? 'content-layout padBot60'
+              : 'content-layout')
           }
         >
           {children}

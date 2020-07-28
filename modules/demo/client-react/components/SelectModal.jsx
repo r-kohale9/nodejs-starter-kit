@@ -6,11 +6,12 @@ import ModalComponent from './ModalComponent';
 import { Divider } from './StyledComponents';
 
 const SelectModal = props => {
-  const { name, title, fields, info, value, handleField } = props;
+  const { name, title, fields, info, value, handleField, onSelect } = props;
   const [visible, setVisible] = useState(false);
 
   const handleSelect = value => {
-    handleField(name, value);
+    props.value === value ? handleField(name, '') : handleField(name, value);
+    props.value === value ? onSelect(name, '') : onSelect(name, value);
     setVisible(false);
   };
 

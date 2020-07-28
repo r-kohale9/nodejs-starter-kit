@@ -8,6 +8,7 @@ import PageLayout from './PageLayout';
 
 import Danzo from '../Icons/dunzo.svg';
 import Swiggy from '../Icons/swiggy.svg';
+import { totalAmount } from './CalcFunc';
 import { Text, Number } from './StyledComponents';
 
 const LogoCard = styled.div`
@@ -30,14 +31,6 @@ const DeliveryMetBtn = styled(Button)`
   height: auto;
   padding: 10px 20px;
 `;
-
-const totalAmount = orderDetails => {
-  let price = 0;
-  orderDetails.map(item => {
-    price = price + (item && item.listing.listingCost.cost) * (item && item.unit);
-  });
-  return price;
-};
 
 const CheckoutOrderView = props => {
   const { getCart, loading, onSubmit, history } = props;

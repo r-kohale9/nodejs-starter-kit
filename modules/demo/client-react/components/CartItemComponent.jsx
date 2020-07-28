@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 
+import { getListingCost } from './CalcFunc';
 import { DropDownButton } from './StyledComponents';
 
 const Text = styled.div`
@@ -82,7 +83,7 @@ const CartItemComponent = props => {
             <Row>
               <Col span={16}>
                 <p style={{ display: 'flex' }}>
-                  <Text>Flavour:</Text> <strong>{listing.flavour}</strong>
+                  <Text>Flavour:</Text> <strong>{item.flavour}</strong>
                 </p>
               </Col>
               <Col span={8}>
@@ -116,7 +117,7 @@ const CartItemComponent = props => {
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="end">
-                  <strong>Rs. {listing.listingCost.cost * units}</strong>
+                  <strong>Rs. {getListingCost(item) * units}</strong>
                 </Row>
               </Col>
             </Row>

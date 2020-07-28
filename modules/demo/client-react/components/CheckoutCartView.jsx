@@ -12,16 +12,7 @@ import PageLayout from './PageLayout';
 
 import { PgTitle } from './StyledComponents';
 
-const totalAmount = (orderDetails, values) => {
-  let price = 0;
-  orderDetails.map((item, indx) => {
-    price =
-      price +
-      Number(item && item.listing.listingCost.cost) *
-        Number(values && values.orderDetails[indx] && values.orderDetails[indx].unit);
-  });
-  return price;
-};
+import { totalAmount } from './CalcFunc';
 
 const Text = styled.span`
   font-size: 14px;

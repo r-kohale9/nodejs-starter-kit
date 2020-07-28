@@ -16,6 +16,7 @@ fragment ListingInfo on Listing {
   listingCost {
     id
     weight
+    flavour
     cost
   }
 }

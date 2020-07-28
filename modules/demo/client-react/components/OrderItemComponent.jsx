@@ -4,14 +4,8 @@ import { Card, Row, Col, Button } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import { Text, StatusText } from './StyledComponents';
+import { totalAmount } from './CalcFunc';
 
-const totalAmount = orderDetails => {
-  let price = 0;
-  orderDetails.map(item => {
-    price = price + (item && item.listing.listingCost.cost) * (item && item.unit);
-  });
-  return price;
-};
 const OrderItemComponent = props => {
   const { order, detailRoute } = props;
   // console.log('props', props);
@@ -54,7 +48,7 @@ const OrderItemComponent = props => {
         </Col>
         <Col span={24}>
           <Row>
-            <Col span={12}>
+            <Col span={10}>
               <Row type="flex" justify="start">
                 <p style={{ display: 'flex' }}>
                   <Text>Quantity:</Text>
@@ -64,7 +58,7 @@ const OrderItemComponent = props => {
                 </p>
               </Row>
             </Col>
-            <Col span={12}>
+            <Col span={14}>
               <Row type="flex" justify="end">
                 <p style={{ display: 'flex' }}>
                   <Text>Total Amount:</Text>
@@ -98,7 +92,8 @@ const OrderItemComponent = props => {
 };
 
 OrderItemComponent.propTypes = {
-  order: PropTypes.object
+  order: PropTypes.object,
+  detailRoute: PropTypes.func
 };
 
 export default OrderItemComponent;

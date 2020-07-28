@@ -29,6 +29,7 @@ type OrderDetail {
   # quantity: Int
   # noteFromCustomer: String
   # additionalCustomization: String
+  flavour: String
   weight: String
   unit: Int
   listing: Listing
@@ -111,6 +112,7 @@ input OrderDetailInput {
 
   # noteFromCustomer: String
   # additionalCustomization: String
+  flavour: String
   weight: String
   unit: Int
   listingId: Int

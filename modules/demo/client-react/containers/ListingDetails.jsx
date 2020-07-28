@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { compose } from '@gqlapp/core-common';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 
 import USER_QUERY from '@gqlapp/user-client-react/graphql/UserQuery.graphql';
 
@@ -17,12 +17,12 @@ import {
 import { useListingWithSubscription } from '@gqlapp/listing-client-react/containers/withSubscriptions';
 import ADD_TO_CART from '@gqlapp/order-client-react/graphql/AddToCart.graphql';
 
+import PageLayout from '../components/PageLayout';
+
 import ListingDetailsView from '../components/ListingDetailsView';
 
-import { FLAVOURS, WEIGHTS } from './Constants';
-
 const ListingDetails = props => {
-  const { updateQuery, subscribeToMore, listing, history, currentUser } = props;
+  const { loading, updateQuery, subscribeToMore, listing, history, currentUser } = props;
   const listingsUpdated = useListingWithSubscription(subscribeToMore, listing && listing.id);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const ListingDetails = props => {
     const obj = {
       consumerId: 1,
       orderDetail: {
-        // flavour: values.flavour,
+        flavour: values.flavour,
         weight: values.weight,
         unit: values.unit,
         listingId: values.listingId
@@ -62,13 +62,13 @@ const ListingDetails = props => {
   };
   console.log('props', props);
   return (
-    <ListingDetailsView
-      {...props}
-      handleBookmark={bookmarkListing}
-      flavours={FLAVOURS}
-      weights={WEIGHTS}
-      onSubmit={handleSubmit}
-    />
+    <PageLayout history={history} showMenuBar={false} title={listing && listing.title}>
+      {!loading && listing ? (
+        <ListingDetailsView {...props} handleBookmark={bookmarkListing} onSubmit={handleSubmit} />
+      ) : (
+        <Spin />
+      )}
+    </PageLayout>
   );
 };
 
