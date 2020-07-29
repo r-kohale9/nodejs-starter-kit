@@ -66,14 +66,13 @@ const withCurrentUser = Component =>
 const withListings = Component =>
   graphql(LISTINGS_QUERY, {
     options: ({ orderBy, filter }) => {
-      getFilter(filter);
       return {
         variables: {
           limit: limit,
           after: 0,
           orderBy,
-          filter:
-            !filter && filter.default ? filter : getFilter(removeTypename(resolvers.defaults.listingsState.filter))
+          filter: getFilter(filter)
+          // !filter && filter.default ? filter : getFilter(removeTypename(resolvers.defaults.listingsState.filter))
         },
         fetchPolicy: 'network-only'
       };
@@ -494,13 +493,13 @@ const withUserListingPagination = Component =>
       } else if (navigation) {
         id = navigation.state.params.id;
       }
-      getFilter(filter);
       return {
         variables: {
           limit: limit,
           after: 0,
           orderBy,
-          filter: filter.default ? getFilter(removeTypename(resolvers.defaults.listingsState.filter)) : filter,
+          filter: getFilter(filter),
+          // : filter.default ? getFilter(removeTypename(resolvers.defaults.listingsState.filter)) : filter,
           userId: Number(id)
         },
         fetchPolicy: 'network-only'
@@ -677,9 +676,7 @@ const withUpdateListingsFilter = Component =>
       onFilterReset() {
         mutate({
           variables: {
-            filter: {
-              default: true
-            }
+            filter: resolvers.defaults.listingsState.filter
           }
         });
       },
@@ -688,18 +685,18 @@ const withUpdateListingsFilter = Component =>
         delete resolvers.defaults.listingsState.filter.default;
         delete resolvers.defaults.listingsState.filter.isActive;
         delete resolvers.defaults.listingsState.filter.searchText;
-        console.log(
-          'object',
-          _.isEqual(getFilter(filter), getFilter(removeTypename(resolvers.defaults.listingsState.filter))),
-          getFilter(removeTypename(resolvers.defaults.listingsState.filter)),
-          getFilter(filter)
-        );
+        // console.log(
+        //   'object',
+        //   _.isEqual(getFilter(filter), getFilter(removeTypename(resolvers.defaults.listingsState.filter))),
+        //   getFilter(removeTypename(resolvers.defaults.listingsState.filter)),
+        //   getFilter(filter)
+        // );
         mutate({
           variables: {
             filter: {
-              default: _.isEqual(getFilter(filter), getFilter(removeTypename(resolvers.defaults.listingsState.filter)))
-                ? true
-                : false,
+              // default: _.isEqual(getFilter(filter), getFilter(removeTypename(resolvers.defaults.listingsState.filter)))
+              //   ? true
+              //   : false,
               flavours: filter.flavours,
               weights: filter.weights,
               categories: filter.categories,
