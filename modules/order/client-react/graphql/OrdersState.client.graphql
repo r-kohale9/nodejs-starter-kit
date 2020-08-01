@@ -5,6 +5,7 @@ fragment OrdersStateInfo on OrdersState {
   }
   filter {
     searchText
+    username
     state
   }
 }

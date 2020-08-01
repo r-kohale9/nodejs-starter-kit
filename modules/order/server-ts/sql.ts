@@ -104,6 +104,15 @@ export default class OrderDAO extends Model {
           this.where('state', filter.state);
         });
       }
+      if (has(filter, 'username') && filter.username !== '') {
+        queryBuilder
+          .from('order')
+          .leftJoin('user', 'user.id', 'order.consumer_id')
+          .where(function() {
+            // console.log('object', this.where('consumer_id', ))
+            this.where(raw('LOWER(??) LIKE LOWER(?)', ['user.username', `%${filter.username}%`]));
+        });
+      }
 
       // if (has(filter, 'searchText') && filter.searchText !== '') {
       //   queryBuilder

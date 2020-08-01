@@ -11,15 +11,16 @@ const defaults = {
     orderBy: {
       column: '',
       order: '',
-      __typename: TYPE_ORDERS_STATE_ORDER_BY
+      __typename: TYPE_ORDERS_STATE_ORDER_BY,
     },
     filter: {
       searchText: '',
+      username: '',
       state: '',
-      __typename: TYPE_ORDERS_STATE_FILTER
+      __typename: TYPE_ORDERS_STATE_FILTER,
     },
-    __typename: TYPE_ORDERS_STATE
-  }
+    __typename: TYPE_ORDERS_STATE,
+  },
 };
 
 const resolvers = {
@@ -28,14 +29,14 @@ const resolvers = {
       const { ordersState } = cache.readQuery({ query: ORDERS_STATE_QUERY });
 
       const newOrdersState = update(ordersState, {
-        orderBy: { $merge: orderBy }
+        orderBy: { $merge: orderBy },
       });
 
       cache.writeData({
         data: {
           ordersState: newOrdersState,
-          __type: TYPE_ORDERS_STATE
-        }
+          __type: TYPE_ORDERS_STATE,
+        },
       });
 
       return null;
@@ -44,22 +45,22 @@ const resolvers = {
       const { ordersState } = cache.readQuery({ query: ORDERS_STATE_QUERY });
 
       const newOrdersState = update(ordersState, {
-        filter: { $merge: filter }
+        filter: { $merge: filter },
       });
 
       cache.writeData({
         data: {
           ordersState: newOrdersState,
-          __type: TYPE_ORDERS_STATE
-        }
+          __type: TYPE_ORDERS_STATE,
+        },
       });
 
       return null;
-    }
-  }
+    },
+  },
 };
 
 export default {
   defaults,
-  resolvers
+  resolvers,
 };
