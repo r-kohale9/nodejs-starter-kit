@@ -2,13 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withRouter, NavLink } from 'react-router-dom';
-import { Drawer, Menu, Icon, Row, Col, Layout } from 'antd';
+
+import { Drawer, Menu, Layout } from 'antd';
 import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
+import { Row, Col } from '@gqlapp/look-client-react';
 
 import UserAvatar from '@gqlapp/user-client-react/containers/UserAvatar';
 import HOME_ROUTES from '@gqlapp/home-client-react/routes';
 import { CONTACT } from '@gqlapp/look-common/';
 
+import Icon from './Icon';
 import MenuItem from './MenuItem';
 import LoggedIn from '../auth/LoggedIn';
 import DropDown from './Dropdown';
@@ -70,12 +73,14 @@ class NavBar extends React.Component {
                   <Col span={10} />
                   <Col span={6}>
                     <BannerLink href={`tel: ${CONTACT.phone}`}>
-                      <Icon type="phone" /> {CONTACT.phone}
+                      <Icon type="PhoneOutlined" />
+                      {CONTACT.phone}
                     </BannerLink>
                   </Col>
                   <Col span={8}>
                     <BannerLink href={`mailto: ${CONTACT.mail}`} target="_blank" rel="noopener noreferrer">
-                      <Icon type="mail" /> {CONTACT.mail}
+                      <Icon type="MailOutlined" />
+                      {CONTACT.mail}
                     </BannerLink>
                   </Col>
                 </Row>
@@ -117,7 +122,7 @@ class NavBar extends React.Component {
                   >
                     {__DEV__ && (
                       <MenuItem>
-                        <DropDown type="deployment-unit">
+                        <DropDown type="DeploymentUnitOutlined">
                           {ref.modules.navItemsTest}
                           <MenuItem>
                             <a href="/graphiql">GraphiQL</a>
@@ -126,11 +131,11 @@ class NavBar extends React.Component {
                       </MenuItem>
                     )}
                     <MenuItem>
-                      <DropDown type="apartment">{ref.modules.navItemsBrowse}</DropDown>
+                      <DropDown type="ApartmentOutlined">{ref.modules.navItemsBrowse}</DropDown>
                     </MenuItem>
                     <LoggedIn role="admin">
                       <MenuItem>
-                        <DropDown type="safety-certificate">{ref.modules.navItemsAdmin}</DropDown>
+                        <DropDown type="SafetyCertificateOutlined">{ref.modules.navItemsAdmin}</DropDown>
                       </MenuItem>
                     </LoggedIn>
                   </Menu>
@@ -142,24 +147,26 @@ class NavBar extends React.Component {
                     selectedKeys={[this.props.location.pathname]}
                     mode="horizontal"
                     theme="light"
-                    style={{ lineHeight: '39px' }}
+                    className="navbar-menu"
                   >
-                    {ref.modules.navItems}
-                    {ref.modules.navItemsRight}
+                    <Row type="flex" justify="end">
+                      {ref.modules.navItems}
+                      {ref.modules.navItemsRight}
 
-                    <LoggedIn>
-                      <MenuItem>
-                        <DropDown content={<UserAvatar />} noicon>
-                          {ref.modules.navItemsUser}
-                        </DropDown>
-                      </MenuItem>
-                    </LoggedIn>
+                      <LoggedIn>
+                        <MenuItem>
+                          <DropDown content={<UserAvatar />} noicon>
+                            {ref.modules.navItemsUser}
+                          </DropDown>
+                        </MenuItem>
+                      </LoggedIn>
+                    </Row>
                   </Menu>
                 </Col>
                 <Col xs={12} md={12} lg={0}>
                   <div onClick={this.showDrawer} className="navbar-drawer-logo">
                     <Icon
-                      type="menu"
+                      type="MenuOutlined"
                       style={{
                         color: 'inherit',
                         fontSize: '20px',
@@ -187,14 +194,14 @@ class NavBar extends React.Component {
                   </div>
                 </LoggedIn>
                 {ref.modules.navItemsUser}
-                {/* {this.NavLinkMyInvitesWithI18n()} */}
                 {__DEV__ && (
                   <SubMenu
                     key="test"
                     style={{ color: 'black !important' }}
                     title={
                       <MenuItem>
-                        <Icon type="deployment-unit" /> Dev
+                        <Icon type="DeploymentUnitOutlined" />
+                        Dev
                       </MenuItem>
                     }
                   >
@@ -208,7 +215,7 @@ class NavBar extends React.Component {
                   key="admin"
                   title={
                     <MenuItem>
-                      <Icon type="apartment" /> Browse
+                      <Icon type="ApartmentOutlined" /> Browse
                     </MenuItem>
                   }
                 >
@@ -219,7 +226,8 @@ class NavBar extends React.Component {
                     key="admin"
                     title={
                       <MenuItem>
-                        <Icon type="safety-certificate" /> Admin
+                        <Icon type="SafetyCertificateOutlined" />
+                        Admin
                       </MenuItem>
                     }
                   >

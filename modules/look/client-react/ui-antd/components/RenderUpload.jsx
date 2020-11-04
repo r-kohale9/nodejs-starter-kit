@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Upload, Modal } from 'antd';
 
-import { Form, Upload, Modal, Icon } from 'antd';
+import { FormItem } from '@gqlapp/look-client-react';
 
-const FormItem = Form.Item;
+import Icon from './Icon';
 
 export default class RenderUpload extends React.Component {
   constructor(props) {
@@ -100,13 +101,13 @@ export default class RenderUpload extends React.Component {
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
       <div>
-        <Icon type="plus" />
+        <Icon type="PlusOutlined" />
         <div className="ant-upload-text">Upload</div>
       </div>
     );
 
     return (
-      <FormItem label={label} validateStatus={validateStatus}>
+      <FormItem label={label} validateStatus={validateStatus} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
         <div>
           <Upload
             action={cloudinary_url}

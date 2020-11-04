@@ -1,9 +1,9 @@
 import React from 'react';
-import { Steps, Col, Row } from 'antd';
+import { Steps } from 'antd';
 import { PropTypes } from 'prop-types';
 
 import settings from '@gqlapp/config';
-import { PageLayout, MetaTags } from '@gqlapp/look-client-react';
+import { PageLayout, MetaTags, Col, Row } from '@gqlapp/look-client-react';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 
 import ListingFormComponent from './ListingFormComponent.web';
@@ -14,13 +14,13 @@ const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
   const [step, setStep] = React.useState(0);
   const steps = [
     {
-      title: 'Details'
+      title: t('listAdd.steps.title1')
     },
     {
-      title: 'Flags'
+      title: t('listAdd.steps.title2')
     },
     {
-      title: 'Media'
+      title: t('listAdd.steps.title3')
     }
   ];
   return (
@@ -54,7 +54,7 @@ const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
             <ListingFormComponent
               step={step}
               setStep={setStep}
-              cardTitle="Add Listing"
+              cardTitle={t('listAdd.cardTitle')}
               listing={{ isActive: true }}
               t={t}
               onSubmit={onSubmit}

@@ -1,11 +1,14 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Button, Icon, Row, Col, Tooltip } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { translate } from '@gqlapp/i18n-client-react';
+
+import { Icon, Row, Col } from '@gqlapp/look-client-react';
 
 import ROUTES from '../routes';
 
 const AddToCartFormBtns = props => {
-  const { inCart, onSubmit, loading, disabled, onSubmitRedirect, onDelete, title, catalogueCard = false } = props;
+  const { t, inCart, onSubmit, loading, disabled, onSubmitRedirect, onDelete, title, catalogueCard = false } = props;
   const customGridLG = !catalogueCard
     ? {
         xs: 0,
@@ -23,7 +26,7 @@ const AddToCartFormBtns = props => {
     md: 24,
     lg: 0
   };
-
+  // console.log(props);
   return (
     <Tooltip title={title}>
       {inCart ? (
@@ -38,8 +41,8 @@ const AddToCartFormBtns = props => {
               ghost
               loading={loading}
             >
-              <Icon type="shopping" />
-              ADD TO CART
+              <Icon type="ShoppingOutlined" />
+              {t('addToCart.form.btn.add')}
             </Button>
           </Col>
           <Col {...customGridLG}>
@@ -51,8 +54,8 @@ const AddToCartFormBtns = props => {
               disabled={loading || disabled}
               loading={loading}
             >
-              BOOK NOW
-              <Icon type="shopping-cart" />
+              <Icon type="ShoppingCartOutlined" />
+              {t('addToCart.form.btn.book')}
             </Button>
           </Col>
           <Col {...customGridXS}>
@@ -65,12 +68,12 @@ const AddToCartFormBtns = props => {
               ghost
               loading={loading}
             >
-              <Icon type="shopping" />
-              ADD TO CART
+              <Icon type="ShoppingOutlined" />
+              {t('addToCart.form.btn.add')}
             </Button>
             <Button block type="primary" size="large" onClick={onSubmitRedirect} disabled={disabled}>
-              BOOK NOW
-              <Icon type="shopping-cart" />
+              <Icon type="ShoppingCartOutlined" />
+              {t('addToCart.form.btn.book')}
             </Button>
           </Col>
         </Row>
@@ -79,30 +82,30 @@ const AddToCartFormBtns = props => {
           {onDelete && (
             <Col {...customGridLG}>
               <Button size="large" onClick={onDelete} block disabled={disabled} type="danger" ghost>
-                <Icon type="delete" />
-                Remove from CART
+                <Icon type="DeleteOutlined" />
+                {t('addToCart.form.btn.remove')}
               </Button>
             </Col>
           )}
           <Col {...customGridLG}>
             <a href={`${ROUTES.checkoutCart}`}>
               <Button type="primary" size="large" block disabled={disabled}>
-                Go to CART
-                <Icon type="shopping-cart" />
+                {t('addToCart.form.btn.go')}
+                <Icon type="ShoppingCartOutlined" />
               </Button>
             </a>
           </Col>
           <Col {...customGridXS}>
             {onDelete && (
               <Button block size="large" onClick={onDelete} disabled={disabled} type="danger" ghost>
-                <Icon type="delete" />
-                Remove from CART
+                <Icon type="DeleteOutlined" />
+                {t('addToCart.form.btn.remove')}
               </Button>
             )}
             <a href={`${ROUTES.checkoutCart}`}>
               <Button block type="primary" size="large" disabled={disabled}>
-                Go to CART
-                <Icon type="shopping-cart" />
+                {t('addToCart.form.btn.go')}
+                <Icon type="ShoppingCartOutlined" />
               </Button>
             </a>
           </Col>
@@ -120,7 +123,8 @@ AddToCartFormBtns.propTypes = {
   onSubmitRedirect: PropTypes.func,
   onDelete: PropTypes.func,
   title: PropTypes.string,
-  catalogueCard: PropTypes.bool
+  catalogueCard: PropTypes.bool,
+  t: PropTypes.func
 };
 
-export default AddToCartFormBtns;
+export default translate('order')(AddToCartFormBtns);

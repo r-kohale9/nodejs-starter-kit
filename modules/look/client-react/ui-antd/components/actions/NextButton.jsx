@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 
+import Icon from '../Icon';
+
 class NextButton extends React.Component {
   render() {
     const { children = 'Next', color = 'primary', type, size, ...props } = this.props;
@@ -15,7 +17,7 @@ class NextButton extends React.Component {
     }
 
     return (
-      <Button type={color} htmlType={type} block size={buttonSize} icon="arrow-right" {...props}>
+      <Button type={color} htmlType={type} block size={buttonSize} icon={<Icon type="ArrowRightOutlined" />} {...props}>
         {children}
       </Button>
     );

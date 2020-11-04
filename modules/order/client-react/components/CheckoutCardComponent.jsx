@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Row, Col, Card, Divider } from 'antd';
+import { Card, Divider } from 'antd';
 
-import { NextButton } from '@gqlapp/look-client-react';
+import { NextButton, Col, Row } from '@gqlapp/look-client-react';
 
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 import CartItemComponent from './CartItemComponent';
@@ -15,14 +15,14 @@ const StatusText = styled.div`
   color: ${props => props.status === 'cancelled' && 'red'};
 `;
 
-const OrderCardComponent = props => {
-  const { getCart, SubmitButton, product, showBtn, btnDisabled, onSubmit, buttonText, showState } = props;
+const CheckoutCardComponent = props => {
+  const { getCart, SubmitButton, product, showBtn, btnDisabled, onSubmit, buttonText, showState, t } = props;
 
   return (
     <Card align="left" style={{ height: '100%' }}>
       <Row>
         <Col span={12}>
-          <h3 className="OrderHead">Order summary</h3>
+          <h3 className="OrderHead">{t('checkoutCard.orderSummary')}</h3>
         </Col>
         {showState && (
           <Col span={12} align="right">
@@ -41,15 +41,17 @@ const OrderCardComponent = props => {
         getCart.orderDetails &&
         getCart.orderDetails.length !== 0 &&
         getCart.orderDetails.map((item, key) => (
-          <>
-            <CartItemComponent inner={true} key={key} item={item} />
-            <Divider />
-          </>
+          <Row>
+            <Col span={24}>
+              <CartItemComponent inner={true} key={key} item={item} t={t} />
+              <Divider />
+            </Col>
+          </Row>
         ))}
       <hr />
       <br />
       <h3 className="OrderHead">
-        <u>Cart Summary</u>
+        <u>{t('checkoutCard.cartSummary')}</u>
       </h3>
       {/* {paid === true ? (
           <h3 className="lightText">
@@ -63,7 +65,7 @@ const OrderCardComponent = props => {
       <br />
       <div style={{ lineHeight: '12px' }}>
         <h3 className="rentAmount">
-          Total amount
+          {t('checkoutCard.total')}
           <h2 style={{ float: 'right' }}>
             &#8377;
             {` ${TotalPrice(getCart && getCart.orderDetails.length !== 0 && displayDataCheck(getCart.orderDetails))}`}
@@ -73,7 +75,8 @@ const OrderCardComponent = props => {
       {/* )} */}
       {getCart.paid === true ? (
         <h4 className="lightText">
-          You paid <strong className="colorFloat"> &#8377; {TotalPrice(getCart)}</strong>
+          {t('checkoutCard.youPaid')}
+          <strong className="colorFloat"> &#8377; {TotalPrice(getCart)}</strong>
           <h6 className="PaidMethodColor">{displayDataCheck(product.youPaid.method)}</h6>
         </h4>
       ) : null}
@@ -92,7 +95,7 @@ const OrderCardComponent = props => {
   );
 };
 
-OrderCardComponent.propTypes = {
+CheckoutCardComponent.propTypes = {
   getCart: PropTypes.object,
   SubmitButton: PropTypes.Component,
   product: PropTypes.object,
@@ -100,7 +103,8 @@ OrderCardComponent.propTypes = {
   showState: PropTypes.bool,
   btnDisabled: PropTypes.bool,
   onSubmit: PropTypes.func,
-  buttonText: PropTypes.string
+  buttonText: PropTypes.string,
+  t: PropTypes.func
 };
 
-export default OrderCardComponent;
+export default CheckoutCardComponent;

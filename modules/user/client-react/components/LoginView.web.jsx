@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
+  Row,
+  Icon,
+  Col,
   PageLayout,
   Card,
   CardGroup,
@@ -9,8 +12,7 @@ import {
   CardText,
   Button,
   Underline,
-  Icon,
-  MetaTags
+  MetaTags,
 } from '@gqlapp/look-client-react';
 
 import LoginForm from './LoginForm';
@@ -38,7 +40,8 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal, history }) => {
         <Card className="form-card">
           <Underline>
             <CardTitle>
-              <Icon type="login" /> {t('login.form.title')}
+              <Icon type="LoginOutlined" />
+              {t('login.form.title')}
             </CardTitle>
           </Underline>
           <LoginForm onSubmit={onSubmit} history={history} />
@@ -58,10 +61,12 @@ const LoginView = ({ onSubmit, t, isRegistered, hideModal, history }) => {
   return (
     <PageLayout type="forms">
       <MetaTags title={t('login.title')} description={t('login.meta')} />
-      <br />
-      <br />
-      <br />
-      <br />
+      <Row>
+        <Col lg={24} md={0} xs={0}>
+          <br />
+          <br />
+        </Col>
+      </Row>
       {renderContent()}
     </PageLayout>
   );
@@ -72,7 +77,7 @@ LoginView.propTypes = {
   t: PropTypes.func,
   isRegistered: PropTypes.bool,
   history: PropTypes.object,
-  hideModal: PropTypes.func
+  hideModal: PropTypes.func,
 };
 
 export default LoginView;

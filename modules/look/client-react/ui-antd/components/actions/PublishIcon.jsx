@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Popconfirm, Icon } from 'antd';
+import { Button, Popconfirm } from 'antd';
+
+import Icon from '../Icon';
 
 class PublishIcon extends React.Component {
   render() {
@@ -21,10 +23,10 @@ class PublishIcon extends React.Component {
     return (
       <Popconfirm
         title="Are you sure？"
-        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+        icon={<Icon type="QuestionCircleOutlined" style={{ color: 'red' }} />}
         onConfirm={onClick}
       >
-        <Button type={color} htmlType={type} size={buttonSize} icon={icon} shape="circle" {...props} />
+        <Button type={color} htmlType={type} size={buttonSize} icon={<Icon type={icon} />} shape="circle" {...props} />
       </Popconfirm>
     );
   }

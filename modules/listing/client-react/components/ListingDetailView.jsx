@@ -2,34 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import {
-  Row,
-  Col,
   Breadcrumb,
-  Divider,
-  Badge, // Card,
-  Descriptions,
-  // Avatar,
-  Statistic,
-  Carousel,
-  Icon,
-  // Tooltip,
+  Divider, // Card,
+  Badge,
+  Descriptions, // Avatar,
+  Carousel, // Tooltip,
   Tabs
 } from 'antd';
 
 import { translate } from '@gqlapp/i18n-client-react';
-import { MetaTags, PageLayout } from '@gqlapp/look-client-react';
+import { MetaTags, PageLayout, Row, Col } from '@gqlapp/look-client-react';
 import { IfLoggedIn } from '@gqlapp/user-client-react';
 import AddToCart from '@gqlapp/order-client-react/containers/AddToCart';
 import Review from '@gqlapp/review-client-react/containers/Review';
+import DiscountComponent from '@gqlapp/discount-client-react/containers/DiscountComponent';
+import DiscountComponentView from '@gqlapp/discount-client-react/components/DiscountComponentView';
 import { NO_IMG } from '@gqlapp/listing-common';
 import { ListingShareMessage } from '@gqlapp/listing-common/SocialSharingMessage';
 import HOME_ROUTES from '@gqlapp/home-client-react/routes';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
-import { LeftArrow, RightArrow } from '@gqlapp/look-client-react/ui-antd/components';
+import { Icon, LeftArrow, RightArrow } from '@gqlapp/look-client-react/ui-antd/components';
+import { MODAL } from '@gqlapp/review-common';
 
 import ListingsCarousel from './ListingCarousel';
 import BookmarkComponent from './BookmarkComponent';
-import CurrencyDisplay from './CurrencyDisplay';
 import SocialSharingButtons from './SocialSharingButtons';
 import { displayDataCheck } from './functions';
 
@@ -147,7 +143,7 @@ const ListingDetailView = props => {
               >
                 <BreadCrumbItem key="home">
                   <NavLink to={`${HOME_ROUTES.home}`}>
-                    <Icon type="home" />
+                    <Icon type="HomeOutlined" />
                   </NavLink>
                 </BreadCrumbItem>
                 <BreadCrumbItem key="listing-title">{listing && displayDataCheck(listing.title)}</BreadCrumbItem>
@@ -188,7 +184,7 @@ const ListingDetailView = props => {
                   {showArrow && <RightArrow nextSlide={nextSlide} />}
                 </div>
                 <div align="left" style={{ padding: '5px' }}>
-                  <h3>Details: </h3>
+                  <h3>{t('listingDetail.details')}</h3>
                   <p>{displayDataCheck(listing.description)}</p>
                 </div>
               </div>
@@ -215,58 +211,26 @@ const ListingDetailView = props => {
                   )}
                 </Col>
                 <Col lg={1} xs={3} align="right">
-                  <SocialSharingButtons {...message} onShare={onShare} />
+                  <SocialSharingButtons {...message} onShare={onShare} t={t} />
                 </Col>
               </Row>
               <br /> <p>{`SKU: ${listing && listing.sku}`}</p>
               <Divider style={{ margin: '10px 5px' }} />
               <Row>
-                <Col lg={8} md={12} xs={12}>
-                  {isDiscount
-                    ? cost && (
-                        <CurrencyDisplay
-                          style={{ display: 'inline' }}
-                          input={(cost - cost * (discount / 100)).toFixed(2)}
-                        />
-                      )
-                    : cost && <CurrencyDisplay input={cost.toFixed(2)} />}
+                <Col lg={16} md={24} xs={24}>
+                  {isDiscount ? (
+                    <DiscountComponentView t={t} isDiscount={isDiscount} discount={discount} cost={cost} />
+                  ) : (
+                    <DiscountComponent modalId={listing && listing.id} modalName={MODAL[1].value} cost={cost} />
+                  )}
                 </Col>
-                {isDiscount && (
-                  <Col lg={8} md={12} xs={12}>
-                    <Statistic
-                      title=""
-                      precision={2}
-                      valueStyle={{ color: '#cf1322' }}
-                      value={discount && discount.toFixed(2) ? discount.toFixed(2) : 0}
-                      suffix={'%'}
-                      prefix={<Icon type="arrow-down" />}
-                    />
-                  </Col>
-                )}
 
                 <Col lg={8} md={24} xs={24}>
                   <p style={{ fontSize: '16px', marginTop: '5px' }}>
-                    {`Availability: ${inventoryCount > 0 ? 'In Stock' : 'Out of Stock'}`}
+                    {`${t('listingDetail.availability')} ${
+                      inventoryCount > 0 ? t('listingDetail.inStock') : t('listingDetail.outOfStock')
+                    }`}
                   </p>
-                </Col>
-                <Col span={24}>
-                  {isDiscount && (
-                    <div style={{ display: 'flex' }}>
-                      <CurrencyDisplay input={cost.toFixed(2)} valueStyle={{ textDecoration: 'line-through' }} />
-                      &nbsp; &nbsp;
-                      <div style={{ lineHeight: '45px', display: 'flex' }}>
-                        <div style={{ fontSize: '15px' }}>
-                          <b>Saving Amount: &nbsp;</b>
-                        </div>
-                        {(cost.toFixed(2) - (cost - cost * (discount / 100)).toFixed(2)).toFixed(2)}
-                      </div>
-                    </div>
-                  )}
-                  <i>
-                    *Including GST
-                    <br /> *free shipping
-                    <br /> *certified
-                  </i>
                 </Col>
               </Row>
               <Divider />
@@ -313,7 +277,7 @@ const ListingDetailView = props => {
                 filter={{
                   isActive: true,
                   modalId: listing && listing.id,
-                  modalName: 'listing'
+                  modalName: MODAL[1].value
                 }}
                 showAdd={canUserReview}
                 currentUser={currentUser}

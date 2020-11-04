@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
+
 import { translate } from '@gqlapp/i18n-client-react';
 import { Form, RenderField, Row, Col, Label, SubmitButton } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
@@ -14,7 +15,7 @@ const PostCommentForm = ({ values, handleSubmit, comment, t }) => {
   return (
     <Form name="comment" onSubmit={handleSubmit}>
       <Row gutter="16">
-        <Col xs={8}>
+        <Col xs={16}>
           <Label>
             {t(`comment.label.${comment.id ? 'edit' : 'add'}`)} {t('comment.label.comment')}
           </Label>
@@ -26,7 +27,7 @@ const PostCommentForm = ({ values, handleSubmit, comment, t }) => {
             placeholder={t('comment.label.field')}
           />
         </Col>
-        <Col xs={2}>
+        <Col xs={4}>
           <br />
           <SubmitButton color="primary" type="submit" className="float-right">
             {t('comment.btn.submit')}

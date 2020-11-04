@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Icon, Checkbox, Empty, Divider } from 'antd';
+import { Card, Checkbox, Empty, Divider } from 'antd';
 
-import { PageLayout, NextButton, AddButton, MetaTags } from '@gqlapp/look-client-react';
+import { Icon, PageLayout, NextButton, AddButton, MetaTags, Row, Col } from '@gqlapp/look-client-react';
 // eslint-disable-next-line import/no-named-default
 import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
@@ -37,7 +37,7 @@ export function TotalPrice(cartArray) {
 const CheckoutCartView = props => {
   const [checkout, setCheckout] = React.useState(false);
 
-  const { history, cartLoading, onSubmit, getCart, onDelete, currentUser, onEdit } = props;
+  const { t, history, cartLoading, onSubmit, getCart, onDelete, currentUser, onEdit } = props;
 
   const cartLength = getCart && getCart.length;
 
@@ -49,64 +49,69 @@ const CheckoutCartView = props => {
       {!cartLoading &&
         (getCart && getCart.orderDetails.length > 0 ? (
           <div>
-            <Row>
-              <Col xl={{ span: 24, offset: 0 }} lg={24} xs={{ span: 24, offset: 0 }} align="center">
-                <CheckoutStepsComponent step={0} />
+            <Row type="flex">
+              <Col span={24} align="center">
+                <CheckoutStepsComponent step={0} t={t} />
+                <br />
+                <br />
               </Col>
-              <Col lg={{ span: 23, offset: 1 }} xs={{ span: 24, offset: 0 }}>
-                <Col lg={{ span: 24, offset: 0 }} xs={{ span: 24, offset: 5 }}>
-                  <Col lg={{ span: 8 }} xs={{ span: 24, offset: 0 }}>
+              <Col span={24}>
+                <Row type="flex" justify="center" align="middle">
+                  <Col lg={8} md={8} xs={24}>
                     <h2>
-                      <Icon type="shopping" />
-                      {' My cart - '} {cartLength} items
+                      <Icon type="ShoppingOutlined" />
+                      {t('checkoutCart.myCart')} {cartLength} items
                     </h2>
                   </Col>
-                  <Col lg={{ span: 8 }} xs={{ span: 24, offset: 0 }}>
-                    <h2>Order id - {displayDataCheck(getCart.id)}</h2>
-                  </Col>
-                  <Col lg={{ span: 8 }} xs={{ span: 24, offset: 0 }}>
+                  <Col lg={8} md={8} xs={24}>
                     <h2>
-                      Total price: <strong>&#8377; {TotalPrice(displayDataCheck(getCart.orderDetails))} </strong>
+                      {t('checkoutCart.orderId')}
+                      {displayDataCheck(getCart.id)}
                     </h2>
                   </Col>
-                  <Col lg={{ span: 8 }} xs={{ span: 24, offset: 0 }}>
+                  <Col lg={8} md={8} xs={24}>
+                    <h2>
+                      {t('checkoutCart.totalPrice')}
+                      <strong>&#8377; {TotalPrice(displayDataCheck(getCart.orderDetails))} </strong>
+                    </h2>
+                  </Col>
+                  <Col span={24}>
                     <br />
                   </Col>
-                </Col>
-                <br />
-                <br />
+                </Row>
                 <Row gutter={24}>
-                  <Col lg={{ span: 16, offset: 0 }} xs={{ span: 24, offset: 0 }}>
+                  <Col xxl={16} lg={16} xs={24}>
                     {getCart &&
                       getCart.orderDetails.map(cartItem => (
-                        <>
-                          <CartItemComponent
-                            item={cartItem}
-                            edit={true}
-                            onSubmit={onSubmit}
-                            onDelete={onDelete}
-                            currentUser={currentUser}
-                            onEdit={onEdit}
-                          />
-                          <Divider />
-                        </>
+                        <Row>
+                          <Col span={24}>
+                            <CartItemComponent
+                              t={t}
+                              item={cartItem}
+                              edit={true}
+                              onSubmit={onSubmit}
+                              onDelete={onDelete}
+                              currentUser={currentUser}
+                              onEdit={onEdit}
+                            />
+                            <Divider />
+                          </Col>
+                        </Row>
                       ))}
                   </Col>
-                  <Col lg={{ span: 8, offset: 0 }} sm={{ span: 24, offset: 0 }} xs={{ span: 24, offset: 0 }}>
+                  <Col lg={8} sm={24} xs={24}>
                     <Card>
-                      <Checkbox onChange={e => setCheckout(e.target.checked)}>
-                        I HAVE READ AND AGREE TO ALL THE PRIVACY POLICY.
-                      </Checkbox>
+                      <Checkbox onChange={e => setCheckout(e.target.checked)}>{t('checkoutCart.checkbox')}</Checkbox>
                       <br />
                       <br />
                       <NextButton onClick={() => history.push(`${ROUTES.checkoutBill}`)} block disabled={!checkout}>
-                        Checkout
+                        {t('checkoutCart.btn.checkout')}
                       </NextButton>
                       <br />
                       <br />
                       <Link className="listing-link" to={`${LISTING_ROUTES.listingCatalogue}`} target="_blank">
                         <AddButton ghost block>
-                          Add more products
+                          {t('checkoutCart.btn.add')}
                         </AddButton>
                       </Link>
                       <br />
@@ -114,15 +119,18 @@ const CheckoutCartView = props => {
                       <hr />
                       <br />
                       <h2>
-                        <u>Cart Summary</u>
+                        <u>{t('checkoutCart.cartSummary')}</u>
                       </h2>
                       <br />
                       <span>
                         {getCart.orderDetails.map((item, key) => (
                           <div key={key}>
-                            <strong>Item {key + 1}:</strong>
+                            <strong>
+                              {t('checkoutCart.item')}
+                              {key + 1}:
+                            </strong>
                             <p>
-                              Price{' '}
+                              {t('checkoutCart.price')}
                               <Rightfloat>
                                 &#8377;{' '}
                                 {item.cost && item.cost !== '0'
@@ -138,7 +146,7 @@ const CheckoutCartView = props => {
                         <hr />
                         <br />
                         <h3>
-                          Total amount
+                          {t('checkoutCart.totalAmount')}
                           <ColorFloat>&#8377; {` ${TotalPrice(displayDataCheck(getCart.orderDetails))}`}</ColorFloat>
                         </h3>
                       </span>
@@ -149,10 +157,10 @@ const CheckoutCartView = props => {
             </Row>
           </div>
         ) : (
-          <div className="width100 centerAlign marginT30">
+          <div className="centerAlign marginT30">
             <Empty description="You have no items in your Cart">
               <Link to={`${LISTING_ROUTES.listingCatalogue}`}>
-                <AddButton style={{ width: 'fit-content' }}>Add some products</AddButton>
+                <AddButton style={{ width: 'fit-content' }}>{t('checkoutCart.btn.add')}</AddButton>
               </Link>
             </Empty>
           </div>
@@ -168,7 +176,8 @@ CheckoutCartView.propTypes = {
   cartLoading: PropTypes.bool,
   onSubmit: PropTypes.func,
   onDelete: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  t: PropTypes.func
 };
 
 export default CheckoutCartView;

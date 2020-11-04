@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Drawer } from 'antd';
+import { Drawer } from 'antd';
 
 import { compose } from '@gqlapp/core-common';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 
-import { Modal, EditIcon } from '@gqlapp/look-client-react';
+import { Modal, EditIcon, Row, Col } from '@gqlapp/look-client-react';
 import { withListing } from '@gqlapp/listing-client-react/containers/ListingOperations';
 
 import AddToCartView from './AddToCartView';
 
 const EditCart = props => {
-  const { loading, listing, currentUser, onEdit, item } = props;
+  const { t, loading, listing, currentUser, onEdit, item } = props;
   const [visibleModal, setVisibleModal] = React.useState(false);
   const [visibleDrawer, setVisibleDrawer] = React.useState(false);
 
@@ -48,6 +48,7 @@ const EditCart = props => {
           {loading && <Spinner size="small" />}
           {listing && (
             <AddToCartView
+              t={t}
               currentUser={currentUser}
               onSubmit={handleSubmit}
               showBtn={false}
@@ -70,6 +71,7 @@ const EditCart = props => {
           {loading && <Spinner size="small" />}
           {listing && (
             <AddToCartView
+              t={t}
               currentUser={currentUser}
               onSubmit={handleSubmit}
               showBtn={false}
@@ -88,7 +90,8 @@ EditCart.propTypes = {
   item: PropTypes.object,
   currentUser: PropTypes.object,
   loading: PropTypes.bool,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  t: PropTypes.func
 };
 
 export default compose(withListing)(EditCart);

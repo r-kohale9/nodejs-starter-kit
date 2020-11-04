@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import QueueAnim from 'rc-queue-anim';
 
-import { Button, Empty, Row, Col } from 'antd';
+import { Button, Empty } from 'antd';
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
+import { Row, Col } from '@gqlapp/look-client-react';
 
 import ROUTES from '../../routes';
 import { getChildrenToRender } from '../AntdLanding/utils';
@@ -25,7 +26,7 @@ const Title = styled.div`
 
 class Content extends React.PureComponent {
   render() {
-    const { isMobile, ...props } = this.props;
+    const { isMobile, t, ...props } = this.props;
     const Feature00DataSource = {
       wrapper: { className: 'home-page-wrapper current-content0-wrapper' },
       page: { className: 'home-page current-content0' },
@@ -35,7 +36,7 @@ class Content extends React.PureComponent {
         children: [
           {
             name: 'title',
-            children: 'Image Banner',
+            children: t('imageBanner.titleWrapper.title'),
             className: 'title-h1 featuredHome-title'
           },
           {
@@ -139,7 +140,8 @@ class Content extends React.PureComponent {
 }
 
 Content.propTypes = {
-  isMobile: PropTypes.bool
+  isMobile: PropTypes.bool,
+  t: PropTypes.func
 };
 
 export default Content;

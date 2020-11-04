@@ -2,26 +2,28 @@ import React from 'react';
 import { Steps } from 'antd';
 import { PropTypes } from 'prop-types';
 
+import { compose } from '@gqlapp/core-common';
 import { PageLayout, MetaTags } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
+import { withModalDiscount } from '@gqlapp/discount-client-react/containers/DiscountOperations';
 
 import ListingFormComponent from './ListingFormComponent.web';
 
 const { Step } = Steps;
 
 const EditListingView = props => {
-  const { t, listing, loading, onSubmit, currentUser } = props;
+  const { t, listing, loading, onSubmit, currentUser, modalDiscount } = props;
   const [step, setStep] = React.useState(0);
   const steps = [
     {
-      title: 'Details'
+      title: t('listing.steps.title1')
     },
     {
-      title: 'Flags'
+      title: t('listing.steps.title2')
     },
     {
-      title: 'Media'
+      title: t('listing.steps.title3')
     }
   ];
 
@@ -46,11 +48,12 @@ const EditListingView = props => {
             <ListingFormComponent
               step={step}
               setStep={setStep}
-              cardTitle="Edit Listing"
+              cardTitle={t('listing.cardTitle')}
               t={t}
               listing={listing}
               onSubmit={onSubmit}
               currentUser={currentUser}
+              modalDiscount={modalDiscount}
             />
           </div>
         </>
@@ -64,7 +67,8 @@ EditListingView.propTypes = {
   loading: PropTypes.bool,
   listing: PropTypes.object,
   currentUser: PropTypes.object,
+  modalDiscount: PropTypes.object,
   onSubmit: PropTypes.func
 };
 
-export default EditListingView;
+export default compose(withModalDiscount)(EditListingView);

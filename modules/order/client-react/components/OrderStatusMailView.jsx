@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Icon, Form } from 'antd';
+
+import { Modal, Button } from 'antd';
 import { withFormik } from 'formik';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { RenderField } from '@gqlapp/look-client-react';
+import { Form, Icon, RenderField } from '@gqlapp/look-client-react';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 
 const OrderStatusMailView = props => {
@@ -14,7 +15,7 @@ const OrderStatusMailView = props => {
   return (
     <>
       <Button type="primary" shape="circle" size="sm" onClick={() => setVisible(true)}>
-        <Icon type="mail" />
+        <Icon type="MailOutlined" />
       </Button>
       <Modal
         title={`Mail details for order id: ${displayDataCheck(props.orderId)}`}

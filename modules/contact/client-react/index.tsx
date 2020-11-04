@@ -1,10 +1,7 @@
 import React from 'react';
-// import { Icon } from 'antd';
 
-import {
-  Route
-  // NavLink
-} from 'react-router-dom';
+// import { Icon } from '@gqlapp/look-client-react';
+import { Route } from 'react-router-dom';
 import loadable from '@loadable/component';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 
@@ -15,7 +12,7 @@ import resources from './locales';
 
 // const NavLinkWithI18n = translate('contact')(({ t }: { t: TranslateFunction }) => (
 //   <NavLink to="/contact" className="nav-link" activeClassName="active">
-//     <Icon type="contacts" /> {t('navLink')}
+//    <Icon type="ContactsOutlined" />{ t('navLink') }
 //   </NavLink>
 // ));
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { translate } from '@gqlapp/i18n-client-react';
-import { Card, MetaTags, PageLayout } from '@gqlapp/look-client-react';
-import { Row, Col, Divider, Icon } from 'antd';
+import { Divider } from 'antd';
+
+import { Icon, Card, MetaTags, PageLayout, Row, Col } from '@gqlapp/look-client-react';
 // eslint-disable-next-line import/no-named-default
 import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
 // import UserListings from '@gqlapp/listing-client-react/containers/UserListings';
@@ -43,7 +44,7 @@ class ProfileView extends React.Component {
                     position: 'relative'
                   }}
                 >
-                  <Icon type="user" /> {user.user.username}
+                  <Icon type="UserOutlined" /> {user.user.username}
                 </h2>
                 <ProfileHeadComponent
                   profile={profile && profile}

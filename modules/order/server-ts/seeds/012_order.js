@@ -2,6 +2,7 @@ import { returnId, truncateTables } from '@gqlapp/database-server-ts';
 
 import { MEDIA } from '@gqlapp/listing-common';
 import { ORDER_STATES_ARRAY } from '@gqlapp/order-common';
+import { MODAL } from '@gqlapp/review-common';
 
 exports.seed = async function(knex) {
   await truncateTables(knex, Promise, ['order', 'order_state', 'order_detail', 'order_option']);
@@ -34,7 +35,7 @@ exports.seed = async function(knex) {
       const orderDetail = await returnId(knex('order_detail')).insert({
         order_id: order[0],
         vendor_id: modal[0].user_id,
-        modal_name: 'listing',
+        modal_name: MODAL[1].value,
         modal_id: id,
         order_detail_state_id: 1,
 
@@ -60,7 +61,7 @@ exports.seed = async function(knex) {
       const addresses2 = await knex('user_address').where('user_id', '=', User2);
       const order2 = await returnId(knex('order')).insert({
         consumer_id: User2,
-        order_state_id: Math.floor(Math.random() * (4 - 1 + 1) + 1),
+        order_state_id: Math.floor(Math.random() * (4 - 2 + 1) + 2),
 
         tracking_id: Math.random()
           .toString(36)
@@ -102,7 +103,7 @@ exports.seed = async function(knex) {
           const orderDetail2 = await returnId(knex('order_detail')).insert({
             order_id: order2[0],
             vendor_id: modal2[0].user_id,
-            modal_name: 'listing',
+            modal_name: MODAL[1].value,
             modal_id: id2,
             order_detail_state_id: 2,
 
@@ -128,7 +129,7 @@ exports.seed = async function(knex) {
           //   const orderDetail3 = await returnId(knex('order_detail')).insert({
           //     order_id: order3[0],
           //     vendor_id: modal3[0].user_id,
-          //     modal_name: 'listing',
+          //     modal_name: MODAL[1].value,
           //     modal_id: id3,
           //     order_detail_state_id: 3,
 
@@ -153,7 +154,7 @@ exports.seed = async function(knex) {
           //   const orderDetail4 = await returnId(knex('order_detail')).insert({
           //     order_id: order4[0],
           //     vendor_id: modal4[0].user_id,
-          //     modal_name: 'listing',
+          //     modal_name: MODAL[1].value,
           //     modal_id: id4,
           //     order_detail_state_id: 4,
 

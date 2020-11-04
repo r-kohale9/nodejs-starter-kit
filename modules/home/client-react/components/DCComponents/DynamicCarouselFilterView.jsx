@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
-import { translate } from '@gqlapp/i18n-client-react';
-import { Form, FormItem, Select, Option, Label, Input } from '@gqlapp/look-client-react';
+import { Form, FormItem, Select, Option, Label, Input, Row, Col } from '@gqlapp/look-client-react';
 import { LABEL } from '@gqlapp/home-common';
 
 const DynamicCarouselFilterView = ({
@@ -13,37 +12,43 @@ const DynamicCarouselFilterView = ({
   t
 }) => (
   <Form layout="inline">
-    <FormItem label={'Search text'}>
-      <DebounceInput
-        minLength={2}
-        debounceTimeout={300}
-        placeholder={'Search text'}
-        element={Input}
-        value={searchText}
-        onChange={e => onSearchTextChange(e.target.value)}
-      />
-    </FormItem>
-    &nbsp;
-    <FormItem label={'Label'}>
-      <Select name="label" defaultValue={label} style={{ width: '100px' }} onChange={e => onLabelChange(e)}>
-        <Option key={1} value={''}>
-          All
-        </Option>
-        {LABEL &&
-          LABEL.map((l, i) => (
-            <Option key={i + 2} value={l}>
-              {l}
+    <Row type="flex">
+      <Col>
+        <FormItem label={t('dynamicCarousel.filter.search')}>
+          <DebounceInput
+            minLength={2}
+            debounceTimeout={300}
+            placeholder={t('dynamicCarousel.filter.search')}
+            element={Input}
+            value={searchText}
+            onChange={e => onSearchTextChange(e.target.value)}
+          />
+        </FormItem>
+      </Col>
+      <Col>
+        <FormItem label={t('dynamicCarousel.filter.label')}>
+          <Select name="label" defaultValue={label} style={{ width: '100px' }} onChange={e => onLabelChange(e)}>
+            <Option key={1} value={''}>
+              All
             </Option>
-          ))}
-      </Select>
-    </FormItem>
-    &nbsp;
-    <FormItem>
-      <Label>
-        <Input type="checkbox" defaultChecked={isActive} onChange={e => onIsActiveChange(e.target.checked)} />
-        &nbsp; {'Is active'}
-      </Label>
-    </FormItem>
+            {LABEL &&
+              LABEL.map((l, i) => (
+                <Option key={i + 2} value={l}>
+                  {l}
+                </Option>
+              ))}
+          </Select>
+        </FormItem>
+      </Col>
+      <Col>
+        <FormItem>
+          <Label>
+            <Input type="checkbox" defaultChecked={isActive} onChange={e => onIsActiveChange(e.target.checked)} />
+            &nbsp; {t('dynamicCarousel.filter.isActive')}
+          </Label>
+        </FormItem>
+      </Col>
+    </Row>
   </Form>
 );
 
@@ -55,4 +60,4 @@ DynamicCarouselFilterView.propTypes = {
   t: PropTypes.func
 };
 
-export default translate('user')(DynamicCarouselFilterView);
+export default DynamicCarouselFilterView;

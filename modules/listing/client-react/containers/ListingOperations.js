@@ -4,6 +4,7 @@ import { message } from 'antd';
 
 // Query
 import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
+import settings from '@gqlapp/config';
 import LISTING_QUERY from '../graphql/ListingQuery.graphql';
 import LISTINGS_QUERY from '../graphql/ListingsQuery.graphql';
 import MY_LISTINGS_BOOKMARK_QUERY from '../graphql/MyListingsBookmark.graphql';
@@ -23,7 +24,6 @@ import SHARE_LISTING_BY_EMAIL from '../graphql/ShareListingByEmail.graphql';
 import UPDATE_ORDER_BY_LISTING from '../graphql/UpdateOrderByListing.client.graphql';
 import UPDATE_LISTING_FILTER from '../graphql/UpdateListingFilter.client.graphql';
 
-import settings from '../../../../settings';
 import ROUTES from '../routes';
 
 const limit =
@@ -239,12 +239,12 @@ export const withListingsDeleting = Component =>
 
 export const withAddListing = Component =>
   graphql(ADD_LISTING, {
-    props: ({ ownProps: { history }, mutate }) => ({
+    props: ({ mutate }) => ({
       addListing: async values => {
-        message.destroy();
-        message.loading('Please wait...', 0);
         try {
-          await mutate({
+          const {
+            data: { addListing: id }
+          } = await mutate({
             variables: {
               input: values
             },
@@ -256,9 +256,7 @@ export const withAddListing = Component =>
               }
             }
           });
-          message.destroy();
-          message.success('Listing added.');
-          history.push(`${ROUTES.adminPanel}`);
+          return id;
         } catch (e) {
           message.destroy();
           message.error("Couldn't perform the action");

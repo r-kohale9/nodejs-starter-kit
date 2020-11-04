@@ -1,10 +1,9 @@
 import React from 'react';
-
-import ClientModule from '@gqlapp/module-client-react';
-import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
+import { Route, NavLink } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-import { Route, NavLink } from 'react-router-dom';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
+import ClientModule from '@gqlapp/module-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 import { MenuItem, Icon } from '@gqlapp/look-client-react';
 import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
@@ -17,7 +16,8 @@ import ROUTES from './routes';
 const NavLinkUserWithI18n = translate('review')(({ t }: { t: TranslateFunction }) => (
   <NavLink to={ROUTES.myReview} className="nav-link" activeClassName="active">
     <div>
-      <Icon type="book" /> {t('review:navLinkUser')}
+      <Icon type="BookOutlined" />
+      {t('review:navLinkUser')}
     </div>
   </NavLink>
 ));

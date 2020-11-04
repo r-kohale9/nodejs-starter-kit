@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import TweenOne from 'rc-tween-one';
 import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
 import QueueAnim from 'rc-queue-anim';
-import { Row, Col, Button } from 'antd';
+import { Button } from 'antd';
+import { Row, Col } from '@gqlapp/look-client-react';
 
 // eslint-disable-next-line import/no-named-default
 import { default as PAGES_ROUTES } from '@gqlapp/pages-client-react/routes';
@@ -43,6 +44,8 @@ const Footer10DataSource = {
         name: 'block0',
         xs: 24,
         md: 6,
+        lg: 6,
+        xl: 6,
         className: 'block',
         title: {
           className: 'logo',
@@ -122,6 +125,8 @@ const Footer10DataSource = {
         name: 'block1',
         xs: 24,
         md: 6,
+        lg: 6,
+        xl: 6,
         className: 'block',
         title: { children: 'About Company' },
         childWrapper: {
@@ -132,6 +137,8 @@ const Footer10DataSource = {
         name: 'block2',
         xs: 24,
         md: 6,
+        lg: 6,
+        xl: 6,
         className: 'block',
         title: { children: 'Static Pages' },
         childWrapper: {
@@ -146,6 +153,8 @@ const Footer10DataSource = {
         name: 'block3',
         xs: 24,
         md: 6,
+        lg: 6,
+        xl: 6,
         className: 'block',
         title: { children: 'Keep in Touch' },
         childWrapper: {
@@ -222,7 +231,7 @@ class Footer extends React.Component {
       <div {...props} {...dataSource.wrapper}>
         <OverPack {...dataSource.OverPack}>
           <QueueAnim type="bottom" key="ul" leaveReverse component={Row} {...dataSource.block}>
-            <Row>{childrenToRender}</Row>
+            {childrenToRender}
           </QueueAnim>
           <TweenOne
             animation={{ y: '+=30', opacity: 0, type: 'from' }}

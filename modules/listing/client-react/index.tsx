@@ -1,12 +1,12 @@
 import React from 'react';
-import { Menu, Icon } from 'antd';
+import { Menu } from 'antd';
 
 import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import loadable from '@loadable/component';
 
 import { Route, NavLink } from 'react-router-dom';
-import { MenuItem } from '@gqlapp/look-client-react';
+import { Icon, MenuItem } from '@gqlapp/look-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
@@ -21,7 +21,8 @@ const MyListingsNavItemAccount = () => {
   return (
     <NavLink to={ROUTES.myListing}>
       <div>
-        <Icon type="solution" /> {'My Listings'}
+        <Icon type="SolutionOutlined" />
+        {'My Listings'}
       </div>
     </NavLink>
   );
@@ -31,7 +32,8 @@ const NavLinkMyListingsBookmark = () => {
   return (
     <NavLink to={ROUTES.listingBookmark}>
       <div>
-        <Icon type="star" /> {'My Bookmarks'}
+        <Icon type="StarOutlined" />
+        {'My Bookmarks'}
       </div>
     </NavLink>
   );
@@ -41,7 +43,8 @@ const NavLinkAddListings = () => {
   return (
     <NavLink to={ROUTES.add}>
       <div>
-        <Icon type="solution" /> {'Create listing'}
+        <Icon type="SolutionOutlined" />
+        {'Create listing'}
       </div>
     </NavLink>
   );
@@ -140,7 +143,8 @@ export default new ClientModule({
         key="/listing"
         title={
           <>
-            <Icon type="solution" /> Listing
+            <Icon type="SolutionOutlined" />
+            Listing
           </>
         }
       >

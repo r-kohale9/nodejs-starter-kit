@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Empty, Icon, Button } from 'antd';
+import { Empty, Button } from 'antd';
 
-import { Row, Col, PageLayout, Heading, MetaTags } from '@gqlapp/look-client-react';
+import { Icon, Row, Col, PageLayout, Heading, MetaTags } from '@gqlapp/look-client-react';
 import SuggestedListComponent from '@gqlapp/look-client-react/ui-antd/components/SuggestedListComponent';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 
@@ -15,8 +15,8 @@ const MyListingsView = props => {
   const { listings, loading, onDelete, history, t } = props;
 
   const renderFunc = (key, listing) => (
-    // <RelatedCardComponent key={key} listing={listing} history={history} currentUser={currentUser} />
     <ListingItemComponent
+      t={t}
       key={key}
       history={history}
       item={listing}
@@ -29,13 +29,14 @@ const MyListingsView = props => {
       <Row>
         <Col span={12}>
           <Heading type="2">
-            <Icon type="solution" /> &nbsp; My Listings
+            <Icon type="SolutionOutlined" />
+            {t('myListings.heading')}
           </Heading>
         </Col>
         <Col span={12} align="right">
           <Link to={`${ROUTES.add}`}>
             <Button type="primary">
-              <Icon type="plus" /> Add
+              <Icon type="PlusOutlined" /> {t('myListings.btn.add')}
             </Button>
           </Link>
         </Col>
@@ -47,9 +48,10 @@ const MyListingsView = props => {
       <SuggestedListComponent
         grid={{
           gutter: 24,
-          sm: 1,
+          xs: 1,
           md: 1,
-          lg: 1
+          lg: 1,
+          xxl: 1
         }}
         {...props}
         items={listings}
@@ -59,7 +61,7 @@ const MyListingsView = props => {
   );
   return (
     <PageLayout>
-      <MetaTags title="My Listings" description={`${settings.app.name} - My Listings)}`} />
+      <MetaTags title={t('myListings.title')} description={`${settings.app.name} - ${t('myListings.title')})}`} />
 
       {loading && <Spinner />}
       {listings && listings.totalCount ? <RenderListings /> : !loading ? <NoListingsMessage t={t} /> : null}

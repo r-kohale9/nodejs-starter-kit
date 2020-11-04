@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'antd';
 
-import { Heading } from '@gqlapp/look-client-react';
+import { Heading, Row, Col } from '@gqlapp/look-client-react';
 
-import settings from '../../../../settings';
+import settings from '@gqlapp/config';
 import ListingItemComponent from './CartItemComponent';
 
 // const ButtonGroup = Button.Group;

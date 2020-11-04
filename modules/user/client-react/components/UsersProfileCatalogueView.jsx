@@ -1,21 +1,18 @@
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Row, Col, Divider, Button, Spin } from 'antd';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
-import { Pagination, PageLayout, CatalogueWithInfiniteScroll } from '@gqlapp/look-client-react';
+import { PageLayout, CatalogueWithInfiniteScroll, Row, Col } from '@gqlapp/look-client-react';
+import settings from '@gqlapp/config';
 
 import ProfileCatalogueCard from './components/ProfileCatalogueCard';
-import settings from '../../../../settings';
 
-const { itemsNumber, type } = settings.pagination.web;
-
-const Loading = ({ t }) => <Spinner />;
+const Loading = () => <Spinner />;
 Loading.propTypes = { t: PropTypes.func };
 
-const NoUserMessage = ({ t }) => (
+const NoUserMessage = () => (
   <h2 className="text-center" style={{ textAlign: 'center' }}>
     No users to show
   </h2>
@@ -23,7 +20,7 @@ const NoUserMessage = ({ t }) => (
 NoUserMessage.propTypes = { t: PropTypes.func };
 class UsersProfileCatalogueView extends Component {
   render() {
-    const { loading, users, t, loadData } = this.props;
+    const { loading, users, t } = this.props;
 
     const RenderUserList = () => (
       <Fragment>
@@ -113,7 +110,10 @@ UsersProfileListComponent.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  loadData: PropTypes.object,
+  users: PropTypes.object,
+  loading: PropTypes.bool
 };
 
 export default translate('listing')(UsersProfileCatalogueView);

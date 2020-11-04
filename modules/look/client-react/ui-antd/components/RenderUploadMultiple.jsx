@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Upload } from 'antd';
 
-import { Form, Upload, Icon } from 'antd';
+import { FormItem } from '@gqlapp/look-client-react';
 
-const FormItem = Form.Item;
+import Icon from './Icon';
 
 const RenderUploadMultiple = props => {
-  const { values, label, setload, arrayHelpers } = props;
+  const { values, label, setload, arrayHelpers, extraFields } = props;
 
-  const cloudinary_url = 'https://api.cloudinary.com/v1_1/gemspremium/image/upload';
-  const cloudinary_data = { upload_preset: 'nu4nfnxt' };
+  const cloudinary_url = 'https://api.cloudinary.com/v1_1/nodejs-starter-kit/image/upload';
+  const cloudinary_data = { upload_preset: 'hycdtdxe' };
 
   let validateStatus = '';
   let defaultFileList = [];
@@ -34,9 +35,13 @@ const RenderUploadMultiple = props => {
         let url = file.response.secure_url;
         if (url) {
           //set value in form
-          const dictKey = dictKey;
+          const dictKey = props.dictKey;
           let obj = {};
           obj[dictKey] = url;
+          if (extraFields && extraFields.length > 0) {
+            extraFields.map(eF => Object.assign(obj, eF));
+          }
+          console.log(obj);
           arrayHelpers.push(obj);
         }
       }
@@ -52,25 +57,22 @@ const RenderUploadMultiple = props => {
   // console.log(defaultFileList);
 
   return (
-    <FormItem label={label} validateStatus={validateStatus}>
-      <div className="dropbox">
-        <Upload.Dragger
-          defaultFileList={defaultFileList}
-          name="file"
-          listType="picture"
-          className="upload-list-inline"
-          onChange={onChangeHandler}
-          action={cloudinary_url}
-          data={cloudinary_data}
-          // headers={headers}
-        >
-          <p className="ant-upload-drag-icon">
-            <Icon type="inbox" />
-          </p>
-          <p className="ant-upload-text">Click or drag file to this area to upload</p>
-          <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-        </Upload.Dragger>
-      </div>
+    <FormItem label={label} validateStatus={validateStatus} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+      <Upload.Dragger
+        defaultFileList={defaultFileList}
+        name="file"
+        listType="picture"
+        onChange={onChangeHandler}
+        action={cloudinary_url}
+        data={cloudinary_data}
+        // headers={headers}
+      >
+        <p className="ant-upload-drag-icon">
+          <Icon type="InboxOutlined" />
+        </p>
+        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+        <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+      </Upload.Dragger>
     </FormItem>
   );
 };
@@ -90,6 +92,7 @@ RenderUploadMultiple.propTypes = {
     })
   ),
   arrayHelpers: PropTypes.object,
-  values: PropTypes.array
+  values: PropTypes.array,
+  extraFields: PropTypes.array
 };
 export default RenderUploadMultiple;

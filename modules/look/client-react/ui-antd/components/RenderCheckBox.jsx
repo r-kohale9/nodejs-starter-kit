@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Form } from 'antd';
+import { Checkbox } from 'antd';
 
-const FormItem = Form.Item;
+import { FormItem } from '@gqlapp/look-client-react';
 
 const RenderCheckBox = ({ input, label, meta: { touched, error } }) => {
   let validateStatus = '';
@@ -11,7 +11,13 @@ const RenderCheckBox = ({ input, label, meta: { touched, error } }) => {
   }
 
   return (
-    <FormItem label={label} validateStatus={validateStatus} help={error}>
+    <FormItem
+      label={label}
+      validateStatus={validateStatus}
+      help={error}
+      labelCol={{ span: 24 }}
+      wrapperCol={{ span: 24 }}
+    >
       <div>
         <Checkbox {...input}>{label}</Checkbox>
       </div>

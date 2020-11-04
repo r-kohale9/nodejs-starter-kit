@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Empty, Button, Row, Col, Checkbox, Spin } from 'antd';
+import { Empty, Button, Checkbox, Spin } from 'antd';
 
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import SuggestedListComponent from '@gqlapp/look-client-react/ui-antd/components/SuggestedListComponent';
-import { MetaTags } from '@gqlapp/look-client-react';
+import { MetaTags, Heading, Row, Col } from '@gqlapp/look-client-react';
 import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
 
 import { Reviews, Review } from '../containers/Reviews.web';
-import ReviewModal from './ReviewModal';
 import ReviewsItemComponent from './ReviewsItemComponent';
 import AvgRatingComponent from './AvgRatingComponent';
-
+import ModalDrawer from '@gqlapp/user-client-react/components/ModalDrawer';
+import ReviewFormComponent from './ReviewFormComponent';
 interface ReviewViewProps {
   t: TranslateFunction;
   filter: {
@@ -65,6 +65,7 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
   const [photo, setPhoto] = useState(false);
   const renderFunc = (key: number, review: Review) => (
     <ReviewsItemComponent
+      t={t}
       key={key}
       review={review}
       showPhotos={photo}
@@ -79,9 +80,10 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
       <SuggestedListComponent
         grid={{
           gutter: 24,
-          sm: 1,
+          xs: 1,
           md: 1,
-          lg: 1
+          lg: 1,
+          xxl: 1
         }}
         items={reviews}
         {...props}
@@ -89,43 +91,38 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
       />
     </div>
   );
-
+  const { modalName, modalId } = filter;
   return (
     <>
       <MetaTags title={t('title')} description={t('meta')} />
-      <Row>
-        <Col span={8}>
-          <div align="center">
-            <h1>{'Rating'}</h1>
-            <h1>{' & '}</h1>
-            <h1>{'Reviews'}</h1>
-          </div>
+      <Row type="flex" align="middle">
+        <Col lg={17} md={17} sm={15} xs={14}>
+          <Heading type="1"> {t('review.heading')}</Heading>
         </Col>
-        <Col span={4}>
+        <Col lg={4} md={4} sm={4} xs={10}>
+          <Checkbox onChange={() => setPhoto(!photo)}>
+            <strong>{t('review.withPhoto')}</strong>
+          </Checkbox>
+        </Col>
+        <Col lg={0} md={0} sm={0} xs={24}>
           <br />
-          <div align="center">
-            {showAdd && (
-              <>
-                <ReviewModal
-                  cardTitle={'Add Review'}
-                  t={t}
-                  addReview={addReview}
-                  modalName={filter.modalName}
-                  modalId={filter.modalId}
-                />
-                <br />
-              </>
-            )}
-            <br />
-            <Checkbox onChange={() => setPhoto(!photo)}>
-              <strong>With photo</strong>
-            </Checkbox>
-          </div>
         </Col>
-        <Col span={12}>
+        <Col lg={3} md={3} sm={5} xs={24}>
+          {showAdd && (
+            <>
+              <ModalDrawer buttonText={t('addReview')} modalTitle={t('addReview')} height="80%">
+                <ReviewFormComponent t={t} onSubmit={addReview} modalData={{ modalName, modalId }} />
+              </ModalDrawer>
+            </>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <br />
+        <Col span={24}>
           {ratingAverage && (
             <>
-              <AvgRatingComponent rating={ratingAverage} />
+              <AvgRatingComponent rating={ratingAverage} t={t} />
             </>
           )}
         </Col>

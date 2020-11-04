@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Icon, Divider } from 'antd';
 
-import { MetaTags, PageLayout, AddButton, Heading } from '@gqlapp/look-client-react';
+import { Icon, MetaTags, PageLayout, AddButton, Heading, Row, Col } from '@gqlapp/look-client-react';
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
-import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 
 import ROUTES from '../routes';
 import ListingFilterComponent from './ListingFilterComponent.web';
@@ -17,7 +15,7 @@ export interface ListingViewProps {
 }
 
 const ListingView: React.FC<ListingViewProps> = props => {
-  const { t, loading } = props;
+  const { t } = props;
   // console.log(loading);
   return (
     <PageLayout>
@@ -26,7 +24,8 @@ const ListingView: React.FC<ListingViewProps> = props => {
       <Row>
         <Col lg={22} md={20} xs={24}>
           <Heading type="2">
-            <Icon type="solution" /> &nbsp;
+            <Icon type="SolutionOutlined" />
+            &nbsp;
             {t('list.subTitle')}
           </Heading>
         </Col>
@@ -41,12 +40,9 @@ const ListingView: React.FC<ListingViewProps> = props => {
       </Row>
       <br />
       <hr />
-      <br />
       <ListingFilterComponent showIsActive={true} {...props} />
-      <Divider />
       <hr />
-      {loading && <Spinner />}
-      {!loading && <ListingListComponent {...props} />}
+      <ListingListComponent {...props} />
     </PageLayout>
   );
 };

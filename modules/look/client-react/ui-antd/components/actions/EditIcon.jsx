@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 
+import Icon from '../Icon';
+
 class EditIcon extends React.Component {
   render() {
     const { color = 'primary', type, size, ...props } = this.props;
@@ -14,7 +16,16 @@ class EditIcon extends React.Component {
       buttonSize = 'large';
     }
 
-    return <Button type={color} htmlType={type} size={buttonSize} icon="edit" shape="circle" {...props} />;
+    return (
+      <Button
+        type={color}
+        htmlType={type}
+        size={buttonSize}
+        icon={<Icon type="EditOutlined" />}
+        shape="circle"
+        {...props}
+      />
+    );
   }
 }
 

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Col, message, Modal, Card, Dropdown } from 'antd';
+import { Button, Col, message, Modal, Card } from 'antd';
 import PropTypes from 'prop-types';
-import { Form, RenderField, Alert } from '@gqlapp/look-client-react';
 import { withFormik } from 'formik';
+
+import { Icon, Form, RenderField, Alert } from '@gqlapp/look-client-react';
+import DropDown from '@gqlapp/look-client-react/ui-antd/components/Dropdown';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 
@@ -18,7 +20,7 @@ const Img = styled.img`
 `;
 
 const SocialSharingButtons = props => {
-  const { values, handleSubmit, submitting, errors, twitterMessage, whatsappMessage, link, hideEmailButton } = props;
+  const { values, handleSubmit, submitting, errors, twitterMessage, whatsappMessage, link, hideEmailButton, t } = props;
   const [visible, setVisible] = useState(false);
   const inputForm = 'email';
 
@@ -62,7 +64,13 @@ const SocialSharingButtons = props => {
           />
         </Button>
       </a>
-      <a href={`https://web.whatsapp.com/send?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
+      <a
+        href={`https://api.whatsapp.com/send?text=${whatsappMessage}`}
+        // href={`https://api.whatsapp.com/send?phone=${phone_number}&text=${title}%20${url}`}
+        dataAction="share/whatsapp/share"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <Button shape="circle" type="link" ghost size="large" style={{ fontSize: '22px' }}>
           <Img
             src={'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1602171220/gtd0x3gg3vcmirxdwr19.jpg'}
@@ -83,38 +91,85 @@ const SocialSharingButtons = props => {
         </Button>
       </a>
       {!hideEmailButton && (
-        <Button
-          shape="circle"
-          onClick={() => setVisible(true)}
-          type="link"
-          size="large"
-          ghost
-          style={{ fontSize: '22px' }}
-        >
-          <Img
-            src={'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1602171054/pueo2x3cpojocidoeou8.svg'}
-            height="30"
-            width="30"
-            align="centre"
-          />
-        </Button>
+        <>
+          <Button
+            shape="circle"
+            onClick={() => setVisible(true)}
+            type="link"
+            size="large"
+            ghost
+            style={{ fontSize: '22px' }}
+          >
+            <Img
+              src={'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1602171054/pueo2x3cpojocidoeou8.svg'}
+              height="30"
+              width="30"
+              align="centre"
+            />
+          </Button>
+          <Modal
+            title={t('socialSharingButton.title')}
+            centered
+            footer={null}
+            visible={visible}
+            onCancel={() => setVisible(false)}
+          >
+            <Form name="invite" onShare={handleSubmit}>
+              {inputForm === 'email' ? (
+                <Field
+                  name="inviteVal.email"
+                  component={RenderField}
+                  type="email"
+                  placeholder={t('socialSharingButton.email')}
+                  value={values.inviteVal.email}
+                />
+              ) : (
+                <Field
+                  name="inviteVal.number"
+                  component={RenderField}
+                  type="number"
+                  placeholder={t('socialSharingButton.number')}
+                  value={values.inviteVal.number}
+                />
+              )}
+              <h3>
+                <strong>{t('socialSharingButton.text')}</strong>
+              </h3>
+              <br />
+              <Card>{whatsappMessage}</Card>
+              <br />
+              <div align="right">
+                <Button disabled={submitting} type="primary" onClick={() => handleSubmit(values)}>
+                  {t('socialSharingButton.btn.share')}
+                </Button>
+              </div>
+              <div>{errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}</div>
+            </Form>
+          </Modal>
+        </>
       )}
     </Card>
   );
   return (
     <Col span={24} style={{ height: '50px' }}>
-      <Dropdown overlay={sharingMenu} trigger={['hover']}>
-        <Button shape="circle" type="primary" ghost icon="share-alt" />
-      </Dropdown>
+      <DropDown content={<Button shape="circle" type="primary" ghost icon={<Icon type="ShareAltOutlined" />} />} noicon>
+        {sharingMenu}
+      </DropDown>
 
-      <Modal title="Share listing by mail" centered footer={null} visible={visible} onCancel={() => setVisible(false)}>
+      {/* <Modal
+        title={t('socialSharingButton.title')}
+        centered
+        footer={null}
+        visible={visible}
+        onCancel={() => setVisible(false)}
+      >
         <Form name="invite" onShare={handleSubmit}>
           {inputForm === 'email' ? (
             <Field
               name="inviteVal.email"
               component={RenderField}
               type="email"
-              placeholder="Enter E-mail to invite"
+              placeholder={t('socialSharingButton.email')}
               value={values.inviteVal.email}
             />
           ) : (
@@ -122,24 +177,24 @@ const SocialSharingButtons = props => {
               name="inviteVal.number"
               component={RenderField}
               type="number"
-              placeholder="Enter Number to invite"
+              placeholder={t('socialSharingButton.number')}
               value={values.inviteVal.number}
             />
           )}
           <h3>
-            <strong>Text:</strong>
+            <strong>{t('socialSharingButton.text')}</strong>
           </h3>
           <br />
           <Card>{whatsappMessage}</Card>
           <br />
           <div align="right">
             <Button disabled={submitting} type="primary" onClick={() => handleSubmit(values)}>
-              Share
+              {t('socialSharingButton.btn.share')}
             </Button>
           </div>
           <div>{errors && errors.errorMsg && <Alert color="error">{errors.errorMsg}</Alert>}</div>
         </Form>
-      </Modal>
+      </Modal> */}
     </Col>
   );
 };
@@ -154,7 +209,8 @@ SocialSharingButtons.propTypes = {
   submitting: PropTypes.bool,
   errors: PropTypes.object,
   hideEmailButton: PropTypes.bool,
-  values: PropTypes.object
+  values: PropTypes.object,
+  t: PropTypes.func
 };
 
 const SocialSharingButtonsWithFormik = withFormik({

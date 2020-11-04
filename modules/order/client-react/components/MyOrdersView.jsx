@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Empty, Divider, Icon, Button, Row, Col } from 'antd';
 
-import { PageLayout, Heading, MetaTags } from '@gqlapp/look-client-react';
+import { Empty, Divider, Button } from 'antd';
+
+import { Icon, PageLayout, Heading, MetaTags, Row, Col } from '@gqlapp/look-client-react';
 import SuggestedListComponent from '@gqlapp/look-client-react/ui-antd/components/SuggestedListComponent';
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 // eslint-disable-next-line import/no-named-default
@@ -34,7 +35,7 @@ const MyOrdersView = props => {
     <div align="center">
       <br />
       <br />
-      <Empty description={t('orders.noListingsMsg')}>
+      <Empty description={t('noOrdersMsg')}>
         <Link to={`${LISTING_ROUTES.listingCatalogue}`}>
           <Button type="primary">Add</Button>
         </Link>
@@ -43,14 +44,14 @@ const MyOrdersView = props => {
   );
 
   const renderFunc = (key, item) => (
-    <MyOrderItemComponent key={key} item={item} history={history} currentUser={currentUser} />
+    <MyOrderItemComponent key={key} item={item} history={history} currentUser={currentUser} t={t} />
   );
   const Icons = [
-    <Icon type="appstore" />,
-    <Icon type="hdd" />,
-    <Icon type="shop" />,
-    <Icon type="to-top" />,
-    <Icon type="delete" />
+    <Icon type="AppstoreOutlined" />,
+    <Icon type="HddOutlined" />,
+    <Icon type="ShopOutlined" />,
+    <Icon type="ToTopOutlined" />,
+    <Icon type="DeleteOutlined" />
   ];
   const RenderMyOrders = () => (
     <div>
@@ -58,22 +59,21 @@ const MyOrdersView = props => {
       {!loading && <SuggestedListComponent {...props} items={orders} renderFunc={renderFunc} />}
     </div>
   );
-  console.log('props', props);
   return (
     <PageLayout>
       <MetaTags title=" MyOrders" description="" />
 
       <Row>
-        <Col md={{ span: 8 }} sm={{ span: 7 }} xs={{ span: 24 }}>
+        <Col lg={{ span: 8 }} md={{ span: 8 }} xs={{ span: 24 }}>
           <Heading type="2" className="headingTop">
-            <Icon type="solution" />
-            &nbsp; My Orders
+            <Icon type="SolutionOutlined" />
+            {t('myOrders')}
           </Heading>
           <br />
         </Col>
-        <Col lg={0} md={0} align="center">
+        <Col lg={0} md={0} xs={24} align="center">
           {orderStates && orderStates.length !== 0 && (
-            <ButtonGroup className="width100">
+            <>
               <Button block onClick={() => filterItems('')} type={classNamesgroup('')}>
                 {Icons[0]}
                 ALL
@@ -84,12 +84,12 @@ const MyOrdersView = props => {
                   {oS.state}
                 </Button>
               ))}
-            </ButtonGroup>
+            </>
           )}
         </Col>
-        <Col lg={{ span: 16 }} md={{ span: 24 }} sm={0} xs={0} align="center">
+        <Col lg={{ span: 16 }} md={{ span: 24 }} xs={0} align="center">
           {orderStates && orderStates.length !== 0 && (
-            <ButtonGroup className="width100">
+            <ButtonGroup>
               <Button onClick={() => filterItems('')} type={classNamesgroup('')}>
                 {Icons[0]}
                 ALL

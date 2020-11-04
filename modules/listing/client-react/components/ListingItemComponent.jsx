@@ -1,11 +1,12 @@
 import React from 'react';
-import { Icon, Button, Row, Col, Card, Avatar, Divider, Popconfirm, message, Tooltip } from 'antd';
+import { Button, Card, Avatar, Divider, Popconfirm, message, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 
 import { NO_IMG } from '@gqlapp/listing-common';
 import USER_ROUTES from '@gqlapp/user-client-react/routes';
+import { Icon, Row, Col } from '@gqlapp/look-client-react';
 
 import ROUTES from '../routes';
 
@@ -48,7 +49,7 @@ const ListingItemComponent = props => {
     message.error('Click on No');
   };
 
-  const { item, history, loading, deleteProduct } = props;
+  const { item, history, loading, deleteProduct, t } = props;
 
   const sellerFirstName = (item && item.user && item.user.profile && item.user.profile.firstName) || null;
   const sellerLastName = (item && item.user && item.user.profile && item.user.profile.lastName) || null;
@@ -77,7 +78,7 @@ const ListingItemComponent = props => {
           <Row type="flex" justify="space-around" align="middle" gutter={12}>
             <Col span={12}>
               <BorderListzero block onClick={() => history.push(`${ROUTES.editLink}${item.id}`)}>
-                <Icon type="edit" />
+                <Icon type="EditOutlined" />
               </BorderListzero>
             </Col>
             {deleteProduct && (
@@ -90,7 +91,7 @@ const ListingItemComponent = props => {
                   cancelText="No"
                 >
                   <BorderListzero block>
-                    <Icon type="delete" />
+                    <Icon type="DeleteOutlined" />
                   </BorderListzero>
                 </Popconfirm>
               </Col>
@@ -107,7 +108,7 @@ const ListingItemComponent = props => {
               <br />
               <br />
               <Link target="_blank" to={`${USER_ROUTES.userPublicProfileLink}${item.user.id}`}>
-                <Tooltip placement="topLeft" title="Visit User's Profile">
+                <Tooltip placement="topLeft" title={t('listingItem.tooltip')}>
                   <Meta
                     avatar={<Avatar src={sellerAvatar} />}
                     title={
@@ -125,6 +126,7 @@ const ListingItemComponent = props => {
         </ProfileAlign>
         <Link to={`${ROUTES.listingDetailLink}${item.id}`}>
           <Card
+            type="inner"
             title={<h3>{item.title}</h3>}
             style={{ marginBottom: '24px' }}
             hoverable
@@ -167,7 +169,7 @@ const ListingItemComponent = props => {
                       <OrderGrey sm={7} xs={24} lg={24} align="right">
                         <span>
                           <strong>
-                            <span>Cost</span> &#8377; {item.listingCostArray[0].cost}
+                            <span>{t('listingItem.cost')}</span> &#8377; {item.listingCostArray[0].cost}
                           </strong>
                         </span>
                       </OrderGrey>
@@ -198,7 +200,8 @@ ListingItemComponent.propTypes = {
   currentUser: PropTypes.object,
   deleteProduct: PropTypes.func,
   history: PropTypes.object,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  t: PropTypes.func
 };
 
 export default ListingItemComponent;

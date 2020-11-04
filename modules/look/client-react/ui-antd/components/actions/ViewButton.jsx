@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Button } from 'antd';
+
+import Icon from '../Icon';
 
 class ViewButton extends React.Component {
   render() {
@@ -15,7 +18,7 @@ class ViewButton extends React.Component {
     }
 
     return (
-      <Button type={color} htmlType={type} block size={buttonSize} icon="eye" {...props}>
+      <Button type={color} htmlType={type} block size={buttonSize} icon={<Icon type="EyeOutlined" />} {...props}>
         {children}
       </Button>
     );

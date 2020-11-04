@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Layout, BackTop, Button, Tooltip } from 'antd';
 import { enquireScreen } from 'enquire-js';
 
+import Icon from './Icon';
 import NavBar from './NavBar';
 import Footer from './Footer';
 
@@ -88,12 +89,12 @@ class PageLayout extends React.Component {
             // style={{ display: 'none' }}
             size="large"
             type="primary"
-            icon="plus"
+            icon={<Icon type="PlusOutlined" />}
           />
         </Tooltip>
         <BackTop>
           <Tooltip placement="left" title="Back to Top" autoAdjustOverflow={true}>
-            <Button icon="arrow-up" type="primary" shape="circle-outline" size="large" />
+            <Button icon={<Icon type="ArrowUpOutlined" />} type="primary" shape="circle" size="large" />
           </Tooltip>
         </BackTop>
         <Footer />

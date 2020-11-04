@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { PageLayout } from '@gqlapp/look-client-react';
-import { Row, Col, Card, Divider } from 'antd';
+import { PageLayout, Row, Col } from '@gqlapp/look-client-react';
+import { Card, Divider } from 'antd';
 
 import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 import AddressView from '@gqlapp/addresses-client-react/components/AddressView';
 
-import settings from '../../../../settings';
+import settings from '@gqlapp/config';
 import CheckoutStepsComponent from './CheckoutStepsComponent';
 import CheckoutCardComponent from './CheckoutCardComponent';
 import OrderTrackCardComponent from './OrderTrackCardComponent';
@@ -21,7 +21,7 @@ const renderMetaData = () => (
 );
 
 const CheckoutOrderView = props => {
-  const { getCart, getCartLoading, onSubmit } = props;
+  const { t, getCart, getCartLoading, onSubmit } = props;
 
   const address =
     getCart &&
@@ -34,46 +34,44 @@ const CheckoutOrderView = props => {
     <PageLayout>
       {renderMetaData()}
       {getCartLoading && <Spinner />}
-      <div className="checkoutDiv">
+      {!getCartLoading && (
         <Row gutter={24}>
-          <Col lg={{ span: 24, offset: 0 }} xs={{ span: 24, offset: 0 }} align="center">
-            <CheckoutStepsComponent step={3} />
+          <Col span={24} align="center">
+            <CheckoutStepsComponent step={0} t={t} />
+            <br />
+            <br />
           </Col>
-          <Col lg={{ span: 22, offset: 1 }} md={{ span: 22, offset: 1 }} xs={{ span: 24, offset: 0 }}>
+          <Col lg={22} md={22} xs={24}>
             <Row gutter={24}>
-              <Col lg={{ span: 10, offset: 0 }} xs={{ span: 24, offset: 0 }} className="margin20">
-                <Row>
-                  {getCart && (
-                    <>
+              <Col lg={10} md={10} xs={24}>
+                {getCart && (
+                  <Row gutter={24}>
+                    <Col span={24}>
                       <OrderTrackCardComponent
+                        t={t}
                         orderStatus={getCart.orderState}
                         // status={state.status}
                         completed={3}
                       />
                       <Divider />
-                      <Col
-                        lg={{ span: 24, offset: 0 }}
-                        sm={{ span: 24, offset: 0 }}
-                        xs={{ span: 24, offset: 0 }}
-                        style={{ paddingBottom: '5%' }}
-                      >
-                        {/* <div style={{ marginTop: "200px" }} /> */}
-                        <Card className="boxShadowTheme borderRadius9">
-                          <h4>The order will be delivered to the address below:</h4>
-                          <hr />
-                          <Row type="flex" justify="center" align="middle">
-                            {address && <AddressView addresses={[address]} addressId={address.id} />}
-                          </Row>
-                        </Card>
-                      </Col>
-                    </>
-                  )}
-                </Row>
+                    </Col>
+                    <Col span={24}>
+                      <Card className="boxShadowTheme borderRadius9">
+                        <h4>{t('checkoutOrder.orderAddress')}</h4>
+                        <hr />
+                        <Row type="flex" justify="center" align="middle">
+                          {address && <AddressView addresses={[address]} addressId={address.id} />}
+                        </Row>
+                      </Card>
+                    </Col>
+                  </Row>
+                )}
               </Col>
-              <Col lg={{ span: 14, offset: 0 }} xs={{ span: 24, offset: 0 }} className="marginT20">
+              <Col lg={14} md={14} xs={24}>
                 {getCart && (
                   <CheckoutCardComponent
                     // onSubmit={openCheckout}
+                    t={t}
                     onSubmit={onSubmit}
                     getCart={getCart}
                     product={{}}
@@ -87,8 +85,7 @@ const CheckoutOrderView = props => {
             </Row>
           </Col>
         </Row>
-      </div>
-      {/* )} */}
+      )}
     </PageLayout>
   );
 };
@@ -96,7 +93,8 @@ const CheckoutOrderView = props => {
 CheckoutOrderView.propTypes = {
   getCart: PropTypes.object,
   getCartLoading: PropTypes.bool,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  t: PropTypes.func
 };
 
 export default CheckoutOrderView;

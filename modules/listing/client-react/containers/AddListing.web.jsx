@@ -1,21 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { message } from 'antd';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withAddDiscount } from '@gqlapp/discount-client-react/containers/DiscountOperations';
 
+import ROUTES from '../routes';
 import AddListingView from '../components/AddListingView.web';
 import { withAddListing, withCurrentUser } from './ListingOperations';
 
 const AddListing = props => {
-  const { addListing } = props;
-  const handleSubmit = values => {
+  const { addListing, addDiscount, history } = props;
+  const handleSubmit = async (values, discountValues) => {
+    console.log(values);
+    message.destroy();
+    message.loading('Please wait...', 0);
     try {
       delete values.id;
       delete values.listingFlags.id;
       delete values.listingOptions.id;
       delete values.listingDetail.id;
-      addListing(values);
+      const id = await addListing(values);
+      console.log(id, discountValues);
+      if (id && discountValues) {
+        delete discountValues.id;
+        delete discountValues.discountDuration.id;
+        await addDiscount({ modalId: id, ...discountValues });
+      }
+      message.destroy();
+      message.success('Listing added.');
+      history.push(`${ROUTES.adminPanel}`);
     } catch (e) {
       throw Error(e);
     }
@@ -25,7 +40,9 @@ const AddListing = props => {
 };
 
 AddListing.propTypes = {
-  addListing: PropTypes.func
+  addListing: PropTypes.func,
+  addDiscount: PropTypes.func,
+  history: PropTypes.object
 };
 
-export default compose(withAddListing, withCurrentUser, translate('listing'))(AddListing);
+export default compose(withAddListing, withAddDiscount, withCurrentUser, translate('listing'))(AddListing);

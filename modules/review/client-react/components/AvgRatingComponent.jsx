@@ -2,144 +2,108 @@ import React from 'react';
 import { Row, Col, Rate, Progress } from 'antd';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
-import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 
 const Rating = styled(Rate)`
   font-size: 12px;
   padding-right: 10px;
 `;
+const TotalRating = styled.h3`
+  @media screen and (max-width: 600px) {
+    font-size: 16px;
+  }
+`;
 
 const AvgRatingComponent = props => {
+  const { t } = props;
   const { one, two, three, four, five } = props.rating;
   const totalRatings = one + two + three + four + five;
   function avgRating() {
     return ((5 * five + 4 * four + 3 * three + 2 * two + 1 * one) / totalRatings).toFixed(1);
   }
+  const comp = [
+    {
+      defaultValue: 5,
+      percent: (five / totalRatings) * 100,
+      value: five
+    },
+    {
+      defaultValue: 4,
+      percent: (four / totalRatings) * 100,
+      value: four
+    },
+    {
+      defaultValue: 3,
+      percent: (three / totalRatings) * 100,
+      value: three
+    },
+    {
+      defaultValue: 2,
+      percent: (two / totalRatings) * 100,
+      value: two
+    },
+    {
+      defaultValue: 1,
+      percent: (one / totalRatings) * 100,
+      value: one
+    }
+  ];
+  const AvrgComponent = ({ defaultValue, percent, value }) => (
+    <Row>
+      <Col span={22}>
+        <Row>
+          <Col span={14}>
+            <Row type="flex" justify="end">
+              <Rating disabled defaultValue={defaultValue} count={defaultValue} />
+            </Row>
+          </Col>
+          <Col offset={1} span={8}>
+            <Progress strokeColor="#fc4c4c" showInfo={false} percent={percent} strokeLinecap="round" />
+          </Col>
+        </Row>
+      </Col>
+      <Col span={2}>
+        <h3>{value}</h3>
+      </Col>
+    </Row>
+  );
+
+  AvrgComponent.propTypes = {
+    defaultValue: PropTypes.number,
+    percent: PropTypes.number,
+    value: PropTypes.number
+  };
+
   // console.log('props', totalRatings * 5, one + two * 2 + three * 3 + four * 4 + five * 5);
   return (
     <Row>
-      <Col span={6}>
+      <Col lg={3} xs={6}>
         <br />
         <br />
-        <Col span={24}>
-          <Row type="flex" justify="center">
-            <h1>{avgRating()}</h1>
-          </Row>
-        </Col>
-        <Col span={24}>
-          <Row type="flex" justify="center">
-            <h3>{totalRatings} rating</h3>
-          </Row>
-        </Col>
+        <Row>
+          <Col span={24}>
+            <Row type="flex" justify="center">
+              <h1>{avgRating()}</h1>
+            </Row>
+          </Col>
+          <Col lg={{ offset: 0, span: 24 }} xs={{ offset: 6, span: 18 }}>
+            <Row type="flex" justify="center">
+              <TotalRating>
+                {totalRatings} {t('avgRating')}
+              </TotalRating>
+            </Row>
+          </Col>
+        </Row>
       </Col>
-      <Col span={18}>
-        <Col span={24}>
-          <Col span={22}>
-            <Col span={10}>
-              <Row type="flex" justify="end">
-                <Rating disabled defaultValue={5} count={5} />
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Progress
-                strokeColor="#fc4c4c"
-                showInfo={false}
-                percent={(five / totalRatings) * 100}
-                strokeLinecap="round"
-              />
-            </Col>
-          </Col>
-          <Col span={2}>
-            <h3>{displayDataCheck(five)}</h3>
-          </Col>
-        </Col>
-        <Col span={24}>
-          <Col span={22}>
-            <Col span={10}>
-              <Row type="flex" justify="end">
-                <Rating disabled defaultValue={4} count={4} />
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Progress
-                strokeColor="#fc4c4c"
-                showInfo={false}
-                percent={(four / totalRatings) * 100}
-                strokeLinecap="round"
-              />
-            </Col>
-          </Col>
-          <Col span={2}>
-            <h3>{displayDataCheck(four)}</h3>
-          </Col>
-        </Col>
-        <Col span={24}>
-          <Col span={22}>
-            <Col span={10}>
-              <Row type="flex" justify="end">
-                <Rating disabled defaultValue={3} count={3} />
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Progress
-                strokeColor="#fc4c4c"
-                showInfo={false}
-                percent={(three / totalRatings) * 100}
-                strokeLinecap="round"
-              />
-            </Col>
-          </Col>
-          <Col span={2}>
-            <h3>{displayDataCheck(three)}</h3>
-          </Col>
-        </Col>
-        <Col span={24}>
-          <Col span={22}>
-            <Col span={10}>
-              <Row type="flex" justify="end">
-                <Rating disabled defaultValue={2} count={2} />
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Progress
-                strokeColor="#fc4c4c"
-                showInfo={false}
-                percent={(two / totalRatings) * 100}
-                strokeLinecap="round"
-              />
-            </Col>
-          </Col>
-          <Col span={2}>
-            <h3>{displayDataCheck(two)}</h3>
-          </Col>
-        </Col>
-        <Col span={24}>
-          <Col span={22}>
-            <Col span={10}>
-              <Row type="flex" justify="end">
-                <Rating disabled defaultValue={1} count={1} />
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Progress
-                strokeColor="#fc4c4c"
-                showInfo={false}
-                percent={(one / totalRatings) * 100}
-                strokeLinecap="round"
-              />
-            </Col>
-          </Col>
-          <Col span={2}>
-            <h3>{displayDataCheck(one)}</h3>
-          </Col>
-        </Col>
+      <Col lg={21} xs={18}>
+        {comp.map(AvrgComponent)}
       </Col>
     </Row>
   );
 };
 
 AvgRatingComponent.propTypes = {
-  rating: PropTypes.object
+  rating: PropTypes.object,
+  t: PropTypes.func
 };
 
 export default AvgRatingComponent;

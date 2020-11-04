@@ -1,11 +1,12 @@
 import React from 'react';
-import { Row, Col, Card } from 'antd';
+import { Card } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 
 import { NO_IMG } from '@gqlapp/listing-common';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
+import { Row, Col } from '@gqlapp/look-client-react';
 import { TotalPrice } from './CheckoutCartView';
 import ROUTES from '../routes';
 
@@ -22,12 +23,12 @@ const StatusText = styled.div`
   color: ${props => props.status === 'cancelled' && 'red'};
 `;
 
-const CartItemComponent = props => {
+const OrderItemComponent = props => {
   const {
-    item
+    item,
+    t
     // edit,
   } = props;
-  // console.log(item);
   return (
     <Link to={`${ROUTES.orderDetailLink}${item.id}`}>
       <Card
@@ -50,29 +51,34 @@ const CartItemComponent = props => {
           <Col span={18}>
             <div
               style={{
-                padding: '15px',
-                align: 'center',
-                height: '100%',
-                position: 'relative'
+                padding: '10px 15px'
               }}
             >
-              <Col span={24}>
-                <h2>Order Id: {item.id}</h2>
-              </Col>
-              <Col span={12}>
-                <Row type="flex" justify="start">
-                  <h3>Items: {item.orderDetails && displayDataCheck(item.orderDetails.length)}</h3>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row type="flex" justify="end">
-                  <h3>
-                    <StatusText status={item.orderState && item.orderState.state.toLowerCase()}>
-                      {item.orderState && displayDataCheck(item.orderState.state)}
-                    </StatusText>
-                  </h3>
-                </Row>
-              </Col>
+              <Row>
+                <Col span={24}>
+                  <h2>
+                    {t('orders.orderId')}
+                    {item.id}
+                  </h2>
+                </Col>
+                <Col span={12}>
+                  <Row type="flex" justify="start">
+                    <h3>
+                      {t('orders.items')}
+                      {item.orderDetails && displayDataCheck(item.orderDetails.length)}
+                    </h3>
+                  </Row>
+                </Col>
+                <Col span={12}>
+                  <Row type="flex" justify="end">
+                    <h3>
+                      <StatusText status={item.orderState && item.orderState.state.toLowerCase()}>
+                        {item.orderState && displayDataCheck(item.orderState.state)}
+                      </StatusText>
+                    </h3>
+                  </Row>
+                </Col>
+              </Row>
             </div>
           </Col>
           <Col span={6}>
@@ -83,7 +89,7 @@ const CartItemComponent = props => {
                   {TotalPrice(displayDataCheck(item.orderDetails))}
                 </strong>
                 <br />
-                <span>Total</span>
+                <span>{t('orders.total')}</span>
               </span>
             </Price>
           </Col>
@@ -93,9 +99,10 @@ const CartItemComponent = props => {
   );
 };
 
-CartItemComponent.propTypes = {
+OrderItemComponent.propTypes = {
   item: PropTypes.object,
-  deleteProduct: PropTypes.func
+  deleteProduct: PropTypes.func,
+  t: PropTypes.func
 };
 
-export default CartItemComponent;
+export default OrderItemComponent;

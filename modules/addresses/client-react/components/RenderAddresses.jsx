@@ -1,12 +1,11 @@
 import React from 'react';
-import Grid from 'hedron';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { RenderField } from '@gqlapp/look-client-react';
-import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { Row, Col, Icon, Button, Form, Modal, Popconfirm, message } from 'antd';
 
-const FormItem = Form.Item;
+import { RenderField, Icon, FormItem, Row, Col } from '@gqlapp/look-client-react';
+import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
+
+import { Button, Modal, Popconfirm, message } from 'antd';
 
 const AddressFormItem = styled.div`
   display: inline-block;
@@ -225,11 +224,11 @@ class RenderAddress extends React.Component {
                 <h4>{address.pinCode && address.pinCode + ','}</h4>
               </AddressLines>
 
-              <Row>
-                <Col xl={20} lg={20} md={20} sm={4} xs={20}>
+              <Row type="flex" justify="center">
+                <Col xxl={20} lg={20} md={20} xs={20}>
                   <AddEditbtn>
                     <Button shape="circle" size="large" onClick={() => this.modalControl(indexa, true)}>
-                      <Icon type="edit" />
+                      <Icon type="EditOutlined" />
                     </Button>
                   </AddEditbtn>
                   <Modal
@@ -246,7 +245,7 @@ class RenderAddress extends React.Component {
                     </div>
                   </Modal>
                 </Col>
-                <Col xl={4} lg={4} md={1} sm={1} xs={4}>
+                <Col xxl={4} lg={4} md={1} xs={4}>
                   <Popconfirm
                     title="Are you sure to delete this address?"
                     onConfirm={() => arrayHelpers.remove(indexa) || handleDeleteAddress(address.id)}
@@ -256,7 +255,7 @@ class RenderAddress extends React.Component {
                   >
                     <AddDelbtn>
                       <Button type="danger" shape="circle" size="large">
-                        <Icon type="delete" />
+                        <Icon type="DeleteOutlined" />
                       </Button>
                     </AddDelbtn>
                   </Popconfirm>
@@ -269,64 +268,46 @@ class RenderAddress extends React.Component {
     }
     return (
       <>
-        <Grid.Provider
-          // debug
-          padding="0px"
-          breakpoints={{ sm: '-500', md: '501-768', lg: '+769' }}
-        >
-          <>
-            {/* <h3 className="Addresses">Addresses</h3> */}
-            <br />
-            <Grid.Bounds direction="vertical" halign="center">
-              <Row>
-                <Col>
-                  <Row>
-                    <Col>
-                      <PadB30>
-                        {isSelectable
-                          ? addresses.map((address, indexas) => (
-                              <HomeAddress
-                                backgroundColor={backgroundColor}
-                                borderColor={borderColor}
-                                key={indexas}
-                                selectable={true}
-                                onClick={() => this.renderCondition(indexas, address.id)}
-                                active={this.state.address === indexas ? true : false}
-                              >
-                                {addressCard[indexas]}
-                              </HomeAddress>
-                            ))
-                          : addresses.map((address, indexas) => (
-                              <HomeAddress
-                                backgroundColor={backgroundColor}
-                                borderColor={borderColor}
-                                selectable={false}
-                                key={indexas}
-                              >
-                                {addressCard[indexas]}
-                              </HomeAddress>
-                            ))}
-                      </PadB30>
-                    </Col>
-                    <Col>
-                      <PadB30>
-                        <AddNewAddressBlock
-                          onClick={this.handleAddAddress}
-                          style={{ marginTop: !isSelectable ? '15px' : null }}
-                        >
-                          <AddNewAddress>
-                            <Icon type="plus" />
-                          </AddNewAddress>
-                          <h4 style={{ position: 'relative', top: '30px' }}>Add a new address</h4>
-                        </AddNewAddressBlock>
-                      </PadB30>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Grid.Bounds>
-          </>
-        </Grid.Provider>
+        <br />
+        <Row type="flex" justify="center">
+          <Col>
+            <PadB30>
+              {isSelectable
+                ? addresses.map((address, indexas) => (
+                    <HomeAddress
+                      backgroundColor={backgroundColor}
+                      borderColor={borderColor}
+                      key={indexas}
+                      selectable={true}
+                      onClick={() => this.renderCondition(indexas, address.id)}
+                      active={this.state.address === indexas ? true : false}
+                    >
+                      {addressCard[indexas]}
+                    </HomeAddress>
+                  ))
+                : addresses.map((address, indexas) => (
+                    <HomeAddress
+                      backgroundColor={backgroundColor}
+                      borderColor={borderColor}
+                      selectable={false}
+                      key={indexas}
+                    >
+                      {addressCard[indexas]}
+                    </HomeAddress>
+                  ))}
+            </PadB30>
+          </Col>
+          <Col>
+            <PadB30>
+              <AddNewAddressBlock onClick={this.handleAddAddress} style={{ marginTop: !isSelectable ? '15px' : null }}>
+                <AddNewAddress>
+                  <Icon type="PlusOutlined" />
+                </AddNewAddress>
+                <h4 style={{ position: 'relative', top: '30px' }}>Add a new address</h4>
+              </AddNewAddressBlock>
+            </PadB30>
+          </Col>
+        </Row>
       </>
     );
   }

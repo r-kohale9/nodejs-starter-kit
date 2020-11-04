@@ -1,11 +1,21 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { Row, Col, Form, Card } from 'antd';
 import { withFormik } from 'formik';
 
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
-import { RenderCheckBox, FormItem, Select, Option, RenderField, Button, RenderUpload } from '@gqlapp/look-client-react';
+import {
+  Row,
+  Col,
+  Form,
+  RenderCheckBox,
+  FormItem,
+  Select,
+  Option,
+  RenderField,
+  RenderUpload,
+  SubmitButton
+} from '@gqlapp/look-client-react';
 import { LABEL } from '@gqlapp/home-common';
 
 const DynamicCarouselFormSchema = {
@@ -17,37 +27,31 @@ class DynamicCarouselFormComponent extends React.Component {
     load: false
   };
   render() {
-    const { cardTitle, values, handleSubmit, setFieldValue } = this.props;
+    const { t, values, handleSubmit, setFieldValue } = this.props;
 
     // console.log('props form component', this.props.values);
     return (
-      <Card
-        title={
-          <h1>
-            <strong>{cardTitle}</strong>
-          </h1>
-        }
-      >
+      <>
         <Field
           name="title"
           component={RenderField}
-          placeholder="Title"
+          placeholder={t('dynamicCarousel.form.title')}
           type="text"
-          label="Title"
+          label={t('dynamicCarousel.form.title')}
           value={values.title}
         />
         <Field
           name="description"
           component={RenderField}
-          placeholder="Description"
+          placeholder={t('dynamicCarousel.form.description')}
           type="textarea"
-          label="Description"
+          label={t('dynamicCarousel.form.description')}
           value={values.description}
         />
         <Form onSubmit={handleSubmit}>
           <Row type="flex" gutter={24}>
             <Col span={12}>
-              <FormItem label={'Label'}>
+              <FormItem label={t('dynamicCarousel.form.label')}>
                 <Select
                   name="label"
                   defaultValue={values.label}
@@ -71,25 +75,32 @@ class DynamicCarouselFormComponent extends React.Component {
                 name="isActive"
                 component={RenderCheckBox}
                 type="checkbox"
-                label={'Is Active'}
+                label={t('dynamicCarousel.form.isActive')}
                 checked={values.isActive}
               />
             </Col>
           </Row>
-          <Field name="link" component={RenderField} placeholder="Link" type="text" label="Link" value={values.link} />
+          <Field
+            name="link"
+            component={RenderField}
+            placeholder={t('dynamicCarousel.form.link')}
+            type="text"
+            label={t('dynamicCarousel.form.link')}
+            value={values.link}
+          />
           <Field
             name="imageUrl"
             component={RenderUpload}
             type="text"
             setload={e => this.setState({ load: e })}
-            label={'Image url'}
+            label={t('dynamicCarousel.form.imageUrl')}
             value={values.imageUrl}
           />
-          <Button color="primary" type="submit" disabled={this.state.load}>
-            Submit
-          </Button>
+          <SubmitButton color="primary" type="submit" disabled={this.state.load}>
+            {t('dynamicCarousel.btn.submit')}
+          </SubmitButton>
         </Form>
-      </Card>
+      </>
     );
   }
 }
