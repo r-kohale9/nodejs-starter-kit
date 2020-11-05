@@ -10,7 +10,7 @@ import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 
 import ROUTES from '../routes';
-import { withListings } from '../containers/ListingOperations';
+import { withListingByIds } from '../containers/ListingOperations';
 import RelatedCardComponent from './RelatedCardComponent';
 
 const isImg = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?/;
@@ -30,7 +30,7 @@ export const getChildrenToRender = (item, i) => {
   return React.createElement(tag, { key: i.toString(), ...item }, children);
 };
 
-const ListingCarousel = props => {
+const ListingsByIdsCarousel = props => {
   const {
     listings,
     loading: loading1,
@@ -41,6 +41,7 @@ const ListingCarousel = props => {
     onDelete,
     getCart
   } = props;
+
   const dataSource = {
     wrapper: { className: 'home-page-wrapper newArrivals-wrapper' },
     page: { className: 'home-page newArrivals' },
@@ -127,6 +128,7 @@ const ListingCarousel = props => {
     };
   };
 
+  // console.log('props', props);
   return (
     <div {...props} {...dataSource.wrapper}>
       <div {...dataSource.page}>
@@ -155,22 +157,25 @@ const ListingCarousel = props => {
             }}
           />
         ) : (
-          !loading1 && (
-            <div align="center">
-              <Empty description={'No Listings.'}>
-                <Link to={`${ROUTES.add}`}>
-                  <Button color="primary">Add</Button>
-                </Link>
-              </Empty>
-            </div>
-          )
+          <>
+            {(loading1 || currentUserLoading) && <Spinner size="small" />}
+            {!loading1 && (
+              <div align="center">
+                <Empty description={'No Listings.'}>
+                  <Link to={`${ROUTES.add}`}>
+                    <Button color="primary">Add</Button>
+                  </Link>
+                </Empty>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
   );
 };
 
-ListingCarousel.propTypes = {
+ListingsByIdsCarousel.propTypes = {
   currentUser: PropTypes.object,
   getCart: PropTypes.object,
   history: PropTypes.object.isRequired,
@@ -183,4 +188,4 @@ ListingCarousel.propTypes = {
   isMobile: PropTypes.bool
 };
 
-export default compose(withListings)(ListingCarousel);
+export default compose(withListingByIds)(ListingsByIdsCarousel);
