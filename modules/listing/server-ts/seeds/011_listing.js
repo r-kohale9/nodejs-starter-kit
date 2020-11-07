@@ -16,7 +16,8 @@ exports.seed = async function(knex) {
 
   await Promise.all(
     [...Array(100).keys()].map(async ii => {
-      const isDiscount = Math.random() < 0.6 ? false : true;
+      const isDiscount = false;
+      // const isDiscount = Math.random() > 0.7;
       const isActive = Math.random() < 0.6 ? false : true;
       const listing = await returnId(knex('listing')).insert({
         user_id: Math.random() < 0.7 ? 2 : 1,

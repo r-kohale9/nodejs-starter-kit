@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Skeleton, Statistic } from 'antd';
 
-import { Icon, Row, Col } from '@gqlapp/look-client-react';
+import { Icon, Row, Col, Skeleton, Statistic } from '@gqlapp/look-client-react';
 import { translate } from '@gqlapp/i18n-client-react';
 
 import CurrencyDisplay from './CurrencyDisplay';
@@ -56,7 +55,10 @@ CurrencyCostDisplay.propTypes = {
 
 const DiscountComponent = props => {
   const { loading, t, cost, isDiscount, discount, modalDiscount } = props;
+  const now = new Date().toISOString();
   const discountDuration = modalDiscount && modalDiscount.discountDuration;
+  const startDate = discountDuration && discountDuration.startDate;
+  const endDate = discountDuration && discountDuration.endDate;
   return !loading ? (
     <Row>
       <Col span={24}>
@@ -82,7 +84,16 @@ const DiscountComponent = props => {
         </i>
       </Col>
       {discountDuration && (
-        <Col span={24}>{`Discount expires on ${new Date(discountDuration.endDate).toLocaleString()}`}</Col>
+        <Col span={24}>
+          {startDate <= now && endDate >= now ? (
+            <h4>Ends in: {Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24))} days</h4>
+          ) : (
+            startDate >= now &&
+            endDate >= now && (
+              <h4>Starts in: {Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24))} days</h4>
+            )
+          )}
+        </Col>
       )}
     </Row>
   ) : (
