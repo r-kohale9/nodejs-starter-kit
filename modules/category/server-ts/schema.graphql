@@ -5,6 +5,7 @@ type Category {
   imageUrl: String
   description: String
   isNavbar: Boolean
+  parentCategoryId: Int
 
   subCategories: [Category]
 
@@ -58,8 +59,7 @@ input AddCategoryInput {
   imageUrl: String
   description: String
   isNavbar: Boolean
-
-  subCategories: [AddCategoryInput]
+  parentCategoryId: Int
 }
 
 input EditCategoryInput {

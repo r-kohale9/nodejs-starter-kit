@@ -1,8 +1,8 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Card } from 'antd';
+import { Spin, Card } from 'antd';
+import { useQuery } from 'react-apollo';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
@@ -26,6 +26,7 @@ import { displayDataCheck } from '@gqlapp/listing-client-react/components/functi
 // import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 import { NO_IMG } from '@gqlapp/listing-common';
 
+import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
 import ROUTES from '../routes';
 // import { withCategory } from '../containers/CategoryOpertations';
 
@@ -38,9 +39,9 @@ const NoCategoryMessage = ({ t }) => (
     <br />
     <br />
     <Empty description={t('category.noCategoryMsg')}>
-      <Link to={`${ROUTES.add}`}>
+      <a href={`${ROUTES.add}`}>
         <Button color="primary">Add</Button>
-      </Link>
+      </a>
     </Empty>
   </div>
 );
@@ -80,26 +81,19 @@ const CategoryListComponent = props => {
     {
       title: (
         <a onClick={e => handleOrderBy(e, 'id')} href="#">
-          {/* {t('list.column.listTitle')} */}
+          {/* {t('category.column.id')} */}
           {'Id'}
           {renderOrderByArrow('id')}
         </a>
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text /* , record */) => (
-        <a
-          href="#"
-          // href={`${ROUTES.listingDetailLink}${record.id}`} rel="noopener noreferrer" target="_blank"
-        >
-          {displayDataCheck(text)}
-        </a>
-      ),
+      render: (text /* , record */) => displayDataCheck(text),
     },
     {
       title: (
         <a onClick={e => handleOrderBy(e, 'title')} href="#">
-          {t('list.column.listTitle')} {renderOrderByArrow('title')}
+          {t('category.column.listTitle')} {renderOrderByArrow('title')}
         </a>
       ),
       dataIndex: 'title',
@@ -109,24 +103,26 @@ const CategoryListComponent = props => {
           href="#"
           // href={`${ROUTES.listingDetailLink}${record.id}`} rel="noopener noreferrer" target="_blank"
         >
-          <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
-            <Meta
-              title={
-                <>
-                  <div style={{ width: '100%', marginTop: '10px' }} />
-                  {displayDataCheck(text)}
-                </>
-              }
-              avatar={<Avatar size={46} src={record.imageUrl || NO_IMG} alt="" />}
-            />
-          </Card>
+          <a href={`${ROUTES.categoryCatalogueLink}${record.id}`} rel="noopener noreferrer" target="_blank">
+            <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
+              <Meta
+                title={
+                  <>
+                    <div style={{ width: '100%', marginTop: '10px' }} />
+                    {displayDataCheck(text)}
+                  </>
+                }
+                avatar={<Avatar size={46} src={record.imageUrl || NO_IMG} alt="" />}
+              />
+            </Card>
+          </a>
         </a>
       ),
     },
     {
       title: (
         <a onClick={e => handleOrderBy(e, 'is_active')} href="#">
-          {t('list.column.active')} {renderOrderByArrow('is_active')}
+          {t('category.column.active')} {renderOrderByArrow('is_active')}
         </a>
       ),
       dataIndex: 'isActive',
@@ -144,15 +140,15 @@ const CategoryListComponent = props => {
     },
 
     {
-      title: t('list.column.actions'),
+      title: t('category.column.actions'),
       key: 'actions',
       render: (text, record) => (
         <div
         // align="center"
         >
-          <Link className="listing-link" to={`${ROUTES.editLink}${record.id}`}>
+          <a className="listing-link" href={`${ROUTES.editLink}${record.id}`}>
             <EditIcon />
-          </Link>
+          </a>
           <Divider type="vertical" />
           {/* <Tooltip title="Duplicate Listing">
             <Button color="primary" shape="circle" onClick={() => onDuplicate(record.id)}>
@@ -166,14 +162,38 @@ const CategoryListComponent = props => {
     },
   ];
 
-  const expandedRowRender = (record /* , index */) => {
-    // const withLoadedCategory = Component => {
-    //   const withLoadedCategory = ({ loading, ...props }) => (loading ? <Spinner size="small" /> : <Component {...props} />);
-    //   return withCategory(withLoadedCategory);
-    // };
-    // console.log(record, index);
-    // return withLoadedCategory(<Table columns={columns} dataSource={record.subCategories} />);
-    return <Table /* showHeader={false} */ columns={columns} dataSource={record.subCategories} />;
+  const ExpandedRowRender = ({ record /* , index */ }) => {
+    const { loading, data } = useQuery(CATEGORY_QUERY, {
+      variables: {
+        id: record.id,
+      },
+    });
+    const category = data && data.category;
+    return loading ? (
+      <div align="center">
+        <Spin size="small" />
+      </div>
+    ) : (
+      <Table
+        showHeader={false}
+        tableLayout={'auto'}
+        expandable={{
+          expandedRowRender: (record, index, indent, expanded) => (
+            <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
+          ),
+          expandIcon: ({ expanded, onExpand, record }) =>
+            expanded ? (
+              <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
+            ) : (
+              category.subCategories &&
+              category.subCategories.length > 0 && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
+            ),
+        }}
+        columns={columns}
+        dataSource={category.subCategories}
+      />
+    );
+    // return <h1>hello</h1>
   };
 
   const handlePageChange = (pagination, pageNumber) => {
@@ -188,8 +208,11 @@ const CategoryListComponent = props => {
       <Table
         dataSource={categories.edges.map(({ node }) => node)}
         columns={columns}
+        tableLayout={'auto'}
         expandable={{
-          expandedRowRender,
+          expandedRowRender: (record, index, indent, expanded) => (
+            <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
+          ),
           expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
@@ -207,7 +230,7 @@ const CategoryListComponent = props => {
           hasNextPage={categories.pageInfo.hasNextPage}
           pagination={type}
           total={categories.totalCount}
-          loadMoreText={t('list.btn.more')}
+          loadMoreText={t('category.btn.more')}
           defaultPageSize={itemsNumber}
         />
       </div>
@@ -218,7 +241,17 @@ const CategoryListComponent = props => {
     <div style={{ overflowX: 'auto' }}>
       {/* Render loader */}
       {loading && (
-        <RenderTableLoading columns={columns} tableProps={{ scroll: { x: 1300 }, expandable: { expandedRowRender } }} />
+        <RenderTableLoading
+          columns={columns}
+          tableProps={{
+            scroll: { x: 1300 },
+            expandable: {
+              expandedRowRender: (record, index, indent, expanded) => (
+                <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
+              ),
+            },
+          }}
+        />
       )}
       {/* Render main category content */}
       {categories && categories.totalCount ? <RenderCategory /> : !loading && <NoCategoryMessage t={t} />}
