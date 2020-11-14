@@ -11,6 +11,8 @@ export interface Identifier {
 }
 
 export interface CategoryInput {
+  modalName: string;
+
   title: string;
   imageUrl: string;
   description: string;
@@ -20,7 +22,7 @@ export interface CategoryInput {
   // subCategories: [CategoryInput] | undefined;
 }
 
-const eager = '[sub_categories]';
+const eager = '[sub_categories, modal_category]';
 // const eager = '[category]';
 
 export default class CategoryDAO extends Model {
@@ -42,18 +44,22 @@ export default class CategoryDAO extends Model {
           from: 'category.id',
           to: 'category.parent_category_id'
         }
+      },
+      modal_category: {
+        relation: Model.HasOneRelation,
+        modelClass: ModalCategory,
+        join: {
+          from: 'category.id',
+          to: 'modal_category.category_id'
+        }
       }
     };
-  }
-
-  public categorys() {
-    return knex.select();
   }
 
   public async categoriesPagination(limit: number, after: number, orderBy: any, filter: any, userId: number) {
     const queryBuilder = CategoryDAO.query()
       .eager(eager)
-      .where('parent_category_id', null);
+      .where('category.parent_category_id', null);
 
     if (orderBy && orderBy.column) {
       const column = orderBy.column;
@@ -64,26 +70,33 @@ export default class CategoryDAO extends Model {
 
       queryBuilder.orderBy(decamelize(column), order);
     } else {
-      queryBuilder.orderBy('id', 'desc');
+      queryBuilder.orderBy('category.id', 'desc');
     }
 
     if (filter) {
       if (has(filter, 'isActive') && filter.isActive !== '') {
-        queryBuilder.where(function () {
-          this.where('is_active', filter.isActive);
+        queryBuilder.where(function() {
+          this.where('category.is_active', filter.isActive);
         });
       }
-
+      if (has(filter, 'isNavbar') && filter.isNavbar !== '') {
+        queryBuilder.where(function() {
+          this.where('category.is_navbar', filter.isNavbar);
+        });
+      }
+      if (has(filter, 'modalName') && filter.modalName !== '') {
+        queryBuilder.where(function() {
+          this.where('modal_category.modal_name', filter.modalName);
+        });
+      }
       if (has(filter, 'searchText') && filter.searchText !== '') {
-        queryBuilder.where(function () {
-          this.where(raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`]));
+        queryBuilder.where(function() {
+          this.where(raw('LOWER(??) LIKE LOWER(?)', ['category.title', `%${filter.searchText}%`]));
         });
       }
     }
 
-    // queryBuilder
-    //   .from('category')
-    //   .leftJoin('user', 'user.id', 'category.user_id');
+    queryBuilder.from('category').leftJoin('modal_category', 'modal_category.category_id', 'category.id');
 
     const allcategories = camelizeKeys(await queryBuilder);
     const total = allcategories.length;
@@ -102,11 +115,24 @@ export default class CategoryDAO extends Model {
       .orderBy('id', 'desc');
 
     const res = camelizeKeys(await queryBuilder);
+    // console.log(res);
     return res;
   }
 
-  public addCategory(params: CategoryInput) {
-    return CategoryDAO.query().insertGraph(decamelizeKeys(params));
+  public async addCategory(params: CategoryInput) {
+    const res = camelizeKeys(
+      await CategoryDAO.query().insertGraph(
+        decamelizeKeys({
+          title: params.title,
+          description: params.description,
+          imageUrl: params.imageUrl,
+          parentCategoryId: params.parentCategoryId,
+          isNavbar: params.isNavbar
+        })
+      )
+    );
+    await ModalCategory.query().insertGraph(decamelizeKeys({ modalName: params.modalName, categoryId: res.id }));
+    return res;
   }
 
   // public async addCategories(parentCategory: CategoryInput) {
@@ -133,8 +159,25 @@ export default class CategoryDAO extends Model {
   //   return true;
   // }
 
-  public async editCategory(params: CategoryInput) {
-    const res = await CategoryDAO.query().upsertGraph(decamelizeKeys(params));
+  public async editCategory(params: CategoryInput & Identifier) {
+    const res = camelizeKeys(
+      await CategoryDAO.query().upsertGraph(
+        decamelizeKeys({
+          id: params.id,
+          title: params.title,
+          description: params.description,
+          imageUrl: params.imageUrl,
+          parentCategoryId: params.parentCategoryId,
+          isNavbar: params.isNavbar
+        })
+      )
+    );
+    const modalCategory = camelizeKeys(await ModalCategory.query().where('category_id', res.id));
+    if (modalCategory && modalCategory.length > 0) {
+      await ModalCategory.query().upsertGraph(decamelizeKeys({ id: modalCategory[0].id, modalName: params.modalName }));
+    } else {
+      await ModalCategory.query().insertGraph(decamelizeKeys({ modalName: params.modalName, categoryId: res.id }));
+    }
     return res.id;
   }
 
@@ -142,5 +185,29 @@ export default class CategoryDAO extends Model {
     return knex('category')
       .where('id', '=', id)
       .del();
+  }
+}
+
+// ModalCategory model.
+class ModalCategory extends Model {
+  static get tableName() {
+    return 'modal_category';
+  }
+
+  static get idColumn() {
+    return 'id';
+  }
+
+  static get relationMappings() {
+    return {
+      category: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: CategoryDAO,
+        join: {
+          from: 'modal_category.category_id',
+          to: 'category.id'
+        }
+      }
+    };
   }
 }

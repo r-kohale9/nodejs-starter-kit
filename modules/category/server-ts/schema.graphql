@@ -6,10 +6,16 @@ type Category {
   description: String
   isNavbar: Boolean
   parentCategoryId: Int
+  modalCategory: ModalCategory
 
   subCategories: [Category]
 
   isActive: Boolean
+}
+
+type ModalCategory {
+  id: Int
+  modalName: String
 }
 
 type Categories {
@@ -45,6 +51,8 @@ input OrderByCategoryInput {
 }
 input FilterCategoryInput {
   searchText: String
+  modalName: String
+  isNavbar: Boolean
   isActive: Boolean
 }
 
@@ -55,6 +63,8 @@ extend type Mutation {
 }
 
 input AddCategoryInput {
+  modalName: String
+
   title: String
   imageUrl: String
   description: String
@@ -63,6 +73,8 @@ input AddCategoryInput {
 }
 
 input EditCategoryInput {
+  modalName: String
+
   id: Int
   title: String
   imageUrl: String

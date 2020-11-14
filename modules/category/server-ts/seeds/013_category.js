@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { returnId, truncateTables } from '@gqlapp/database-server-ts';
 import { camelizeKeys, decamelizeKeys } from 'humps';
+import { MODAL } from '@gqlapp/review-common';
 
 let CATEGORIES = {
   title: `Category`,
@@ -27,17 +28,20 @@ const CATEGORY = {
 export async function seed(knex) {
   await truncateTables(knex, Promise, ['category', 'modal_category']);
   async function add(obj) {
-    return await returnId(knex('category')).insert(decamelizeKeys(obj));
+    const res = await returnId(knex('category')).insert(decamelizeKeys(obj));
+    await returnId(knex('modal_category')).insert(decamelizeKeys({ modalName: MODAL[1].value, categoryId: res[0] }));
+    return res;
   }
 
   async function addCategory(parentCategory, i) {
     try {
-      const { title, description, imageUrl, subCategories, parentCategoryId } = parentCategory;
+      const { title, description, imageUrl, isNavbar, subCategories, parentCategoryId } = parentCategory;
       const parentId = camelizeKeys(
         await add({
           title: `${title}${i}`,
           description: `${description}${i}`,
           imageUrl: `${imageUrl}${i}`,
+          isNavbar,
           parentCategoryId
         })
       )[0];
@@ -49,6 +53,7 @@ export async function seed(knex) {
               title: c.title,
               description: c.description,
               imageUrl: c.imageUrl,
+              isNavbar,
               subCategories: c.subCategories,
               parentCategoryId: parentId
             },

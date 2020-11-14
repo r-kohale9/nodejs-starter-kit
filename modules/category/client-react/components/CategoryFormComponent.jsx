@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withFormik, FieldArray } from 'formik';
+import { withFormik } from 'formik';
 
-import { Button, RenderCheckBox, RenderUpload, Icon, Card, RenderField, Form } from '@gqlapp/look-client-react';
+import {
+  Row,
+  Col,
+  Button,
+  RenderCheckBox,
+  Option,
+  RenderUpload,
+  RenderSelect,
+  Icon,
+  Card,
+  RenderField,
+  Form
+} from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
+import { MODAL } from '@gqlapp/review-common';
 
 import CategoryTreeComponent from '../containers/CategoryTreeComponent';
 // import RendersubCategories from './RendersubCategories';
 
 const CategoryFormSchema = {
-  title: [required],
+  title: [required]
 };
 
 const CategoryFormComponent = props => {
-  const { cardTitle, handleSubmit, values, t, showAdditional = false } = props;
+  const { cardTitle, handleSubmit, values, t } = props;
   const [load, setLoad] = useState(false);
   return (
     <Card
@@ -37,58 +50,83 @@ const CategoryFormComponent = props => {
         </>
       }
     >
-      {/* {console.log(values.parentCategoryId)} */}
+      {console.log(values)}
       <Form onSubmit={handleSubmit} align="left">
-        <Field
-          name="title"
-          component={RenderField}
-          placeholder={t('categoryForm.title')}
-          type="text"
-          label={t('categoryForm.title')}
-          value={values.title}
-        />
-        <Field
-          name="description"
-          component={RenderField}
-          placeholder={t('categoryForm.description')}
-          type="textarea"
-          label={t('categoryForm.description')}
-          value={values.description}
-        />
-        <Field name="isNavbar" component={RenderCheckBox} type="checkbox" label={'Is Navbar'} checked={values.isNavbar} />
-        <Field
-          component={CategoryTreeComponent}
-          type="number"
-          name="parentCategoryId"
-          placeholder="category"
-          label="Select a category"
-          value={values.parentCategoryId}
-        />
-        <Field
-          name="imageUrl"
-          component={RenderUpload}
-          type="text"
-          setload={setLoad}
-          label={'Image url'}
-          value={values.imageUrl}
-        />
-        {/* {showAdditional && (
-          <FieldArray
-            name={'subCategories'}
-            render={arrayHelpers => (
-              <RendersubCategories
-                name={'subCategories'}
-                arrayHelpers={arrayHelpers}
-                values={values.subCategories}
-                // label={"Add Choices"}
-                setload={setLoad}
-              />
-            )}
-          />
-        )} */}
-        <Button color="primary" type="submit" disabled={load}>
-          Submit
-        </Button>
+        <Row type="flex" gutter={24}>
+          <Col md={12} xs={24} align="left">
+            <Field
+              name="title"
+              component={RenderField}
+              placeholder={t('categoryForm.title')}
+              type="text"
+              label={t('categoryForm.title')}
+              value={values.title}
+            />
+          </Col>
+          <Col md={12} xs={24} align="left">
+            <Field
+              name="modalName"
+              component={RenderSelect}
+              placeholder={t('categoryForm.modalName')}
+              defaultValue={MODAL[0].value}
+              label={t('categoryForm.modalName')}
+              style={{ width: '100px' }}
+              value={values.modalName}
+            >
+              {MODAL.map((m, i) => (
+                <Option key={i} value={m.value}>
+                  {m.label}
+                </Option>
+              ))}
+            </Field>
+          </Col>
+          <Col md={12} xs={24} align="left">
+            <Field
+              name="description"
+              component={RenderField}
+              placeholder={t('categoryForm.description')}
+              type="textarea"
+              label={t('categoryForm.description')}
+              value={values.description}
+            />
+          </Col>
+          <Col md={12} xs={24} align="left">
+            <Field
+              component={CategoryTreeComponent}
+              type="number"
+              name="parentCategoryId"
+              placeholder="category"
+              label="Select a category"
+              value={values.parentCategoryId}
+            />
+            <Row type="flex">
+              <Col md={12} xs={24} align="left">
+                <Field
+                  name="isNavbar"
+                  component={RenderCheckBox}
+                  type="checkbox"
+                  label={'Is Navbar'}
+                  checked={values.isNavbar}
+                />
+              </Col>
+              <Col md={12} xs={24} align="left">
+                <Field
+                  name="imageUrl"
+                  component={RenderUpload}
+                  type="text"
+                  setload={setLoad}
+                  label={'Image url'}
+                  value={values.imageUrl}
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col span={24} align="right">
+            <Button color="primary" type="submit" disabled={load}>
+              Submit
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </Card>
   );
@@ -99,7 +137,7 @@ CategoryFormComponent.propTypes = {
   values: PropTypes.object,
   t: PropTypes.func,
   cardTitle: PropTypes.string,
-  showAdditional: PropTypes.bool,
+  showAdditional: PropTypes.bool
 };
 
 const CategoryWithFormik = withFormik({
@@ -108,10 +146,11 @@ const CategoryWithFormik = withFormik({
     return {
       id: (props.category && props.category.id) || null,
       title: (props.category && props.category.title) || '',
+      modalName: (props.category && props.category.modalCategory && props.category.modalCategory.modalName) || '',
       parentCategoryId: (props.category && props.category.parentCategoryId) || null,
       description: (props.category && props.category.description) || '',
       isNavbar: (props.category && props.category.isNavbar) || false,
-      imageUrl: (props.category && props.category.imageUrl) || '',
+      imageUrl: (props.category && props.category.imageUrl) || ''
       // subCategories: (props.category && props.category.subCategories) || [],
     };
   },
@@ -119,7 +158,7 @@ const CategoryWithFormik = withFormik({
     await onSubmit(values);
   },
   validate: values => validate(values, CategoryFormSchema),
-  displayName: 'Category Form', // helps with React DevTools
+  displayName: 'Category Form' // helps with React DevTools
 });
 
 export default CategoryWithFormik(CategoryFormComponent);
