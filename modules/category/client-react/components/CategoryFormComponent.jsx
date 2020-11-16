@@ -50,7 +50,7 @@ const CategoryFormComponent = props => {
         </>
       }
     >
-      {console.log(values)}
+      {/* {console.log(values)} */}
       <Form onSubmit={handleSubmit} align="left">
         <Row type="flex" gutter={24}>
           <Col md={12} xs={24} align="left">
@@ -93,6 +93,8 @@ const CategoryFormComponent = props => {
           <Col md={12} xs={24} align="left">
             <Field
               component={CategoryTreeComponent}
+              disableParent={false}
+              filter={{ modalName: values.modalName }}
               type="number"
               name="parentCategoryId"
               placeholder="category"

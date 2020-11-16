@@ -18,6 +18,7 @@ export interface CategoryInput {
   description: string;
   isNavbar: boolean;
   parentCategoryId: number;
+  isLeaf: boolean;
 
   // subCategories: [CategoryInput] | undefined;
 }
@@ -120,6 +121,11 @@ export default class CategoryDAO extends Model {
   }
 
   public async addCategory(params: CategoryInput) {
+    let isLeaf = false;
+    if (params.parentCategoryId !== null) {
+      await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
+      isLeaf = true;
+    }
     const res = camelizeKeys(
       await CategoryDAO.query().insertGraph(
         decamelizeKeys({
@@ -127,7 +133,8 @@ export default class CategoryDAO extends Model {
           description: params.description,
           imageUrl: params.imageUrl,
           parentCategoryId: params.parentCategoryId,
-          isNavbar: params.isNavbar
+          isNavbar: params.isNavbar,
+          isLeaf
         })
       )
     );
@@ -159,7 +166,30 @@ export default class CategoryDAO extends Model {
   //   return true;
   // }
 
+  // if pid is nt same as prev -> pId = null, nt-null
+  // if pid is same
   public async editCategory(params: CategoryInput & Identifier) {
+    const prevCategory = camelizeKeys(
+      await CategoryDAO.query()
+        .findById(params.id)
+        .eager(eager)
+    );
+    if (params.parentCategoryId !== prevCategory.parentCategoryId) {
+      // before edit, parentCategory if nt-null to isLeaf to true if has only 1 leaf
+      if (prevCategory.parentCategoryId !== null) {
+        const parentCategory = camelizeKeys(
+          await CategoryDAO.query()
+            .findById(params.parentCategoryId)
+            .eager(eager)
+        );
+        if (parentCategory.subCategories.length === 1) {
+          await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: parentCategory.id, isLeaf: true }));
+        }
+      }
+
+      // after edit, parentCategory to isLeaf to false since adding a leaf to it
+      await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
+    }
     const res = camelizeKeys(
       await CategoryDAO.query().upsertGraph(
         decamelizeKeys({
@@ -182,6 +212,21 @@ export default class CategoryDAO extends Model {
   }
 
   public async deleteCategory(id: number) {
+    const category = camelizeKeys(
+      await CategoryDAO.query()
+        .findById(id)
+        .eager(eager)
+    );
+    if (category.parentCategoryId !== null) {
+      const parentCategory = camelizeKeys(
+        await CategoryDAO.query()
+          .findById(category.parentCategoryId)
+          .eager(eager)
+      );
+      if (parentCategory.subCategories.length === 1) {
+        await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: parentCategory.id, isLeaf: true }));
+      }
+    }
     return knex('category')
       .where('id', '=', id)
       .del();
