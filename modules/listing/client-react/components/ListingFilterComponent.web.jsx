@@ -14,7 +14,7 @@ import SliderControlled from './FIlterSliderControlledComponent';
 const ListingsFilterComponent = props => {
   // console.log('listings filter component', props);
   const {
-    filter: { searchText, lowerCost, upperCost, categoryId, isActive },
+    filter: { searchText, lowerCost, upperCost, isActive, categoryFilter },
     onIsActiveChange,
     onCategoryChange,
     onSearchTextChange,
@@ -23,6 +23,7 @@ const ListingsFilterComponent = props => {
     onFiltersRemove,
     listings,
     showIsActive = false,
+    showCategoryFilter = false,
     orderBy,
     onOrderBy,
     t
@@ -43,6 +44,11 @@ const ListingsFilterComponent = props => {
       searchText: '',
       lowerCost: 0,
       upperCost: 0,
+      categoryFilter: {
+        categoryId: 0,
+        allSubCategory: true,
+        __typename: 'CategoryFilter'
+      },
       isActive: true
     };
     const orderBy = { column: '', order: '' };
@@ -55,12 +61,29 @@ const ListingsFilterComponent = props => {
     [`${minCostRangeValues}`]: minCostRangeValues,
     [`${maxCostRangeValues}`]: maxCostRangeValues
   };
+
+  const CategoryTreeField = showCategoryFilter && (
+    <Field
+      component={CategoryTreeComponent}
+      filter={{ modalName: MODAL[1].value }}
+      // disableParent={true}
+      onChange={e => onCategoryChange({ categoryId: e, allSubCategory: false })}
+      type="number"
+      name="categoryId"
+      placeholder="category"
+      label="Select a category"
+      value={categoryFilter.categoryId}
+    />
+  );
+
   return (
-    <Form layout="inline">
+    <Form
+    //  layout="inline"
+    >
       <Row type="flex" align="middle">
         <Col span={24}>
           <Row>
-            <Col lg={18} xs={24} md={14}>
+            <Col lg={10} xs={24} md={14}>
               <Row gutter={24}>
                 <Col>
                   <FormItem label={'search'} style={{ width: '100%' }}>
@@ -76,7 +99,7 @@ const ListingsFilterComponent = props => {
                 </Col>
                 <Col>
                   {showIsActive && (
-                    <FormItem>
+                    <FormItem labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
                       <Label>
                         <Input
                           type="checkbox"
@@ -89,29 +112,17 @@ const ListingsFilterComponent = props => {
                     </FormItem>
                   )}
                 </Col>
-                <Col>
-                  <Field
-                    component={CategoryTreeComponent}
-                    filter={{ modalName: MODAL[1].value }}
-                    disableParent={true}
-                    onChange={onCategoryChange}
-                    type="number"
-                    name="categoryId"
-                    placeholder="category"
-                    label="Select a category"
-                    value={categoryId}
-                  />
-                </Col>
               </Row>
             </Col>
             <Col
-              lg={6}
+              lg={14}
               xs={24}
               md={10}
               // align="right"
             >
               <Row>
                 <Col lg={0} md={0} xs={24}>
+                  {CategoryTreeField}
                   <FormItem label={t('listingFilter.sortBy')} style={{ width: '100%' }}>
                     <Select
                       name="sortBy"
@@ -120,7 +131,10 @@ const ListingsFilterComponent = props => {
                       onChange={e =>
                         SORT_BY[e].sortBy === ''
                           ? onOrderBy({ order: SORT_BY[e].sortBy, column: '' })
-                          : onOrderBy({ order: SORT_BY[e].sortBy, column: SORT_BY[e].value })
+                          : onOrderBy({
+                              order: SORT_BY[e].sortBy,
+                              column: SORT_BY[e].value
+                            })
                       }
                     >
                       <Option key={1} value="">
@@ -136,6 +150,8 @@ const ListingsFilterComponent = props => {
                 </Col>
                 <Col xs={0} md={24} lg={24}>
                   <Row type="flex" justify="end">
+                    {CategoryTreeField}
+
                     {SORT_BY && SORT_BY.length !== 0 && (
                       <FormItem label={'Sort By'}>
                         <Select
@@ -144,8 +160,14 @@ const ListingsFilterComponent = props => {
                           style={{ width: '170px' }}
                           onChange={e =>
                             SORT_BY[e].sortBy === ''
-                              ? onOrderBy({ order: SORT_BY[e].sortBy, column: '' })
-                              : onOrderBy({ order: SORT_BY[e].sortBy, column: SORT_BY[e].value })
+                              ? onOrderBy({
+                                  order: SORT_BY[e].sortBy,
+                                  column: ''
+                                })
+                              : onOrderBy({
+                                  order: SORT_BY[e].sortBy,
+                                  column: SORT_BY[e].value
+                                })
                           }
                         >
                           <Option key={1} value="">
@@ -224,6 +246,7 @@ ListingsFilterComponent.propTypes = {
   onSearchTextChange: PropTypes.func.isRequired,
   onRoleChange: PropTypes.func.isRequired,
   showIsActive: PropTypes.bool.isRequired,
+  showCategoryFilter: PropTypes.bool.isRequired,
   onIsActiveChange: PropTypes.func.isRequired,
   onOrderBy: PropTypes.func.isRequired,
   t: PropTypes.func

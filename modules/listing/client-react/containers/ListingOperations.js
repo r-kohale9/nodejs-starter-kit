@@ -51,12 +51,23 @@ export const withCurrentUser = Component =>
 export const withListings = Component =>
   graphql(LISTINGS_QUERY, {
     options: ({ orderBy, filter, match, navigation }) => {
+      // console.log(filter);
       return {
         variables: {
           limit: limit,
           after: 0,
           orderBy,
-          filter: { ...filter, categoryId: Number((match ? match.params.cid : navigation.state.params.cid) || 0) }
+          filter: {
+            ...filter,
+            categoryFilter: {
+              categoryId: Number(
+                (match ? match.params.cid : navigation.state.params.cid) ||
+                  (filter && filter.categoryFilter && filter.categoryFilter.categoryId) ||
+                  0
+              ),
+              allSubCategory: filter && filter.categoryFilter && filter.categoryFilter.allSubCategory
+            }
+          }
         },
         fetchPolicy: 'network-only'
       };
@@ -205,7 +216,11 @@ export const withCanUserReview = Component =>
     },
     props({ data: { loading, error, canUserReview, subscribeToMore } }) {
       if (error) throw new Error(error);
-      return { loading, canUserReview, canUserReviewsubscribeToMore: subscribeToMore };
+      return {
+        loading,
+        canUserReview,
+        canUserReviewsubscribeToMore: subscribeToMore
+      };
     }
   })(Component);
 
@@ -413,8 +428,19 @@ export const withFilterUpdating = Component =>
       onIsActiveChange(isActive) {
         mutate({ variables: { filter: { isActive } } });
       },
-      onCategoryChange(categoryId) {
-        mutate({ variables: { filter: { categoryId } } });
+      onCategoryChange(categoryFilter) {
+        // console.log(categoryFilter);
+        mutate({
+          variables: {
+            filter: {
+              categoryFilter: {
+                categoryId: categoryFilter.categoryId,
+                allSubCategory: categoryFilter.allSubCategory,
+                __typename: 'CategoryFilter'
+              }
+            }
+          }
+        });
       },
       // onIsFeaturedChange(isFeatured) {
       //   mutate({ variables: { filter: { isFeatured } } });

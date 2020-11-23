@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Skeleton } from 'antd';
 import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
 
-import { Row, Col, DropDown } from '@gqlapp/look-client-react';
+import { Row, Col, DropDown, Card, Skeleton } from '@gqlapp/look-client-react';
 
-import ROUTES from '../routes';
+import ROUTES from '@gqlapp/listing-client-react/routes';
 
 const CategoryNavBarComponentView = props => {
   const [visible, setVisible] = useState(false);
@@ -38,8 +37,8 @@ const CategoryNavBarComponentView = props => {
         >
           {categories.edges &&
             categories.totalCount > 0 &&
-            categories.edges.map(c => (
-              <Col span={24 / categories.totalCount}>
+            categories.edges.map((c, i) => (
+              <Col key={i} span={24 / categories.totalCount}>
                 <a href="#" onMouseEnter={() => setDropDownMenu(c.node)}>
                   <h1>{c.node.title}</h1>
                 </a>

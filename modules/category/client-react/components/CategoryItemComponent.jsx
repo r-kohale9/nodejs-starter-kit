@@ -1,41 +1,66 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Card } from 'antd';
+import { Typography } from 'antd';
 import { NavLink } from 'react-router-dom';
 
-import { Row, Col } from '@gqlapp/look-client-react';
+import { useImageLoaded } from '@gqlapp/listing-client-react/components/functions';
+import { Card } from '@gqlapp/look-client-react';
 import { NO_IMG } from '@gqlapp/listing-common';
 
-import ROUTES from '../routes';
+import ROUTES from '@gqlapp/listing-client-react/routes';
 
 const { Text } = Typography;
 
 const CategoryItemComponent = props => {
-  const { categories } = props;
+  const [ref, loaded, onLoad] = useImageLoaded();
+  const { category, componentStyle } = props;
+
+  const cardImg = (
+    <img
+      alt=""
+      ref={ref}
+      onLoad={onLoad}
+      src={category.imageUrl || NO_IMG}
+      style={{
+        height: '200px',
+        display: !loaded && 'none'
+      }}
+    />
+  );
 
   return (
-    <Row gutter={[24, 24]}>
-      {categories &&
-        categories.length > 0 &&
-        categories.map((c, idx) => (
-          <Col lg={6} md={8} xs={12} key={idx}>
-            <NavLink to={`${ROUTES.categoryCatalogueLink}${c.id}`}>
-              <Card
-                bordered={false}
-                //  bodyStyle={{}}
-                cover={<img alt="" src={c.imageUrl || NO_IMG} height="200px" />}
-              >
-                <Text style={{ textAlign: 'left' }}>{c && c.title}</Text>
-              </Card>
-            </NavLink>
-          </Col>
-        ))}
-    </Row>
+    <div style={componentStyle}>
+      <NavLink to={`${ROUTES.categoryCatalogueLink}${category.id}`}>
+        <Card
+          bordered={false}
+          cover={
+            <>
+              {cardImg}
+              {!loaded && (
+                <div
+                  style={{
+                    overflow: 'hidden',
+                    height: '126px',
+                    borderRadius: '8px 8px 0px 0px',
+                    background: 'linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%)',
+                    animation: 'ant-skeleton-loading 1.4s ease infinite'
+                  }}
+                  align="center"
+                ></div>
+              )}
+            </>
+          }
+        >
+          <Text style={{ textAlign: 'left' }}>{category && category.title}</Text>
+        </Card>
+      </NavLink>
+    </div>
   );
 };
 
 CategoryItemComponent.propTypes = {
-  categories: PropTypes.array
+  category: PropTypes.object,
+  componentStyle: PropTypes.object
 };
 
 export default CategoryItemComponent;

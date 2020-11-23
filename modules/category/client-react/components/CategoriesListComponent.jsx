@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Spin, Card } from 'antd';
 import { useQuery } from 'react-apollo';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -15,15 +14,15 @@ import {
   DeleteIcon,
   Empty,
   Divider,
-  /* Tooltip, */
-  // Card,
   Avatar,
   Button,
+  RenderTableLoading,
+  Spin,
+  CardMeta,
+  Card
 } from '@gqlapp/look-client-react';
-import RenderTableLoading from '@gqlapp/look-client-react/ui-antd/components/RenderTableLoading';
 import settings from '@gqlapp/config';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
-// import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
 import { NO_IMG } from '@gqlapp/listing-common';
 
 import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
@@ -31,7 +30,6 @@ import ROUTES from '../routes';
 // import { withCategory } from '../containers/CategoryOpertations';
 
 const { itemsNumber, type } = settings.pagination.web;
-const { Meta } = Card;
 
 const NoCategoryMessage = ({ t }) => (
   <div align="center">
@@ -70,7 +68,7 @@ const CategoryListComponent = props => {
       } else if (orderBy.order === 'desc') {
         return onOrderBy({
           column: '',
-          order: '',
+          order: ''
         });
       }
     }
@@ -88,7 +86,7 @@ const CategoryListComponent = props => {
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text /* , record */) => displayDataCheck(text),
+      render: (text /* , record */) => displayDataCheck(text)
     },
     {
       title: (
@@ -105,7 +103,7 @@ const CategoryListComponent = props => {
         >
           <a href={`${ROUTES.categoryCatalogueLink}${record.id}`} rel="noopener noreferrer" target="_blank">
             <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
-              <Meta
+              <CardMeta
                 title={
                   <>
                     <div style={{ width: '100%', marginTop: '10px' }} />
@@ -117,7 +115,7 @@ const CategoryListComponent = props => {
             </Card>
           </a>
         </a>
-      ),
+      )
     },
     {
       title: (
@@ -128,7 +126,12 @@ const CategoryListComponent = props => {
       dataIndex: 'isActive',
       key: 'isActive',
       render: (text, record) => (
-        <Select name="role" defaultValue={text} style={{ width: '90px' }} onChange={e => onToggle('isActive', e, record.id)}>
+        <Select
+          name="role"
+          defaultValue={text}
+          style={{ width: '90px' }}
+          onChange={e => onToggle('isActive', e, record.id)}
+        >
           <Option key={0} value={true}>
             Active
           </Option>
@@ -136,7 +139,7 @@ const CategoryListComponent = props => {
             In-active
           </Option>
         </Select>
-      ),
+      )
     },
 
     {
@@ -158,15 +161,15 @@ const CategoryListComponent = props => {
           {/* <Divider type="vertical" /> */}
           <DeleteIcon onClick={() => deleteCategory(record.id)} title="Are you sure delete this listing?" />
         </div>
-      ),
-    },
+      )
+    }
   ];
 
   const ExpandedRowRender = ({ record /* , index */ }) => {
     const { loading, data } = useQuery(CATEGORY_QUERY, {
       variables: {
-        id: record.id,
-      },
+        id: record.id
+      }
     });
     const category = data && data.category;
     return loading ? (
@@ -187,7 +190,7 @@ const CategoryListComponent = props => {
             ) : (
               category.subCategories &&
               category.subCategories.length > 0 && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
-            ),
+            )
         }}
         columns={columns}
         dataSource={category.subCategories}
@@ -198,7 +201,7 @@ const CategoryListComponent = props => {
 
   const handlePageChange = (pagination, pageNumber) => {
     const {
-      pageInfo: { endCursor },
+      pageInfo: { endCursor }
     } = categories;
     pagination === 'relay' ? loadData(endCursor + 1, 'add') : loadData((pageNumber - 1) * itemsNumber, 'replace');
   };
@@ -219,7 +222,7 @@ const CategoryListComponent = props => {
             ) : (
               record.subCategories &&
               record.subCategories.length > 0 && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
-            ),
+            )
         }}
         // loading={true}
       />
@@ -236,7 +239,6 @@ const CategoryListComponent = props => {
       </div>
     </Fragment>
   );
-
   return (
     <div style={{ overflowX: 'auto' }}>
       {/* Render loader */}
@@ -248,8 +250,8 @@ const CategoryListComponent = props => {
             expandable: {
               expandedRowRender: (record, index, indent, expanded) => (
                 <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
-              ),
-            },
+              )
+            }
           }}
         />
       )}
@@ -270,6 +272,9 @@ CategoryListComponent.propTypes = {
   t: PropTypes.func,
   onDuplicate: PropTypes.func,
   history: PropTypes.object,
+  record: PropTypes.object,
+  expanded: PropTypes.func,
+  onExpand: PropTypes.func
 };
 
 export default translate('category')(CategoryListComponent);

@@ -2,17 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { Button } from 'antd';
-
-import { Icon, PageLayout, Heading, MetaTags, Row, Col, Divider, Empty } from '@gqlapp/look-client-react';
-import SuggestedListComponent from '@gqlapp/look-client-react/ui-antd/components/SuggestedListComponent';
-import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
+import {
+  Icon,
+  PageLayout,
+  Heading,
+  MetaTags,
+  Row,
+  Col,
+  Divider,
+  Empty,
+  SuggestedListComponent,
+  Spinner,
+  Button,
+  ButtonGroup
+} from '@gqlapp/look-client-react';
 // eslint-disable-next-line import/no-named-default
 import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
 
 import MyOrderItemComponent from './MyOrderItemComponent';
-
-const ButtonGroup = Button.Group;
 
 const MyOrdersView = props => {
   const [status, setStatus] = React.useState('');

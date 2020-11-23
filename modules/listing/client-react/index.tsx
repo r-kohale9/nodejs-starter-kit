@@ -1,17 +1,13 @@
 import React from 'react';
-import { Menu } from 'antd';
 
 import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import loadable from '@loadable/component';
 
 import { Route, NavLink } from 'react-router-dom';
-import { Icon, MenuItem } from '@gqlapp/look-client-react';
+import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
-import Spinner from '@gqlapp/look-client-react/ui-antd/components/Spinner';
-
-const { SubMenu } = Menu;
 
 import resolvers from './resolvers';
 import resources from './locales';
@@ -82,6 +78,13 @@ export default new ClientModule({
       exact
       path={ROUTES.listingCatalogue}
       component={loadable(() => import('./containers/ListingCatalogue.web').then(c => c.default), {
+        fallback: <Spinner />
+      })}
+    />,
+    <Route
+      exact
+      path={ROUTES.categoryCatalogue}
+      component={loadable(() => import('./containers/CategoryCatalogue').then(c => c.default), {
         fallback: <Spinner />
       })}
     />,

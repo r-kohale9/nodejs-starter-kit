@@ -3,6 +3,7 @@ import { Model, raw } from 'objection';
 import { camelizeKeys, decamelizeKeys, decamelize } from 'humps';
 
 import { knex } from '@gqlapp/database-server-ts';
+import { clientStorage } from '../../../packages/common/utils';
 
 Model.knex(knex);
 
@@ -19,11 +20,13 @@ export interface CategoryInput {
   isNavbar: boolean;
   parentCategoryId: number;
   isLeaf: boolean;
-
+  isActive: boolean;
   // subCategories: [CategoryInput] | undefined;
 }
 
 const eager = '[sub_categories, modal_category]';
+const allEager = '[sub_categories.^, modal_category]';
+const noneEager = '[modal_category]';
 // const eager = '[category]';
 
 export default class CategoryDAO extends Model {
@@ -57,9 +60,15 @@ export default class CategoryDAO extends Model {
     };
   }
 
-  public async categoriesPagination(limit: number, after: number, orderBy: any, filter: any, userId: number) {
+  public async categoriesPagination(
+    limit: number,
+    after: number,
+    orderBy: any,
+    filter: any,
+    childNode: string = 'single'
+  ) {
     const queryBuilder = CategoryDAO.query()
-      .eager(eager)
+      .eager(childNode === 'all' ? allEager : childNode === 'none' ? noneEager : eager)
       .where('category.parent_category_id', null);
 
     if (orderBy && orderBy.column) {
@@ -109,10 +118,10 @@ export default class CategoryDAO extends Model {
     };
   }
 
-  public async category(id: number) {
+  public async category(id: number, childNode: string = 'single') {
     const queryBuilder = CategoryDAO.query()
       .findById(id)
-      .eager(eager)
+      .eager(childNode === 'all' ? allEager : childNode === 'none' ? noneEager : eager)
       .orderBy('id', 'desc');
 
     const res = camelizeKeys(await queryBuilder);
@@ -121,10 +130,9 @@ export default class CategoryDAO extends Model {
   }
 
   public async addCategory(params: CategoryInput) {
-    let isLeaf = false;
+    const isLeaf = true;
     if (params.parentCategoryId !== null) {
       await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
-      isLeaf = true;
     }
     const res = camelizeKeys(
       await CategoryDAO.query().insertGraph(
@@ -139,7 +147,7 @@ export default class CategoryDAO extends Model {
       )
     );
     await ModalCategory.query().insertGraph(decamelizeKeys({ modalName: params.modalName, categoryId: res.id }));
-    return res;
+    return res.id;
   }
 
   // public async addCategories(parentCategory: CategoryInput) {
@@ -179,16 +187,17 @@ export default class CategoryDAO extends Model {
       if (prevCategory.parentCategoryId !== null) {
         const parentCategory = camelizeKeys(
           await CategoryDAO.query()
-            .findById(params.parentCategoryId)
+            .findById(prevCategory.parentCategoryId)
             .eager(eager)
         );
         if (parentCategory.subCategories.length === 1) {
           await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: parentCategory.id, isLeaf: true }));
         }
       }
-
       // after edit, parentCategory to isLeaf to false since adding a leaf to it
-      await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
+      if (params.parentCategoryId !== null) {
+        await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
+      }
     }
     const res = camelizeKeys(
       await CategoryDAO.query().upsertGraph(
@@ -198,7 +207,8 @@ export default class CategoryDAO extends Model {
           description: params.description,
           imageUrl: params.imageUrl,
           parentCategoryId: params.parentCategoryId,
-          isNavbar: params.isNavbar
+          isNavbar: params.isNavbar,
+          isActive: params.isActive
         })
       )
     );
