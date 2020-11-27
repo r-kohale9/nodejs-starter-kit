@@ -24,6 +24,7 @@ import {
 import settings from '@gqlapp/config';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 import { NO_IMG } from '@gqlapp/listing-common';
+import LISTING_ROUTES from '@gqlapp/listing-client-react/routes';
 
 import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
 import ROUTES from '../routes';
@@ -97,23 +98,18 @@ const CategoryListComponent = props => {
       dataIndex: 'title',
       key: 'title',
       render: (text, record) => (
-        <a
-          href="#"
-          // href={`${ROUTES.listingDetailLink}${record.id}`} rel="noopener noreferrer" target="_blank"
-        >
-          <a href={`${ROUTES.categoryCatalogueLink}${record.id}`} rel="noopener noreferrer" target="_blank">
-            <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
-              <CardMeta
-                title={
-                  <>
-                    <div style={{ width: '100%', marginTop: '10px' }} />
-                    {displayDataCheck(text)}
-                  </>
-                }
-                avatar={<Avatar size={46} src={record.imageUrl || NO_IMG} alt="" />}
-              />
-            </Card>
-          </a>
+        <a href={`${LISTING_ROUTES.categoryCatalogueLink}${record.id}`} rel="noopener noreferrer" target="_blank">
+          <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
+            <CardMeta
+              title={
+                <>
+                  <div style={{ width: '100%', marginTop: '10px' }} />
+                  {displayDataCheck(text)}
+                </>
+              }
+              avatar={<Avatar size={46} src={record.imageUrl || NO_IMG} alt="" />}
+            />
+          </Card>
         </a>
       )
     },
@@ -188,8 +184,7 @@ const CategoryListComponent = props => {
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
             ) : (
-              category.subCategories &&
-              category.subCategories.length > 0 && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
+              !record.isLeaf && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
             )
         }}
         columns={columns}
@@ -220,8 +215,7 @@ const CategoryListComponent = props => {
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
             ) : (
-              record.subCategories &&
-              record.subCategories.length > 0 && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
+              !record.isLeaf && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
             )
         }}
         // loading={true}

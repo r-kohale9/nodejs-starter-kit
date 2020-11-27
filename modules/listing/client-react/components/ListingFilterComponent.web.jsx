@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
 
@@ -28,18 +28,8 @@ const ListingsFilterComponent = props => {
     onOrderBy,
     t
   } = props;
-  const rangeValues = listings && listings.rangeValues;
-  const handleChangeSlider = e => {
-    onLowerCostChange(e[0]);
-    onUpperCostChange(e[1]);
-    console.log(e);
-  };
 
-  // const handleOrderBy = (order, name) => {
-  //   return onOrderBy({ column: name, order });
-  // };
-
-  const handleFiltersRemove = () => {
+  const handleFiltersRemove = useCallback(() => {
     const filter = {
       searchText: '',
       lowerCost: 0,
@@ -53,7 +43,22 @@ const ListingsFilterComponent = props => {
     };
     const orderBy = { column: '', order: '' };
     onFiltersRemove(filter, orderBy);
+  }, [onFiltersRemove]);
+
+  useEffect(() => {
+    return () => handleFiltersRemove();
+  }, [handleFiltersRemove]);
+
+  const rangeValues = listings && listings.rangeValues;
+  const handleChangeSlider = e => {
+    onLowerCostChange(e[0]);
+    onUpperCostChange(e[1]);
+    // console.log(e);
   };
+
+  // const handleOrderBy = (order, name) => {
+  //   return onOrderBy({ column: name, order });
+  // };
 
   const minCostRangeValues = Math.round(rangeValues && rangeValues.minCost);
   const maxCostRangeValues = Math.round(rangeValues && rangeValues.maxCost);
@@ -67,6 +72,7 @@ const ListingsFilterComponent = props => {
       component={CategoryTreeComponent}
       filter={{ modalName: MODAL[1].value }}
       // disableParent={true}
+      nullable={true}
       onChange={e => onCategoryChange({ categoryId: e, allSubCategory: false })}
       type="number"
       name="categoryId"
@@ -75,7 +81,32 @@ const ListingsFilterComponent = props => {
       value={categoryFilter.categoryId}
     />
   );
-
+  const ListingSortBy = width => {
+    return (
+      <Select
+        name="sortBy"
+        defaultValue={orderBy.order}
+        style={{ width: width }}
+        onChange={e =>
+          SORT_BY[e].sortBy === ''
+            ? onOrderBy({ order: SORT_BY[e].sortBy, column: '' })
+            : onOrderBy({
+                order: SORT_BY[e].sortBy,
+                column: SORT_BY[e].value
+              })
+        }
+      >
+        <Option key={1} value="">
+          None
+        </Option>
+        {SORT_BY.map((sB, i) => (
+          <Option key={i + 2} value={i}>
+            {sB.label}
+          </Option>
+        ))}
+      </Select>
+    );
+  };
   return (
     <Form
     //  layout="inline"
@@ -124,28 +155,7 @@ const ListingsFilterComponent = props => {
                 <Col lg={0} md={0} xs={24}>
                   {CategoryTreeField}
                   <FormItem label={t('listingFilter.sortBy')} style={{ width: '100%' }}>
-                    <Select
-                      name="sortBy"
-                      defaultValue={orderBy.order}
-                      style={{ width: '100%' }}
-                      onChange={e =>
-                        SORT_BY[e].sortBy === ''
-                          ? onOrderBy({ order: SORT_BY[e].sortBy, column: '' })
-                          : onOrderBy({
-                              order: SORT_BY[e].sortBy,
-                              column: SORT_BY[e].value
-                            })
-                      }
-                    >
-                      <Option key={1} value="">
-                        None
-                      </Option>
-                      {SORT_BY.map((sB, i) => (
-                        <Option key={i + 2} value={i}>
-                          {sB.label}
-                        </Option>
-                      ))}
-                    </Select>
+                    {ListingSortBy('100%')}
                   </FormItem>
                 </Col>
                 <Col xs={0} md={24} lg={24}>
@@ -157,33 +167,7 @@ const ListingsFilterComponent = props => {
                     <Col lg={10} md={10}>
                       <Row type="flex" justify="end">
                         {SORT_BY && SORT_BY.length !== 0 && (
-                          <FormItem label={'Sort By'}>
-                            <Select
-                              name="sortBy"
-                              defaultValue={orderBy.order}
-                              style={{ width: '170px' }}
-                              onChange={e =>
-                                SORT_BY[e].sortBy === ''
-                                  ? onOrderBy({
-                                      order: SORT_BY[e].sortBy,
-                                      column: ''
-                                    })
-                                  : onOrderBy({
-                                      order: SORT_BY[e].sortBy,
-                                      column: SORT_BY[e].value
-                                    })
-                              }
-                            >
-                              <Option key={1} value="">
-                                None
-                              </Option>
-                              {SORT_BY.map((sB, i) => (
-                                <Option key={i + 2} value={i}>
-                                  {sB.label}
-                                </Option>
-                              ))}
-                            </Select>
-                          </FormItem>
+                          <FormItem label={t('listingFilter.sortBy')}>{ListingSortBy('170px')}</FormItem>
                         )}
                       </Row>
                     </Col>

@@ -1,24 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'antd';
 import { NavLink } from 'react-router-dom';
 
-import { Row, Icon, PageLayout, Divider, Spinner, BreadcrumbItem, Breadcrumb } from '@gqlapp/look-client-react';
+import {
+  Row,
+  Icon,
+  PageLayout,
+  Divider,
+  Spinner,
+  BreadcrumbItem,
+  Breadcrumb,
+  Title,
+  Paragraph,
+  Col,
+  MetaTags
+} from '@gqlapp/look-client-react';
 import CategoryListingsCatalogue from '@gqlapp/listing-client-react/containers/CategoryListingsCatalogue';
 import { MODAL } from '@gqlapp/review-common';
 // import CategoryItemComponent from '@gqlapp/category-client-react/components/CategoryItemComponent';
 import CategoryNavBarComponent from '@gqlapp/category-client-react/containers/CategoryNavBarComponent';
+import settings from '@gqlapp/config';
 
 import CategoryCarousel from './CategoryCarousel';
 
-const { Title, Paragraph } = Typography;
-
 const CategoryCatalogueView = props => {
-  const { loading, category, navigation, match } = props;
+  const { loading, category, navigation, match, t } = props;
 
   return (
     <PageLayout>
-      <CategoryNavBarComponent filter={{ isActive: true, isNavbar: true, modalName: MODAL[1].value }} />
+      <MetaTags
+        title={t('categoryCatalogue.title')}
+        description={`${settings.app.name} - ${t('categoryCatalogue.title')})}`}
+      />
+
+      <Col xs={0} md={0} lg={24}>
+        <CategoryNavBarComponent filter={{ isActive: true, isNavbar: true, modalName: MODAL[1].value }} />
+      </Col>
+      <Col xs={24} md={24} lg={0}>
+        <CategoryNavBarComponent filter={{ isActive: true, isNavbar: true, modalName: MODAL[1].value }} mobile={true} />
+      </Col>
       {loading && <Spinner />}
       {category && (
         <>
@@ -30,10 +50,10 @@ const CategoryCatalogueView = props => {
             </BreadcrumbItem>
             {category && <BreadcrumbItem>{category.title}</BreadcrumbItem>}
           </Breadcrumb>
-          <Typography style={{ marginTop: '15px' }}>
+          <div style={{ marginTop: '15px' }}>
             <Title level={2}>{category.title}</Title>
             <Paragraph>{category.description}</Paragraph>
-          </Typography>
+          </div>
           {category && category.subCategories && category.subCategories.length !== 0 && (
             <>
               <Divider orientation="left">
@@ -61,7 +81,8 @@ CategoryCatalogueView.propTypes = {
   loading: PropTypes.bool,
   category: PropTypes.object,
   match: PropTypes.object,
-  navigation: PropTypes.object
+  navigation: PropTypes.object,
+  t: PropTypes.fuc
 };
 
 export default CategoryCatalogueView;
