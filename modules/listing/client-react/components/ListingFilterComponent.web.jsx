@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { SORT_BY } from '@gqlapp/listing-common/SortFilter';
 import { translate } from '@gqlapp/i18n-client-react';
-import { Select, Option, Form, FormItem, Label, Input, Row, Col, Button } from '@gqlapp/look-client-react';
+import { Affix, Card, Select, Option, Form, FormItem, Label, Input, Row, Col, Button } from '@gqlapp/look-client-react';
 import CategoryTreeComponent from '@gqlapp/category-client-react/containers/CategoryTreeComponent';
 import { MODAL } from '@gqlapp/review-common';
 
@@ -26,10 +26,13 @@ const ListingsFilterComponent = props => {
     showCategoryFilter = false,
     orderBy,
     onOrderBy,
-    t
+    t,
+    layout
   } = props;
 
-  const handleFiltersRemove = useCallback(() => {
+  const handleFiltersRemove = useRef(() => {});
+
+  handleFiltersRemove.current = () => {
     const filter = {
       searchText: '',
       lowerCost: 0,
@@ -43,11 +46,11 @@ const ListingsFilterComponent = props => {
     };
     const orderBy = { column: '', order: '' };
     onFiltersRemove(filter, orderBy);
-  }, [onFiltersRemove]);
+  };
 
   useEffect(() => {
-    return () => handleFiltersRemove();
-  }, [handleFiltersRemove]);
+    return () => handleFiltersRemove.current();
+  }, []);
 
   const rangeValues = listings && listings.rangeValues;
   const handleChangeSlider = e => {
@@ -66,7 +69,6 @@ const ListingsFilterComponent = props => {
     [`${minCostRangeValues}`]: minCostRangeValues,
     [`${maxCostRangeValues}`]: maxCostRangeValues
   };
-
   const CategoryTreeField = showCategoryFilter && (
     <Field
       component={CategoryTreeComponent}
@@ -107,10 +109,91 @@ const ListingsFilterComponent = props => {
       </Select>
     );
   };
-  return (
-    <Form
-    //  layout="inline"
-    >
+
+  const handleResetBtn = (
+    <Button color="primary" onClick={handleFiltersRemove}>
+      {t('listingFilter.btn.reset')}
+    </Button>
+  );
+
+  const filterItems =
+    layout === 'vertical' ? (
+      <Row type="flex" align="middle">
+        <Col span={24}>
+          <Row gutter={24}>
+            <Col span={24}>
+              <FormItem label={t('listingFilter.search')} style={{ width: '100%' }}>
+                <DebounceInput
+                  minLength={2}
+                  debounceTimeout={300}
+                  placeholder={t('listingFilter.search')}
+                  element={Input}
+                  value={searchText}
+                  onChange={e => onSearchTextChange(e.target.value)}
+                />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={24}>
+              {showIsActive && (
+                <FormItem labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ width: '100%' }}>
+                  <Label>
+                    <Input
+                      type="checkbox"
+                      defaultChecked={isActive}
+                      checked={isActive}
+                      onChange={() => onIsActiveChange(!isActive)}
+                    />
+                    &nbsp;{t('listingFilter.isActive')}
+                  </Label>
+                </FormItem>
+              )}
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col>{CategoryTreeField}</Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={24}>
+              <FormItem label={t('listingFilter.sortBy')} style={{ width: '100%' }}>
+                {ListingSortBy('100%')}
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={24}>
+              <div style={{ display: 'block' }}>
+                <h5>{t('listingFilter.costFilter')}</h5>
+                <SliderControlled
+                  style={{
+                    width: '100%',
+                    background: 'white'
+                  }}
+                  max={Math.round(rangeValues && rangeValues.maxCost + 1)}
+                  min={Math.floor(rangeValues && rangeValues.minCost)}
+                  marks={costMarks}
+                  range
+                  value={[lowerCost, upperCost]}
+                  // disabled={false}
+                  handleSliderChange={e => handleChangeSlider(e)}
+                />
+              </div>
+            </Col>
+          </Row>
+          <Row gutter={24}>
+            <Col span={24}>
+              <br />
+              <FormItem>
+                <Button block color="primary" onClick={handleFiltersRemove}>
+                  {t('listingFilter.btn.reset')}
+                </Button>
+              </FormItem>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    ) : (
       <Row type="flex" align="middle">
         <Col span={24}>
           <Row>
@@ -203,21 +286,31 @@ const ListingsFilterComponent = props => {
               <Row>
                 <Col lg={0} md={0} xs={24}>
                   <br />
-                  <Button block color="primary" onClick={handleFiltersRemove}>
-                    {t('listingFilter.btn.reset')}
-                  </Button>
+                  {handleResetBtn}
                 </Col>
                 <Col xs={0} md={24} lg={24}>
                   <br />
-                  <FormItem>
-                    <Button color="primary" onClick={handleFiltersRemove}>
-                      {t('listingFilter.btn.reset')}
-                    </Button>
-                  </FormItem>
+                  <FormItem>{handleResetBtn}</FormItem>
                 </Col>
               </Row>
             </Col>
           </Row>
+        </Col>
+      </Row>
+    );
+
+  return (
+    <Form
+    //  layout="inline"
+    >
+      <Row>
+        <Col lg={24} md={24} xs={0}>
+          <Affix offsetTop={110}>
+            <Card>{filterItems}</Card>
+          </Affix>
+        </Col>
+        <Col lg={0} md={0} xs={24}>
+          <Card>{filterItems}</Card>
         </Col>
       </Row>
     </Form>
@@ -239,7 +332,8 @@ ListingsFilterComponent.propTypes = {
   showCategoryFilter: PropTypes.bool.isRequired,
   onIsActiveChange: PropTypes.func.isRequired,
   onOrderBy: PropTypes.func.isRequired,
-  t: PropTypes.func
+  t: PropTypes.func,
+  layout: PropTypes.string
 };
 
 export default translate('listing')(ListingsFilterComponent);
