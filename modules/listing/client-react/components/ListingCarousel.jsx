@@ -39,7 +39,9 @@ const ListingCarousel = props => {
     onDelete,
     getCart,
     filter,
-    name = ''
+    onFilter = () => {
+      return true;
+    }
   } = props;
 
   React.useEffect(() => {
@@ -138,16 +140,17 @@ const ListingCarousel = props => {
           {dataSource.titleWrapper.children.map(getChildrenToRender)}
         </div>
         {(loading1 || currentUserLoading) && <Spinner size="small" />}
-        {listings && name && listings.totalCount ? (
+        {listings && listings.totalCount ? (
           <SlickCarousel
             Compo={RelatedCardComponent}
             settings={carouselSettings(itemLength)}
             itemName={'listing'}
-            data={listings.edges.filter(c => c.node.listingFlags[name] === true)}
+            data={listings.edges.filter(onFilter)}
             height={'500px'}
             node={true}
             getCart={getCart}
             onDelete={onDelete}
+            modalName="listing"
             componentProps={{
               currentUser,
               history,
@@ -186,8 +189,8 @@ ListingCarousel.propTypes = {
   listings: PropTypes.object,
   isMobile: PropTypes.bool,
   subscribeToMore: PropTypes.func,
-  filter: PropTypes.object,
-  name: PropTypes.string
+  onFilter: PropTypes.func,
+  filter: PropTypes.object
 };
 
 export default compose(withListings)(ListingCarousel);

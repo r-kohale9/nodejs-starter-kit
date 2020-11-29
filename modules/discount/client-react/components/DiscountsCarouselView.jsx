@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ListingsByIdsCarousel from '@gqlapp/listing-client-react/components/ListingsByIdsCarousel';
+import ListingCarousel from '@gqlapp/listing-client-react/components/ListingCarousel';
 
 const DiscountsCarouselView = props => {
   const { title, ids = [], currentUser, currentUserLoading, history, cartLoading, onDelete, getCart } = props;
 
   return (
-    <ListingsByIdsCarousel
+    <ListingCarousel
       ids={ids}
       currentUser={currentUser}
       currentUserLoading={currentUserLoading}
@@ -24,7 +24,7 @@ const DiscountsCarouselView = props => {
 
 DiscountsCarouselView.propTypes = {
   ids: PropTypes.array,
-  title: PropTypes.func,
+  title: PropTypes.string,
   currentUser: PropTypes.object,
   currentUserLoading: PropTypes.bool,
   history: PropTypes.object,
