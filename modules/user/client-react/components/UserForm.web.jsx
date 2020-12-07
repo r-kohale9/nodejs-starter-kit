@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import { isEmpty } from 'lodash';
 
+import { IMG_ASPECT } from '@gqlapp/listing-common';
 import { isFormError, FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { translate } from '@gqlapp/i18n-client-react';
 import { email, minLength, required, match, validate } from '@gqlapp/validation-common-react';
@@ -14,7 +15,8 @@ import {
   Option,
   Alert,
   SubmitButton,
-  RenderUpload,
+  // RenderUpload,
+  RenderUploadWithCrop,
   Row,
   Col,
   ModalDrawer
@@ -68,12 +70,19 @@ const UserForm = props => {
           <Col lg={3} xs={24} />
           <Col lg={18} xs={24}>
             <Field
-              name={'avatar'}
-              component={RenderUpload}
-              type="text"
-              setload={e => setLoad(e)}
-              label={'Avatar'}
+              name="profile.avatar"
               value={values.profile.avatar}
+              setload={e => setLoad(e)}
+              load={load}
+              shape="round"
+              height={IMG_ASPECT.medium.height}
+              width={IMG_ASPECT.medium.width}
+              // component={RenderUpload}
+              component={RenderUploadWithCrop}
+              label={'Avatar'}
+              cropPropSettings={{
+                shape: 'round'
+              }}
             />
           </Col>
         </Col>
