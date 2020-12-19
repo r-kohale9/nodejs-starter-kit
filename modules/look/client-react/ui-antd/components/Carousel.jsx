@@ -8,7 +8,7 @@ import { LeftArrow, RightArrow } from './CarouselArrows';
 
 const Carousel = props => {
   let carousel = React.useRef();
-  const { children, height, showArrow = true, ...rest } = props;
+  const { children, showArrow = true, ...rest } = props;
 
   const prevSlide = () => {
     carousel.prev();
@@ -20,24 +20,27 @@ const Carousel = props => {
 
   return (
     <Row type="flex" justify="center" align="middle">
-      <Col span={1} align="center" style={{ height }}>
-        {showArrow && <LeftArrow prevSlide={prevSlide} />}
-      </Col>
-      <Col span={22} align="center">
+      {showArrow && (
+        <Col span={1} align="center">
+          <LeftArrow prevSlide={prevSlide} />
+        </Col>
+      )}
+      <Col span={showArrow ? 22 : 24} align="center">
         <ADCarousel ref={node => (carousel = node)} {...rest}>
           {children}
         </ADCarousel>
       </Col>
-      <Col span={1} align="center" style={{ height }}>
-        {showArrow && <RightArrow nextSlide={nextSlide} />}
-      </Col>
+      {showArrow && (
+        <Col span={1} align="center">
+          <RightArrow nextSlide={nextSlide} />
+        </Col>
+      )}
     </Row>
   );
 };
 Carousel.propTypes = {
   children: PropTypes.node,
-  showArrow: PropTypes.bool,
-  height: PropTypes.string
+  showArrow: PropTypes.bool
 };
 
 export default Carousel;
