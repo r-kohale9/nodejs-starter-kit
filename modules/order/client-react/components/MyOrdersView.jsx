@@ -63,7 +63,7 @@ const MyOrdersView = props => {
   const RenderMyOrders = () => (
     <div>
       {loading && <Spinner />}
-      {!loading && <SuggestedListComponent {...props} items={orders} renderFunc={renderFunc} />}
+      {!loading && <SuggestedListComponent endText={'orders'} {...props} items={orders} renderFunc={renderFunc} />}
     </div>
   );
   return (
@@ -73,7 +73,7 @@ const MyOrdersView = props => {
       <Row>
         <Col lg={{ span: 8 }} md={{ span: 8 }} xs={{ span: 24 }}>
           <Heading type="2" className="headingTop">
-            <Icon type="SolutionOutlined" />
+            <Icon type="FileOutlined" />
             {t('myOrders')}
           </Heading>
           <br />

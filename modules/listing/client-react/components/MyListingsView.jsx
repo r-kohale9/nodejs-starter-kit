@@ -15,6 +15,7 @@ import {
   SuggestedListComponent,
   Spinner
 } from '@gqlapp/look-client-react';
+import { MODAL } from '@gqlapp/review-common';
 
 import settings from '@gqlapp/config';
 import ROUTES from '../routes';
@@ -33,6 +34,8 @@ const MyListingsView = props => {
         item={listing}
         deleteProduct={onDelete}
         currentUser={currentUser}
+        modalName={MODAL[1].value}
+        modalId={listing.id}
       />
       <Divider />
     </>
@@ -59,13 +62,15 @@ const MyListingsView = props => {
       <br />
       {/* <Divider style={{ margin: '5px 0px 10px' }} /> */}
       <SuggestedListComponent
+        endText={'listing'}
         grid={{
           gutter: 24,
           xs: 1,
-          md: 1,
-          lg: 1,
-          xl: 1,
-          xxl: 1
+          sm: 1,
+          md: 2,
+          lg: 3,
+          xl: 3,
+          xxl: 3
         }}
         {...props}
         items={listings}

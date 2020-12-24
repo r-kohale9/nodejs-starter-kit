@@ -89,7 +89,7 @@ const ListingCarousel = props => {
     return {
       className: 'slider variable-width',
       // variableWidth: true,
-      // autoplay: true,
+      autoplay: true,
       easing: 1000,
       infinite: true,
       speed: 500,
@@ -126,7 +126,7 @@ const ListingCarousel = props => {
         {
           breakpoint: 480,
           settings: {
-            slidesToShow: 1.5,
+            slidesToShow: 1,
             slidesToScroll: 1
           }
         }
