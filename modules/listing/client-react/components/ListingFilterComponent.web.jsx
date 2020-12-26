@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
+import styled from 'styled-components';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { SORT_BY } from '@gqlapp/listing-common/SortFilter';
+import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common/SortFilter';
 import { translate } from '@gqlapp/i18n-client-react';
 import {
   Affix,
@@ -16,23 +17,36 @@ import {
   Button,
   RenderSelect,
   Icon,
-  RenderCheckBox
+  RenderCheckBox,
+  Rate
 } from '@gqlapp/look-client-react';
 import CategoryTreeComponent from '@gqlapp/category-client-react/containers/CategoryTreeComponent';
 import { MODAL } from '@gqlapp/review-common';
 
 import SliderControlled from './FIlterSliderControlledComponent';
 
+const RateDiv = styled.div`
+  height: 22px;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(0, 98, 190);
+    text-decoration: underline;
+  }
+`;
+
 const ListingsFilterComponent = props => {
   // console.log('listings filter component', props);
   const {
-    filter: { searchText, lowerCost, upperCost, isActive, categoryFilter },
+    filter: { searchText, lowerCost, upperCost, isActive, categoryFilter, discount },
     onIsActiveChange,
     onCategoryChange,
     onSearchTextChange,
     onLowerCostChange,
     onUpperCostChange,
     onFiltersRemove,
+    onDiscountChange,
+    onRatedChange,
     listings,
     showIsActive = false,
     showCategoryFilter = false,
@@ -49,6 +63,8 @@ const ListingsFilterComponent = props => {
       searchText: '',
       lowerCost: 0,
       upperCost: 0,
+      discount: 0,
+      popularity: 0,
       categoryFilter: {
         categoryId: 0,
         allSubCategory: true,
@@ -130,6 +146,48 @@ const ListingsFilterComponent = props => {
     );
   };
 
+  const listingDiscount = (width, inFilter = true) => {
+    return (
+      <Field
+        name="discount"
+        component={RenderSelect}
+        label={t('listingFilter.discount')}
+        onChange={e => {
+          e === '' ? onDiscountChange(0) : DISCOUNT[e] && onDiscountChange(DISCOUNT[e].value);
+        }}
+        style={{ width: '100%' }}
+        value={discount === 0 ? '' : discount}
+        inFilter={inFilter}
+        selectStyle={{ width }}
+      >
+        <Option key={1} value="">
+          None
+        </Option>
+        {DISCOUNT.map((d, i) => (
+          <Option key={i + 2} value={i}>
+            {d.label}
+          </Option>
+        ))}
+      </Field>
+    );
+  };
+
+  const listingByRating = infilter => {
+    return (
+      <FormItem
+        label={'Avg. Customer Review'}
+        labelCol={infilter && { span: 24 }}
+        wrapperCol={infilter && { span: 24 }}
+      >
+        {[5, 4, 3, 2, 1].map(i => (
+          <RateDiv onClick={() => onRatedChange(i)}>
+            <Rate disabled defaultValue={i} style={{ fontSize: '18px' }} /> &nbsp; {'& up'}
+          </RateDiv>
+        ))}
+      </FormItem>
+    );
+  };
+
   const handleResetBtn = (
     <Button block color="primary" onClick={handleFiltersRemove.current}>
       <Icon type={'UndoOutlined'} /> {t('listingFilter.btn.reset')}
@@ -196,6 +254,8 @@ const ListingsFilterComponent = props => {
             <Col span={24}>{showIsActive && activeField(false)}</Col>
             <Col>{categoryTreeField}</Col>
             <Col span={24}>{listingSortBy('100%', false)}</Col>
+            <Col span={24}>{listingDiscount('100%', false)}</Col>
+            <Col span={24}>{listingByRating(true)}</Col>
             <Col span={22}>{sliderControlled(false)}</Col>
             <Col span={24}>
               <br />
@@ -205,31 +265,40 @@ const ListingsFilterComponent = props => {
         </Col>
       </Row>
     ) : (
-      <Row type="flex" align="middle">
+      <Row /* type="flex" */ /* align="middle" */>
         <Col span={24} /* style={{ height: '60px' }} */>
           <Row gutter={24}>
-            <Col>{searchField(true)}</Col>
-            <Col>{showIsActive && activeField(true)}</Col>
-          </Row>
-        </Col>
-        <Col lg={24} xs={24} md={12}>
-          <Row type="flex" gutter={24}>
-            <Col lg={16} md={16} xs={24}>
-              {categoryTreeField}
+            <Col span={19}>
+              <Row gutter={24}>
+                <Col span={12}>{searchField(true)}</Col>
+                <Col span={12}>{showIsActive && activeField(true)}</Col>
+                <Col lg={24} xs={24} md={12}>
+                  <Row type="flex" gutter={24}>
+                    <Col lg={24} md={8} xs={24}>
+                      {categoryTreeField}
+                    </Col>
+                    <Col lg={12} md={8} xs={24}>
+                      {listingSortBy('100%')}
+                    </Col>
+                    <Col lg={12} md={8} xs={24}>
+                      {listingDiscount('100%')}
+                    </Col>
+                    <Col lg={24} md={24} xs={24} align="left">
+                      {sliderControlled(false)}
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
             </Col>
-            <Col lg={8} md={8} xs={24}>
-              {listingSortBy('100%')}
-            </Col>
-          </Row>
-        </Col>
-        <Col span={24} align="right">
-          <Row type="flex" gutter={48}>
-            <Col lg={20} md={18} xs={21} align="left">
-              {sliderControlled(false)}
-            </Col>
-            <Col lg={4} md={6} xs={24}>
-              <br />
-              <FormItem>{handleResetBtn}</FormItem>
+            <Col span={5}>
+              {listingByRating(true)}
+              <Col lg={24} md={24} xs={0}>
+                <br />
+                <br />
+                <br />
+                <br />
+              </Col>
+              {handleResetBtn}
             </Col>
           </Row>
         </Col>
@@ -264,6 +333,8 @@ ListingsFilterComponent.propTypes = {
   showIsActive: PropTypes.bool.isRequired,
   showCategoryFilter: PropTypes.bool.isRequired,
   onIsActiveChange: PropTypes.func.isRequired,
+  onDiscountChange: PropTypes.func.isRequired,
+  onRatedChange: PropTypes.func.isRequired,
   onOrderBy: PropTypes.func.isRequired,
   t: PropTypes.func,
   layout: PropTypes.string

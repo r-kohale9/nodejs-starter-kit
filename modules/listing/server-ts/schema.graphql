@@ -143,6 +143,9 @@ input FilterListInput {
   lowerCost: Float
   upperCost: Float
 
+  discount: Int
+  popularity: Int
+
   showOwned: Boolean
   isFeatured: Boolean
   isNew: Boolean
