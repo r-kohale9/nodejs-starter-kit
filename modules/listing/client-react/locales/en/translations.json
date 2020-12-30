@@ -81,6 +81,7 @@
     "SKU":"SKU",
     "cost":"Cost",
     "invontoryCount":"Invontory Count",
+    "brand":"Brand",
     "fixedQuantity":"Fixed Quantity",
     "tooltip":"Enter -1 for false",
     "btn":{
@@ -165,6 +166,7 @@
   "listingFilter":{
     "search":"Search",
     "isActive":"Is Active",
+    "brand":"Brand",
     "costFilter":"Cost Filter",
     "btn":{
       "reset":"Reset Filters"
