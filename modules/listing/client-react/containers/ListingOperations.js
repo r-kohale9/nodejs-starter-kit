@@ -49,13 +49,14 @@ export const withCurrentUser = Component =>
 
 export const withListings = Component =>
   graphql(LISTINGS_QUERY, {
-    options: ({ orderBy, filter, match, navigation, ids }) => {
+    options: ({ orderBy, addFilter, filter, match, navigation, ids }) => {
       return {
         variables: {
           limit: limit,
           after: 0,
           orderBy,
           filter: {
+            ...addFilter,
             ...filter,
             categoryFilter: {
               categoryId: Number(
@@ -407,6 +408,9 @@ export const withFilterUpdating = Component =>
         // console.log("searchtext", searchText);
         mutate({ variables: { filter: { searchText } } });
       },
+      onDiscountChange(discount) {
+        mutate({ variables: { filter: { discount } } });
+      },
       onUpperCostChange(cost) {
         mutate({ variables: { filter: { upperCost: cost } } });
       },
@@ -415,6 +419,9 @@ export const withFilterUpdating = Component =>
       },
       onIsActiveChange(isActive) {
         mutate({ variables: { filter: { isActive } } });
+      },
+      onRatedChange(popularity) {
+        mutate({ variables: { filter: { popularity } } });
       },
       onCategoryChange(categoryFilter) {
         // console.log(categoryFilter);

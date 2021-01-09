@@ -6,7 +6,7 @@ import { NextButton, Col, Row, Card, Divider } from '@gqlapp/look-client-react';
 
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 import CartItemComponent from './CartItemComponent';
-import { TotalPrice } from './CheckoutCartView';
+import { TotalPrice } from './function';
 
 const StatusText = styled.div`
   color: ${props => props.status === 'completed' && '#2aa952'};
@@ -42,7 +42,7 @@ const CheckoutCardComponent = props => {
         getCart.orderDetails.map((item, key) => (
           <Row>
             <Col span={24}>
-              <CartItemComponent inner={true} key={key} item={item} t={t} />
+              <CartItemComponent inner={true} key={key} item={item} t={t} modalId={item.modalId} />
               <Divider />
             </Col>
           </Row>

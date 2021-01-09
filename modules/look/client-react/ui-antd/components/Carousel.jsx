@@ -20,17 +20,21 @@ const Carousel = props => {
 
   return (
     <Row type="flex" justify="center" align="middle">
-      <Col span={1} align="center">
-        {showArrow && <LeftArrow prevSlide={prevSlide} />}
-      </Col>
-      <Col span={22} align="center">
+      {showArrow && (
+        <Col span={1} align="center">
+          <LeftArrow prevSlide={prevSlide} />
+        </Col>
+      )}
+      <Col span={showArrow ? 22 : 24} align="center">
         <ADCarousel ref={node => (carousel = node)} {...rest}>
           {children}
         </ADCarousel>
       </Col>
-      <Col span={1} align="center">
-        {showArrow && <RightArrow nextSlide={nextSlide} />}
-      </Col>
+      {showArrow && (
+        <Col span={1} align="center">
+          <RightArrow nextSlide={nextSlide} />
+        </Col>
+      )}
     </Row>
   );
 };

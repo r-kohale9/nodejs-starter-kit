@@ -7,10 +7,10 @@
     "form":{
       "btn":{
         "save":"Save",
-        "add":"ADD TO CART",
-        "book":"BOOK NOW",
-        "remove":"Remove from CART",
-        "go":"Go to CART"
+        "add":"Add to cart",
+        "book":"Book now",
+        "remove":"Remove from Cart",
+        "go":"Go to Cart"
       }
     }
   },
@@ -59,8 +59,8 @@
   "checkoutSteps":{
     "heading":"Checkout",
     "step1":"Cart",
-    "step2":"Billing Address",
-    "step3":"Payment options"
+    "step2":"Select Address",
+    "step3": "Review & Pay"
   },
   "checkoutCart":{
     "myCart":" My cart - ",

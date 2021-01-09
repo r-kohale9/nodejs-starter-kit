@@ -84,17 +84,17 @@ const ListingCarousel = props => {
 
   delete props.isMobile;
 
-  const itemLength = listings && listings.edges && displayDataCheck(listings.edges.length);
+  const itemLength = listings && listings.edges && displayDataCheck(listings.edges.filter(onFilter).length);
   const carouselSettings = itemLength => {
     return {
       className: 'slider variable-width',
       // variableWidth: true,
-      // autoplay: true,
+      autoplay: true,
       easing: 1000,
       infinite: true,
       speed: 500,
       autoplaySpeed: 2000,
-      slidesToShow: itemLength >= 4 ? 4 : itemLength,
+      slidesToShow: itemLength >= 4 ? 3.5 : itemLength,
       slidesToScroll: 1,
       swipeToSlide: true,
       lazyLoad: true,
@@ -105,21 +105,21 @@ const ListingCarousel = props => {
         {
           breakpoint: 1440,
           settings: {
-            slidesToShow: itemLength >= 4 ? 4 : itemLength,
+            slidesToShow: itemLength >= 4 ? 3.5 : itemLength,
             slidesToScroll: 1
           }
         },
         {
           breakpoint: 1024,
           settings: {
-            slidesToShow: itemLength >= 4 ? 4 : itemLength,
+            slidesToShow: itemLength >= 4 ? 3.5 : itemLength,
             slidesToScroll: 1
           }
         },
         {
           breakpoint: 768,
           settings: {
-            slidesToShow: itemLength >= 2 ? 2 : itemLength,
+            slidesToShow: itemLength >= 2 ? 2.5 : itemLength,
             slidesToScroll: 1
           }
         },
@@ -146,7 +146,7 @@ const ListingCarousel = props => {
             settings={carouselSettings(itemLength)}
             itemName={'listing'}
             data={listings.edges.filter(onFilter)}
-            height={'500px'}
+            height={'530px'}
             node={true}
             getCart={getCart}
             onDelete={onDelete}
@@ -158,7 +158,7 @@ const ListingCarousel = props => {
             }}
             componentStyle={{
               margin: '0 4px',
-              width: '256px'
+              width: listings.edges.filter(onFilter).length < 3.5 && '280px'
             }}
           />
         ) : (

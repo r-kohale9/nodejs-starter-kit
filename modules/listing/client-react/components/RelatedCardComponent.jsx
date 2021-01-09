@@ -6,15 +6,16 @@ import { Link } from 'react-router-dom';
 
 import { NO_IMG } from '@gqlapp/listing-common';
 import { compose } from '@gqlapp/core-common';
-import { Message, Card, CardMeta } from '@gqlapp/look-client-react';
+import { Icon, Button, Ribbon, Message, Card, CardMeta, Tooltip } from '@gqlapp/look-client-react';
 import { IfLoggedIn } from '@gqlapp/user-client-react/containers/Auth';
 import { withAddToCart } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { default as ORDER_ROUTES } from '@gqlapp/order-client-react/routes';
 import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
 import AddToCartFormBtns from '@gqlapp/order-client-react/components/AddToCartFormBtns';
-import { CurrencyCostDisplay } from '@gqlapp/discount-client-react/components/DiscountComponentView';
+import DiscountComponentView from '@gqlapp/discount-client-react/components/DiscountComponentView';
 import { withModalDiscount } from '@gqlapp/discount-client-react/containers/DiscountOperations';
 import { subscribeToDiscount } from '@gqlapp/discount-client-react/containers/DiscountSubscriptions';
+import ReviewStar from '@gqlapp/review-client-react/containers/ReviewStar';
 import { MODAL } from '@gqlapp/review-common';
 
 import { withToogleListingBookmark } from '../containers/ListingOperations';
@@ -23,18 +24,31 @@ import { useImageLoaded } from './functions';
 import RelatedCardSkeleton from './RelatedCardSkeleton';
 import BookmarkComponent from './BookmarkComponent';
 
-const NewLabel = styled.div`
+const DealDiv = styled.div`
   position: absolute;
-  top: 10px;
-  left: 0;
-  padding: 5px;
-  color: white;
-  background: #0985be;
-  z-index: 2;
+  bottom: 0.8px;
+  width: 100%;
+  background-color: #f6ffed;
+  border: 3px solid #b7eb8f;
+  padding-top: 4px;
+  color: #52c41a;
+`;
+
+const OutOfStock = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: #d9d9d9;
+  opacity: 0.6;
+  z-index: 1;
+  border-radius: 8px;
 `;
 
 const ListingWraper = styled.div`
   position: relative;
+  @media screen and (max-width: 767px) {
+    width: 280px;
+  }
 `;
 
 const RelatedCardComponent = props => {
@@ -149,6 +163,141 @@ const RelatedCardComponent = props => {
       }}
     />
   );
+  const listingCard = (
+    <>
+      {listing && listing.listingDetail && listing.listingDetail.inventoryCount <= 0 && (
+        <div
+          align="center"
+          style={{
+            padding: '20px',
+            zIndex: 2,
+            position: 'absolute',
+            bottom: 0,
+            width: '100%'
+          }}
+        >
+          <Link className="listing-link" to={`${ROUTES.categoryCatalogueLink}${listing.category.id}`}>
+            <Button block /* ghost */ style={{ marginBottom: '5px' }} size="lg">
+              <Icon type="BlockOutlined" />
+              Show similar
+            </Button>
+          </Link>
+        </div>
+      )}
+      <Link className="listing-link" to={`${ROUTES.listingDetailLink}${listing_id}`}>
+        {listing && listing.listingDetail && listing.listingDetail.inventoryCount <= 0 && (
+          <>
+            <div className={'HVCenter'}>
+              <span
+                style={{
+                  backgroundColor: 'white',
+                  padding: '10px 20px',
+                  fontWeight: 'bold',
+                  fontSize: 'large',
+                  borderRadius: '8px',
+                  color: 'red',
+                  zIndex: 2
+                }}
+              >
+                Out Of Stock
+              </span>
+            </div>
+            <OutOfStock />
+          </>
+        )}
+        <Card
+          bodyStyle={{ margin: '0px', padding: '14px', textAlign: 'left' }}
+          hoverable
+          cover={
+            <div
+              style={{
+                height: 'fit-content',
+                borderRadius: '8px 8px 0px 0px'
+              }}
+              align="center"
+            >
+              {cardImg}
+              {startDate <= now && endDate >= now ? (
+                <DealDiv align="center">
+                  Deal ends in:{' '}
+                  {Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24)) !== 0
+                    ? ` ${Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24))} days`
+                    : Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60)) !== 0
+                    ? ` ${Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60))} hours`
+                    : Math.round((new Date(endDate) - new Date()) / (1000 * 60)) !== 0
+                    ? ` ${Math.round((new Date(endDate) - new Date()) / (1000 * 60))} minutes`
+                    : Math.round((new Date(endDate) - new Date()) / (1000 * 60)) !== 0
+                    ? ` ${Math.round((new Date(endDate) - new Date()) / 1000)} seconds`
+                    : 'Deal has Ended!'}
+                </DealDiv>
+              ) : (
+                startDate >= now &&
+                endDate >= now && (
+                  <DealDiv align="center">
+                    Deal starts in:
+                    {Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24)) !== 0
+                      ? ` ${Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24))} days`
+                      : Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60)) !== 0
+                      ? ` ${Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60))} hours`
+                      : Math.round((new Date(startDate) - new Date()) / (1000 * 60)) !== 0
+                      ? ` ${Math.round((new Date(startDate) - new Date()) / (1000 * 60))} minutes`
+                      : Math.round((new Date(startDate) - new Date()) / (1000 * 60)) !== 0
+                      ? ` ${Math.round((new Date(startDate) - new Date()) / 1000)} seconds`
+                      : 'Deal has Ended!'}
+                  </DealDiv>
+                )
+              )}
+            </div>
+          }
+        >
+          <CardMeta
+            title={
+              <Tooltip title={listing && listing.title}>
+                <span
+                  style={{
+                    fontSize: '18px',
+                    overflow: 'hidden',
+                    lineClamp: 1,
+                    display: 'box',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {listing && listing.title}
+                </span>
+              </Tooltip>
+            }
+            description={
+              <>
+                <DiscountComponentView
+                  isDiscount={isDiscount}
+                  cost={cost}
+                  discount={discount}
+                  span={[16, 8]}
+                  card={true}
+                  rowStyle={{ height: '75px' }}
+                />
+                <div /* align="center" */>
+                  <ReviewStar
+                    filter={{
+                      isActive: true,
+                      modalId: listing && listing.id,
+                      modalName: MODAL[1].value
+                    }}
+                    currentUser={currentUser}
+                  />
+                </div>
+              </>
+            }
+          />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </Card>
+      </Link>
+    </>
+  );
 
   return (
     <>
@@ -161,7 +310,7 @@ const RelatedCardComponent = props => {
             currentUser={currentUser}
           />
         </IfLoggedIn>
-        {listing_is_new && <NewLabel>{'New'}</NewLabel>}
+        {/* {listing_is_new && <NewLabel>{'New'}</NewLabel>} */}
         <div
           align="center"
           style={{
@@ -189,82 +338,13 @@ const RelatedCardComponent = props => {
             catalogueCard={true}
           />
         </div>
-        <Link className="listing-link" to={`${ROUTES.listingDetailLink}${listing_id}`}>
-          <Card
-            bodyStyle={{ margin: '0px' }}
-            hoverable
-            cover={
-              <div
-                style={{
-                  // overflow: 'hidden',
-                  // height: '230px',
-                  height: 'fit-content',
-                  borderRadius: '8px 8px 0px 0px'
-                }}
-                align="center"
-              >
-                {cardImg}
-              </div>
-            }
-          >
-            <CardMeta
-              title={
-                <span
-                  style={{
-                    fontSize: '20px',
-                    overflow: 'hidden',
-                    lineClamp: 1,
-                    display: 'box'
-                  }}
-                >
-                  {listing && listing.title}
-                </span>
-              }
-              description={
-                <CurrencyCostDisplay
-                  isDiscount={isDiscount}
-                  cost={cost}
-                  discount={discount}
-                  span={[15, 9]}
-                  card={true}
-                  rowStyle={{ height: '75px' }}
-                />
-              }
-            />
-            {startDate <= now && endDate >= now ? (
-              <h4>
-                Deal ends in:{' '}
-                {Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24)) !== 0
-                  ? `${Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24))} days`
-                  : Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60)) !== 0
-                  ? `${Math.round((new Date(endDate) - new Date()) / (1000 * 60 * 60))} hours`
-                  : Math.round((new Date(endDate) - new Date()) / (1000 * 60)) !== 0
-                  ? `${Math.round((new Date(endDate) - new Date()) / (1000 * 60))} minutes`
-                  : Math.round((new Date(endDate) - new Date()) / (1000 * 60)) !== 0
-                  ? `${Math.round((new Date(endDate) - new Date()) / 1000)} seconds`
-                  : 'Deal has Ended!'}
-              </h4>
-            ) : startDate >= now && endDate >= now ? (
-              <h4>
-                Deal starts in:
-                {Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24)) !== 0
-                  ? `${Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60 * 24))} days`
-                  : Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60)) !== 0
-                  ? `${Math.round((new Date(startDate) - new Date()) / (1000 * 60 * 60))} hours`
-                  : Math.round((new Date(startDate) - new Date()) / (1000 * 60)) !== 0
-                  ? `${Math.round((new Date(startDate) - new Date()) / (1000 * 60))} minutes`
-                  : Math.round((new Date(startDate) - new Date()) / (1000 * 60)) !== 0
-                  ? `${Math.round((new Date(startDate) - new Date()) / 1000)} seconds`
-                  : 'Deal has Ended!'}
-              </h4>
-            ) : (
-              <br />
-            )}
-            <br />
-            <br />
-            <br />
-          </Card>
-        </Link>
+        {listing_is_new ? (
+          <Ribbon placement={'start'} text={'New'}>
+            {listingCard}
+          </Ribbon>
+        ) : (
+          listingCard
+        )}
       </ListingWraper>
     </>
   );

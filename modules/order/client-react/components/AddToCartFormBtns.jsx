@@ -29,21 +29,7 @@ const AddToCartFormBtns = props => {
   return (
     <Tooltip title={title}>
       {inCart ? (
-        <Row type="flex" gutter={24}>
-          <Col {...customGridLG}>
-            <Button
-              size="lg"
-              block
-              onClick={onSubmit}
-              disabled={loading || disabled}
-              color="primary"
-              ghost
-              loading={loading}
-            >
-              <Icon type="ShoppingOutlined" />
-              {t('addToCart.form.btn.add')}
-            </Button>
-          </Col>
+        <Row type="flex" gutter={[24, 4]}>
           <Col {...customGridLG}>
             <Button
               color="primary"
@@ -53,31 +39,37 @@ const AddToCartFormBtns = props => {
               disabled={loading || disabled}
               loading={loading}
             >
-              <Icon type="ShoppingCartOutlined" />
+              <Icon type="ShoppingOutlined" />
               {t('addToCart.form.btn.book')}
             </Button>
           </Col>
           <Col {...customGridXS}>
-            <Button
-              block
-              size="lg"
-              onClick={onSubmit}
-              disabled={loading || disabled}
-              color="primary"
-              ghost
-              loading={loading}
-            >
-              <Icon type="ShoppingOutlined" />
+            <Button block size="lg" onClick={onSubmit} disabled={loading || disabled} loading={loading}>
+              <Icon type="PlusCircleOutlined" />
               {t('addToCart.form.btn.add')}
             </Button>
             <Button block color="primary" size="lg" onClick={onSubmitRedirect} disabled={disabled}>
-              <Icon type="ShoppingCartOutlined" />
+              <Icon type="ShoppingOutlined" />
               {t('addToCart.form.btn.book')}
+            </Button>
+          </Col>
+          <Col {...customGridLG}>
+            <Button size="lg" block onClick={onSubmit} disabled={loading || disabled} loading={loading}>
+              <Icon type="PlusCircleOutlined" />
+              {t('addToCart.form.btn.add')}
             </Button>
           </Col>
         </Row>
       ) : (
-        <Row type="flex" gutter={24}>
+        <Row type="flex" gutter={[24, 4]}>
+          <Col {...customGridLG}>
+            <a href={`${ROUTES.checkoutCart}`}>
+              <Button color="primary" size="lg" block disabled={disabled}>
+                <Icon type="ShoppingOutlined" />
+                {t('addToCart.form.btn.go')}
+              </Button>
+            </a>
+          </Col>
           {onDelete && (
             <Col {...customGridLG}>
               <Button size="lg" onClick={onDelete} block disabled={disabled} danger ghost>
@@ -86,27 +78,19 @@ const AddToCartFormBtns = props => {
               </Button>
             </Col>
           )}
-          <Col {...customGridLG}>
+          <Col {...customGridXS}>
             <a href={`${ROUTES.checkoutCart}`}>
-              <Button color="primary" size="lg" block disabled={disabled}>
+              <Button block color="primary" size="lg" disabled={disabled}>
                 {t('addToCart.form.btn.go')}
-                <Icon type="ShoppingCartOutlined" />
+                <Icon type="ShoppingOutlined" />
               </Button>
             </a>
-          </Col>
-          <Col {...customGridXS}>
             {onDelete && (
               <Button block size="lg" onClick={onDelete} disabled={disabled} danger ghost>
                 <Icon type="DeleteOutlined" />
                 {t('addToCart.form.btn.remove')}
               </Button>
             )}
-            <a href={`${ROUTES.checkoutCart}`}>
-              <Button block color="primary" size="lg" disabled={disabled}>
-                {t('addToCart.form.btn.go')}
-                <Icon type="ShoppingCartOutlined" />
-              </Button>
-            </a>
           </Col>
         </Row>
       )}

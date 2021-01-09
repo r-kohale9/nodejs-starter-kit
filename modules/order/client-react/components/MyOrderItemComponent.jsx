@@ -6,7 +6,7 @@ import { PropTypes } from 'prop-types';
 import { NO_IMG } from '@gqlapp/listing-common';
 import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
 import { Row, Col, Card } from '@gqlapp/look-client-react';
-import { TotalPrice } from './CheckoutCartView';
+import { TotalPrice } from './function';
 import ROUTES from '../routes';
 
 const Price = styled(Row)`
@@ -38,7 +38,7 @@ const OrderItemComponent = props => {
         }}
       >
         <Row type="flex">
-          <Col span={24} align="center" style={{ maxHeight: '200px', overflow: 'hidden' }}>
+          <Col span={24} align="center" style={{ height: 'fit-content' /* , overflow: 'hidden' */ }}>
             <img
               alt=""
               src={(item.orderDetails && item.orderDetails[0] && item.orderDetails[0].imageUrl) || NO_IMG}

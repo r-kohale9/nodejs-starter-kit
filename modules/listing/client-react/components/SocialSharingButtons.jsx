@@ -181,6 +181,7 @@ const SocialSharingButtons = props => {
                   block
                   onClick={async () => {
                     await window.navigator.clipboard.writeText(link);
+                    Message.success('Copied to clipboard!');
                   }}
                 >
                   Copy
@@ -201,6 +202,7 @@ const SocialSharingButtons = props => {
         height="auto"
         shape="circle"
         ghost={true}
+        block={false}
         type="primary"
       >
         {sharingMenu}

@@ -11,7 +11,7 @@ import {
   RenderCheckBox,
   Option,
   RenderField,
-  RenderUploadWithCrop,
+  RenderUpload,
   SubmitButton,
   RenderSelect
 } from '@gqlapp/look-client-react';
@@ -31,6 +31,7 @@ const DynamicCarouselFormComponent = props => {
     <>
       <Field
         name="title"
+        icon="FontSizeOutlined"
         component={RenderField}
         placeholder={t('dynamicCarousel.form.title')}
         type="text"
@@ -39,6 +40,7 @@ const DynamicCarouselFormComponent = props => {
       />
       <Field
         name="description"
+        icon="FileOutlined"
         component={RenderField}
         placeholder={t('dynamicCarousel.form.description')}
         type="textarea"
@@ -95,7 +97,7 @@ const DynamicCarouselFormComponent = props => {
           load={load}
           height={IMG_ASPECT.medium.height}
           width={IMG_ASPECT.medium.width}
-          component={RenderUploadWithCrop}
+          component={RenderUpload}
           label={t('dynamicCarousel.form.imageUrl')}
         />
         <SubmitButton color="primary" type="submit" disabled={load}>

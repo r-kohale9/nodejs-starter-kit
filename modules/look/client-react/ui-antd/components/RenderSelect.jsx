@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { FormItem } from '@gqlapp/look-client-react';
-
+import FormItem from './FormItem';
 import Select from './Select';
+import Space from './Space';
+import Icon from './Icon';
 
 const RenderSelect = props => {
   const {
+    icon,
     input,
     label,
     type,
@@ -14,7 +16,7 @@ const RenderSelect = props => {
     meta: { touched, error },
     onChange,
     selectStyle,
-    inFilter
+    inFilter = false
   } = props;
   let validateStatus = '';
   if (touched && error) {
@@ -29,22 +31,31 @@ const RenderSelect = props => {
       formik.handleChange({ target: { value, name } });
     }
   };
-  let labels = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 }
-  };
-  if (inFilter) {
-    labels = null;
-  }
+
+  let labels = inFilter
+    ? {}
+    : {
+        labelCol: { span: 24 },
+        wrapperCol: { span: 24 }
+      };
 
   // console.log(props);
   return (
-    <FormItem label={label} validateStatus={validateStatus} help={error} {...labels} style={{ width: '100%' }}>
-      <div>
-        <Select type={type} style={selectStyle} {...input} onChange={handleChange}>
-          {children}
-        </Select>
-      </div>
+    <FormItem
+      label={
+        <Space align="center">
+          {icon && <Icon type={icon} />}
+          {label}
+        </Space>
+      }
+      validateStatus={validateStatus}
+      help={error}
+      style={{ width: '100%' }}
+      {...labels}
+    >
+      <Select type={type} style={selectStyle} {...input} onChange={handleChange}>
+        {children}
+      </Select>
     </FormItem>
   );
 };
@@ -59,7 +70,8 @@ RenderSelect.propTypes = {
   name: PropTypes.string.isRequired,
   children: PropTypes.node,
   selectStyle: PropTypes.object,
-  inFilter: PropTypes.bool
+  inFilter: PropTypes.bool,
+  icon: PropTypes.string
 };
 
 export default RenderSelect;

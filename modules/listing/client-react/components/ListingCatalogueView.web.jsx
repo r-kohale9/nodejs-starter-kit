@@ -48,7 +48,7 @@ const ListingCatalogueView = props => {
         key={key}
         listing={listing}
         history={history}
-        modalName={'listing'}
+        modalName={MODAL[1].value}
         modalId={listing.id}
         currentUser={currentUser}
         inCart={cartItemArray.length === 0}
@@ -61,13 +61,14 @@ const ListingCatalogueView = props => {
     <div>
       <SuggestedListComponent
         {...props}
+        endText={'listing'}
         grid={
           layout === 'vertical' && {
             gutter: 24,
             xs: 1,
             sm: 1,
             md: 2,
-            lg: 2,
+            lg: 3,
             xl: 3,
             xxl: 3
           }
@@ -83,8 +84,8 @@ const ListingCatalogueView = props => {
     const span =
       layout === 'vertical'
         ? {
-            spanFilter: { lg: 6, md: 6, sm: 24 },
-            spanContent: { lg: 18, md: 18, sm: 24 }
+            spanFilter: { lg: 6, md: 8, sm: 24 },
+            spanContent: { lg: 18, md: 16, sm: 24 }
           }
         : {
             spanFilter: { span: 24 },
@@ -121,9 +122,20 @@ const ListingCatalogueView = props => {
     <PageLayout>
       <MetaTags title={t('list.title')} description={`${settings.app.name} - ${t('list.meta')}`} />
       <CategoryNavBarComponent filter={{ isActive: true, isNavbar: true, modalName: MODAL[1].value }} />
-      <Heading type="2">
-        <Icon type="SolutionOutlined" /> &nbsp; {title}
-      </Heading>
+      <Row type="flex" align="middle">
+        <Col lg={12} md={12} xs={24}>
+          <Heading type="2">
+            <Icon type="SolutionOutlined" /> &nbsp; {title}
+          </Heading>{' '}
+        </Col>
+        <Col lg={12} md={12} xs={0}>
+          <Row justify="end">
+            {listings && (
+              <h4>{`(showing 1 - ${listings.edges.length} products of ${listings.totalCount} products)`}</h4>
+            )}
+          </Row>
+        </Col>
+      </Row>
       <Divider style={{ margin: '5px 0px 10px' }} />
       {renderChildren('vertical')}
       {/* {renderChildren()} */}
