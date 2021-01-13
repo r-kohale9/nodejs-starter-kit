@@ -6,7 +6,7 @@ import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
 import ROUTES from '../routes';
-import ListingView from '../components/ListingView';
+import ListingView from '../components/ListingViewDemo';
 
 import { subscribeToListings } from './ListingSubscriptions';
 import {

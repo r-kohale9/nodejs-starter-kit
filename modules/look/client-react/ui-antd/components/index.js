@@ -103,5 +103,6 @@ export { default as Title } from './Title';
 export { default as Paragraph } from './Paragraph';
 export { default as Menu } from './Menu';
 export { default as Image } from './Image';
+export { default as TableMotion } from './TableMotion';
 
 export { onAppCreate } from './NavBar';
