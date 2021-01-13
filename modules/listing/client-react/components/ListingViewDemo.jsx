@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import {
   Icon,
@@ -7,16 +8,12 @@ import {
   PageLayout,
   AddButton,
   Heading,
-  Row,
-  Col,
   TableMotion,
   Empty,
   Button,
   RenderTableLoading,
   Select,
   Option,
-  Table,
-  Pagination,
   EditIcon,
   DeleteIcon,
   Divider,
@@ -29,10 +26,6 @@ import { MODAL } from '@gqlapp/review-common';
 import ROUTES from '../routes';
 import ListingFilterComponent from './ListingFilterComponent.web';
 import { displayDataCheck } from './functions';
-
-import ListingListComponent from './ListingListComponent.web';
-
-const { itemsNumber, type } = settings.pagination.web;
 
 const NoListingsMessage = ({ t }) => (
   <div align="center">
@@ -47,8 +40,10 @@ const NoListingsMessage = ({ t }) => (
   </div>
 );
 
+NoListingsMessage.propTypes = { t: PropTypes.func };
+
 const ListingView = props => {
-  const { onToggle, orderBy, onOrderBy, loading, listings, t, loadData, deleteListing, onDuplicate } = props;
+  const { onToggle, orderBy, onOrderBy, loading, listings, t, /* loadData, */ deleteListing, onDuplicate } = props;
   const renderOrderByArrow = name => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
@@ -296,6 +291,19 @@ const ListingView = props => {
       )}
     </PageLayout>
   );
+};
+
+ListingView.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  loadData: PropTypes.bool,
+  listings: PropTypes.object,
+  orderBy: PropTypes.object,
+  onOrderBy: PropTypes.func.isRequired,
+  deleteListing: PropTypes.func.isRequired,
+  onToggle: PropTypes.func,
+  t: PropTypes.func,
+  onDuplicate: PropTypes.func,
+  history: PropTypes.object
 };
 
 export default ListingView;

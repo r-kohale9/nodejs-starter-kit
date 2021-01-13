@@ -1,14 +1,10 @@
 import React from 'react';
 import Table from 'antd/lib/table';
-import Button from 'antd/lib/button';
 import PropTypes from 'prop-types';
 import { TweenOneGroup } from 'rc-tween-one';
-import { Link } from 'react-router-dom';
 import '../styles/tableMotion.less';
 import Row from './Row';
 import Col from './Col';
-import Heading from './Heading';
-import AddButton from './actions/AddButton';
 
 const TableContext = React.createContext(false);
 
@@ -161,5 +157,14 @@ class TableMotion extends React.Component {
     );
   }
 }
+TableMotion.propTypes = {
+  onAdd: PropTypes.func,
+  heading: PropTypes.node,
+  addButton: PropTypes.node,
+  filterComponent: PropTypes.node,
+  columns: PropTypes.node,
+  scroll: PropTypes.node,
+  dataSource: PropTypes.node
+};
 
 export default TableMotion;
