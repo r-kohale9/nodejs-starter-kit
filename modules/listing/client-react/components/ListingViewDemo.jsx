@@ -43,7 +43,7 @@ const NoListingsMessage = ({ t }) => (
 NoListingsMessage.propTypes = { t: PropTypes.func };
 
 const ListingView = props => {
-  const { onToggle, orderBy, onOrderBy, loading, listings, t, /* loadData, */ deleteListing, onDuplicate } = props;
+  const { onToggle, orderBy, onOrderBy, loading, listings, t, loadData, deleteListing, onDuplicate } = props;
   const renderOrderByArrow = name => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
@@ -282,9 +282,11 @@ const ListingView = props => {
           filterComponent={
             <ListingFilterComponent showCategoryFilter={true} showIsActive={true} affix={false} {...props} />
           }
-          dataSource={listings.edges.map(({ node }) => node)}
+          dataSource={listings}
           columns={columns}
           scroll={{ x: 1300 }}
+          loadMoreText={t('list.btn.more')}
+          loadData={loadData}
         />
       ) : (
         !loading && <NoListingsMessage t={t} />

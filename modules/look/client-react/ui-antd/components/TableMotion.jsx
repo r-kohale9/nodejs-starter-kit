@@ -2,9 +2,15 @@ import React from 'react';
 import Table from 'antd/lib/table';
 import PropTypes from 'prop-types';
 import { TweenOneGroup } from 'rc-tween-one';
+
+import settings from '@gqlapp/config';
+
 import '../styles/tableMotion.less';
 import Row from './Row';
 import Col from './Col';
+import Pagination from './Pagination';
+
+const { itemsNumber, type } = settings.pagination.web;
 
 const TableContext = React.createContext(false);
 
@@ -118,6 +124,17 @@ class TableMotion extends React.Component {
     });
   };
   render() {
+    const handlePageChange = (pagination, pageNumber) => {
+      const {
+        pageInfo: { endCursor }
+      } = this.props.dataSource;
+      pagination === 'relay'
+        ? this.props.loadData(endCursor + 1, 'add')
+        : this.props.loadData((pageNumber - 1) * itemsNumber, 'replace');
+      this.setState({
+        isPageTween: true
+      });
+    };
     return (
       <div>
         <Row>
@@ -145,14 +162,27 @@ class TableMotion extends React.Component {
         <TableContext.Provider value={this.state.isPageTween}>
           <Table
             columns={this.props.columns}
+            pagination={false}
+            rowKey="id"
             // pagination={{ pageSize: 10 }}
-            dataSource={this.props.dataSource}
+            dataSource={this.props.dataSource && this.props.dataSource.edges.map(({ node }) => node)}
             // className={`${this.props.className}-table`}
             components={{ body: { wrapper: this.animTag } }}
             onChange={this.pageChange}
             scroll={this.props.scroll}
           />
         </TableContext.Provider>
+        <div align="center">
+          <Pagination
+            itemsPerPage={this.props.dataSource && this.props.dataSource.edges.length}
+            handlePageChange={handlePageChange}
+            hasNextPage={this.props.dataSource && this.props.dataSource.pageInfo.hasNextPage}
+            pagination={type}
+            total={this.props.dataSource && this.props.dataSource.totalCount}
+            loadMoreText={this.props.loadMoreText}
+            defaultPageSize={itemsNumber}
+          />
+        </div>
       </div>
     );
   }
@@ -164,7 +194,9 @@ TableMotion.propTypes = {
   filterComponent: PropTypes.node,
   columns: PropTypes.node,
   scroll: PropTypes.node,
-  dataSource: PropTypes.node
+  dataSource: PropTypes.node,
+  loadMoreText: PropTypes.string,
+  loadData: PropTypes.func
 };
 
 export default TableMotion;
