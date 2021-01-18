@@ -1,0 +1,120 @@
+# Entity
+type Question {
+  id: Int!
+  questionType: String
+  description: String
+  isActive: Boolean
+  choices: [Choice]
+  createdAt: String
+  updatedAt: String
+}
+
+type Choice {
+  id: Int!
+  questionId: Int!
+  description: String!
+  createdAt: String
+  updatedAt: String
+}
+
+
+
+type QuestionEdges {
+  node: Question
+  cursor: Int
+}
+
+type QuestionList {
+  totalCount: Int
+  edges: [QuestionEdges]
+  pageInfo: QuestionPageInfo
+}
+
+type QuestionPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
+extend type Query {
+  #get question list
+  questionList(
+    limit: Int
+    after: Int
+    filter: FilterQuestionInput
+    orderBy:OrderByQuestionInput
+  ): QuestionList
+  #get question by id
+  question(id: Int!): Question
+
+}
+
+input FilterQuestionInput {
+  searchText: String
+  isActive: Boolean
+}
+
+# Input for ordering users
+input OrderByQuestionInput {
+  # id | description
+  column: String
+  # asc | desc
+  order: String
+}
+
+extend type Mutation {
+  # Create new question
+  addQuestion(input: AddQuestionInput!): Question
+  # Edit a question
+  editQuestion(input: EditQuestionInput!): Question
+  # Delete question
+  deleteQuestion(id: Int): Question
+  # Duplicate question
+  # duplicateQuestion(userId: Int!, questionId: Int!): Question
+}
+
+input EditQuestionInput {
+  id: Int!
+  description: String!
+  questionType: String!
+  isActive: Boolean
+  choices: [ChoiceInput!]
+}
+
+input EditChoiceInput {
+  id: Int
+  questionId: Int
+  description: String!
+}
+
+
+
+
+input AddQuestionInput {
+  description: String!
+  questionType: String!
+  isActive: Boolean
+  choices: [ChoiceInput]!
+}
+
+input ChoiceInput {
+  id: Int
+  questionId: Int
+  description: String!
+}
+
+extend type Subscription {
+  # modelUpdated: UpdateModelPayload
+  questionsUpdated(filter: FilterQuestionInput): UpdateQuestionsPayload
+  questionUpdated(id: Int): UpdateQuestionPayload
+}
+
+type UpdateQuestionsPayload {
+  mutation: String!
+  node: Question
+}
+
+type UpdateQuestionPayload {
+  mutation: String!
+  id: Int
+  node: Question
+}
