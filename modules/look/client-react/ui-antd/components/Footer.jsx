@@ -72,7 +72,7 @@ class Footer extends React.Component {
             </h2>
             <ChildLink {...childWrapper}>{childWrapper.children.map(getChildrenToRender)}</ChildLink>
           </Col>
-          <Col lg={0} md={0} xs={24}>
+          <Col lg={0} md={0} xs={24} align="left">
             {item.name === 'dropdownable' ? (
               <Collapse
                 expandIconPosition={'right'}
@@ -91,7 +91,7 @@ class Footer extends React.Component {
                 </CollapsePanel>
               </Collapse>
             ) : (
-              <>
+              <div align="center">
                 <h2 {...title}>
                   {typeof title.children === 'string' && title.children.match(isImg) ? (
                     <img src={title.children} width="100%" alt="img" />
@@ -100,7 +100,7 @@ class Footer extends React.Component {
                   )}
                 </h2>
                 <ChildLink {...childWrapper}>{childWrapper.children.map(getChildrenToRender)}</ChildLink>
-              </>
+              </div>
             )}
           </Col>
         </Col>
@@ -151,7 +151,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -164,7 +163,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -177,7 +175,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -190,7 +187,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -203,7 +199,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                       </div>
