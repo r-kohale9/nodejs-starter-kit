@@ -5,8 +5,7 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { translate } from '@gqlapp/i18n-client-react';
-import { DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
-// eslint-disable-next-line import/no-named-default
+import { Affix, DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import { withCurrentUser, withGetCart, withEditOrderDetail, withDeleteCartItem } from './OrderOperations';
@@ -19,6 +18,11 @@ const StyleCard = styled(Card)`
   border: 0px !important;
   border-radius: 0px !important;
   margin-right: 15px !important;
+`;
+
+const WhiteDiv = styled.div`
+  background: white;
+  padding: 5px;
 `;
 
 const NavItemCart = props => {
@@ -97,31 +101,35 @@ const NavItemCart = props => {
               className="navbar-cart-dropdown"
               noicon
             >
-              {props.getCart && props.getCart.orderDetails && props.getCart.orderDetails.length !== 0 ? (
-                <NavItemCartLayout
-                  Compo={NavItemCartComponent}
-                  data={props.getCart.orderDetails}
-                  width={'300px'}
-                  height={'260px'}
-                  itemName={'item'}
-                  componentProps={{
-                    mobile: true,
-                    t
-                  }}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              ) : (
-                <div style={{ padding: '10px' }}>
-                  <EmptyComponent
-                    applyClass={false}
-                    description={'You have no items in your Cart'}
-                    emptyLink={`${LISTING_ROUTES.listingCatalogue}`}
-                    showAddBtn={true}
-                    btnText={t('checkoutCart.btn.add')}
-                  />
-                </div>
-              )}
+              <Affix offsetTop={52}>
+                <WhiteDiv>
+                  {props.getCart && props.getCart.orderDetails && props.getCart.orderDetails.length !== 0 ? (
+                    <NavItemCartLayout
+                      Compo={NavItemCartComponent}
+                      data={props.getCart.orderDetails}
+                      width={'300px'}
+                      height={'260px'}
+                      itemName={'item'}
+                      componentProps={{
+                        mobile: true,
+                        t
+                      }}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  ) : (
+                    <div style={{ padding: '10px' }}>
+                      <EmptyComponent
+                        applyClass={false}
+                        description={'You have no items in your Cart'}
+                        emptyLink={`${LISTING_ROUTES.listingCatalogue}`}
+                        showAddBtn={true}
+                        btnText={t('checkoutCart.btn.add')}
+                      />
+                    </div>
+                  )}
+                </WhiteDiv>
+              </Affix>
             </DropDown>
           )}
         </>
