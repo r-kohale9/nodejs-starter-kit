@@ -100,14 +100,12 @@ class TableMotion extends React.Component {
       isPageTween: false
     };
   }
-
   onEnd = e => {
     const dom = e.target;
     dom.style.height = 'auto';
   };
 
   onAdd = () => {
-    this.props.onAdd();
     this.setState({
       isPageTween: false
     });
