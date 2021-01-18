@@ -123,6 +123,13 @@ export default new ClientModule({
       redirect={HOME_ROUTES.home}
       component={loadable(() => import('./containers/LogoutPage').then(c => c.default), { fallback: <Spinner /> })}
     />,
+    <Route
+      exact
+      path={ROUTES.emailVerified}
+      component={loadable(() => import('./containers/EmailVerifiedPage').then(c => c.default), {
+        fallback: <Spinner />
+      })}
+    />,
     <AuthRoute
       exact
       path={ROUTES.forgotPassword}

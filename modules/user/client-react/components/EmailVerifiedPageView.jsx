@@ -1,20 +1,18 @@
-/* eslint-disable import/no-named-default */
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { MetaTags, PageLayout, Icon, Row, Col, Button, Result } from '@gqlapp/look-client-react';
+import { PageLayout, Icon, Row, Col, Button, Result, MetaTags } from '@gqlapp/look-client-react';
 import { HOME_ROUTES } from '@gqlapp/home-client-react';
 import { USER_ROUTES } from '@gqlapp/user-client-react';
 import settings from '@gqlapp/config';
 
-const LOGOUT_PAGE_GIF =
-  'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1601824605/cwy15kfennovwu6j4noe.webp';
+const EMAIL_VERIFIED_GIF = 'https://media.tenor.com/images/90170b1a23f28719c66f43fc435bf076/tenor.gif';
 
 const LogoutPageView = props => {
   const { history } = props;
   return (
     <PageLayout>
-      <MetaTags title={'Logged Out'} description={`${settings.app.name} - Logged Out}`} />
+      <MetaTags title={'Email Verified'} description={`${settings.app.name} - Email Verified}`} />
       <div align="center">
         <Row>
           <Col xs={0} sm={0} md={24} lg={24}>
@@ -29,10 +27,10 @@ const LogoutPageView = props => {
           icon={
             <Row type="flex">
               <Col xs={0} sm={0} md={24} lg={24} align="center">
-                <img src={LOGOUT_PAGE_GIF} height="200px" />
+                <img src={EMAIL_VERIFIED_GIF} height="200px" />
               </Col>
               <Col span={24} md={0} lg={0} align="center">
-                <img src={LOGOUT_PAGE_GIF} height="100px" />
+                <img src={EMAIL_VERIFIED_GIF} height="100px" />
               </Col>
             </Row>
           }
@@ -40,18 +38,18 @@ const LogoutPageView = props => {
             <>
               <Row justify="center">
                 <Col lg={24} md={24} sm={24} xs={0}>
-                  Successfully Logged Out
+                  Email Verification Successfully
+                </Col>
+                <Col lg={0} md={0} xs={24}>
+                  Verification
                 </Col>
                 <Col lg={0} md={0} xs={24}>
                   Successfully
                 </Col>
-                <Col lg={0} md={0} xs={24}>
-                  Logged Out
-                </Col>
               </Row>
             </>
           }
-          subTitle="It was a pleasure having you here. And see you again soon!"
+          subTitle="It is a pleasure to have you here. Continue to Login!"
           extra={
             <>
               <Row justify="center">
