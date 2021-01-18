@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import ROUTES from '../routes';
 import AddListingView from '../components/AddListingView.web';
-import { withAddListing, withCurrentUser } from './ListingOperations';
-// import { removeEmpty } from '../components/functions';
+import { withAddListing } from './ListingOperations';
 
 const AddListing = props => {
   const { addListing, history } = props;

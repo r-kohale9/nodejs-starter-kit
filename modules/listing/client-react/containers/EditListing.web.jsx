@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import { PropTypes } from 'prop-types';
-import { withListing, withCurrentUser, withEditListing } from './ListingOperations';
+import { withListing, withEditListing } from './ListingOperations';
 
 import EditListingView from '../components/EditListingView.web';
 import { subscribeToListing } from './ListingSubscriptions';

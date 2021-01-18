@@ -7,8 +7,9 @@ import styled from 'styled-components';
 import { translate } from '@gqlapp/i18n-client-react';
 import { Affix, DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
-import { withCurrentUser, withGetCart, withEditOrderDetail, withDeleteCartItem } from './OrderOperations';
+import { withGetCart, withEditOrderDetail, withDeleteCartItem } from './OrderOperations';
 import { subscribeToCart } from './OrderSubscriptions';
 import NavItemCartLayout from '../components/NavItemCartLayout';
 import NavItemCartComponent from '../components/NavItemCartComponent';

@@ -2,8 +2,8 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
-import { withCurrentUser } from './ListingOperations';
 import MyListingsView from '../components/MyListingsView';
 import MyListingsContainer from './MyListingsContainer';
 

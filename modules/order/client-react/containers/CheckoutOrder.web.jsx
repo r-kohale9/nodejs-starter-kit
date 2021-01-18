@@ -4,15 +4,16 @@ import { Message } from '@gqlapp/look-client-react';
 
 import { compose } from '@gqlapp/core-common';
 import { ORDER_STATES } from '@gqlapp/order-common';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
+import { translate } from '@gqlapp/i18n-client-react';
 
 // import ORDER_PAYMENT from '../graphql/OrderPayment.graphql';
 // import PATCH_ORDER_PAYMENT from '../graphql/PatchOrderPayment.graphql';
 
-import { translate } from '@gqlapp/i18n-client-react';
 import ROUTES from '../routes';
 import CheckoutOrderView from '../components/CheckoutOrderView';
 
-import { withCurrentUser, withGetCart, withPatchOrderState } from './OrderOperations';
+import { withGetCart, withPatchOrderState } from './OrderOperations';
 import { subscribeToCart } from './OrderSubscriptions';
 
 const CheckoutOrder = props => {

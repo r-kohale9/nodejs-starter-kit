@@ -3,11 +3,11 @@ import { PropTypes } from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import ListingCatalogueView from '../components/ListingCatalogueView.web';
 
 import {
-  withCurrentUser,
   withMyListingsBookmark,
   withFilterUpdating,
   withOrderByUpdating,

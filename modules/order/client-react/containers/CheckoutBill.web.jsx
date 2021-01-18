@@ -4,10 +4,11 @@ import { Message } from '@gqlapp/look-client-react';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import ROUTES from '../routes';
 import CheckoutBillView from '../components/CheckoutBillView';
-import { withCurrentUser, withGetCart, withPatchAddress } from './OrderOperations';
+import { withGetCart, withPatchAddress } from './OrderOperations';
 import { subscribeToCart } from './OrderSubscriptions';
 
 const CheckoutBill = props => {
