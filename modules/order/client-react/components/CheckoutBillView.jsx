@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { NextButton, MetaTags, PageLayout, Row, Col, Spinner } from '@gqlapp/look-client-react';
+import { NextButton, MetaTags, PageLayout, Row, Col, Spinner, Tooltip } from '@gqlapp/look-client-react';
 import SelectAddress from '@gqlapp/addresses-client-react/containers/SelectAddress';
 import AddAddressBtn from '@gqlapp/addresses-client-react/containers/AddAddressBtn';
-
 import settings from '@gqlapp/config';
+
 import CheckoutLayout from './CheckoutLayout';
 import OrderSummary from './OrderSummary';
 
@@ -39,9 +39,11 @@ const CheckoutBillView = props => {
               getCart={getCart}
               history={history}
               btn={
-                <NextButton onClick={onSubmit} loading={cartLoading} disabled={btnDisabled} size="lg">
-                  Continue
-                </NextButton>
+                <Tooltip title={btnDisabled && 'Select delivery address.'}>
+                  <NextButton onClick={onSubmit} loading={cartLoading} disabled={btnDisabled} size="lg">
+                    Continue
+                  </NextButton>
+                </Tooltip>
               }
             />
           }

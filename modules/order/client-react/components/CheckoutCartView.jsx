@@ -10,7 +10,8 @@ import {
   Col,
   Card,
   Divider,
-  Spinner
+  Spinner,
+  Tooltip
 } from '@gqlapp/look-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
@@ -37,7 +38,7 @@ const CheckoutCartView = props => {
         Col1={
           <div style={{ overflowX: 'auto' }}>
             <Card
-              // style={{ width: '750px' }}
+              style={{ minWidth: '700px' }}
               type="inner"
               title={
                 <Row type="flex">
@@ -70,6 +71,7 @@ const CheckoutCartView = props => {
                       <CartItemComponent
                         modalName={MODAL[1].value}
                         modalId={cartItem.modalId}
+                        state={getCart.orderState.state}
                         t={t}
                         item={cartItem}
                         edit={true}
@@ -91,14 +93,14 @@ const CheckoutCartView = props => {
             getCart={getCart}
             history={history}
             btn={
-              <>
+              <Tooltip title={!checkout && 'Accept privacy policy.'}>
                 <CheckBox onChange={e => setCheckout(e.target.checked)}>{t('checkoutCart.checkbox')}</CheckBox>
                 <br />
                 <br />
                 <NextButton onClick={() => history.push(`${ROUTES.checkoutBill}`)} block disabled={!checkout}>
                   {t('checkoutCart.btn.checkout')}
                 </NextButton>
-              </>
+              </Tooltip>
             }
           />
         }

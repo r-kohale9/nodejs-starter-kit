@@ -4,15 +4,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { EmptyComponent, AddButton, Heading, Row, Col } from '@gqlapp/look-client-react';
-// eslint-disable-next-line import/no-named-default
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import CheckoutStepsComponent from './CheckoutStepsComponent';
 
 const CustomBody = styled.div`
   background: white;
-  margin: 0 -200%;
-  padding: 0 200%;
+  padding: 0 24px;
+  min-height: 80vh;
 `;
 const CheckoutLayout = props => {
   const { cartLoading, loading, t, title, extra, step, Col1, Col2 } = props;
@@ -26,10 +25,12 @@ const CheckoutLayout = props => {
           <CustomBody>
             <br />
             <Row>
-              <Col span={12}>
+              <Col lg={12} md={12} xs={24}>
                 <Heading>{title}</Heading>
               </Col>
-              <Col span={12}>{extra}</Col>
+              <Col lg={12} md={12} xs={24}>
+                {extra}
+              </Col>
             </Row>
             <br />
             <Row gutter={24}>
