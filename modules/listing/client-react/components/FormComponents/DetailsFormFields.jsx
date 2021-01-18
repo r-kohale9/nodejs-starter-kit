@@ -14,6 +14,7 @@ import {
   Row,
   Col,
   RenderField
+  // Divider
 } from '@gqlapp/look-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
@@ -162,6 +163,8 @@ const DetailsFormFields = props => {
         />
       </Col>
       <Col span={24} align="left">
+        {/* <Divider /> */}
+        <hr />
         <Row>
           <Col span={18}>
             <FormItem

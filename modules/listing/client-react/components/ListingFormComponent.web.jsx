@@ -171,9 +171,13 @@ const ListingWithFormik = withFormik({
       sku: (props.listing && props.listing.sku) || '',
       brand: (props.listing && props.listing.brand) || '',
       isActive: props.listing && (props.listing.isActive ? true : false),
-      listingHighlight:
-        (props.listing && props.listing.listingHighlight && props.listing.listingHighlight.map(getListingHighlight)) ||
-        [],
+      listingHighlight: (props.listing &&
+        props.listing.listingHighlight &&
+        props.listing.listingHighlight.map(getListingHighlight)) || [
+        {
+          highlight: 'Example highlight'
+        }
+      ],
       listingCostArray: (props.listing &&
         props.listing.listingCostArray &&
         props.listing.listingCostArray.map(getCost)) || [
