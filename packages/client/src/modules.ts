@@ -1,3 +1,4 @@
+import setting from '@gqlapp/setting-client-react';
 import category from '@gqlapp/category-client-react';
 import discount from '@gqlapp/discount-client-react';
 import pages from '@gqlapp/pages-client-react';
@@ -48,6 +49,7 @@ const modules = new ClientModule(
   payments,
   order,
   user,
+  setting,
   i18n,
   reports,
   pageNotFound,

@@ -1,10 +1,10 @@
 import { graphql } from 'react-apollo';
+
 import { PLATFORM, removeTypename } from '@gqlapp/core-common';
 import { Message } from '@gqlapp/look-client-react';
-
 import settings from '@gqlapp/config';
+
 // Query
-import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
 import LISTING_QUERY from '../graphql/ListingQuery.graphql';
 import GET_LISTING_BRAND_LIST_QUERY from '../graphql/GetBrandListQuery.graphql';
 import LISTINGS_QUERY from '../graphql/ListingsQuery.graphql';
@@ -50,14 +50,6 @@ export const withListingsState = Component =>
         ...state,
         loadingState: loading
       };
-    }
-  })(Component);
-
-export const withCurrentUser = Component =>
-  graphql(CURRENT_USER_QUERY, {
-    props({ data: { loading, error, currentUser } }) {
-      if (error) throw new Error(error);
-      return { currentUserLoading: loading, currentUser };
     }
   })(Component);
 

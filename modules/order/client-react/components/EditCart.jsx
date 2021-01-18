@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { Spinner } from '@gqlapp/look-client-react';
-import { withListing } from '@gqlapp/listing-client-react/containers/ListingOperations';
-import { withModalDiscount } from '@gqlapp/discount-client-react/containers/DiscountOperations';
-import { subscribeToDiscount } from '@gqlapp/discount-client-react/containers/DiscountSubscriptions';
+import { withListing } from '@gqlapp/listing-client-react';
+import { withModalDiscount, subscribeToDiscount } from '@gqlapp/discount-client-react';
 
 import AddToCartView from './AddToCartView';
 

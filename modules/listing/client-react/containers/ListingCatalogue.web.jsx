@@ -6,16 +6,11 @@ import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import { withGetCart, withDeleteCartItem } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { subscribeToCart } from '@gqlapp/order-client-react/containers/OrderSubscriptions';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import ListingCatalogueView from '../components/ListingCatalogueView.web';
 import { subscribeToListings } from './ListingSubscriptions';
-import {
-  withListingsState,
-  withFilterUpdating,
-  withOrderByUpdating,
-  withListings,
-  withCurrentUser
-} from './ListingOperations';
+import { withListingsState, withFilterUpdating, withOrderByUpdating, withListings } from './ListingOperations';
 import ROUTES from '../routes';
 
 const ListingsCatalogue = props => {

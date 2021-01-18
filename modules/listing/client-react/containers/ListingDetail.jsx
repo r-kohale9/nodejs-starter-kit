@@ -6,10 +6,10 @@ import { translate } from '@gqlapp/i18n-client-react';
 import { compose } from '@gqlapp/core-common';
 import { withGetCart, withDeleteCartItem } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { subscribeToCart } from '@gqlapp/order-client-react/containers/OrderSubscriptions';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import {
   withListing,
-  withCurrentUser,
   withToogleListingBookmark,
   withCanUserReview,
   withShareListingByEmail

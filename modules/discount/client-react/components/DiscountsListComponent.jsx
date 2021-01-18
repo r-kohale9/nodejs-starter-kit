@@ -10,33 +10,15 @@ import {
   Pagination,
   DeleteIcon,
   Divider,
-  Empty,
-  Button,
+  EmptyComponent,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
+import { displayDataCheck } from '@gqlapp/listing-client-react';
 
 import ROUTES from '../routes';
 
 const { itemsNumber, type } = settings.pagination.web;
-
-const NoDiscountsMessage = ({ t }) => (
-  <div align="center">
-    <br />
-    <br />
-    <br />
-    <Empty description={t('adminPanel.noDiscountsMsg')}>
-      <Link to={`${ROUTES.add}`}>
-        <Button color="primary">{t('adminPanel.noDiscountsMsg')}</Button>
-      </Link>
-    </Empty>
-  </div>
-);
-
-NoDiscountsMessage.propTypes = {
-  t: PropTypes.func
-};
 
 const DiscountsListComponent = props => {
   const { orderBy, onDiscountsOrderBy, loading, discounts, t, loadData, deleteDiscount } = props;
@@ -195,11 +177,15 @@ const DiscountsListComponent = props => {
   );
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main discount content */}
-      {discounts && discounts.totalCount ? <RenderDiscounts /> : <NoDiscountsMessage t={t} />}
+      {discounts && discounts.totalCount ? (
+        <RenderDiscounts />
+      ) : (
+        <EmptyComponent description={t('adminPanel.noDiscountsMsg')} emptyLink={`${ROUTES.add}`} />
+      )}
     </div>
   );
 };

@@ -2,9 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { PageLayout, Icon, Row, Col, Button, Result } from '@gqlapp/look-client-react';
-import { default as HOME_ROUTES } from '@gqlapp/home-client-react/routes';
-import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
+import { MetaTags, PageLayout, Icon, Row, Col, Button, Result } from '@gqlapp/look-client-react';
+import { HOME_ROUTES } from '@gqlapp/home-client-react';
+import { USER_ROUTES } from '@gqlapp/user-client-react';
+import settings from '@gqlapp/config';
 
 const LOGOUT_PAGE_GIF =
   'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1601824605/cwy15kfennovwu6j4noe.webp';
@@ -13,6 +14,7 @@ const LogoutPageView = props => {
   const { history } = props;
   return (
     <PageLayout>
+      <MetaTags title={'Logged Out'} description={`${settings.app.name} - Logged Out}`} />
       <div align="center">
         <Row>
           <Col xs={0} sm={0} md={24} lg={24}>
@@ -49,7 +51,7 @@ const LogoutPageView = props => {
               </Row>
             </>
           }
-          subTitle="Hey awesome manager, it was a pleasure having you here. And see you again soon! Go to HomeSignIn"
+          subTitle="It was a pleasure having you here. And see you again soon!"
           extra={
             <>
               <Row justify="center">
@@ -71,7 +73,7 @@ const LogoutPageView = props => {
                       <div style={{ width: '100%' }}>
                         <Button key="signIn" block={true} onClick={() => history.push(`${USER_ROUTES.login}`)}>
                           <Icon type="LoginOutlined" />
-                          SignIn
+                          Sign In
                         </Button>
                       </div>
                     </Col>

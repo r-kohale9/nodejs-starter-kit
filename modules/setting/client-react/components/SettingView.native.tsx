@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
-interface DiscountViewProps {
+interface SettingViewProps {
   t: TranslateFunction;
 }
 
-const DiscountView = ({ t }: DiscountViewProps) => {
+const SettingView = ({ t }: SettingViewProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.element}>
@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DiscountView;
+export default SettingView;

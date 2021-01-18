@@ -4,9 +4,10 @@ import { Message } from '@gqlapp/look-client-react';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import CheckoutCartView from '../components/CheckoutCartView';
-import { withCurrentUser, withGetCart, withDeleteCartItem, withEditOrderDetail } from './OrderOperations';
+import { withGetCart, withDeleteCartItem, withEditOrderDetail } from './OrderOperations';
 import { subscribeToCart } from './OrderSubscriptions';
 
 const CheckoutCart = props => {
@@ -60,6 +61,5 @@ export default compose(
   withGetCart,
   withDeleteCartItem,
   withEditOrderDetail,
-
   translate('order')
 )(CheckoutCart);

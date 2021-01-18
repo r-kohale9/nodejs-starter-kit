@@ -5,7 +5,6 @@ import { PLATFORM, removeTypename } from '@gqlapp/core-common';
 import settings from '@gqlapp/config';
 
 // Query
-import CURRENT_USER_QUERY from '@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql';
 import ORDER_QUERY from '../graphql/OrderQuery.graphql';
 import ORDERS_STATE_QUERY from '../graphql/OrdersStateQuery.client.graphql';
 import ORDERS_QUERY from '../graphql/OrdersQuery.graphql';
@@ -35,14 +34,6 @@ export const withOrdersState = Component =>
   graphql(ORDERS_STATE_QUERY, {
     props({ data: { ordersState, loading } }) {
       return { ...removeTypename(ordersState), loadingState: loading };
-    }
-  })(Component);
-
-export const withCurrentUser = Component =>
-  graphql(CURRENT_USER_QUERY, {
-    props({ data: { loading, error, currentUser } }) {
-      if (error) throw new Error(error);
-      return { currentUserLoading: loading, currentUser };
     }
   })(Component);
 

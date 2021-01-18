@@ -3,15 +3,15 @@ import { Route, NavLink } from 'react-router-dom';
 
 import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
-import { AuthRoute, IfLoggedIn } from '@gqlapp/user-client-react';
-// eslint-disable-next-line import/no-named-default
-import { default as USER_ROUTES } from '@gqlapp/user-client-react/routes';
+import { USER_ROUTES, AuthRoute, IfLoggedIn } from '@gqlapp/user-client-react';
 import loadable from '@loadable/component';
 import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
 
 import ROUTES from './routes';
 import resolvers from './resolvers';
 import resources from './locales';
+
+export { default as HOME_ROUTES } from './routes';
 
 // const NavLinkWithI18n = translate('home')(({ t }: { t: TranslateFunction }) => (
 //   <NavLink to="/home" className="nav-link" activeClassName="active">

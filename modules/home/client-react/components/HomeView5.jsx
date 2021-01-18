@@ -6,7 +6,8 @@ import { PageLayout, MetaTags } from '@gqlapp/look-client-react';
 import { translate } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 import { LABEL } from '@gqlapp/home-common';
-import ListingCarousel from '@gqlapp/listing-client-react/components/ListingCarousel';
+import { ListingCarousel } from '@gqlapp/listing-client-react';
+import { DiscountsCarousel } from '@gqlapp/discount-client-react';
 
 import BannerComponent from '../containers/DCComponents/BannerComponent';
 import ImageTabBannerComponent from '../containers/DCComponents/ImageTabBannerComponent';
@@ -76,6 +77,25 @@ class HomeView extends React.Component {
         history={history}
         {...this.props}
         // style={{ backgroundColor: '#f7f7f7' }}
+      />,
+      <DiscountsCarousel
+        filter={{ isActive: true, isDiscount: true, onGoing: true }}
+        orderBy={{ order: 'asc', column: 'discountDuration.endDate' }}
+        currentUser={currentUser}
+        title={t('discountsCarousel.onGoing')}
+        history={history}
+        {...this.props}
+        OnGoingDiscounts
+      />,
+      <DiscountsCarousel
+        filter={{ isActive: true, isDiscount: true, upComing: true }}
+        orderBy={{ order: 'asc', column: 'discountDuration.startDate' }}
+        currentUser={currentUser}
+        title={t('discountsCarousel.upComing')}
+        history={history}
+        {...this.props}
+        OnGoingDiscounts
+        style={{ backgroundColor: '#f7f7f7' }}
       />
     ];
     return (

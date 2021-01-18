@@ -17,6 +17,8 @@ import DataRootComponent from './containers/DataRootComponent';
 
 import { AuthRoute, IfLoggedIn, IfNotLoggedIn, withLoadedUser, withLogout } from './containers/Auth';
 
+export { default as USER_ROUTES } from './routes';
+
 const NavLinkSignIn = styled(NavLink)`
   color: unset;
   &:hover {
@@ -120,6 +122,13 @@ export default new ClientModule({
       path={ROUTES.logoutPage}
       redirect={HOME_ROUTES.home}
       component={loadable(() => import('./containers/LogoutPage').then(c => c.default), { fallback: <Spinner /> })}
+    />,
+    <Route
+      exact
+      path={ROUTES.emailVerified}
+      component={loadable(() => import('./containers/EmailVerifiedPage').then(c => c.default), {
+        fallback: <Spinner />
+      })}
     />,
     <AuthRoute
       exact

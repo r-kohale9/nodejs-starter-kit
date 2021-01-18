@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -8,16 +7,15 @@ import {
   MetaTags,
   PageLayout,
   Heading,
-  Empty,
   Divider,
-  Button,
+  EmptyComponent,
   SuggestedListComponent,
   Spinner,
   Col,
   Row
 } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-import CategoryNavBarComponent from '@gqlapp/category-client-react/containers/CategoryNavBarComponent';
+import { CategoryNavBarComponent } from '@gqlapp/category-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
 import RelatedCardComponent from './RelatedCardComponent';
@@ -69,8 +67,8 @@ const ListingCatalogueView = props => {
             sm: 1,
             md: 2,
             lg: 3,
-            xl: 3,
-            xxl: 3
+            xl: 4,
+            xxl: 4
           }
         }
         items={listings}
@@ -104,14 +102,13 @@ const ListingCatalogueView = props => {
               {...props}
             />
           )}
-          {layout !== 'vertical' && <Divider />}
         </Col>
         <Col {...span.spanContent}>
           {loading && <Spinner />}
           {!loading && listings && listings.totalCount ? (
             <RenderListings layout={layout} />
           ) : !loading ? (
-            <NoListingsMessage t={t} emptyLink={emptyLink} />
+            <EmptyComponent description={t('listing.noListingsMsg')} emptyLink={emptyLink} />
           ) : null}
         </Col>
       </Row>
@@ -158,16 +155,3 @@ ListingCatalogueView.propTypes = {
 };
 
 export default translate('listing')(ListingCatalogueView);
-
-const NoListingsMessage = ({ t, emptyLink }) => (
-  <div align="center">
-    <br />
-    <br />
-    <Empty description={t('listing.noListingsMsg')}>
-      <Link to={`${emptyLink}`}>
-        <Button color="primary">Add</Button>
-      </Link>
-    </Empty>
-  </div>
-);
-NoListingsMessage.propTypes = { t: PropTypes.func, emptyLink: PropTypes.string };

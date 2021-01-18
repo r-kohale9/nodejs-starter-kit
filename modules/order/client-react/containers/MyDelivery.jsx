@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
-import { withCurrentUser, withOrdersState, withFilterUpdating, withOrderStates, withOrders } from './OrderOperations';
+import { withOrdersState, withFilterUpdating, withOrderStates, withOrders } from './OrderOperations';
 import { subscribeToOrders } from './OrderSubscriptions';
 
 import MyDeliveryView from '../components/MyDeliveryView';
