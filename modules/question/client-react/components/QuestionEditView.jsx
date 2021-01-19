@@ -1,16 +1,21 @@
 import React from "react";
-import Grid from "hedron";
 import PropTypes from "prop-types";
 import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
-
+import { Card, Spin } from "antd";
 import { translate } from "@gqlapp/i18n-client-react";
-import { LayoutCenter, PageLayout, Card } from "@gqlapp/look-client-react";
+import { PageLayout } from "@gqlapp/look-client-react";
 import settings from "@gqlapp/config";
 
 import QuestionForm from "./QuestionForm";
 
-const QuestionEditView = ({ loading, question, t, onSubmit }) => {
+const QuestionEditView = ({
+  loading,
+  question,
+  t,
+  questionLoading,
+  onSubmit
+}) => {
   const renderMetaData = () => (
     <Helmet
       title={`${settings.app.name} - ${t("questionEdit.title")}`}
@@ -26,7 +31,13 @@ const QuestionEditView = ({ loading, question, t, onSubmit }) => {
   const renderContent = () => (
     <Card>
       <h2>Question Edit</h2>
-      <QuestionForm onSubmit={onSubmit} initialValues={question} />
+      {questionLoading ? (
+        <div align="center">
+          <Spin />
+        </div>
+      ) : (
+        <QuestionForm onSubmit={onSubmit} initialValues={question} />
+      )}
     </Card>
   );
 

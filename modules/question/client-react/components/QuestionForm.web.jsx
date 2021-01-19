@@ -48,7 +48,7 @@ const UserForm = ({
       <Field
         name="description"
         component={RenderField}
-        type="email"
+        type="text"
         label="Description"
         value={description}
       />
@@ -66,8 +66,8 @@ const UserForm = ({
         label="Question Type"
         value={questionType}
       >
-        <Option value="user">{t("userEdit.form.field.role.user")}</Option>
-        <Option value="admin">{t("userEdit.form.field.role.admin")}</Option>
+        <Option value="user">skdlfj</Option>
+        <Option value="admin">sdaf</Option>
       </Field>
 
       {errors && errors.errorMsg && (
@@ -97,19 +97,22 @@ UserForm.propTypes = {
 };
 
 const UserFormWithFormik = withFormik({
-  mapPropsToValues: (values) => {
-    const {
-      description,
-      isActive,
-      choices,
-      questionType,
-    } = values.initialValues;
-    console.log("mapPropsToValue", values);
+  mapPropsToValues: ({ initialValues }) => {
+    function getChoice(choice) {
+      return {
+        description: (choice && choice.description) || "",
+        questionId: (choice && choice.questionId) || null,
+      };
+    }
     return {
-      description: description || "",
-      isActive: isActive || true,
-      choices: choices || [],
-      questionType,
+      description: (initialValues && initialValues.description) || "",
+      isActive: initialValues && initialValues.isActive,
+      choices:
+        (initialValues &&
+          initialValues.choices &&
+          initialValues.choices.map(getChoice)) ||
+        [],
+      questionType: (initialValues && initialValues.questionType) || "",
     };
   },
   async handleSubmit(

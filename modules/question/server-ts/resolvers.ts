@@ -85,7 +85,7 @@ export default (pubsub: any) => ({
       async (obj: any, { input }: any, { Question }: any) => {
         try {
           const inputId = input && input.id;
-          await Question.editQuestion(input);
+          await Question.updateQuestion(input);
           var item = await Question.getQuestion(inputId);
           pubsub.publish(QUESTIONS_SUBSCRIPTION, {
             questionsUpdated: {

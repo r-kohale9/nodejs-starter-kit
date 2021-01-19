@@ -13,7 +13,7 @@ import { useQuestionWithSubscription } from "./withSubscription";
 import { withQuestion, withQuestionEditing } from "./QuestionOperations";
 
 const Questions = (props) => {
-  const { t, updateQuery, subscribeToMore, question } = props;
+  const { t, updateQuery, subscribeToMore, question, editQuestion } = props;
   // const filter = { isActive: true };
   useEffect(() => {
     if (props.question) {
@@ -28,6 +28,11 @@ const Questions = (props) => {
     }
   });
 
+  const onSubmit = async (values) => {
+    values.id = question && question.id;
+    await editQuestion(values);
+  };
+
   console.log("questionsedit", props);
   return (
     <>
@@ -40,7 +45,7 @@ const Questions = (props) => {
 
       {/* <QuestionsFilterView {...props} filter={filter} />
       <hr />*/}
-      <QuestionEditView {...props} />
+      <QuestionEditView {...props} onSubmit={onSubmit} />
     </>
   );
 };

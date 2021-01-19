@@ -124,6 +124,7 @@ export default class Question extends Model {
   }
 
   public async updateQuestion(input: any) {
+    console.log('sqlquestioneditinputtttttttttttt', input);
     const res = camelizeKeys(
       await Question.query().upsertGraph(decamelizeKeys(input))
     );

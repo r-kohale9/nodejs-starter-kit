@@ -12,8 +12,8 @@ import {
 } from "@gqlapp/look-client-react";
 import settings from "@gqlapp/config";
 import Helmet from "react-helmet";
-import CatalogueWithInfiniteScroll from '@gqlapp/look-client-react/ui-antd/components/CatalogueWithInfiniteScroll';
-import RenderTableLoading from '@gqlapp/look-client-react/ui-antd/components/RenderTableLoading';
+import CatalogueWithInfiniteScroll from "@gqlapp/look-client-react/ui-antd/components/CatalogueWithInfiniteScroll";
+import RenderTableLoading from "@gqlapp/look-client-react/ui-antd/components/RenderTableLoading";
 
 const cancel = () => {
   message.error("Task cancelled");
@@ -87,7 +87,11 @@ const QuestionAdminView = ({
       dataIndex: "description",
       key: "description",
       render: (text, record) => (
-        <div dangerouslySetInnerHTML={{__html:record.node.description}}></div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: record.node.description || "<div></div>",
+          }}
+        ></div>
       ),
     },
     // {
@@ -159,16 +163,17 @@ const QuestionAdminView = ({
       render: (text, record) => (
         <>
           <Tooltip title="Edit">
-            <Button
-              href={`question/edit/${record.node.id}`}
-              shape="circle"
-              icon="edit"
-              type="secondary"
-              size="medium"
-              style={{ marginBottom: "10px", marginRight: "3px" }}
-            />
+            <Link to={`/question/edit/${record.node.id}`}>
+              <Button
+                shape="circle"
+                icon="edit"
+                type="secondary"
+                size="medium"
+                style={{ marginBottom: "10px", marginRight: "3px" }}
+              />
+            </Link>
           </Tooltip>
-          <Tooltip title="Duplicate Question">
+          {/* <Tooltip title="Duplicate Question">
             <Popconfirm
               title="Duplicate Question?"
               onConfirm={() =>
@@ -183,7 +188,7 @@ const QuestionAdminView = ({
             >
               <Button type="primary" icon="copy" shape="circle" size="md" />
             </Popconfirm>
-          </Tooltip>
+          </Tooltip> */}
 
           <Popconfirm
             title="Delete Question?"
