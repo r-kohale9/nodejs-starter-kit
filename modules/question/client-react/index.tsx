@@ -12,7 +12,7 @@ import resolvers from "./resolvers";
 const NavLinkWithI18n = translate("question")(
   ({ t }: { t: TranslateFunction }) => (
     <NavLink to="/question/admin" className="nav-link" activeClassName="active">
-      {t("question:navLink")}
+      Questions
     </NavLink>
   )
 );
@@ -28,9 +28,23 @@ export default new ClientModule({
     />,
     <Route
       exact
+      path="/question/detail/:id"
+      component={loadable(() =>
+        import("./containers/QuestionDetail").then((c) => c.default)
+      )}
+    />,
+    <Route
+      exact
       path="/question/edit/:id"
       component={loadable(() =>
         import("./containers/QuestionEdit").then((c) => c.default)
+      )}
+    />,
+    <Route
+      exact
+      path="/question/add"
+      component={loadable(() =>
+        import("./containers/QuestionAdd").then((c) => c.default)
       )}
     />,
   ],

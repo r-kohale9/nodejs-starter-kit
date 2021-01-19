@@ -173,6 +173,17 @@ const QuestionAdminView = ({
               />
             </Link>
           </Tooltip>
+          <Tooltip title="View">
+            <Link to={`/question/detail/${record.node.id}`}>
+              <Button
+                shape="circle"
+                icon="file"
+                type="secondary"
+                size="medium"
+                style={{ marginBottom: "10px", marginRight: "3px" }}
+              />
+            </Link>
+          </Tooltip>
           {/* <Tooltip title="Duplicate Question">
             <Popconfirm
               title="Duplicate Question?"
@@ -215,6 +226,7 @@ const QuestionAdminView = ({
   return (
     <PageLayout>
       <div style={{ overflowX: "scroll", overflowY: "hidden" }}>
+        <Button href="/question/add">Add Question</Button>
         {loading && <RenderTableLoading rows={6} columns={5} />}
         {/* Render main questions content */}
         {questionList && !loading && (

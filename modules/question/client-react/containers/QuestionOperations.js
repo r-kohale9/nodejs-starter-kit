@@ -329,7 +329,7 @@ const withAddQuestion = (Component) =>
           const {
             data: { addQuestion },
           } = await mutate({
-            variables: values,
+            variables: { input: values },
           });
           message.destroy();
           message.success("Question Added.");

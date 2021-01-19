@@ -21,6 +21,8 @@ import {
   Button,
   Alert,
   RenderUpload,
+  RenderCKEditorField,
+  RenderDynamicField,
   // RenderDynamicField
 } from "@gqlapp/look-client-react";
 import settings from "@gqlapp/config";
@@ -47,7 +49,7 @@ const UserForm = ({
     <Form name="description" onSubmit={handleSubmit}>
       <Field
         name="description"
-        component={RenderField}
+        component={RenderCKEditorField}
         type="text"
         label="Description"
         value={description}
@@ -69,7 +71,20 @@ const UserForm = ({
         <Option value="user">skdlfj</Option>
         <Option value="admin">sdaf</Option>
       </Field>
-
+      <FieldArray
+        name="choices"
+        label="Choices"
+        render={(arrayHelpers) => (
+          <RenderDynamicField
+          label="Choices"
+            arrayHelpers={arrayHelpers}
+            values={values.choices}
+            type
+            name="choices"
+            keys={[{key:"description", type:'editor'}]}
+          />
+        )}
+      />
       {errors && errors.errorMsg && (
         <Alert color="error">{errors.errorMsg}</Alert>
       )}
@@ -101,7 +116,6 @@ const UserFormWithFormik = withFormik({
     function getChoice(choice) {
       return {
         description: (choice && choice.description) || "",
-        questionId: (choice && choice.questionId) || null,
       };
     }
     return {

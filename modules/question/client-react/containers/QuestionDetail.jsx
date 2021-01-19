@@ -6,21 +6,14 @@ import { graphql } from "react-apollo";
 import { compose } from "@gqlapp/core-common";
 import { translate } from "@gqlapp/i18n-client-react";
 
-import QuestionEditView from "../components/QuestionEditView";
+import QuestionDetailView from "../components/QuestionDetailView";
 import CURRENT_USER_QUERY from "@gqlapp/user-client-react/graphql/CurrentUserQuery.graphql";
 
 import { useQuestionWithSubscription } from "./withSubscription";
 import { withQuestion, withQuestionEditing } from "./QuestionOperations";
 
 const Questions = (props) => {
-  const {
-    t,
-    updateQuery,
-    subscribeToMore,
-    question,
-    editQuestion,
-    history,
-  } = props;
+  const { t, updateQuery, subscribeToMore, question, editQuestion } = props;
   // const filter = { isActive: true };
   useEffect(() => {
     if (props.question) {
@@ -35,11 +28,7 @@ const Questions = (props) => {
     }
   });
 
-  const onSubmit = async (values) => {
-    values.id = question && question.id;
-    await editQuestion(values);
-    history.push("/question/admin");
-  };
+
 
   console.log("questionsedit", props);
   return (
@@ -53,7 +42,7 @@ const Questions = (props) => {
 
       {/* <QuestionsFilterView {...props} filter={filter} />
       <hr />*/}
-      <QuestionEditView {...props} onSubmit={onSubmit} />
+      <QuestionDetailView {...props}  />
     </>
   );
 };

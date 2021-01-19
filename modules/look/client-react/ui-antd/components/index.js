@@ -26,4 +26,6 @@ export { default as LanguagePicker } from './LanguagePicker';
 export { default as Pagination } from './Pagination';
 export { default as RenderTableLoading } from './RenderTableLoading';
 export { default as CatalogueWithInfiniteScroll } from './CatalogueWithInfiniteScroll';
+export { default as RenderCKEditorField } from './RenderCKEditorField';
+export { default as RenderDynamicField } from './RenderDynamicField';
 export { onAppCreate } from './NavBar';

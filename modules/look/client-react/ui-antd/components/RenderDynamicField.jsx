@@ -7,6 +7,7 @@ import {
   RenderUpload,
   Button,
   RenderUploadWithCrop,
+  RenderCKEditorField
 } from "@gqlapp/look-client-react";
 
 const FormItem = Form.Item;
@@ -74,6 +75,17 @@ export default class DynamicFieldSet extends React.Component {
                   component={RenderField}
                   placeholder={k.placeholder || k.key}
                   type="number"
+                  label={`${k.label || k.key}`}
+                  value={v[k.key]}
+                  key={indexv}
+                />
+              ) : null}
+              {k.type == "editor" ? (
+                <Field
+                  name={`${name}[${indexv}].${k.key}`}
+                  component={RenderCKEditorField}
+                  placeholder={k.placeholder || k.key}
+                  type="text"
                   label={`${k.label || k.key}`}
                   value={v[k.key]}
                   key={indexv}

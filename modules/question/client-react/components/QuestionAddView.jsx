@@ -9,7 +9,7 @@ import settings from "@gqlapp/config";
 
 import QuestionForm from "./QuestionForm";
 
-const UserAddView = ({ t, onSubmit }) => {
+const QuestionAddView = ({ t, onSubmit }) => {
   const renderMetaData = () => (
     <Helmet
       title={`${settings.app.name} - ${t("userEdit.title")}`}
@@ -24,7 +24,6 @@ const UserAddView = ({ t, onSubmit }) => {
 
   const renderContent = () => (
     <Card className="form-card">
-      <Link to="/question/admin">Back</Link>
       <h2>Add Question</h2>
       <QuestionForm onSubmit={onSubmit} initialValues={{}} />
     </Card>
@@ -39,9 +38,9 @@ const UserAddView = ({ t, onSubmit }) => {
   );
 };
 
-UserAddView.propTypes = {
+QuestionAddView.propTypes = {
   t: PropTypes.func,
   onSubmit: PropTypes.func,
 };
 
-export default translate("user")(UserAddView);
+export default translate("user")(QuestionAddView);
