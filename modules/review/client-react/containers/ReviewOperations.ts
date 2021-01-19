@@ -1,9 +1,14 @@
+import { FunctionComponent } from 'react';
 import { graphql } from 'react-apollo';
 import { Message } from '@gqlapp/look-client-react';
 import update from 'immutability-helper';
+import { match as Match } from 'react-router-dom';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { History } from 'history';
 
 import { PLATFORM, removeTypename } from '@gqlapp/core-common';
 import settings from '@gqlapp/config';
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
 
 // Query
 import REVIEW_QUERY from '../graphql/ReviewQuery.graphql';
@@ -27,13 +32,41 @@ import UPDATE_REVIEWS_ORDER_BY from '../graphql/UpdateReviewsOrderBy.client.grap
 
 import ROUTES from '../routes';
 
+// types
+import {
+  OrderByReviewInput,
+  FilterReviewInput,
+  AddReviewInput,
+  AddModalReviewInput,
+  EditReviewInput
+} from '../../../../packages/server/__generated__/globalTypes';
+
+import { review as reviewResponse, review_review as Review, reviewVariables } from '../graphql/__generated__/review';
+import { ratingAverage as ratingAverageResponse, ratingAverageVariables } from '../graphql/__generated__/ratingAverage';
+import {
+  reviews as reviewsResponse,
+  reviews_reviews as Reviews,
+  reviewsVariables
+} from '../graphql/__generated__/reviews';
+import { deleteReview as deleteReviewResponse, deleteReviewVariables } from '../graphql/__generated__/deleteReview';
+import { addReview as addReviewResponse, addReviewVariables } from '../graphql/__generated__/addReview';
+import { editReview as editReviewResponse, editReviewVariables } from '../graphql/__generated__/editReview';
+import {
+  reviewHelpfulStatus as reviewHelpfulStatusResponse,
+  reviewHelpfulStatusVariables
+} from '../graphql/__generated__/reviewHelpfulStatus';
+import {
+  addOrRemoveReviewHelpful as addOrRemoveReviewHelpfulResponse,
+  addOrRemoveReviewHelpfulVariables
+} from '../graphql/__generated__/addOrRemoveReviewHelpful';
+
 const limit =
   PLATFORM === 'web' || PLATFORM === 'server'
     ? settings.pagination.web.itemsNumber
     : settings.pagination.mobile.itemsNumber;
 
-export const withRating = Component =>
-  graphql(RATING_QUERY, {
+export const withRating = (Component: FunctionComponent) =>
+  graphql<{ filter: FilterReviewInput }, ratingAverageResponse, ratingAverageVariables, {}>(RATING_QUERY, {
     options: ({ filter }) => {
       // console.log('filter', filter);
       return {
@@ -45,15 +78,25 @@ export const withRating = Component =>
       };
     },
     props({ data: { loading, error, ratingAverage, subscribeToMore, updateQuery } }) {
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, ratingAverage, subscribeToMore, updateQuery };
     }
   })(Component);
 
-export const withReview = Component =>
-  graphql(REVIEW_QUERY, {
+export const withReview = (Component: FunctionComponent) =>
+  graphql<
+    {
+      match: Match<{ id: string }>;
+      navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    },
+    reviewResponse,
+    reviewVariables,
+    {}
+  >(REVIEW_QUERY, {
     options: props => {
-      let id = 0;
+      let id = '0';
       if (props.match) {
         id = props.match.params.id;
       } else if (props.navigation) {
@@ -65,13 +108,23 @@ export const withReview = Component =>
       };
     },
     props({ data: { loading, error, review, subscribeToMore, updateQuery } }) {
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, review, subscribeToMore, updateQuery };
     }
   })(Component);
 
-export const withReviews = Component =>
-  graphql(REVIEWS_QUERY, {
+export const withReviews = (Component: FunctionComponent) =>
+  graphql<
+    {
+      orderBy: OrderByReviewInput;
+      filter: FilterReviewInput;
+    },
+    reviewsResponse,
+    reviewsVariables,
+    {}
+  >(REVIEWS_QUERY, {
     options: ({ orderBy, filter }) => {
       // console.log('filter', filter);
       return {
@@ -86,7 +139,7 @@ export const withReviews = Component =>
     },
     props: ({ data }) => {
       const { loading, error, reviews, fetchMore, subscribeToMore, updateQuery } = data;
-      const loadData = (after, dataDelivery) => {
+      const loadData = (after: number, dataDelivery: string) => {
         return fetchMore({
           variables: {
             after
@@ -104,42 +157,36 @@ export const withReviews = Component =>
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Review'
+                __typename: 'Reviews'
               }
             };
           }
         });
       };
       if (error) {
-        throw new Error(error);
+        throw new Error(error.message);
       }
       return { loading, reviews, subscribeToMore, loadData, updateQuery };
     }
   })(Component);
 
-export const withReviewsDeleting = Component =>
-  graphql(DELETE_REVIEW, {
+// Mutation
+export const withReviewsDeleting = (Component: FunctionComponent) =>
+  graphql<{}, deleteReviewResponse, deleteReviewVariables, {}>(DELETE_REVIEW, {
     props: ({ mutate }) => ({
-      deleteReview: id => {
+      deleteReview: (id: number) => {
         mutate({
-          variables: { id },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            deleteReview: {
-              id,
-              __typename: 'Review'
-            }
-          }
+          variables: { id }
         });
         Message.error('Review deleted.');
       }
     })
   })(Component);
 
-export const withReviewAdding = Component =>
-  graphql(ADD_REVIEW, {
+export const withReviewAdding = (Component: FunctionComponent) =>
+  graphql<{ history: History }, addReviewResponse, addReviewVariables, {}>(ADD_REVIEW, {
     props: ({ ownProps: { history }, mutate }) => ({
-      addReview: async values => {
+      addReview: async (values: AddReviewInput & AddModalReviewInput) => {
         const input = {
           modalName: values.modalName,
           modalId: values.modalId,
@@ -157,20 +204,15 @@ export const withReviewAdding = Component =>
           await mutate({
             variables: {
               input
-            },
-            optimisticResponse: {
-              __typename: 'Mutation',
-              addReview: {
-                __typename: 'Review',
-                ...input
-              }
             }
           });
 
           Message.destroy();
           Message.success('Review added.');
           // console.log('addreview', values);
-          history && history.push(ROUTES.adminPanel);
+          if (history) {
+            history.push(ROUTES.adminPanel);
+          }
         } catch (e) {
           Message.destroy();
           Message.error("Couldn't perform the action");
@@ -180,10 +222,10 @@ export const withReviewAdding = Component =>
     })
   })(Component);
 
-export const withReviewEditing = Component =>
-  graphql(EDIT_REVIEW, {
+export const withReviewEditing = (Component: FunctionComponent) =>
+  graphql<{}, editReviewResponse, editReviewVariables, {}>(EDIT_REVIEW, {
     props: ({ mutate }) => ({
-      editReview: async input => {
+      editReview: async (input: EditReviewInput) => {
         await mutate({
           variables: {
             input
@@ -193,19 +235,31 @@ export const withReviewEditing = Component =>
     })
   })(Component);
 
-export const subscribeToReviews = (subscribeToMore, filter) =>
+// export const subscribeToReviews = (
+//   subscribeToMore: ({
+//     document,
+//     variables: { filter },
+//     updateQuery
+//   }: {
+//     document: string;
+//     variables: { filter: FilterReviewInput };
+//     updateQuery;
+//   }) => Reviews,
+//   filter: FilterReviewInput
+// ) =>
+export const subscribeToReviews = (subscribeToMore, filter: FilterReviewInput) =>
   subscribeToMore({
     document: REVIEWS_SUBSCRIPTION,
     variables: { filter },
     updateQuery: (
-      prev,
+      prev: { reviews: Reviews },
       {
         subscriptionData: {
           data: {
             reviewUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { reviewUpdated: { mutation: string; node: Review } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -219,7 +273,7 @@ export const subscribeToReviews = (subscribeToMore, filter) =>
     }
   });
 
-function onAddReviews(prev, node) {
+function onAddReviews(prev: { reviews: Reviews }, node: Review) {
   // console.log('prev', prev, node);
   if (prev.reviews.edges.some(review => node.id === review.cursor)) {
     return update(prev, {
@@ -238,7 +292,7 @@ function onAddReviews(prev, node) {
 
   const edge = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ReviewEdges'
   };
 
@@ -254,11 +308,11 @@ function onAddReviews(prev, node) {
   });
 }
 
-function onEditReviews(prev, node) {
-  const index = prev.reviews.edges.findIndex(x => x.id === node.id);
+function onEditReviews(prev: { reviews: Reviews }, node: Review) {
+  const index = prev.reviews.edges.findIndex((x: { node: Review }) => x.node.id === node.id);
   const edge = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ReviewEdges'
   };
   if (index) {
@@ -273,7 +327,7 @@ function onEditReviews(prev, node) {
   }
 }
 
-const onDeleteReviews = (prev, id) => {
+const onDeleteReviews = (prev: { reviews: Reviews }, id: number) => {
   // console.log('called', id);
   const index = prev.reviews.edges.findIndex(x => x.node.id === id);
 
@@ -294,18 +348,18 @@ const onDeleteReviews = (prev, id) => {
   });
 };
 
-export const subscribeToReview = (subscribeToMore, history) =>
+export const subscribeToReview = (subscribeToMore, history: History) =>
   subscribeToMore({
     document: REVIEWS_SUBSCRIPTION,
     updateQuery: (
-      prev,
+      prev: { review: Review },
       {
         subscriptionData: {
           data: {
             reviewUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { reviewUpdated: { mutation: string; node: Review } } } }
     ) => {
       let newResult = prev;
       // if (mutation === 'CREATED') {
@@ -314,49 +368,14 @@ export const subscribeToReview = (subscribeToMore, history) =>
       if (mutation === 'UPDATED') {
         newResult = onEditReview(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteReview(history);
+        onDeleteReview(history);
       }
       return newResult;
     }
   });
 
-// function onAddReview(prev, node) {
-//   // console.log('prev', prev, node);
-//   if (prev.reviews.edges.some(review => node.id === review.cursor)) {
-//     return update(prev, {
-//       reviews: {
-//         totalCount: {
-//           $set: prev.reviews.totalCount - 1
-//         },
-//         edges: {
-//           $set: prev.reviews.edges
-//         }
-//       }
-//     });
-//   }
-
-//   const filteredReviews = prev.reviews.edges.filter(review => review.node.id !== null);
-
-//   const edge = {
-//     cursor: node.id,
-//     node: node,
-//     __typename: 'ReviewEdges'
-//   };
-
-//   return update(prev, {
-//     reviews: {
-//       totalCount: {
-//         $set: prev.reviews.totalCount + 1
-//       },
-//       edges: {
-//         $set: [edge, ...filteredReviews]
-//       }
-//     }
-//   });
-// }
-
-function onEditReview(prev, node) {
-  console.log(prev);
+function onEditReview(prev: { review: Review }, node: Review) {
+  // console.log(prev);
   return update(prev, {
     review: {
       $set: node
@@ -364,42 +383,42 @@ function onEditReview(prev, node) {
   });
 }
 
-const onDeleteReview = history => {
+const onDeleteReview = (history: History) => {
   Message.error('Review was deleted!');
   return history.push(ROUTES.adminPanel);
 };
 
 // Filter
-export const withReviewsStateQuery = Component =>
+export const withReviewsStateQuery = (Component: FunctionComponent) =>
   graphql(REVIEWS_STATE_QUERY, {
     props({ data: { reviewsState } }) {
       return removeTypename(reviewsState);
     }
   })(Component);
 
-export const withReviewsOrderByUpdating = Component =>
+export const withReviewsOrderByUpdating = (Component: FunctionComponent) =>
   graphql(UPDATE_REVIEWS_ORDER_BY, {
     props: ({ mutate }) => ({
-      onReviewsOrderBy: orderBy => {
+      onReviewsOrderBy: (orderBy: OrderByReviewInput) => {
         // console.log('orderBy', orderBy);
         mutate({ variables: { orderBy } });
       }
     })
   })(Component);
 
-export const withUpdateReviewsFilter = Component =>
+export const withUpdateReviewsFilter = (Component: FunctionComponent) =>
   graphql(UPDATE_REVIEWS_FILTER, {
     props: ({ mutate }) => ({
-      onSearchTextChange(searchText) {
+      onSearchTextChange(searchText: string) {
         mutate({ variables: { filter: { searchText } } });
       },
-      onIsActiveChange(isActive) {
+      onIsActiveChange(isActive: boolean) {
         mutate({ variables: { filter: { isActive } } });
       },
-      onModalNameChange(modalName) {
+      onModalNameChange(modalName: string) {
         mutate({ variables: { filter: { modalName } } });
       },
-      onFiltersRemove(filter, orderBy) {
+      onFiltersRemove(filter: FilterReviewInput, orderBy: OrderByReviewInput) {
         mutate({
           variables: {
             filter,
@@ -410,11 +429,16 @@ export const withUpdateReviewsFilter = Component =>
     })
   })(Component);
 
-// export const with = Component =>
-// (Component)
-
-export const withReviewHelpfulStatus = Component =>
-  graphql(REVIEW_HELPFUL_STATUS, {
+export const withReviewHelpfulStatus = (Component: FunctionComponent) =>
+  graphql<
+    {
+      review: Review;
+      currentUser: CurrentUser;
+    },
+    reviewHelpfulStatusResponse,
+    reviewHelpfulStatusVariables,
+    {}
+  >(REVIEW_HELPFUL_STATUS, {
     options: props => {
       return {
         variables: {
@@ -425,19 +449,21 @@ export const withReviewHelpfulStatus = Component =>
       };
     },
     props({ data: { loading, error, reviewHelpfulStatus } }) {
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, reviewHelpfulStatus };
     }
   })(Component);
 
-export const withToogleReviewHelpful = Component =>
-  graphql(TOOGLE_REVIEW_HELPFUL, {
+export const withToogleReviewHelpful = (Component: FunctionComponent) =>
+  graphql<{}, addOrRemoveReviewHelpfulResponse, addOrRemoveReviewHelpfulVariables, {}>(TOOGLE_REVIEW_HELPFUL, {
     props: ({ mutate }) => ({
-      addOrRemoveReviewHelpful: async (reviewId, userId) => {
+      addOrRemoveReviewHelpful: async (reviewId: number, userId: number) => {
         Message.destroy();
         Message.loading('Please wait...', 0);
         try {
-          console.log(reviewId, userId);
+          // console.log(reviewId, userId);
           const {
             data: { addOrRemoveReviewHelpful }
           } = await mutate({
