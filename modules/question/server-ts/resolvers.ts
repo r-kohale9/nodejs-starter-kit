@@ -140,6 +140,7 @@ export default (pubsub: any) => ({
         () => pubsub.asyncIterator(QUESTIONS_SUBSCRIPTION),
         (payload, variables) => {
           const { mutation, node } = payload.questionsUpdated;
+          console.log('serverSubsssssssssssssssssssssssssssss', variables);
           const {
             filter: { searchText, isActive },
           } = variables;

@@ -1,0 +1,11 @@
+#import "./Question.graphql"
+
+subscription onQuestionUpdated($id: Int!) {
+  questionUpdated(id: $id) {
+    mutation
+    id
+    node {
+      ...QuestionFragment
+    }
+  }
+}

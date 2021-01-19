@@ -1,0 +1,6 @@
+fragment QuestionListStateInfo on QuestionListState {
+  filter {
+    isActive
+    searchText
+  }
+}

@@ -1,0 +1,10 @@
+#import "./Question.graphql"
+
+subscription questionsUpdated($filter: FilterQuestionInput) {
+  questionsUpdated(filter: $filter) {
+    mutation
+    node {
+      ...QuestionFragment
+    }
+  }
+}

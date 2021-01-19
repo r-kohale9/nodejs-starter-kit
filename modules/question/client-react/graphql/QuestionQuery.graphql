@@ -1,6 +1,7 @@
-# GraphQL queries
-query queryNameQuery {
-  queryName {
-    typename
+#import "./Question.graphql"
+
+query question($id: Int!) {
+  question(id: $id) {
+    ...QuestionFragment
   }
 }

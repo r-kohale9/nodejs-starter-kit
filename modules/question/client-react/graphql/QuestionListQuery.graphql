@@ -1,0 +1,27 @@
+#import "./Question.graphql"
+
+query questionList(
+  $limit: Int!
+  $after: Int
+  $filter: FilterQuestionInput
+  $orderBy: OrderByQuestionInput
+) {
+  questionList(
+    limit: $limit
+    after: $after
+    filter: $filter
+    orderBy: $orderBy
+  ) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...QuestionFragment
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

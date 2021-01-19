@@ -1,0 +1,15 @@
+fragment QuestionFragment on Question {
+  id
+  isActive
+  description
+  questionType
+  createdAt
+  updatedAt
+  choices {
+    id
+    questionId
+    description
+    createdAt
+    updatedAt
+  }
+}

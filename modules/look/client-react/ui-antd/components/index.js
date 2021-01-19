@@ -24,4 +24,6 @@ export { default as ListGroup } from './ListGroup';
 export { default as ListItem } from './ListItem';
 export { default as LanguagePicker } from './LanguagePicker';
 export { default as Pagination } from './Pagination';
+export { default as RenderTableLoading } from './RenderTableLoading';
+export { default as CatalogueWithInfiniteScroll } from './CatalogueWithInfiniteScroll';
 export { onAppCreate } from './NavBar';

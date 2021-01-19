@@ -1,0 +1,5 @@
+#import "./QuestionListState.client.graphql"
+
+mutation updateQuestionListFilter($filter: FilterQuestionInput!) {
+  updateQuestionListFilter(filter: $filter) @client
+}

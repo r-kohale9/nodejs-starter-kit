@@ -1,0 +1,7 @@
+#import "./QuestionListState.client.graphql"
+
+query questionListState {
+  questionListState @client {
+    ...QuestionListStateInfo
+  }
+}

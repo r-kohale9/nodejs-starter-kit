@@ -1,0 +1,6 @@
+
+mutation editQuestion($input: EditQuestionInput!) {
+  editQuestion(input: $input) {
+    id
+  }
+}
