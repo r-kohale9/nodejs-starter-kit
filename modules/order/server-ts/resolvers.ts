@@ -4,10 +4,10 @@ import { withFilter } from 'graphql-subscriptions';
 import { ORDER_STATES } from '@gqlapp/order-common';
 import { log } from '@gqlapp/core-common';
 import { LISTING_SUBSCRIPTION, LISTINGS_SUBSCRIPTION } from '@gqlapp/listing-server-ts/resolvers';
+import settings from '@gqlapp/config';
+import { TotalPrice } from '@gqlapp/order-client-react/components/function';
 
 import { Orders, Identifier } from './sql';
-import settings from '@gqlapp/config';
-import { TotalPrice } from '@gqlapp/order-client-react/components/CheckoutCartView';
 
 interface Edges {
   cursor: number;
