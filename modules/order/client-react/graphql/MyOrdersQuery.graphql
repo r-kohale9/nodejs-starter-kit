@@ -1,7 +1,0 @@
-#import "./Order.graphql"
-
-query userOrders {
-  userOrders {
-    ...OrderInfo
-  }
-}
