@@ -1,6 +1,7 @@
-import { Message } from '@gqlapp/look-client-react';
 import update from 'immutability-helper';
+import { History } from 'history';
 
+import { Message } from '@gqlapp/look-client-react';
 import { HOME_ROUTES } from '@gqlapp/home-client-react';
 
 import LISTINGS_BOOKMARK_SUBSCRIPTION from '../graphql/MyListingsBookmarkSubscription.graphql';
@@ -10,32 +11,41 @@ import LISTING_REVIEW_SUBSCRIPTION from '../graphql/ListingReviewSubscription.gr
 
 import ROUTES from '../routes';
 
-export const subscribeToListing = (subscribeToMore, listingId, history) =>
+// types
+import { FilterListInput } from '../../../../packages/server/__generated__/globalTypes';
+import {
+  listings_listings as Listings,
+  listings_listings_edges as ListingEdges
+} from '../graphql/__generated__/listings';
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+import { myListingsBookmark_myListingsBookmark as MyListingsBookmark } from '../graphql/__generated__/myListingsBookmark';
+
+export const subscribeToListing = (subscribeToMore, listingId: number, history: History) =>
   subscribeToMore({
     document: LISTING_SUBSCRIPTION,
     variables: { id: listingId },
     updateQuery: (
-      prev,
+      prev: { listing: Listing },
       {
         subscriptionData: {
           data: {
             listingUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { listingUpdated: { mutation: string; node: Listing } } } }
     ) => {
       let newResult = prev;
       // console.log('mutation', mutation, node);
       if (mutation === 'UPDATED') {
         newResult = onEditListing(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteListing(history);
+        onDeleteListing(history);
       }
       return newResult;
     }
   });
 
-function onEditListing(prev, node) {
+function onEditListing(prev: { listing: Listing }, node: Listing) {
   return update(prev, {
     listing: {
       $set: node
@@ -43,7 +53,7 @@ function onEditListing(prev, node) {
   });
 }
 
-const onDeleteListing = history => {
+const onDeleteListing = (history: History) => {
   Message.info('This listing has been deleted!');
   if (history) {
     Message.warn('Redirecting to my listings');
@@ -53,19 +63,19 @@ const onDeleteListing = history => {
   }
 };
 
-export const subscribeToListings = (subscribeToMore, filter) =>
+export const subscribeToListings = (subscribeToMore, filter: FilterListInput) =>
   subscribeToMore({
     document: LISTINGS_SUBSCRIPTION,
     variables: { filter },
     updateQuery: (
-      prev,
+      prev: { listings: Listings },
       {
         subscriptionData: {
           data: {
             listingsUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { listingsUpdated: { mutation: string; node: Listing } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -79,7 +89,7 @@ export const subscribeToListings = (subscribeToMore, filter) =>
     }
   });
 
-function onAddListings(prev, node) {
+function onAddListings(prev: { listings: Listings }, node: Listing) {
   // console.log('prev', prev, node);
   if (prev.listings.edges.some(listing => node.id === listing.cursor)) {
     return update(prev, {
@@ -96,9 +106,9 @@ function onAddListings(prev, node) {
 
   const filteredListings = prev.listings.edges.filter(listing => listing.node.id !== null);
 
-  const edge = {
+  const edge: ListingEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ListingEdges'
   };
 
@@ -114,11 +124,11 @@ function onAddListings(prev, node) {
   });
 }
 
-function onEditListings(prev, node) {
+function onEditListings(prev: { listings: Listings }, node: Listing) {
   const index = prev.listings.edges.findIndex(x => x.node.id === node.id);
-  const edge = {
+  const edge: ListingEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ListingEdges'
   };
   if (index) {
@@ -133,7 +143,7 @@ function onEditListings(prev, node) {
   }
 }
 
-const onDeleteListings = (prev, id) => {
+const onDeleteListings = (prev: { listings: Listings }, id: number) => {
   // console.log('called', id);
   const index = prev.listings.edges.findIndex(x => x.node.id === id);
 
@@ -154,19 +164,19 @@ const onDeleteListings = (prev, id) => {
   });
 };
 
-export const subscribeToListingsBookmark = (subscribeToMore, filter) =>
+export const subscribeToListingsBookmark = (subscribeToMore, filter: FilterListInput) =>
   subscribeToMore({
     document: LISTINGS_BOOKMARK_SUBSCRIPTION,
     variables: { filter },
     updateQuery: (
-      prev,
+      prev: { myListingsBookmark: MyListingsBookmark },
       {
         subscriptionData: {
           data: {
             listingsBookmarkUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { listingsBookmarkUpdated: { mutation: string; node: Listing } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -180,7 +190,7 @@ export const subscribeToListingsBookmark = (subscribeToMore, filter) =>
     }
   });
 
-function onAddListingsBookmark(prev, node) {
+function onAddListingsBookmark(prev: { myListingsBookmark: MyListingsBookmark }, node: Listing) {
   // console.log('prev', prev, node);
   if (prev.myListingsBookmark.edges.some(listing => node.id === listing.cursor)) {
     return update(prev, {
@@ -197,9 +207,9 @@ function onAddListingsBookmark(prev, node) {
 
   const filteredListings = prev.myListingsBookmark.edges.filter(listing => listing.node.id !== null);
 
-  const edge = {
+  const edge: ListingEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ListingEdges'
   };
 
@@ -215,11 +225,11 @@ function onAddListingsBookmark(prev, node) {
   });
 }
 
-function onEditListingsBookmark(prev, node) {
-  const index = prev.myListingsBookmark.edges.findIndex(x => x.id === node.id);
-  const edge = {
+function onEditListingsBookmark(prev: { myListingsBookmark: MyListingsBookmark }, node: Listing) {
+  const index = prev.myListingsBookmark.edges.findIndex(x => x.node.id === node.id);
+  const edge: ListingEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ListingEdges'
   };
   if (index) {
@@ -234,7 +244,7 @@ function onEditListingsBookmark(prev, node) {
   }
 }
 
-const onDeleteListingsBookmark = (prev, id) => {
+const onDeleteListingsBookmark = (prev: { myListingsBookmark: MyListingsBookmark }, id: number) => {
   // console.log('called', id);
   const index = prev.myListingsBookmark.edges.findIndex(x => x.node.id === id);
 
@@ -255,19 +265,19 @@ const onDeleteListingsBookmark = (prev, id) => {
   });
 };
 
-export const subscribeToListingReview = (subscribeToMore, listingId) =>
+export const subscribeToListingReview = (subscribeToMore, listingId: number) =>
   subscribeToMore({
     document: LISTING_REVIEW_SUBSCRIPTION,
     variables: { id: listingId },
     updateQuery: (
-      prev,
+      prev: { canUserReview: boolean },
       {
         subscriptionData: {
           data: {
             listingReview: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { listingReview: { mutation: string; node: boolean } } } }
     ) => {
       let newResult = prev;
       // console.log("mutation", mutation, node);
@@ -280,7 +290,7 @@ export const subscribeToListingReview = (subscribeToMore, listingId) =>
     }
   });
 
-function onAddListingReview(prev, node) {
+function onAddListingReview(prev: { canUserReview: boolean }, node: boolean) {
   return update(prev, {
     canUserReview: {
       $set: node
@@ -288,7 +298,7 @@ function onAddListingReview(prev, node) {
   });
 }
 
-const onDeleteListingReview = (prev, node) => {
+const onDeleteListingReview = (prev: { canUserReview: boolean }, node: boolean) => {
   return update(prev, {
     canUserReview: {
       $set: node
