@@ -10,11 +10,11 @@ import ROUTES from '../routes';
 
 // types
 import { FilterCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
-import { categories_categories as Categories } from '../graphql/__generated__/categories';
 import {
-  category_category as Category,
-  category_category_edges as CategoryEdges
-} from '../graphql/__generated__/category';
+  categories_categories as Categories,
+  categories_categories_edges as CategoryEdges
+} from '../graphql/__generated__/categories';
+import { category_category as Category } from '../graphql/__generated__/category';
 
 export const subscribeToCategories = (subscribeToMore, filter: FilterCategoryInput) =>
   subscribeToMore({

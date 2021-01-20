@@ -1,22 +1,31 @@
-import { Message } from '@gqlapp/look-client-react';
 import update from 'immutability-helper';
+
+import { Message } from '@gqlapp/look-client-react';
 
 import DISCOUNT_SUBSCRIPTION from '../graphql/DiscountSubscription.graphql';
 import DISCOUNTS_SUBSCRIPTION from '../graphql/DiscountsSubscription.graphql';
 
-export const subscribeToDiscount = (subscribeToMore, modalId) =>
+// types
+import { FilterDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
+import {
+  discounts_discounts as Discounts,
+  discounts_discounts_edges as DiscountEdges
+} from '../graphql/__generated__/discounts';
+import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
+
+export const subscribeToDiscount = (subscribeToMore, modalId: number) =>
   subscribeToMore({
     document: DISCOUNT_SUBSCRIPTION,
     variables: { modalId },
     updateQuery: (
-      prev,
+      prev: { modalDiscount: ModalDiscount },
       {
         subscriptionData: {
           data: {
             discountUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { discountUpdated: { mutation: string; node: ModalDiscount } } } }
     ) => {
       let newResult = prev;
       // console.log('mutation', mutation, node);
@@ -29,7 +38,7 @@ export const subscribeToDiscount = (subscribeToMore, modalId) =>
     }
   });
 
-function onEditDiscount(prev, node) {
+function onEditDiscount(prev: { modalDiscount: ModalDiscount }, node: ModalDiscount) {
   // console.log(prev, node);
   return update(prev, {
     modalDiscount: {
@@ -38,7 +47,7 @@ function onEditDiscount(prev, node) {
   });
 }
 
-const onDeleteDiscount = prev => {
+const onDeleteDiscount = (prev: { modalDiscount: ModalDiscount }) => {
   Message.info('This discount has been expired!');
   return update(prev, {
     modalDiscount: {
@@ -47,19 +56,19 @@ const onDeleteDiscount = prev => {
   });
 };
 
-export const subscribeToDiscounts = (subscribeToMore, filter) =>
+export const subscribeToDiscounts = (subscribeToMore, filter: FilterDiscountInput) =>
   subscribeToMore({
     document: DISCOUNTS_SUBSCRIPTION,
     variables: { filter },
     updateQuery: (
-      prev,
+      prev: { discounts: Discounts },
       {
         subscriptionData: {
           data: {
             discountsUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { discountsUpdated: { mutation: string; node: ModalDiscount } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -72,7 +81,7 @@ export const subscribeToDiscounts = (subscribeToMore, filter) =>
       return newResult;
     }
   });
-function onAddDiscounts(prev, node) {
+function onAddDiscounts(prev: { discounts: Discounts }, node: ModalDiscount) {
   if (prev.discounts.edges.some(discount => node.id === discount.cursor)) {
     return update(prev, {
       discounts: {
@@ -88,9 +97,9 @@ function onAddDiscounts(prev, node) {
 
   const filtereddiscounts = prev.discounts.edges.filter(discount => discount.node.id !== null);
 
-  const edge = {
+  const edge: DiscountEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'DiscountEdges'
   };
 
@@ -106,11 +115,11 @@ function onAddDiscounts(prev, node) {
   });
 }
 
-function onEditDiscounts(prev, node) {
+function onEditDiscounts(prev: { discounts: Discounts }, node: ModalDiscount) {
   const index = prev.discounts.edges.findIndex(x => x.node.id === node.id);
-  const edge = {
+  const edge: DiscountEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'DiscountEdges'
   };
   if (index) {
@@ -125,9 +134,9 @@ function onEditDiscounts(prev, node) {
   }
 }
 
-const onDeleteDiscounts = (prev, id) => {
+const onDeleteDiscounts = (prev: { discounts: Discounts }, id: number) => {
   // console.log('called', id);
-  const index = prev.discount.edges.findIndex(x => x.node.id === id);
+  const index = prev.discounts.edges.findIndex(x => x.node.id === id);
 
   // ignore if not found
   if (index < 0) {
@@ -135,9 +144,9 @@ const onDeleteDiscounts = (prev, id) => {
   }
 
   return update(prev, {
-    discount: {
+    discounts: {
       totalCount: {
-        $set: prev.discount.totalCount - 1
+        $set: prev.discounts.totalCount - 1
       },
       edges: {
         $splice: [[index, 1]]
