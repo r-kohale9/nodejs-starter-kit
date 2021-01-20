@@ -37,6 +37,7 @@ import {
 } from '../../../../../packages/server/__generated__/globalTypes';
 import {
   dynamicCarousels_dynamicCarousels as DynamicCarousels,
+  dynamicCarousels_dynamicCarousels_edges as DynamicCarouselsEdges,
   dynamicCarousels as dynamicCarouselsResponse,
   dynamicCarouselsVariables
 } from '../../graphql/__generated__/dynamicCarousels';
@@ -264,7 +265,7 @@ function onAddDynamicCarousels(prev: { dynamicCarousels: DynamicCarousels }, nod
 
   const filteredListings = prev.dynamicCarousels.edges.filter(dC => dC.node.id !== null);
 
-  const edge = {
+  const edge: DynamicCarouselsEdges = {
     cursor: node.id,
     node,
     __typename: 'DynamicCarouselEdges'
@@ -284,10 +285,10 @@ function onAddDynamicCarousels(prev: { dynamicCarousels: DynamicCarousels }, nod
 
 function onEditDynamicCarousels(prev: { dynamicCarousels: DynamicCarousels }, node: DynamicCarousel) {
   const index = prev.dynamicCarousels.edges.findIndex(x => x.node.id === node.id);
-  const edge = {
+  const edge: DynamicCarouselsEdges = {
     cursor: node.id,
     node,
-    __typename: 'ListingEdges'
+    __typename: 'DynamicCarouselEdges'
   };
   if (index) {
     prev.dynamicCarousels.edges.splice(index, 1, edge);

@@ -45,6 +45,7 @@ import { review as reviewResponse, review_review as Review, reviewVariables } fr
 import { ratingAverage as ratingAverageResponse, ratingAverageVariables } from '../graphql/__generated__/ratingAverage';
 import {
   reviews as reviewsResponse,
+  reviews_reviews_edges as ReviewsEdges,
   reviews_reviews as Reviews,
   reviewsVariables
 } from '../graphql/__generated__/reviews';
@@ -290,7 +291,7 @@ function onAddReviews(prev: { reviews: Reviews }, node: Review) {
 
   const filteredReviews = prev.reviews.edges.filter(review => review.node.id !== null);
 
-  const edge = {
+  const edge: ReviewsEdges = {
     cursor: node.id,
     node,
     __typename: 'ReviewEdges'
@@ -310,7 +311,7 @@ function onAddReviews(prev: { reviews: Reviews }, node: Review) {
 
 function onEditReviews(prev: { reviews: Reviews }, node: Review) {
   const index = prev.reviews.edges.findIndex((x: { node: Review }) => x.node.id === node.id);
-  const edge = {
+  const edge: ReviewsEdges = {
     cursor: node.id,
     node,
     __typename: 'ReviewEdges'
