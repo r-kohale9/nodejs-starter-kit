@@ -1,4 +1,8 @@
+import { FunctionComponent } from 'react';
 import { graphql } from 'react-apollo';
+import { match as Match } from 'react-router-dom';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+
 import { removeTypename, PLATFORM } from '@gqlapp/core-common';
 import { Message } from '@gqlapp/look-client-react';
 
@@ -18,13 +22,39 @@ import DELETE_DISCOUNT from '../graphql/DeleteDiscount.graphql';
 import UPDATE_ORDER_BY_DISCOUNT from '../graphql/UpdateOrderByDiscount.client.graphql';
 import UPDATE_DISCOUNT_FILTER from '../graphql/UpdateDiscountFilter.client.graphql';
 
+// types
+import {
+  OrderByDiscountInput,
+  FilterDiscountInput,
+  AddDiscountInput,
+  EditDiscountInput
+} from '../../../../packages/server/__generated__/globalTypes';
+import { modalDiscount as modalDiscountResponse, modalDiscountVariables } from '../graphql/__generated__/modalDiscount';
+import { discounts as discountsResponse, discountsVariables } from '../graphql/__generated__/discounts';
+import { addDiscount as addDiscountResponse, addDiscountVariables } from '../graphql/__generated__/addDiscount';
+import { editDiscount as editDiscountResponse, editDiscountVariables } from '../graphql/__generated__/editDiscount';
+import {
+  deleteDiscount as deleteDiscountResponse,
+  deleteDiscountVariables
+} from '../graphql/__generated__/deleteDiscount';
+
 const limit =
   PLATFORM === 'web' || PLATFORM === 'server'
     ? settings.pagination.web.itemsNumber
     : settings.pagination.mobile.itemsNumber;
 
-export const withModalDiscount = Component =>
-  graphql(MODAL_DISCOUNT_QUERY, {
+export const withModalDiscount = (Component: FunctionComponent) =>
+  graphql<
+    {
+      modalId: number;
+      modalName: string;
+      match: Match<{ id: string; modalName: string }>;
+      navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    },
+    modalDiscountResponse,
+    modalDiscountVariables,
+    {}
+  >(MODAL_DISCOUNT_QUERY, {
     options: ({ modalId, modalName, match, navigation }) => {
       return {
         variables: {
@@ -34,25 +64,35 @@ export const withModalDiscount = Component =>
       };
     },
     props({ data: { loading, error, modalDiscount, subscribeToMore, updateQuery } }) {
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, modalDiscount, discountSubscribeToMore: subscribeToMore, updateQuery };
     }
   })(Component);
 
-export const withDiscounts = Component =>
-  graphql(DISCOUNTS_QUERY, {
+export const withDiscounts = (Component: FunctionComponent) =>
+  graphql<
+    {
+      orderBy: OrderByDiscountInput;
+      filter: FilterDiscountInput;
+    },
+    discountsResponse,
+    discountsVariables,
+    {}
+  >(DISCOUNTS_QUERY, {
     options: ({ orderBy, filter }) => {
       return {
-        variables: { limit: limit, after: 0, orderBy, filter },
+        variables: { limit, after: 0, orderBy, filter },
         fetchPolicy: 'network-only'
       };
     },
     props: ({ data }) => {
       const { loading, error, discounts, fetchMore, subscribeToMore, updateQuery } = data;
-      const loadData = (after, dataDelivery) => {
+      const loadData = (after: number, dataDelivery: string | null) => {
         return fetchMore({
           variables: {
-            after: after
+            after
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             const totalCount = fetchMoreResult.discounts.totalCount;
@@ -73,12 +113,14 @@ export const withDiscounts = Component =>
           }
         });
       };
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, discounts, subscribeToMore, loadData, updateQuery };
     }
   })(Component);
 
-export const withDiscountsState = Component =>
+export const withDiscountsState = (Component: FunctionComponent) =>
   graphql(DISCOUNTS_STATES_QUERY, {
     props({ data: { discountState, loading } }) {
       return { ...removeTypename(discountState), loadingState: loading };
@@ -86,43 +128,14 @@ export const withDiscountsState = Component =>
   })(Component);
 
 // Mutation
-export const withAddDiscount = Component =>
-  graphql(ADD_DISCOUNT, {
+export const withAddDiscount = (Component: FunctionComponent) =>
+  graphql<{}, addDiscountResponse, addDiscountVariables, {}>(ADD_DISCOUNT, {
     props: ({ mutate }) => ({
-      addDiscount: async values => {
-        try {
-          const {
-            data: { id }
-          } = await mutate({
-            variables: {
-              input: values
-            },
-            optimisticResponse: {
-              __typename: 'Mutation',
-              addDiscount: {
-                __typename: 'Discount',
-                ...values
-              }
-            }
-          });
-          return id;
-        } catch (e) {
-          Message.destroy();
-          Message.error("Couldn't perform the action");
-          console.error(e);
-        }
-      }
-    })
-  })(Component);
-
-export const withEditDiscount = Component =>
-  graphql(EDIT_DISCOUNT, {
-    props: ({ mutate }) => ({
-      editDiscount: async input => {
+      addDiscount: async (values: AddDiscountInput) => {
         try {
           await mutate({
             variables: {
-              input: input
+              input: values
             }
           });
         } catch (e) {
@@ -134,19 +147,31 @@ export const withEditDiscount = Component =>
     })
   })(Component);
 
-export const withDiscountDeleting = Component =>
-  graphql(DELETE_DISCOUNT, {
+export const withEditDiscount = (Component: FunctionComponent) =>
+  graphql<{}, editDiscountResponse, editDiscountVariables, {}>(EDIT_DISCOUNT, {
     props: ({ mutate }) => ({
-      deleteDiscount: id => {
-        mutate({
-          variables: { id },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            deleteDiscount: {
-              id: id,
-              __typename: 'Discount'
+      editDiscount: async (input: EditDiscountInput) => {
+        try {
+          await mutate({
+            variables: {
+              input
             }
-          }
+          });
+        } catch (e) {
+          Message.destroy();
+          Message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      }
+    })
+  })(Component);
+
+export const withDiscountDeleting = (Component: FunctionComponent) =>
+  graphql<{}, deleteDiscountResponse, deleteDiscountVariables, {}>(DELETE_DISCOUNT, {
+    props: ({ mutate }) => ({
+      deleteDiscount: (id: number) => {
+        mutate({
+          variables: { id }
         });
         Message.warning('Discount deleted.');
       }
@@ -154,26 +179,26 @@ export const withDiscountDeleting = Component =>
   })(Component);
 
 // Filter
-export const withOrderByUpdating = Component =>
+export const withOrderByUpdating = (Component: FunctionComponent) =>
   graphql(UPDATE_ORDER_BY_DISCOUNT, {
     props: ({ mutate }) => ({
-      onDiscountsOrderBy: orderBy => {
+      onDiscountsOrderBy: (orderBy: OrderByDiscountInput) => {
         mutate({ variables: { orderBy } });
       }
     })
   })(Component);
 
-export const withFilterUpdating = Component =>
+export const withFilterUpdating = (Component: FunctionComponent) =>
   graphql(UPDATE_DISCOUNT_FILTER, {
     props: ({ mutate }) => ({
-      onSearchTextChange(searchText) {
+      onSearchTextChange(searchText: string) {
         // console.log("searchtext", searchText);
         mutate({ variables: { filter: { searchText } } });
       },
-      onIsActiveChange(isActive) {
+      onIsActiveChange(isActive: boolean) {
         mutate({ variables: { filter: { isActive } } });
       },
-      onModalNameChange(modalName) {
+      onModalNameChange(modalName: string) {
         mutate({ variables: { filter: { modalName } } });
       },
       // onCategoryChange(categoryFilter) {
@@ -190,7 +215,7 @@ export const withFilterUpdating = Component =>
       //     },
       //   });
       // },
-      onFiltersRemove(filter, orderBy) {
+      onFiltersRemove(filter: FilterDiscountInput, orderBy: OrderByDiscountInput) {
         mutate({
           variables: {
             filter,
