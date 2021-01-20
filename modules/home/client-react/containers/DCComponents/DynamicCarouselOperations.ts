@@ -1,7 +1,11 @@
-import { Message } from '@gqlapp/look-client-react';
+import { FunctionComponent } from 'react';
 import update from 'immutability-helper';
 import { graphql } from 'react-apollo';
+import { match as Match } from 'react-router-dom';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { History } from 'history';
 
+import { Message } from '@gqlapp/look-client-react';
 import { removeTypename, PLATFORM } from '@gqlapp/core-common';
 import settings from '@gqlapp/config';
 
@@ -24,27 +28,65 @@ import DYNAMIC_CAROUSEL_ORDER_BY from '../../graphql/UpdateOrderByDynamiceCarous
 
 import ROUTES from '../../routes';
 
+// types
+import {
+  OrderByDynamicCarouselInput,
+  FilterDynamicCarouselInput,
+  AddDynamicCarouselInput,
+  EditDynamicCarouselInput
+} from '../../../../../packages/server/__generated__/globalTypes';
+import {
+  dynamicCarousels_dynamicCarousels as DynamicCarousels,
+  dynamicCarousels as dynamicCarouselsResponse,
+  dynamicCarouselsVariables
+} from '../../graphql/__generated__/dynamicCarousels';
+import {
+  dynamicCarousel_dynamicCarousel as DynamicCarousel,
+  dynamicCarousel as dynamicCarouselResponse,
+  dynamicCarouselVariables
+} from '../../graphql/__generated__/dynamicCarousel';
+import {
+  deleteDynamicCarousel as deleteDynamicCarouselResponse,
+  deleteDynamicCarouselVariables
+} from '../../graphql/__generated__/deleteDynamicCarousel';
+import {
+  addDynamicCarousel as addDynamicCarouselResponse,
+  addDynamicCarouselVariables
+} from '../../graphql/__generated__/addDynamicCarousel';
+import {
+  editDynamicCarousel as editDynamicCarouselResponse,
+  editDynamicCarouselVariables
+} from '../../graphql/__generated__/editDynamicCarousel';
+
 const limit =
   PLATFORM === 'web' || PLATFORM === 'server'
     ? settings.pagination.web.itemsNumber
     : settings.pagination.mobile.itemsNumber;
 
 // Query
-export const withDynamicCarousels = Component =>
-  graphql(DYNAMIC_CAROUSELS_QUERY, {
+export const withDynamicCarousels = (Component: FunctionComponent) =>
+  graphql<
+    {
+      orderBy: OrderByDynamicCarouselInput;
+      filter: FilterDynamicCarouselInput;
+    },
+    dynamicCarouselsResponse,
+    dynamicCarouselsVariables,
+    {}
+  >(DYNAMIC_CAROUSELS_QUERY, {
     options: ({ orderBy, filter }) => {
       // console.log(filter);
       return {
         fetchPolicy: 'network-only',
-        variables: { limit: limit, after: 0, orderBy, filter }
+        variables: { limit, after: 0, orderBy, filter }
       };
     },
     props: ({ data }) => {
       const { loading, error, dynamicCarousels, fetchMore, subscribeToMore, updateQuery } = data;
-      const loadData = (after, dataDelivery) => {
+      const loadData = (after: number, dataDelivery: string) => {
         return fetchMore({
           variables: {
-            after: after
+            after
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             const totalCount = fetchMoreResult.dynamicCarousels.totalCount;
@@ -60,13 +102,15 @@ export const withDynamicCarousels = Component =>
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Dynamic Carousel'
+                __typename: 'DynamicCarousels'
               }
             };
           }
         });
       };
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return {
         loading,
         dynamicCarousels,
@@ -77,11 +121,19 @@ export const withDynamicCarousels = Component =>
     }
   })(Component);
 
-export const withDynamicCarousel = Component =>
-  graphql(DYNAMIC_CAROUSEL_QUERY, {
+export const withDynamicCarousel = (Component: FunctionComponent) =>
+  graphql<
+    {
+      match: Match<{ id: string }>;
+      navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    },
+    dynamicCarouselResponse,
+    dynamicCarouselVariables,
+    {}
+  >(DYNAMIC_CAROUSEL_QUERY, {
     options: props => {
       // console.log(props);
-      let id = 0;
+      let id = '0';
       if (props.match) {
         id = props.match.params.id;
       } else if (props.navigation) {
@@ -93,51 +145,42 @@ export const withDynamicCarousel = Component =>
       };
     },
     props({ data: { loading, error, dynamicCarousel, subscribeToMore, updateQuery } }) {
-      if (error) throw new Error(error);
+      if (error) {
+        throw new Error(error.message);
+      }
       return { loading, dynamicCarousel, subscribeToMore, updateQuery };
     }
   })(Component);
 
 // Mutation
-export const withDeleteDynamicCarousel = Component =>
-  graphql(DELETE_DYNAMIC_CAROUSEL, {
+export const withDeleteDynamicCarousel = (Component: FunctionComponent) =>
+  graphql<{}, deleteDynamicCarouselResponse, deleteDynamicCarouselVariables, {}>(DELETE_DYNAMIC_CAROUSEL, {
     props: ({ mutate }) => ({
-      deleteDynamicCarousel: async id => {
+      deleteDynamicCarousel: async (id: number) => {
         const {
           data: { deleteDynamicCarousel }
         } = await mutate({
-          variables: { id },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            deleteDynamicCarousel: {
-              id: id,
-              __typename: 'DynamicCarousel'
-            }
-          }
+          variables: { id }
         });
-        if (deleteDynamicCarousel) Message.warning('Banner deleted.');
-        else Message.warning('Try again!');
+        if (deleteDynamicCarousel) {
+          Message.warning('Banner deleted.');
+        } else {
+          Message.warning('Try again!');
+        }
       }
     })
   })(Component);
 
-export const withAddDynamicCarousel = Component =>
-  graphql(ADD_DYNAMIC_CAROUSEL, {
+export const withAddDynamicCarousel = (Component: FunctionComponent) =>
+  graphql<{ history: History }, addDynamicCarouselResponse, addDynamicCarouselVariables, {}>(ADD_DYNAMIC_CAROUSEL, {
     props: ({ ownProps: { history }, mutate }) => ({
-      addDynamicCarousel: async values => {
+      addDynamicCarousel: async (values: AddDynamicCarouselInput) => {
         Message.destroy();
         Message.loading('Please wait...', 0);
         try {
           await mutate({
             variables: {
               input: values
-            },
-            optimisticResponse: {
-              __typename: 'Mutation',
-              addDynamicCarousel: {
-                __typename: 'DynamicCarousel',
-                ...values
-              }
             }
           });
 
@@ -153,10 +196,10 @@ export const withAddDynamicCarousel = Component =>
     })
   })(Component);
 
-export const withEditDynamicCarousel = Component =>
-  graphql(EDIT_DYNAMIC_CAROUSEL, {
+export const withEditDynamicCarousel = (Component: FunctionComponent) =>
+  graphql<{ history: History }, editDynamicCarouselResponse, editDynamicCarouselVariables, {}>(EDIT_DYNAMIC_CAROUSEL, {
     props: ({ ownProps: { history }, mutate }) => ({
-      editDynamicCarousel: async values => {
+      editDynamicCarousel: async (values: EditDynamicCarouselInput) => {
         Message.destroy();
         Message.loading('Please wait...', 0);
         try {
@@ -183,14 +226,14 @@ export const subscribeToDynamicCarousels = subscribeToMore =>
   subscribeToMore({
     document: DYNAMIC_CAROUSEL_SUBSCRIPTION,
     updateQuery: (
-      prev,
+      prev: { dynamicCarousels: DynamicCarousels },
       {
         subscriptionData: {
           data: {
             dynamicCarouselUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { dynamicCarouselUpdated: { mutation: string; node: DynamicCarousel } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -204,7 +247,7 @@ export const subscribeToDynamicCarousels = subscribeToMore =>
     }
   });
 
-function onAddDynamicCarousels(prev, node) {
+function onAddDynamicCarousels(prev: { dynamicCarousels: DynamicCarousels }, node: DynamicCarousel) {
   // console.log('prev', prev, node);
   if (prev.dynamicCarousels.edges.some(dC => node.id === dC.cursor)) {
     return update(prev, {
@@ -223,7 +266,7 @@ function onAddDynamicCarousels(prev, node) {
 
   const edge = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'DynamicCarouselEdges'
   };
 
@@ -239,11 +282,11 @@ function onAddDynamicCarousels(prev, node) {
   });
 }
 
-function onEditDynamicCarousels(prev, node) {
+function onEditDynamicCarousels(prev: { dynamicCarousels: DynamicCarousels }, node: DynamicCarousel) {
   const index = prev.dynamicCarousels.edges.findIndex(x => x.node.id === node.id);
   const edge = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'ListingEdges'
   };
   if (index) {
@@ -251,14 +294,14 @@ function onEditDynamicCarousels(prev, node) {
     return update(prev, {
       dynamicCarousels: {
         edges: {
-          $set: [...prev.dynamicCarousels]
+          $set: [...prev.dynamicCarousels.edges]
         }
       }
     });
   }
 }
 
-const onDeleteDynamicCarousels = (prev, id) => {
+const onDeleteDynamicCarousels = (prev: { dynamicCarousels: DynamicCarousels }, id: number) => {
   const index = prev.dynamicCarousels.edges.findIndex(x => x.node.id === id);
 
   // ignore if not found
@@ -274,30 +317,30 @@ const onDeleteDynamicCarousels = (prev, id) => {
   });
 };
 
-export const subscribeToDynamicCarousel = (subscribeToMore, history) =>
+export const subscribeToDynamicCarousel = (subscribeToMore, history: History) =>
   subscribeToMore({
     document: DYNAMIC_CAROUSEL_SUBSCRIPTION,
     updateQuery: (
-      prev,
+      prev: { dynamicCarousel: DynamicCarousel },
       {
         subscriptionData: {
           data: {
             dynamicCarouselUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { dynamicCarouselUpdated: { mutation: string; node: DynamicCarousel } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'UPDATED') {
         newResult = onEditDynamicCarousel(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteDynamicCarousel(prev, node.id, history);
+        onDeleteDynamicCarousel(prev, node.id, history);
       }
       return newResult;
     }
   });
 
-function onEditDynamicCarousel(prev, node) {
+function onEditDynamicCarousel(prev: { dynamicCarousel: DynamicCarousel }, node: DynamicCarousel) {
   return update(prev, {
     dynamicCarousel: {
       $set: node
@@ -305,7 +348,7 @@ function onEditDynamicCarousel(prev, node) {
   });
 }
 
-const onDeleteDynamicCarousel = (prev, id, history) => {
+const onDeleteDynamicCarousel = (prev: { dynamicCarousel: DynamicCarousel }, id: number, history: History) => {
   if (prev.dynamicCarousel.id === id) {
     Message.error('Banner was deleted');
     history.push(`${ROUTES.adminPanel}`);
@@ -313,27 +356,27 @@ const onDeleteDynamicCarousel = (prev, id, history) => {
 };
 
 // Filters
-export const withDynamicCarouselState = Component =>
+export const withDynamicCarouselState = (Component: FunctionComponent) =>
   graphql(DYNAMIC_CAROUSEL_STATE_QUERY, {
     props({ data: { dynamicCarouselState } }) {
       return { ...removeTypename(dynamicCarouselState) };
     }
   })(Component);
 
-export const withDynamicCarouselFilterUpdating = Component =>
+export const withDynamicCarouselFilterUpdating = (Component: FunctionComponent) =>
   graphql(DYNAMIC_CAROUSEL_UPDATE_FILTER, {
     props: ({ mutate }) => ({
-      onSearchTextChange(searchText) {
+      onSearchTextChange(searchText: string) {
         mutate({ variables: { filter: { searchText } } });
       },
-      onLabelChange(label) {
+      onLabelChange(label: string) {
         mutate({ variables: { filter: { label } } });
       },
-      onIsActiveChange(isActive) {
+      onIsActiveChange(isActive: boolean) {
         // console.log(isActive);
         mutate({ variables: { filter: { isActive } } });
       },
-      onFiltersRemove(filter, orderBy) {
+      onFiltersRemove(filter: FilterDynamicCarouselInput, orderBy: OrderByDynamicCarouselInput) {
         mutate({
           variables: {
             filter,
@@ -344,11 +387,10 @@ export const withDynamicCarouselFilterUpdating = Component =>
     })
   })(Component);
 
-export const withDynamicCarouselOrderByUpdating = Component =>
+export const withDynamicCarouselOrderByUpdating = (Component: FunctionComponent) =>
   graphql(DYNAMIC_CAROUSEL_ORDER_BY, {
     props: ({ mutate }) => ({
-      onDynamicCarouselOrderBy: orderBy => {
-        console.log('orderBy', orderBy);
+      onDynamicCarouselOrderBy: (orderBy: OrderByDynamicCarouselInput) => {
         mutate({ variables: { orderBy } });
       }
     })
