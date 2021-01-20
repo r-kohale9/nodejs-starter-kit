@@ -1,39 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Message } from '@gqlapp/look-client-react';
 import update from 'immutability-helper';
 import { Redirect } from 'react-router-dom';
+import { History } from 'history';
+
+import { Message } from '@gqlapp/look-client-react';
+import { HOME_ROUTES } from '@gqlapp/home-client-react';
 
 import ROUTES from '../routes';
 
 import ORDER_SUBSCRIPTION from '../graphql/OrderSubscription.graphql';
 import ORDERS_SUBSCRIPTION from '../graphql/OrdersSubscription.graphql';
 
-export const subscribeToCart = (subscribeToMore, orderId, history) =>
+// types
+import { FilterOrderInput } from '../../../../packages/server/__generated__/globalTypes';
+import { orders_orders as Orders, orders_orders_edges as OrderEdges } from '../graphql/__generated__/orders';
+import { getCart_getCart as GetCart } from '../graphql/__generated__/getCart';
+import { order_order as Order } from '../graphql/__generated__/order';
+
+export const subscribeToCart = (subscribeToMore, orderId: number, history: History) =>
   subscribeToMore({
     document: ORDER_SUBSCRIPTION,
     variables: { id: orderId },
     updateQuery: (
-      prev,
+      prev: { getCart: GetCart },
       {
         subscriptionData: {
           data: {
             orderUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { orderUpdated: { mutation: string; node: GetCart } } } }
     ) => {
       let newResult = prev;
       // console.log('mutation', mutation, node);
       if (mutation === 'UPDATED') {
         newResult = onEditCart(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteCart(history);
+        onDeleteCart(history);
       }
       return newResult;
     }
   });
 
-function onEditCart(prev, node) {
+function onEditCart(prev: { getCart: GetCart }, node: GetCart) {
   return update(prev, {
     getCart: {
       $set: node
@@ -41,42 +50,42 @@ function onEditCart(prev, node) {
   });
 }
 
-const onDeleteCart = history => {
+const onDeleteCart = (history: History) => {
   Message.info('This cart has been deleted!');
   Message.warn('Redirecting to my orders');
   if (history) {
     return history.push(`${ROUTES.myOrder}`);
   } else {
-    return <Redirect to={'/'} />;
+    return history.push(`${HOME_ROUTES.home}`);
   }
 };
 
-export const subscribeToOrder = (subscribeToMore, orderId, history) =>
+export const subscribeToOrder = (subscribeToMore, orderId: number, history: History) =>
   subscribeToMore({
     document: ORDER_SUBSCRIPTION,
     variables: { id: orderId },
     updateQuery: (
-      prev,
+      prev: { order: Order },
       {
         subscriptionData: {
           data: {
             orderUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { orderUpdated: { mutation: string; node: Order } } } }
     ) => {
       let newResult = prev;
       // console.log('mutation', mutation, node);
       if (mutation === 'UPDATED') {
         newResult = onEditOrder(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteOrder(history);
+        onDeleteOrder(history);
       }
       return newResult;
     }
   });
 
-function onEditOrder(prev, node) {
+function onEditOrder(prev: { order: Order }, node: Order) {
   return update(prev, {
     order: {
       $set: node
@@ -84,29 +93,29 @@ function onEditOrder(prev, node) {
   });
 }
 
-const onDeleteOrder = history => {
+const onDeleteOrder = (history: History) => {
   Message.info('This cart has been deleted!');
   Message.warn('Redirecting to my orders');
   if (history) {
     return history.push(`${ROUTES.myOrder}`);
   } else {
-    return <Redirect to={'/'} />;
+    return history.push(`${HOME_ROUTES.home}`);
   }
 };
 
-export const subscribeToOrders = (subscribeToMore, filter) =>
+export const subscribeToOrders = (subscribeToMore, filter: FilterOrderInput) =>
   subscribeToMore({
     document: ORDERS_SUBSCRIPTION,
     variables: { filter },
     updateQuery: (
-      prev,
+      prev: { orders: Orders },
       {
         subscriptionData: {
           data: {
             ordersUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { ordersUpdated: { mutation: string; node: Order } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -120,25 +129,25 @@ export const subscribeToOrders = (subscribeToMore, filter) =>
     }
   });
 
-export const SubscribeToOrdersForMyOrders = (subscribeToMore, filter) => {
+export const SubscribeToOrdersForMyOrders = (subscribeToMore, filter: FilterOrderInput) => {
   const [ordersUpdated, setOrdersUpdated] = useState(null);
 
   useEffect(() => {
-    const subscribe = subscribeToOrders();
+    const subscribe = subscribeToOrderss();
     return () => subscribe();
   });
 
-  const subscribeToOrders = () => {
+  const subscribeToOrderss = () => {
     return subscribeToMore({
       document: ORDERS_SUBSCRIPTION,
       variables: { filter },
       updateQuery: (
-        prev,
+        prev: { orders: Orders },
         {
           subscriptionData: {
             data: { ordersUpdated: newData }
           }
-        }
+        }: { subscriptionData: { data: { ordersUpdated: { mutation: string; node: Order } } } }
       ) => {
         setOrdersUpdated(newData);
       }
@@ -148,9 +157,9 @@ export const SubscribeToOrdersForMyOrders = (subscribeToMore, filter) => {
   return ordersUpdated;
 };
 
-export const updateOrdersState = (OrdersUpdated, updateQuery) => {
+export const updateOrdersState = (OrdersUpdated: { mutation: string; node: Order }, updateQuery) => {
   const { mutation, node } = OrdersUpdated;
-  updateQuery(prev => {
+  updateQuery((prev: { orders: Orders }) => {
     switch (mutation) {
       case 'CREATED':
         return onAddOrders(prev, node);
@@ -164,7 +173,7 @@ export const updateOrdersState = (OrdersUpdated, updateQuery) => {
   });
 };
 
-function onAddOrders(prev, node) {
+function onAddOrders(prev: { orders: Orders }, node: Order) {
   if (prev.orders && prev.orders.edges.some(order => node.id === order.cursor)) {
     return update(prev, {
       orders: {
@@ -180,12 +189,11 @@ function onAddOrders(prev, node) {
 
   if (prev.orders) {
     const filteredOrders = prev.orders.edges.filter(order => order.node.id !== null);
-    const edge = {
+    const edge: OrderEdges = {
       cursor: node.id,
-      node: node,
+      node,
       __typename: 'OrderEdges'
     };
-    console.log([edge, ...filteredOrders]);
     return update(prev, {
       orders: {
         totalCount: {
@@ -199,11 +207,11 @@ function onAddOrders(prev, node) {
   }
 }
 
-function onEditOrders(prev, node) {
+function onEditOrders(prev: { orders: Orders }, node: Order) {
   const index = prev.orders.edges.findIndex(x => x.node.id === node.id);
-  const edge = {
+  const edge: OrderEdges = {
     cursor: node.id,
-    node: node,
+    node,
     __typename: 'OrderEdges'
   };
   if (index) {
@@ -220,7 +228,7 @@ function onEditOrders(prev, node) {
   }
 }
 
-const onDeleteOrders = (prev, id) => {
+const onDeleteOrders = (prev: { orders: Orders }, id: number) => {
   // console.log('called', id);
   const index = prev.orders.edges.findIndex(x => x.node.id === id);
 
