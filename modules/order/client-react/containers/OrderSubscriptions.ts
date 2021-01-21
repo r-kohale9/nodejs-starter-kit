@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { UpdateQueryOptions, SubscribeToMoreOptions } from 'apollo-client';
 import update from 'immutability-helper';
-import { Redirect } from 'react-router-dom';
 import { History } from 'history';
 
 import { Message } from '@gqlapp/look-client-react';
@@ -17,7 +17,11 @@ import { orders_orders as Orders, orders_orders_edges as OrderEdges } from '../g
 import { getCart_getCart as GetCart } from '../graphql/__generated__/getCart';
 import { order_order as Order } from '../graphql/__generated__/order';
 
-export const subscribeToCart = (subscribeToMore, orderId: number, history: History) =>
+export const subscribeToCart = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  orderId: number,
+  history: History
+) =>
   subscribeToMore({
     document: ORDER_SUBSCRIPTION,
     variables: { id: orderId },
@@ -60,7 +64,11 @@ const onDeleteCart = (history: History) => {
   }
 };
 
-export const subscribeToOrder = (subscribeToMore, orderId: number, history: History) =>
+export const subscribeToOrder = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  orderId: number,
+  history: History
+) =>
   subscribeToMore({
     document: ORDER_SUBSCRIPTION,
     variables: { id: orderId },
@@ -103,7 +111,10 @@ const onDeleteOrder = (history: History) => {
   }
 };
 
-export const subscribeToOrders = (subscribeToMore, filter: FilterOrderInput) =>
+export const subscribeToOrders = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterOrderInput
+) =>
   subscribeToMore({
     document: ORDERS_SUBSCRIPTION,
     variables: { filter },
@@ -129,7 +140,10 @@ export const subscribeToOrders = (subscribeToMore, filter: FilterOrderInput) =>
     }
   });
 
-export const SubscribeToOrdersForMyOrders = (subscribeToMore, filter: FilterOrderInput) => {
+export const SubscribeToOrdersForMyOrders = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterOrderInput
+) => {
   const [ordersUpdated, setOrdersUpdated] = useState(null);
 
   useEffect(() => {
@@ -157,7 +171,10 @@ export const SubscribeToOrdersForMyOrders = (subscribeToMore, filter: FilterOrde
   return ordersUpdated;
 };
 
-export const updateOrdersState = (OrdersUpdated: { mutation: string; node: Order }, updateQuery) => {
+export const updateOrdersState = (
+  OrdersUpdated: { mutation: string; node: Order },
+  updateQuery: (mapFn: (previousQueryResult: any, options: UpdateQueryOptions<any>) => any) => void
+) => {
   const { mutation, node } = OrdersUpdated;
   updateQuery((prev: { orders: Orders }) => {
     switch (mutation) {

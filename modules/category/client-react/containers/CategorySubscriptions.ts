@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import { History } from 'history';
 
 import { Message } from '@gqlapp/look-client-react';
@@ -16,7 +17,10 @@ import {
 } from '../graphql/__generated__/categories';
 import { category_category as Category } from '../graphql/__generated__/category';
 
-export const subscribeToCategories = (subscribeToMore, filter: FilterCategoryInput) =>
+export const subscribeToCategories = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterCategoryInput
+) =>
   subscribeToMore({
     document: CATEGORIES_SUBSCRIPTION,
     variables: { filter },
@@ -131,7 +135,11 @@ const onDeleteCategories = (prev: { categories: Categories }, node: Category) =>
     });
   }
 };
-export const subscribeToCategory = (subscribeToMore, CategoryId: number, history: History) =>
+export const subscribeToCategory = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  CategoryId: number,
+  history: History
+) =>
   subscribeToMore({
     document: CATEGORY_SUBSCRIPTION,
     variables: { id: CategoryId },

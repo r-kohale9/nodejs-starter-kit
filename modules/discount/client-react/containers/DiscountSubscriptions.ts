@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { Message } from '@gqlapp/look-client-react';
 
@@ -13,7 +14,10 @@ import {
 } from '../graphql/__generated__/discounts';
 import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
 
-export const subscribeToDiscount = (subscribeToMore, modalId: number) =>
+export const subscribeToDiscount = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  modalId: number
+) =>
   subscribeToMore({
     document: DISCOUNT_SUBSCRIPTION,
     variables: { modalId },
@@ -56,7 +60,10 @@ const onDeleteDiscount = (prev: { modalDiscount: ModalDiscount }) => {
   });
 };
 
-export const subscribeToDiscounts = (subscribeToMore, filter: FilterDiscountInput) =>
+export const subscribeToDiscounts = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterDiscountInput
+) =>
   subscribeToMore({
     document: DISCOUNTS_SUBSCRIPTION,
     variables: { filter },

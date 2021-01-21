@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import ADDRESSES_SUBSCRIPTION from '../graphql/AddressesSubscription.graphql';
 
@@ -7,7 +8,10 @@ import { addresses_addresses as Addresses } from '../graphql/__generated__/addre
 import { AddressInfo as Address } from '../graphql/__generated__/AddressInfo';
 
 // eslint-disable-next-line import/prefer-default-export
-export const subscribeToAddresses = (subscribeToMore, userId: number) =>
+export const subscribeToAddresses = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  userId: number
+) =>
   subscribeToMore({
     document: ADDRESSES_SUBSCRIPTION,
     variables: { userId },

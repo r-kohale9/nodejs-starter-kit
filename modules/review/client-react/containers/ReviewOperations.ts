@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import { graphql } from 'react-apollo';
 import { Message } from '@gqlapp/look-client-react';
 import update from 'immutability-helper';
@@ -248,7 +249,10 @@ export const withReviewEditing = (Component: FunctionComponent) =>
 //   }) => Reviews,
 //   filter: FilterReviewInput
 // ) =>
-export const subscribeToReviews = (subscribeToMore, filter: FilterReviewInput) =>
+export const subscribeToReviews = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterReviewInput
+) =>
   subscribeToMore({
     document: REVIEWS_SUBSCRIPTION,
     variables: { filter },
@@ -349,7 +353,7 @@ const onDeleteReviews = (prev: { reviews: Reviews }, id: number) => {
   });
 };
 
-export const subscribeToReview = (subscribeToMore, history: History) =>
+export const subscribeToReview = (subscribeToMore: (options: SubscribeToMoreOptions) => () => void, history: History) =>
   subscribeToMore({
     document: REVIEWS_SUBSCRIPTION,
     updateQuery: (

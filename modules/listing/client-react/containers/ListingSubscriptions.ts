@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import { History } from 'history';
 
 import { Message } from '@gqlapp/look-client-react';
@@ -20,7 +21,11 @@ import {
 import { listing_listing as Listing } from '../graphql/__generated__/listing';
 import { myListingsBookmark_myListingsBookmark as MyListingsBookmark } from '../graphql/__generated__/myListingsBookmark';
 
-export const subscribeToListing = (subscribeToMore, listingId: number, history: History) =>
+export const subscribeToListing = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  listingId: number,
+  history: History
+) =>
   subscribeToMore({
     document: LISTING_SUBSCRIPTION,
     variables: { id: listingId },
@@ -63,7 +68,10 @@ const onDeleteListing = (history: History) => {
   }
 };
 
-export const subscribeToListings = (subscribeToMore, filter: FilterListInput) =>
+export const subscribeToListings = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterListInput
+) =>
   subscribeToMore({
     document: LISTINGS_SUBSCRIPTION,
     variables: { filter },
@@ -164,7 +172,10 @@ const onDeleteListings = (prev: { listings: Listings }, id: number) => {
   });
 };
 
-export const subscribeToListingsBookmark = (subscribeToMore, filter: FilterListInput) =>
+export const subscribeToListingsBookmark = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  filter: FilterListInput
+) =>
   subscribeToMore({
     document: LISTINGS_BOOKMARK_SUBSCRIPTION,
     variables: { filter },
@@ -265,7 +276,10 @@ const onDeleteListingsBookmark = (prev: { myListingsBookmark: MyListingsBookmark
   });
 };
 
-export const subscribeToListingReview = (subscribeToMore, listingId: number) =>
+export const subscribeToListingReview = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  listingId: number
+) =>
   subscribeToMore({
     document: LISTING_REVIEW_SUBSCRIPTION,
     variables: { id: listingId },

@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { UpdateQueryOptions } from 'apollo-client';
 import { graphql } from 'react-apollo';
 import update from 'immutability-helper';
 
@@ -178,7 +179,7 @@ export const updateUsersState = (
     mutation: string;
     node: User;
   },
-  updateQuery
+  updateQuery: (mapFn: (previousQueryResult: any, options: UpdateQueryOptions<any>) => any) => void
 ) => {
   const { mutation, node } = usersUpdated;
   updateQuery((prev: { users: UserList }) => {

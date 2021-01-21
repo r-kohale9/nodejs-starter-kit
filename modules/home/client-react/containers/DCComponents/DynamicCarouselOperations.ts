@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import update from 'immutability-helper';
 import { graphql } from 'react-apollo';
 import { match as Match } from 'react-router-dom';
@@ -223,7 +224,7 @@ export const withEditDynamicCarousel = (Component: FunctionComponent) =>
   })(Component);
 
 // Subscription
-export const subscribeToDynamicCarousels = subscribeToMore =>
+export const subscribeToDynamicCarousels = (subscribeToMore: (options: SubscribeToMoreOptions) => () => void) =>
   subscribeToMore({
     document: DYNAMIC_CAROUSEL_SUBSCRIPTION,
     updateQuery: (
@@ -318,7 +319,10 @@ const onDeleteDynamicCarousels = (prev: { dynamicCarousels: DynamicCarousels }, 
   });
 };
 
-export const subscribeToDynamicCarousel = (subscribeToMore, history: History) =>
+export const subscribeToDynamicCarousel = (
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
+  history: History
+) =>
   subscribeToMore({
     document: DYNAMIC_CAROUSEL_SUBSCRIPTION,
     updateQuery: (
