@@ -2,20 +2,24 @@ import update from 'immutability-helper';
 
 import ADDRESSES_SUBSCRIPTION from '../graphql/AddressesSubscription.graphql';
 
+// types
+import { addresses_addresses as Addresses } from '../graphql/__generated__/addresses';
+import { AddressInfo as Address } from '../graphql/__generated__/AddressInfo';
+
 // eslint-disable-next-line import/prefer-default-export
-export const subscribeToAddresses = (subscribeToMore, userId) =>
+export const subscribeToAddresses = (subscribeToMore, userId: number) =>
   subscribeToMore({
     document: ADDRESSES_SUBSCRIPTION,
     variables: { userId },
     updateQuery: (
-      prev,
+      prev: { addresses: Addresses[] },
       {
         subscriptionData: {
           data: {
             addressesUpdated: { mutation, node }
           }
         }
-      }
+      }: { subscriptionData: { data: { addressesUpdated: { mutation: string; node: Address } } } }
     ) => {
       let newResult = prev;
       if (mutation === 'CREATED') {
@@ -23,15 +27,15 @@ export const subscribeToAddresses = (subscribeToMore, userId) =>
       } else if (mutation === 'UPDATED') {
         newResult = onEditAddresses(prev, node);
       } else if (mutation === 'DEFAULT_UPDATED') {
-        newResult = onDefualtAddress(prev, node.id);
+        newResult = onDefualtAddress(prev, node);
       } else if (mutation === 'DELETED') {
-        newResult = onDeleteAddresses(prev, node.id);
+        onDeleteAddresses(prev, node.id);
       }
       return newResult;
     }
   });
 
-function onAddAddresses(prev, node) {
+function onAddAddresses(prev: { addresses: Addresses[] }, node: Address) {
   // console.log('prev', prev, node);
   const filteredAddresses = prev.addresses.filter(address => address.id !== null);
 
@@ -42,11 +46,11 @@ function onAddAddresses(prev, node) {
   });
 }
 
-function onEditAddresses(prev, node) {
+function onEditAddresses(prev: { addresses: Addresses[] }, node: Address) {
   const index = prev.addresses.findIndex(x => x.id === node.id);
 
   if (index) {
-    prev.addresses.edges.splice(index, 1, node);
+    prev.addresses.splice(index, 1, node);
     return update(prev, {
       addresses: {
         $set: [...prev.addresses]
@@ -55,7 +59,7 @@ function onEditAddresses(prev, node) {
   }
 }
 
-function onDefualtAddress(prev, node) {
+function onDefualtAddress(prev: { addresses: Addresses[] }, node: Address) {
   const indexForTrue = prev.addresses.findIndex(x => x.id === node.id);
   const indexForFalse = prev.addresses.findIndex(x => x.isDefault);
 
@@ -63,8 +67,8 @@ function onDefualtAddress(prev, node) {
   falseNode.isDefault = false;
 
   if (indexForTrue) {
-    prev.addresses.edges.splice(indexForTrue, 1, node);
-    prev.addresses.edges.splice(indexForFalse, 1, falseNode);
+    prev.addresses.splice(indexForTrue, 1, node);
+    prev.addresses.splice(indexForFalse, 1, falseNode);
     return update(prev, {
       addresses: {
         $set: [...prev.addresses]
@@ -73,7 +77,7 @@ function onDefualtAddress(prev, node) {
   }
 }
 
-const onDeleteAddresses = (prev, id) => {
+const onDeleteAddresses = (prev: { addresses: Addresses[] }, id: number) => {
   // console.log('called', id);
   const index = prev.addresses.findIndex(x => x.id === id);
 
