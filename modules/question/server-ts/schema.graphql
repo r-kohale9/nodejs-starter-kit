@@ -76,6 +76,37 @@ type SubjectPageInfo {
   hasNextPage: Boolean
 }
 
+type Chapters {
+  totalCount: Int
+  edges: [ChapterEdges]
+  pageInfo: ChapterPageInfo
+}
+
+type ChapterEdges {
+  node: Chapter
+  cursor: Int
+}
+
+type ChapterPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+type Topics {
+  totalCount: Int
+  edges: [TopicEdges]
+  pageInfo: TopicPageInfo
+}
+
+type TopicEdges {
+  node: Topic
+  cursor: Int
+}
+
+type TopicPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
 extend type Query {
   #get question list
   questionList(
@@ -93,6 +124,18 @@ extend type Query {
     orderBy: OrderBySubjectInput
     filter: FilterSubjectInput
   ): Subjects
+  chapters(
+    limit: Int!
+    after: Int!
+    orderBy: OrderByChapterInput
+    filter: FilterChapterInput
+  ): Chapters
+  topics(
+    limit: Int!
+    after: Int!
+    orderBy: OrderByTopicInput
+    filter: FilterTopicInput
+  ): Topics
   subject(id: Int!): Subject
   chapter(id: Int!): Chapter
   topic(id: Int!): Topic
@@ -107,6 +150,31 @@ input OrderBySubjectInput {
 
 input FilterSubjectInput {
   userId: Int
+  searchText: String
+
+  isActive: Boolean
+}
+input OrderByChapterInput {
+  column: String
+  # asc | desc
+  order: String
+}
+
+input FilterChapterInput {
+  subjectId: Int
+  searchText: String
+
+  isActive: Boolean
+}
+input OrderByTopicInput {
+  column: String
+  # asc | desc
+  order: String
+}
+
+input FilterTopicInput {
+  # subjectId: Int
+  chapterId: Int
   searchText: String
 
   isActive: Boolean

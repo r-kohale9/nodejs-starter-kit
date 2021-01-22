@@ -44,9 +44,9 @@ export default class Question extends Model {
         modelClass: Choice,
         join: {
           from: 'question.id',
-          to: 'choice.question_id'
-        }
-      }
+          to: 'choice.question_id',
+        },
+      },
     };
   }
 
@@ -222,7 +222,101 @@ export default class Question extends Model {
     // console.log(res);
     return {
       subjects: res,
-      total
+      total,
+    };
+  }
+  public async chaptersPagination(limit: number, after: number, orderBy: any, filter: any) {
+    const queryBuilder = ChapterDAO.query().eager('[topic]');
+
+    if (orderBy && orderBy.column) {
+      const column = orderBy.column;
+      let order = 'asc';
+      if (orderBy.order) {
+        order = orderBy.order;
+      }
+
+      queryBuilder.orderBy(decamelize(column), order);
+    } else {
+      queryBuilder.orderBy('id', 'desc');
+    }
+
+    if (filter) {
+      if (has(filter, 'isActive') && filter.isActive !== '') {
+        queryBuilder.where(function() {
+          this.where('chapter.is_active', filter.isActive);
+        });
+      }
+      if (has(filter, 'subjectId') && filter.subjectId !== '') {
+        queryBuilder.where(function() {
+          this.where('chapter.subject_id', filter.subjectId);
+        });
+      }
+
+      if (has(filter, 'searchText') && filter.searchText !== '') {
+        queryBuilder.where(function() {
+          this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`])).orWhere(
+            raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`])
+          );
+        });
+      }
+    }
+
+    const allChapters = camelizeKeys(await queryBuilder);
+    const total = allChapters.length;
+    const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
+    // console.log(res);
+    return {
+      chapters: res,
+      total,
+    };
+  }
+  public async topicsPagination(limit: number, after: number, orderBy: any, filter: any) {
+    const queryBuilder = TopicDAO.query().eager(subjectEager);
+
+    if (orderBy && orderBy.column) {
+      const column = orderBy.column;
+      let order = 'asc';
+      if (orderBy.order) {
+        order = orderBy.order;
+      }
+
+      queryBuilder.orderBy(decamelize(column), order);
+    } else {
+      queryBuilder.orderBy('id', 'desc');
+    }
+
+    if (filter) {
+      if (has(filter, 'isActive') && filter.isActive !== '') {
+        queryBuilder.where(function() {
+          this.where('topic.is_active', filter.isActive);
+        });
+      }
+      // if (has(filter, 'subjectId') && filter.subjectId !== '') {
+      //   queryBuilder.where(function() {
+      //     this.where('chapter.subject_id', filter.subjectId);
+      //   });
+      // }
+      if (has(filter, 'chapterId') && filter.chapterId !== '') {
+        queryBuilder.where(function() {
+          this.where('topic.chapter_id', filter.chapterId);
+        });
+      }
+      if (has(filter, 'searchText') && filter.searchText !== '') {
+        queryBuilder.where(function() {
+          this.where(raw('LOWER(??) LIKE LOWER(?)', ['description', `%${filter.searchText}%`])).orWhere(
+            raw('LOWER(??) LIKE LOWER(?)', ['title', `%${filter.searchText}%`])
+          );
+        });
+      }
+    }
+
+    const allTopics = camelizeKeys(await queryBuilder);
+    const total = allTopics.length;
+    const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
+    // console.log(res);
+    return {
+      topics: res,
+      total,
     };
   }
 
@@ -316,9 +410,9 @@ export class Choice extends Model {
         modelClass: Question,
         join: {
           from: 'choice.question_id',
-          to: 'question.id'
-        }
-      }
+          to: 'question.id',
+        },
+      },
     };
   }
 }
@@ -338,9 +432,9 @@ export class SubjectDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'subject.id',
-          to: 'chapter.subject_id'
-        }
-      }
+          to: 'chapter.subject_id',
+        },
+      },
     };
   }
 }
@@ -360,9 +454,9 @@ export class ChapterDAO extends Model {
         modelClass: TopicDAO,
         join: {
           from: 'chapter.id',
-          to: 'topic.chapter_id'
-        }
-      }
+          to: 'topic.chapter_id',
+        },
+      },
     };
   }
 }
@@ -382,9 +476,9 @@ export class TopicDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'topic.chapter_id',
-          to: 'chapter.id'
-        }
-      }
+          to: 'chapter.id',
+        },
+      },
     };
   }
 }
