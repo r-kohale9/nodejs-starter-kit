@@ -133,13 +133,13 @@ const ReviewFormComponent: React.FC<ReviewFormComponentProps> = props => {
             value={values.modalId}
           />
           <UserAutoCompleteComponent
+            icon="UserOutlined"
             name="username"
             label={t('reviewForm.username')}
             userType="user"
             defaultValue={(props.review && props.review.user && `${props.review.user.username}`) || ''}
             value={values.userId}
             setValue={e => setFieldValue('userId', e)}
-            onSearchTextChange={onSearchTextChange}
           />
         </>
       )}

@@ -17,9 +17,10 @@ import {
   // Divider
 } from '@gqlapp/look-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { UserAutoCompleteComponent } from '@gqlapp/review-client-react';
 
 const DetailsFormFields = props => {
-  const { values, listingHighlight, t, setFieldValue } = props;
+  const { values, listingHighlight, t, setFieldValue, onSearchTextChange, role } = props;
   let formItemsListingHighlight = null;
 
   if (listingHighlight.length > 0) {
@@ -118,7 +119,7 @@ const DetailsFormFields = props => {
           value={values.categoryId}
         />
       </Col>
-      <Col md={8} xs={24} align="left">
+      <Col md={12} xs={24} align="left">
         <Field
           name="brand"
           icon="FireOutlined"
@@ -128,8 +129,6 @@ const DetailsFormFields = props => {
           label={t('listingForm.brand')}
           value={values.brand}
         />
-      </Col>
-      <Col md={8} xs={24} align="left">
         <Field
           icon="ProjectOutlined"
           name="listingDetail.inventoryCount"
@@ -141,7 +140,8 @@ const DetailsFormFields = props => {
           value={values.listingDetail.inventoryCount}
         />
       </Col>
-      <Col md={8} xs={24} align="left">
+
+      <Col md={12} xs={24} align="left">
         <Field
           name="listingOptions.fixedQuantity"
           icon="NodeIndexOutlined"
@@ -161,6 +161,17 @@ const DetailsFormFields = props => {
           max={values.listingDetail.inventoryCount}
           value={values.listingOptions.fixedQuantity}
         />
+        {role && role === 'admin' && (
+          <UserAutoCompleteComponent
+            icon="UserOutlined"
+            name="username"
+            label={t('listingForm.username')}
+            userType="user"
+            value={values.userId}
+            setValue={e => setFieldValue('userId', e)}
+            onSearchTextChange={onSearchTextChange}
+          />
+        )}
       </Col>
       <Col span={24} align="left">
         {/* <Divider /> */}
@@ -203,7 +214,9 @@ DetailsFormFields.propTypes = {
   values: PropTypes.object,
   listingHighlight: PropTypes.object,
   t: PropTypes.func,
-  setFieldValue: PropTypes.func
+  setFieldValue: PropTypes.func,
+  onSearchTextChange: PropTypes.func,
+  role: PropTypes.string
 };
 
 export default DetailsFormFields;
