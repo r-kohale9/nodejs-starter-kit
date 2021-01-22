@@ -19,12 +19,13 @@ const limit =
     : settings.pagination.mobile.itemsNumber;
 
 const UserAutoCompleteComponent = props => {
-  const { name, setValue, label, defaultValue, onSearchTextChange } = props;
+  const { name, setValue, label, defaultValue, onSearchTextChange, icon } = props;
   const handleUserSelect = value => {
     setValue(props.userList.edges.filter(i => i.node.username === value)[0].node.id);
   };
   return (
     <Field
+      icon={icon}
       name={name}
       dataSource={props.userList && props.userList.edges.map(item => item.node.username)}
       component={RenderAutoComplete}
@@ -44,7 +45,8 @@ UserAutoCompleteComponent.propTypes = {
   setValue: PropTypes.func,
   label: PropTypes.string,
   defaultValue: PropTypes.string,
-  onSearchTextChange: PropTypes.func
+  onSearchTextChange: PropTypes.func,
+  icon: PropTypes.node
 };
 
 export default compose(

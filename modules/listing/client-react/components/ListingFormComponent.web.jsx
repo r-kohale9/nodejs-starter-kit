@@ -65,11 +65,11 @@ const ListingFormSchema = [
 
 const ListingFormComponent = props => {
   const [load, setLoad] = useState(false);
-  const { t, step, setStep, setFieldValue, cardTitle, values, handleSubmit } = props;
+  const { t, step, setStep, setFieldValue, cardTitle, values, handleSubmit, currentUser } = props;
   const videos = values.listingMedia.video;
   const listingHighlight = values.listingHighlight;
 
-  // console.log('props', props.modalDiscount);
+  // console.log('props', props);
   return (
     <Card
       title={
@@ -92,7 +92,13 @@ const ListingFormComponent = props => {
     >
       <Form layout={'vertical'} onSubmit={handleSubmit}>
         {step === 0 && (
-          <DetailsFormFields values={values} listingHighlight={listingHighlight} t={t} setFieldValue={setFieldValue} />
+          <DetailsFormFields
+            values={values}
+            listingHighlight={listingHighlight}
+            t={t}
+            setFieldValue={setFieldValue}
+            role={currentUser && currentUser.role}
+          />
         )}
         {step === 1 && <FlagsFormFields values={values} t={t} setStep={setStep} />}
         {step === 2 && (
@@ -120,7 +126,8 @@ ListingFormComponent.propTypes = {
   handleSubmit: PropTypes.func,
   values: PropTypes.object,
   listing: PropTypes.object,
-  modalDiscount: PropTypes.object
+  modalDiscount: PropTypes.object,
+  currentUser: PropTypes.object
 };
 
 const ListingWithFormik = withFormik({
