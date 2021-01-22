@@ -1,24 +1,25 @@
-import { graphql } from "react-apollo";
-import { PLATFORM, removeTypename, log } from "@gqlapp/core-common";
-import update from "immutability-helper";
-import { message } from "antd";
+import { graphql } from 'react-apollo';
+import { PLATFORM, removeTypename, log } from '@gqlapp/core-common';
+import update from 'immutability-helper';
+import { message } from 'antd';
 
 // import LISTINGS_QUERY from '../graphql/ListingsQuery.graphql';
-import QUESTION_LIST_QUERY from "../graphql/QuestionListQuery.graphql";
-import UPDATE_QUESTION_LIST_FILTER from "../graphql/UpdateQuestionListFilter.client.graphql";
-import QUESTION_LIST_STATE_QUERY from "../graphql/QuestionListStateQuery.client.graphql";
+import QUESTION_LIST_QUERY from '../graphql/QuestionListQuery.graphql';
+import UPDATE_QUESTION_LIST_FILTER from '../graphql/UpdateQuestionListFilter.client.graphql';
+import QUESTION_LIST_STATE_QUERY from '../graphql/QuestionListStateQuery.client.graphql';
 // import UPDATE_ORDER_BY from "../graphql/UpdateOrderBy.client.graphql";
-import QUESTION_EDIT from "../graphql/QuestionEdit.graphql";
-import DELETE_QUESTION from "../graphql/DeleteQuestion.graphql";
-import ADD_QUESTION from "../graphql/AddQuestion.graphql";
-import QUESTION_QUERY from "../graphql/QuestionQuery.graphql";
+import QUESTION_EDIT from '../graphql/QuestionEdit.graphql';
+import DELETE_QUESTION from '../graphql/DeleteQuestion.graphql';
+import ADD_QUESTION from '../graphql/AddQuestion.graphql';
+import ADD_SUBJECT from '../graphql/AddSubject.graphql';
+import ADD_CHAPTER from '../graphql/AddChapter.graphql';
+import ADD_TOPIC from '../graphql/AddTopic.graphql';
+import QUESTION_QUERY from '../graphql/QuestionQuery.graphql';
 
-import settings from "../../../../settings";
+import settings from '../../../../settings';
 
 const limit =
-  PLATFORM === "web" || PLATFORM === "server"
-    ? settings.pagination.web.itemsNumber
-    : settings.pagination.mobile.itemsNumber;
+  PLATFORM === 'web' || PLATFORM === 'server' ? settings.pagination.web.itemsNumber : settings.pagination.mobile.itemsNumber;
 
 const withQuestionListState = (Component) =>
   graphql(QUESTION_LIST_STATE_QUERY, {
@@ -55,18 +56,11 @@ const withAdminQuestionList = (Component) =>
       return {
         // eslint-disable-next-line prettier/prettier
         variables: { filter: filterss, after: 0, limit: limit, orderBy },
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       };
     },
     props: ({ data }) => {
-      const {
-        loading,
-        error,
-        questionList,
-        fetchMore,
-        updateQuery,
-        subscribeToMore,
-      } = data;
+      const { loading, error, questionList, fetchMore, updateQuery, subscribeToMore } = data;
       // console.log("ops", profiles);
       const loadDataQuestionList = async (after, dataDelivery) => {
         return await fetchMore({
@@ -78,10 +72,7 @@ const withAdminQuestionList = (Component) =>
             const totalCount = fetchMoreResult.questionList.totalCount;
             const newEdges = fetchMoreResult.questionList.edges;
             const pageInfo = fetchMoreResult.questionList.pageInfo;
-            const displayedEdges =
-              dataDelivery === "add"
-                ? [...previousResult.questionList.edges, ...newEdges]
-                : newEdges;
+            const displayedEdges = dataDelivery === 'add' ? [...previousResult.questionList.edges, ...newEdges] : newEdges;
             return {
               questionList: {
                 // By returning `cursor` here, we update the `fetchMore` function
@@ -90,7 +81,7 @@ const withAdminQuestionList = (Component) =>
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: "Profiles",
+                __typename: 'Profiles',
               },
             };
           },
@@ -196,14 +187,14 @@ const withFilterUpdating = (Component) =>
 
 const updateQuestionListState = (questionListUpdated, updateQuery) => {
   const { mutation, node } = questionListUpdated;
-  console.log("updatedFaqsState", mutation, node);
+  console.log('updatedFaqsState', mutation, node);
   updateQuery((prev) => {
     switch (mutation) {
-      case "CREATED":
+      case 'CREATED':
         return addQuestionItem(prev, node);
-      case "DELETED":
+      case 'DELETED':
         return deleteQuestionItem(prev, node.id);
-      case "UPDATED":
+      case 'UPDATED':
         return updateQuestionItem(prev, node);
       default:
         return prev;
@@ -281,7 +272,7 @@ const withQuestionEditing = (Component) =>
     props: ({ ownProps: { history, navigation }, mutate }) => ({
       editQuestion: async (values) => {
         message.destroy();
-        message.loading("Please wait...", 0);
+        message.loading('Please wait...', 0);
         try {
           let questionData = await mutate({
             variables: {
@@ -289,7 +280,7 @@ const withQuestionEditing = (Component) =>
             },
           });
           message.destroy();
-          message.success("Question edited.");
+          message.success('Question edited.');
           return questionData;
         } catch (e) {
           message.destroy();
@@ -311,7 +302,7 @@ const withQuestionDeleting = (Component) =>
             variables: { id },
           });
           message.destroy();
-          message.success("Question deleted.");
+          message.success('Question deleted.');
         } catch (e) {
           message.destroy();
           message.error("Couldn't perform the action");
@@ -332,7 +323,7 @@ const withAddQuestion = (Component) =>
             variables: { input: values },
           });
           message.destroy();
-          message.success("Question Added.");
+          message.success('Question Added.');
         } catch (e) {
           message.destroy();
           message.error("Couldn't perform the action");
@@ -356,9 +347,7 @@ const withQuestion = (Component) =>
         variables: { id: Number(id) },
       };
     },
-    props({
-      data: { loading, error, question, refetch, updateQuery, subscribeToMore },
-    }) {
+    props({ data: { loading, error, question, refetch, updateQuery, subscribeToMore } }) {
       if (error) throw new Error(error);
       return {
         questionLoading: loading,
@@ -368,6 +357,70 @@ const withQuestion = (Component) =>
         subscribeToMore,
       };
     },
+  })(Component);
+
+export const withAddSubject = (Component) =>
+  graphql(ADD_SUBJECT, {
+    props: ({ mutate }) => ({
+      addSubject: async (values) => {
+        try {
+          const {
+            data: { addSubject: id },
+          } = await mutate({
+            variables: {
+              input: values,
+            },
+          });
+          return id;
+        } catch (e) {
+          message.destroy();
+          message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      },
+    }),
+  })(Component);
+export const withAddChapter = (Component) =>
+  graphql(ADD_CHAPTER, {
+    props: ({ mutate }) => ({
+      addChapter: async (values) => {
+        try {
+          const {
+            data: { addChapter: id },
+          } = await mutate({
+            variables: {
+              input: values,
+            },
+          });
+          return id;
+        } catch (e) {
+          message.destroy();
+          message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      },
+    }),
+  })(Component);
+export const withAddTopic = (Component) =>
+  graphql(ADD_TOPIC, {
+    props: ({ mutate }) => ({
+      addTopic: async (values) => {
+        try {
+          const {
+            data: { addTopic: id },
+          } = await mutate({
+            variables: {
+              input: values,
+            },
+          });
+          return id;
+        } catch (e) {
+          message.destroy();
+          message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      },
+    }),
   })(Component);
 
 export {
