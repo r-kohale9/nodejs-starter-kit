@@ -1,6 +1,6 @@
 exports.up = function(knex) {
   return Promise.all([
-    knex.schema.createTable('subject', (table) => {
+    knex.schema.createTable('subject', table => {
       table.increments();
       table
         .integer('user_id')
@@ -13,7 +13,7 @@ exports.up = function(knex) {
       table.boolean('is_active').defaultTo(true);
       table.timestamps(false, true);
     }),
-    knex.schema.createTable('chapter', (table) => {
+    knex.schema.createTable('chapter', table => {
       table.increments();
       table
         .integer('subject_id')
@@ -26,7 +26,7 @@ exports.up = function(knex) {
       table.boolean('is_active').defaultTo(true);
       table.timestamps(false, true);
     }),
-    knex.schema.createTable('topic', (table) => {
+    knex.schema.createTable('topic', table => {
       table.increments();
       table
         .integer('chapter_id')
@@ -69,7 +69,7 @@ exports.up = function(knex) {
     //   table.boolean("is_active").defaultTo(true);
     //   table.timestamps(false, true);
     // }),
-    knex.schema.createTable('question', (table) => {
+    knex.schema.createTable('question', table => {
       table.increments();
       table
         .integer('topic_id')
@@ -84,7 +84,7 @@ exports.up = function(knex) {
       table.boolean('is_active').defaultTo(true);
       table.timestamps(false, true);
     }),
-    knex.schema.createTable('choice', (table) => {
+    knex.schema.createTable('choice', table => {
       table.increments();
       table
         .integer('question_id')
@@ -95,7 +95,7 @@ exports.up = function(knex) {
       table.string('description', 5000);
       table.boolean('is_active').defaultTo(true);
       table.timestamps(false, true);
-    }),
+    })
     //     knex.schema.createTable("attempt", (table) => {
     //       table.increments();
     //       table
@@ -143,7 +143,7 @@ exports.down = function(knex) {
     // knex.schema.dropTable("answer"),
     // knex.schema.dropTable("attempt"),
     knex.schema.dropTable('choice'),
-    knex.schema.dropTable('question'),
+    knex.schema.dropTable('question')
     // knex.schema.dropTable("section"),
     // knex.schema.dropTable("quiz"),
   ]);

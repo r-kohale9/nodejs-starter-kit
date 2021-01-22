@@ -1,4 +1,31 @@
 # Entity
+type Subject {
+  id: Int!
+  title: String!
+  description: String
+  chapter: [Chapter]
+  isActive: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+type Chapter {
+  id: Int!
+  title: String!
+  description: String
+  topic: [Topic]
+  isActive: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+type Topic {
+  id: Int!
+  title: String!
+  description: String
+  isActive: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Question {
   id: Int!
   questionType: String
@@ -17,8 +44,6 @@ type Choice {
   updatedAt: String
 }
 
-
-
 type QuestionEdges {
   node: Question
   cursor: Int
@@ -35,19 +60,57 @@ type QuestionPageInfo {
   hasNextPage: Boolean
 }
 
+type Subjects {
+  totalCount: Int
+  edges: [SubjectEdges]
+  pageInfo: SubjectPageInfo
+}
+
+type SubjectEdges {
+  node: Subject
+  cursor: Int
+}
+
+type SubjectPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
 extend type Query {
   #get question list
   questionList(
     limit: Int
     after: Int
     filter: FilterQuestionInput
-    orderBy:OrderByQuestionInput
+    orderBy: OrderByQuestionInput
   ): QuestionList
   #get question by id
   question(id: Int!): Question
 
+  subjects(
+    limit: Int!
+    after: Int!
+    orderBy: OrderBySubjectInput
+    filter: FilterSubjectInput
+  ): Subjects
+  subject(id: Int!): Subject
+  chapter(id: Int!): Chapter
+  topic(id: Int!): Topic
 }
 
+# Input for ordering listings
+input OrderBySubjectInput {
+  column: String
+  # asc | desc
+  order: String
+}
+
+input FilterSubjectInput {
+  userId: Int
+  searchText: String
+
+  isActive: Boolean
+}
 input FilterQuestionInput {
   searchText: String
   isActive: Boolean
@@ -70,6 +133,71 @@ extend type Mutation {
   deleteQuestion(id: Int): Question
   # Duplicate question
   # duplicateQuestion(userId: Int!, questionId: Int!): Question
+
+  addSubject(input: AddSubjectInput!): Int
+  addChapter(input: AddChapterInput!): Int
+  addTopic(input: AddTopicInput!): Int
+
+  editSubject(input: EditSubjectInput!): Boolean
+  editChapter(input: EditChapterInput!): Boolean
+  editTopic(input: EditTopicInput!): Boolean
+
+  deleteSubject(id: Int!): Boolean
+  deleteChapter(id: Int!): Boolean
+  deleteTopic(id: Int!): Boolean
+}
+
+input AddSubjectInput {
+  userId: Int
+
+  title: String
+  description: String
+
+  isActive: Boolean
+}
+input AddChapterInput {
+  subjectId: Int
+
+  title: String
+  description: String
+
+  isActive: Boolean
+}
+input AddTopicInput {
+  chapterId: Int
+
+  title: String
+  description: String
+
+  isActive: Boolean
+}
+
+input EditSubjectInput {
+  id: Int!
+  userId: Int
+
+  title: String
+  description: String
+
+  isActive: Boolean
+}
+input EditChapterInput {
+  id: Int!
+  subjectId: Int!
+
+  title: String
+  description: String
+
+  isActive: Boolean
+}
+input EditTopicInput {
+  id: Int!
+  topicId: Int!
+
+  title: String
+  description: String
+
+  isActive: Boolean
 }
 
 input EditQuestionInput {
@@ -85,9 +213,6 @@ input EditChoiceInput {
   questionId: Int
   description: String!
 }
-
-
-
 
 input AddQuestionInput {
   description: String!
