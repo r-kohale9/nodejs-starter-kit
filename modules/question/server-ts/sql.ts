@@ -44,9 +44,9 @@ export default class Question extends Model {
         modelClass: Choice,
         join: {
           from: 'question.id',
-          to: 'choice.question_id',
-        },
-      },
+          to: 'choice.question_id'
+        }
+      }
     };
   }
 
@@ -222,7 +222,7 @@ export default class Question extends Model {
     // console.log(res);
     return {
       subjects: res,
-      total,
+      total
     };
   }
 
@@ -316,9 +316,9 @@ export class Choice extends Model {
         modelClass: Question,
         join: {
           from: 'choice.question_id',
-          to: 'question.id',
-        },
-      },
+          to: 'question.id'
+        }
+      }
     };
   }
 }
@@ -338,9 +338,9 @@ export class SubjectDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'subject.id',
-          to: 'chapter.subject_id',
-        },
-      },
+          to: 'chapter.subject_id'
+        }
+      }
     };
   }
 }
@@ -360,9 +360,9 @@ export class ChapterDAO extends Model {
         modelClass: TopicDAO,
         join: {
           from: 'chapter.id',
-          to: 'topic.chapter_id',
-        },
-      },
+          to: 'topic.chapter_id'
+        }
+      }
     };
   }
 }
@@ -382,9 +382,9 @@ export class TopicDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'topic.chapter_id',
-          to: 'chapter.id',
-        },
-      },
+          to: 'chapter.id'
+        }
+      }
     };
   }
 }

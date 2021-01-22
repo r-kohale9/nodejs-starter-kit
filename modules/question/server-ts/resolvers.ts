@@ -44,7 +44,7 @@ export default (pubsub: any) => ({
       questions.map((item: any, i: number) => {
         edgesArray.push({
           cursor: after + i,
-          node: item,
+          node: item
         });
       });
 
@@ -54,8 +54,8 @@ export default (pubsub: any) => ({
         edges: edgesArray,
         pageInfo: {
           endCursor,
-          hasNextPage,
-        },
+          hasNextPage
+        }
       };
     },
 
@@ -72,7 +72,7 @@ export default (pubsub: any) => ({
       subjects.map((subject: Subjects & Identifier, index: number) => {
         edgesArray.push({
           cursor: after + index,
-          node: subject,
+          node: subject
         });
       });
       const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
@@ -82,8 +82,8 @@ export default (pubsub: any) => ({
         edges: edgesArray,
         pageInfo: {
           endCursor,
-          hasNextPage,
-        },
+          hasNextPage
+        }
       };
     },
     async subject(obj: any, { id }: Identifier, context: any) {
@@ -94,17 +94,17 @@ export default (pubsub: any) => ({
     },
     async topic(obj: any, { id }: Identifier, context: any) {
       return context.Question.topic(id);
-    },
+    }
   },
   Mutation: {
     async addQuestion(obj: any, { input }: any, { Question }: any) {
       const id = await Question.addQuestion(input);
-      var newQuestion = await Question.getQuestion(id);
+      let newQuestion = await Question.getQuestion(id);
       pubsub.publish(QUESTIONS_SUBSCRIPTION, {
         questionsUpdated: {
           mutation: 'CREATED',
-          node: newQuestion,
-        },
+          node: newQuestion
+        }
       });
       if (id) {
         return newQuestion;
@@ -120,8 +120,8 @@ export default (pubsub: any) => ({
         pubsub.publish(QUESTIONS_SUBSCRIPTION, {
           questionsUpdated: {
             mutation: 'DELETED',
-            node: data,
-          },
+            node: data
+          }
         });
         return data;
       } catch (e) {
@@ -133,19 +133,19 @@ export default (pubsub: any) => ({
       try {
         const inputId = input && input.id;
         await Question.updateQuestion(input);
-        var item = await Question.getQuestion(inputId);
+        let item = await Question.getQuestion(inputId);
         pubsub.publish(QUESTIONS_SUBSCRIPTION, {
           questionsUpdated: {
             mutation: 'UPDATED',
-            node: item,
-          },
+            node: item
+          }
         });
         pubsub.publish(QUESTION_SUBSCRIPTION, {
           questionUpdated: {
             mutation: 'UPDATED',
             id: item && item.id,
-            node: item,
-          },
+            node: item
+          }
         });
         return item;
       } catch (e) {
@@ -392,7 +392,7 @@ export default (pubsub: any) => ({
       } else {
         return false;
       }
-    }),
+    })
   },
   Subscription: {
     questionsUpdated: {
@@ -402,7 +402,7 @@ export default (pubsub: any) => ({
           const { mutation, node } = payload.questionsUpdated;
           console.log('serverSubsssssssssssssssssssssssssssss', variables);
           const {
-            filter: { searchText, isActive },
+            filter: { searchText, isActive }
           } = variables;
           const checkByFilter =
             (!isActive || isActive === node.isActive.name) &&
@@ -416,7 +416,7 @@ export default (pubsub: any) => ({
               return !checkByFilter;
           }
         }
-      ),
+      )
     },
     questionUpdated: {
       subscribe: withFilter(
@@ -424,7 +424,7 @@ export default (pubsub: any) => ({
         (payload, variables) => {
           return payload && payload.questionUpdated && payload.questionUpdated.id === variables.id;
         }
-      ),
-    },
-  },
+      )
+    }
+  }
 });
