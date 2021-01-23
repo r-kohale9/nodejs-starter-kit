@@ -65,9 +65,9 @@ const TopicFormComponent = props => {
           </Col>
           <Col md={12} xs={24} align="left">
             <SubjectAutoCompleteComponent
-              name="chapter"
-              label={t('topicForm.chapter')}
-              defaultValue={''}
+              name="subject"
+              label={t('topicForm.subject')}
+              defaultValue={props.chapter && props.chapter.subject && props.chapter.subject.title}
               value={values.subjectId}
               setValue={e => setFieldValue('subjectId', e)}
             />
@@ -120,12 +120,12 @@ const TopicWithFormik = withFormik({
   enableReinitialize: true,
   mapPropsToValues: props => {
     return {
-      id: (props.topic && props.topic.id) || null,
-      title: (props.topic && props.topic.title) || '',
-      description: (props.topic && props.topic.description) || '',
-      subjectId: (props.topic && props.topic.subjectId) || '',
+      id: (props.chapter && props.chapter.id) || null,
+      title: (props.chapter && props.chapter.title) || '',
+      description: (props.chapter && props.chapter.description) || '',
+      subjectId: (props.chapter && props.chapter.subject && props.chapter.subject.id) || '',
       isActive: props.listing && (props.listing.isActive ? true : false)
-      // subCategories: (props.topic && props.topic.subCategories) || [],
+      // subCategories: (props.chapter && props.chapter.subCategories) || [],
     };
   },
   async handleSubmit(

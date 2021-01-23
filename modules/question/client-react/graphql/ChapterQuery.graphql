@@ -1,0 +1,7 @@
+#import "./Chapter.graphql"
+
+query chapter($id: Int!) {
+  chapter(id: $id) {
+    ...ChapterInfo
+  }
+}

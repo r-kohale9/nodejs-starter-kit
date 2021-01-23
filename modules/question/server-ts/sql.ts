@@ -44,9 +44,9 @@ export default class Question extends Model {
         modelClass: Choice,
         join: {
           from: 'question.id',
-          to: 'choice.question_id',
-        },
-      },
+          to: 'choice.question_id'
+        }
+      }
     };
   }
 
@@ -222,7 +222,7 @@ export default class Question extends Model {
     // console.log(res);
     return {
       subjects: res,
-      total,
+      total
     };
   }
   public async chaptersPagination(limit: number, after: number, orderBy: any, filter: any) {
@@ -267,7 +267,7 @@ export default class Question extends Model {
     // console.log(res);
     return {
       chapters: res,
-      total,
+      total
     };
   }
   public async topicsPagination(limit: number, after: number, orderBy: any, filter: any) {
@@ -316,7 +316,7 @@ export default class Question extends Model {
     // console.log(res);
     return {
       topics: res,
-      total,
+      total
     };
   }
 
@@ -334,7 +334,7 @@ export default class Question extends Model {
     const res = camelizeKeys(
       await ChapterDAO.query()
         .findById(id)
-        .eager('[topic]')
+        .eager('[subject, topic]')
         .orderBy('id', 'desc')
     );
     // console.log(res);
@@ -410,9 +410,9 @@ export class Choice extends Model {
         modelClass: Question,
         join: {
           from: 'choice.question_id',
-          to: 'question.id',
-        },
-      },
+          to: 'question.id'
+        }
+      }
     };
   }
 }
@@ -432,9 +432,9 @@ export class SubjectDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'subject.id',
-          to: 'chapter.subject_id',
-        },
-      },
+          to: 'chapter.subject_id'
+        }
+      }
     };
   }
 }
@@ -449,14 +449,22 @@ export class ChapterDAO extends Model {
 
   static get relationMappings() {
     return {
+      subject: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: SubjectDAO,
+        join: {
+          from: 'chapter.subject_id',
+          to: 'subject.id'
+        }
+      },
       topic: {
         relation: Model.HasManyRelation,
         modelClass: TopicDAO,
         join: {
           from: 'chapter.id',
-          to: 'topic.chapter_id',
-        },
-      },
+          to: 'topic.chapter_id'
+        }
+      }
     };
   }
 }
@@ -476,9 +484,9 @@ export class TopicDAO extends Model {
         modelClass: ChapterDAO,
         join: {
           from: 'topic.chapter_id',
-          to: 'chapter.id',
-        },
-      },
+          to: 'chapter.id'
+        }
+      }
     };
   }
 }

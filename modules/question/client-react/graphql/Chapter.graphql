@@ -1,5 +1,10 @@
+#import "./Subject.graphql"
+
 fragment ChapterInfo on Chapter {
   id
+  subject {
+    ...SubjectInfo
+  }
   title
   description
   isActive

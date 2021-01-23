@@ -6,6 +6,7 @@ import { message } from 'antd';
 // import LISTINGS_QUERY from '../graphql/ListingsQuery.graphql';
 import SUBJECTS_QUERY from '../graphql/SubjectsQuery.graphql';
 import SUBJECT_QUERY from '../graphql/SubjectQuery.graphql';
+import CHAPTER_QUERY from '../graphql/ChapterQuery.graphql';
 import QUESTION_LIST_QUERY from '../graphql/QuestionListQuery.graphql';
 import UPDATE_QUESTION_LIST_FILTER from '../graphql/UpdateQuestionListFilter.client.graphql';
 import QUESTION_LIST_STATE_QUERY from '../graphql/QuestionListStateQuery.client.graphql';
@@ -15,6 +16,7 @@ import DELETE_QUESTION from '../graphql/DeleteQuestion.graphql';
 import ADD_QUESTION from '../graphql/AddQuestion.graphql';
 import ADD_SUBJECT from '../graphql/AddSubject.graphql';
 import EDIT_SUBJECT from '../graphql/EditSubject.graphql';
+import EDIT_CHAPTER from '../graphql/EditChapter.graphql';
 import ADD_CHAPTER from '../graphql/AddChapter.graphql';
 import ADD_TOPIC from '../graphql/AddTopic.graphql';
 import QUESTION_QUERY from '../graphql/QuestionQuery.graphql';
@@ -508,6 +510,46 @@ export const withEditSubject = Component =>
   graphql(EDIT_SUBJECT, {
     props: ({ mutate }) => ({
       editSubject: async input => {
+        try {
+          await mutate({
+            variables: {
+              input
+            }
+          });
+        } catch (e) {
+          message.destroy();
+          message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      }
+    })
+  })(Component);
+
+export const withChapter = Component =>
+  graphql(CHAPTER_QUERY, {
+    options: props => {
+      let id = '0';
+      if (props.match) {
+        id = props.match.params.id;
+      } else if (props.navigation) {
+        id = props.navigation.state.params.id;
+      }
+      return {
+        variables: { id: Number(id) || props.modalId }
+      };
+    },
+    props({ data: { loading, error, chapter, subscribeToMore, updateQuery } }) {
+      if (error) {
+        throw new Error(error.message);
+      }
+      return { loading, chapter, subscribeToMore, updateQuery };
+    }
+  })(Component);
+
+export const withEditChapter = Component =>
+  graphql(EDIT_CHAPTER, {
+    props: ({ mutate }) => ({
+      editChapter: async input => {
         try {
           await mutate({
             variables: {
