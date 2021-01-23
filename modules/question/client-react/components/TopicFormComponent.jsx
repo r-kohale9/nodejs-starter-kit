@@ -13,7 +13,7 @@ import {
   // Icon,
   Card,
   RenderField,
-  Form
+  Form,
 } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
@@ -22,14 +22,16 @@ import SubjectAutoCompleteComponent from './SubjectAutoCompleteComponent';
 import ChapterAutoCompleteComponent from './ChapterAutoCompleteComponent';
 
 const TopicFormSchema = {
-  title: [required]
+  title: [required],
 };
 
-const TopicFormComponent = props => {
+const TopicFormComponent = (props) => {
   const { cardTitle, handleSubmit, values, t, setFieldValue } = props;
   const [load, setLoad] = useState(false);
+  const chapterTitle = props.topic && props.topic.chapter && props.topic.chapter.title;
+  const subjectTitle = props.topic && props.topic.chapter && props.topic.chapter.subject && props.topic.chapter.subject.title;
 
-  // console.log('props form component', props.values.imageUrl);
+  console.log('props', props.topic.chapter);
   return (
     <Card
       title={
@@ -68,19 +70,19 @@ const TopicFormComponent = props => {
             <SubjectAutoCompleteComponent
               name="chapter"
               label={t('topicForm.chapter')}
-              defaultValue={''}
+              defaultValue={chapterTitle}
               value={values.subjectId}
-              setValue={e => setFieldValue('subjectId', e)}
+              setValue={(e) => setFieldValue('subjectId', e)}
             />
             {values.subjectId && (
               <ChapterAutoCompleteComponent
                 name="chapter"
                 label={t('topicForm.chapter')}
-                defaultValue={''}
+                defaultValue={subjectTitle}
                 value={values.chapterId}
                 subjectId={values.subjectId}
                 filter={{}}
-                setValue={e => setFieldValue('chapterId', e)}
+                setValue={(e) => setFieldValue('chapterId', e)}
               />
             )}
           </Col>
@@ -125,32 +127,32 @@ TopicFormComponent.propTypes = {
   values: PropTypes.object,
   t: PropTypes.func,
   cardTitle: PropTypes.string,
-  showAdditional: PropTypes.bool
+  showAdditional: PropTypes.bool,
 };
 
 const TopicWithFormik = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => {
+  mapPropsToValues: (props) => {
     return {
       id: (props.topic && props.topic.id) || null,
       title: (props.topic && props.topic.title) || '',
       description: (props.topic && props.topic.description) || '',
-      subjectId: (props.topic && props.topic.subjectId) || '',
-      chapterId: (props.topic && props.topic.chapterId) || '',
-      isActive: props.listing && (props.listing.isActive ? true : false)
+      subjectId: (props.topic && props.topic.chapter && props.topic.chapter.subject && props.topic.chapter.subject.id) || '',
+      chapterId: (props.topic && props.topic.chapter && props.topic.chapter.id) || '',
+      isActive: props.listing && (props.listing.isActive ? true : false),
       // subCategories: (props.topic && props.topic.subCategories) || [],
     };
   },
   async handleSubmit(
     values,
     {
-      props: { onSubmit }
+      props: { onSubmit },
     }
   ) {
     await onSubmit(values);
   },
-  validate: values => validate(values, TopicFormSchema),
-  displayName: 'Topic Form' // helps with React DevTools
+  validate: (values) => validate(values, TopicFormSchema),
+  displayName: 'Topic Form', // helps with React DevTools
 });
 
 export default TopicWithFormik(TopicFormComponent);

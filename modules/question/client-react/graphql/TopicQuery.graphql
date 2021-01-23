@@ -1,0 +1,7 @@
+#import "./Topic.graphql"
+
+query topic($id: Int!) {
+  topic(id: $id) {
+    ...TopicInfo
+  }
+}

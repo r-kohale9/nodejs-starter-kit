@@ -20,59 +20,60 @@ export default new ClientModule({
     <Route
       exact
       path="/question/admin"
-      component={loadable(() => import('./containers/QuestionAdmin').then(c => c.default))}
+      component={loadable(() => import('./containers/QuestionAdmin').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/detail/:id"
-      component={loadable(() => import('./containers/QuestionDetail').then(c => c.default))}
+      component={loadable(() => import('./containers/QuestionDetail').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/edit/:id"
-      component={loadable(() => import('./containers/QuestionEdit').then(c => c.default))}
+      component={loadable(() => import('./containers/QuestionEdit').then((c) => c.default))}
     />,
-    <Route
-      exact
-      path="/question/add"
-      component={loadable(() => import('./containers/QuestionAdd').then(c => c.default))}
-    />,
+    <Route exact path="/question/add" component={loadable(() => import('./containers/QuestionAdd').then((c) => c.default))} />,
     <Route
       exact
       path="/question/subject/add"
-      component={loadable(() => import('./containers/SubjectAdd').then(c => c.default))}
+      component={loadable(() => import('./containers/SubjectAdd').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/subject/edit/:id"
-      component={loadable(() => import('./containers/SubjectEdit').then(c => c.default))}
+      component={loadable(() => import('./containers/SubjectEdit').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/subject/admin-panel"
-      component={loadable(() => import('./containers/Subjects').then(c => c.default))}
+      component={loadable(() => import('./containers/Subjects').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/chapter/add"
-      component={loadable(() => import('./containers/ChapterAdd').then(c => c.default))}
+      component={loadable(() => import('./containers/ChapterAdd').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/chapter/edit/:id"
-      component={loadable(() => import('./containers/ChapterEdit').then(c => c.default))}
+      component={loadable(() => import('./containers/ChapterEdit').then((c) => c.default))}
     />,
     <Route
       exact
       path="/question/topic/add"
-      component={loadable(() => import('./containers/TopicAdd').then(c => c.default))}
-    />
+      component={loadable(() => import('./containers/TopicAdd').then((c) => c.default))}
+    />,
+    <Route
+      exact
+      path="/question/topic/edit/:id"
+      component={loadable(() => import('./containers/TopicEdit').then((c) => c.default))}
+    />,
   ],
   navItem: [
     <MenuItem key="/question/admin">
       <NavLinkWithI18n />
-    </MenuItem>
+    </MenuItem>,
   ],
   resolver: [resolvers],
-  localization: [{ ns: 'question', resources }]
+  localization: [{ ns: 'question', resources }],
 });

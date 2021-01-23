@@ -344,7 +344,7 @@ export default class Question extends Model {
     const res = camelizeKeys(
       await TopicDAO.query()
         .findById(id)
-        // .eager(eager)
+        .eager('[chapter.subject]')
         .orderBy('id', 'desc')
     );
     // console.log(res);
