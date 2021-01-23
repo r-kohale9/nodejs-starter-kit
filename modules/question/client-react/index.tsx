@@ -44,6 +44,16 @@ export default new ClientModule({
     />,
     <Route
       exact
+      path="/question/subject/edit/:id"
+      component={loadable(() => import('./containers/SubjectEdit').then(c => c.default))}
+    />,
+    <Route
+      exact
+      path="/question/subject/admin-panel"
+      component={loadable(() => import('./containers/Subjects').then(c => c.default))}
+    />,
+    <Route
+      exact
       path="/question/chapter/add"
       component={loadable(() => import('./containers/ChapterAdd').then(c => c.default))}
     />,

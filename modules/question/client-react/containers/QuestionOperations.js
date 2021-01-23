@@ -4,6 +4,8 @@ import update from 'immutability-helper';
 import { message } from 'antd';
 
 // import LISTINGS_QUERY from '../graphql/ListingsQuery.graphql';
+import SUBJECTS_QUERY from '../graphql/SubjectsQuery.graphql';
+import SUBJECT_QUERY from '../graphql/SubjectQuery.graphql';
 import QUESTION_LIST_QUERY from '../graphql/QuestionListQuery.graphql';
 import UPDATE_QUESTION_LIST_FILTER from '../graphql/UpdateQuestionListFilter.client.graphql';
 import QUESTION_LIST_STATE_QUERY from '../graphql/QuestionListStateQuery.client.graphql';
@@ -12,6 +14,7 @@ import QUESTION_EDIT from '../graphql/QuestionEdit.graphql';
 import DELETE_QUESTION from '../graphql/DeleteQuestion.graphql';
 import ADD_QUESTION from '../graphql/AddQuestion.graphql';
 import ADD_SUBJECT from '../graphql/AddSubject.graphql';
+import EDIT_SUBJECT from '../graphql/EditSubject.graphql';
 import ADD_CHAPTER from '../graphql/AddChapter.graphql';
 import ADD_TOPIC from '../graphql/AddTopic.graphql';
 import QUESTION_QUERY from '../graphql/QuestionQuery.graphql';
@@ -19,14 +22,16 @@ import QUESTION_QUERY from '../graphql/QuestionQuery.graphql';
 import settings from '../../../../settings';
 
 const limit =
-  PLATFORM === 'web' || PLATFORM === 'server' ? settings.pagination.web.itemsNumber : settings.pagination.mobile.itemsNumber;
+  PLATFORM === 'web' || PLATFORM === 'server'
+    ? settings.pagination.web.itemsNumber
+    : settings.pagination.mobile.itemsNumber;
 
-const withQuestionListState = (Component) =>
+const withQuestionListState = Component =>
   graphql(QUESTION_LIST_STATE_QUERY, {
     props({ data }) {
       const questionListState = removeTypename(data.questionListState);
       return { ...questionListState, stateLoading: data.loading };
-    },
+    }
   })(Component);
 
 // const withFeaturedQuestionList = (Component) =>
@@ -49,14 +54,14 @@ const withQuestionListState = (Component) =>
 //     },
 //   })(Component);
 
-const withAdminQuestionList = (Component) =>
+const withAdminQuestionList = Component =>
   graphql(QUESTION_LIST_QUERY, {
     options: ({ orderBy, filter }) => {
       const filterss = filter;
       return {
         // eslint-disable-next-line prettier/prettier
         variables: { filter: filterss, after: 0, limit: limit, orderBy },
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'network-only'
       };
     },
     props: ({ data }) => {
@@ -65,14 +70,15 @@ const withAdminQuestionList = (Component) =>
       const loadDataQuestionList = async (after, dataDelivery) => {
         return await fetchMore({
           variables: {
-            after: after,
+            after: after
           },
 
           updateQuery: (previousResult, { fetchMoreResult }) => {
             const totalCount = fetchMoreResult.questionList.totalCount;
             const newEdges = fetchMoreResult.questionList.edges;
             const pageInfo = fetchMoreResult.questionList.pageInfo;
-            const displayedEdges = dataDelivery === 'add' ? [...previousResult.questionList.edges, ...newEdges] : newEdges;
+            const displayedEdges =
+              dataDelivery === 'add' ? [...previousResult.questionList.edges, ...newEdges] : newEdges;
             return {
               questionList: {
                 // By returning `cursor` here, we update the `fetchMore` function
@@ -81,10 +87,10 @@ const withAdminQuestionList = (Component) =>
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Profiles',
-              },
+                __typename: 'Profiles'
+              }
             };
-          },
+          }
         });
       };
       if (error) throw new Error(error);
@@ -93,9 +99,9 @@ const withAdminQuestionList = (Component) =>
         questionList,
         loadDataQuestionList,
         updateQuery,
-        subscribeToMore,
+        subscribeToMore
       };
-    },
+    }
   })(Component);
 
 // const withCardQuestionList = (Component) =>
@@ -164,7 +170,7 @@ const withAdminQuestionList = (Component) =>
 //     },
 //   })(Component);
 
-const withFilterUpdating = (Component) =>
+const withFilterUpdating = Component =>
   graphql(UPDATE_QUESTION_LIST_FILTER, {
     props: ({ mutate }) => ({
       onSearchTextChange(searchText) {
@@ -172,8 +178,8 @@ const withFilterUpdating = (Component) =>
       },
       onIsActiveChange(isActive) {
         mutate({ variables: { filter: { isActive } } });
-      },
-    }),
+      }
+    })
   })(Component);
 
 // const withOrderByUpdating = (Component) =>
@@ -188,7 +194,7 @@ const withFilterUpdating = (Component) =>
 const updateQuestionListState = (questionListUpdated, updateQuery) => {
   const { mutation, node } = questionListUpdated;
   console.log('updatedFaqsState', mutation, node);
-  updateQuery((prev) => {
+  updateQuery(prev => {
     switch (mutation) {
       case 'CREATED':
         return addQuestionItem(prev, node);
@@ -204,33 +210,33 @@ const updateQuestionListState = (questionListUpdated, updateQuery) => {
 
 function addQuestionItem(prev, node) {
   // check if it is duplicate
-  if (prev.questionList.edges.some((x) => x.node.id === node.id)) {
+  if (prev.questionList.edges.some(x => x.node.id === node.id)) {
     return prev;
   }
   return update(prev, {
     questionList: {
-      $set: [...prev.questionList.edges, node],
-    },
+      $set: [...prev.questionList.edges, node]
+    }
   });
 }
 
 function updateQuestionItem(prev, node) {
   // check if it is duplicate
-  if (prev.questionList.edges.some((x) => x.node.id === node.id)) {
+  if (prev.questionList.edges.some(x => x.node.id === node.id)) {
     return prev;
   }
   var data = prev;
-  const index = prev.questionList.edges.indexOf((x) => x.node.id === node.id);
+  const index = prev.questionList.edges.indexOf(x => x.node.id === node.id);
   data.questionList.edges[index] = node;
   return update(prev, {
     questionList: {
-      $set: [...data.questionList.edges],
-    },
+      $set: [...data.questionList.edges]
+    }
   });
 }
 
 function deleteQuestionItem(prev, id) {
-  const index = prev.questionList.edges.findIndex((x) => x.node.id === id);
+  const index = prev.questionList.edges.findIndex(x => x.node.id === id);
   // ignore if not found
   if (index < 0) {
     return prev;
@@ -238,12 +244,12 @@ function deleteQuestionItem(prev, id) {
   return update(prev, {
     questionList: {
       totalCount: {
-        $set: prev.questionList.totalCount - 1,
+        $set: prev.questionList.totalCount - 1
       },
       edges: {
-        $splice: [[index, 1]],
-      },
-    },
+        $splice: [[index, 1]]
+      }
+    }
   });
 }
 
@@ -267,17 +273,17 @@ function deleteQuestionItem(prev, id) {
 //   });
 // };
 
-const withQuestionEditing = (Component) =>
+const withQuestionEditing = Component =>
   graphql(QUESTION_EDIT, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editQuestion: async (values) => {
+      editQuestion: async values => {
         message.destroy();
         message.loading('Please wait...', 0);
         try {
           let questionData = await mutate({
             variables: {
-              input: values,
-            },
+              input: values
+            }
           });
           message.destroy();
           message.success('Question edited.');
@@ -287,19 +293,19 @@ const withQuestionEditing = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
   })(Component);
 
-const withQuestionDeleting = (Component) =>
+const withQuestionDeleting = Component =>
   graphql(DELETE_QUESTION, {
     props: ({ mutate }) => ({
-      deleteQuestion: async (id) => {
+      deleteQuestion: async id => {
         try {
           const {
-            data: { deleteQuestion },
+            data: { deleteQuestion }
           } = await mutate({
-            variables: { id },
+            variables: { id }
           });
           message.destroy();
           message.success('Question deleted.');
@@ -308,19 +314,19 @@ const withQuestionDeleting = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
   })(Component);
 
-const withAddQuestion = (Component) =>
+const withAddQuestion = Component =>
   graphql(ADD_QUESTION, {
     props: ({ mutate }) => ({
-      addQuestion: async (values) => {
+      addQuestion: async values => {
         try {
           const {
-            data: { addQuestion },
+            data: { addQuestion }
           } = await mutate({
-            variables: { input: values },
+            variables: { input: values }
           });
           message.destroy();
           message.success('Question Added.');
@@ -329,13 +335,13 @@ const withAddQuestion = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
   })(Component);
 
-const withQuestion = (Component) =>
+const withQuestion = Component =>
   graphql(QUESTION_QUERY, {
-    options: (props) => {
+    options: props => {
       let id = 0;
       if (props.match) {
         id = props.match.params.id;
@@ -344,7 +350,7 @@ const withQuestion = (Component) =>
       }
 
       return {
-        variables: { id: Number(id) },
+        variables: { id: Number(id) }
       };
     },
     props({ data: { loading, error, question, refetch, updateQuery, subscribeToMore } }) {
@@ -354,22 +360,22 @@ const withQuestion = (Component) =>
         question,
         refetch,
         updateQuery,
-        subscribeToMore,
+        subscribeToMore
       };
-    },
+    }
   })(Component);
 
-export const withAddSubject = (Component) =>
+export const withAddSubject = Component =>
   graphql(ADD_SUBJECT, {
     props: ({ mutate }) => ({
-      addSubject: async (values) => {
+      addSubject: async values => {
         try {
           const {
-            data: { addSubject: id },
+            data: { addSubject: id }
           } = await mutate({
             variables: {
-              input: values,
-            },
+              input: values
+            }
           });
           return id;
         } catch (e) {
@@ -377,20 +383,20 @@ export const withAddSubject = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
   })(Component);
-export const withAddChapter = (Component) =>
+export const withAddChapter = Component =>
   graphql(ADD_CHAPTER, {
     props: ({ mutate }) => ({
-      addChapter: async (values) => {
+      addChapter: async values => {
         try {
           const {
-            data: { addChapter: id },
+            data: { addChapter: id }
           } = await mutate({
             variables: {
-              input: values,
-            },
+              input: values
+            }
           });
           return id;
         } catch (e) {
@@ -398,20 +404,20 @@ export const withAddChapter = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
   })(Component);
-export const withAddTopic = (Component) =>
+export const withAddTopic = Component =>
   graphql(ADD_TOPIC, {
     props: ({ mutate }) => ({
-      addTopic: async (values) => {
+      addTopic: async values => {
         try {
           const {
-            data: { addTopic: id },
+            data: { addTopic: id }
           } = await mutate({
             variables: {
-              input: values,
-            },
+              input: values
+            }
           });
           return id;
         } catch (e) {
@@ -419,8 +425,102 @@ export const withAddTopic = (Component) =>
           message.error("Couldn't perform the action");
           console.error(e);
         }
-      },
-    }),
+      }
+    })
+  })(Component);
+
+export const withSubjects = Component =>
+  graphql(SUBJECTS_QUERY, {
+    options: ({ orderBy, filter }) => {
+      return {
+        // eslint-disable-next-line prettier/prettier
+        variables: {
+          limit: limit,
+          after: 0,
+          orderBy,
+          filter
+        },
+        fetchPolicy: 'network-only'
+      };
+    },
+    props: ({ data }) => {
+      const { loading, error, subjects, fetchMore, updateQuery, subscribeToMore } = data;
+      // console.log("ops", users);
+      const loadData = (after, dataDelivery) => {
+        return fetchMore({
+          variables: {
+            after: after
+          },
+
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            const totalCount = fetchMoreResult.subjects.totalCount;
+            const newEdges = fetchMoreResult.subjects.edges;
+            const pageInfo = fetchMoreResult.subjects.pageInfo;
+            const displayedEdges = dataDelivery === 'add' ? [...previousResult.subjects.edges, ...newEdges] : newEdges;
+
+            return {
+              subjects: {
+                // By returning `cursor` here, we update the `fetchMore` function
+                // to the new cursor.
+
+                totalCount,
+                edges: displayedEdges,
+                pageInfo,
+                __typename: 'Profiles'
+              }
+            };
+          }
+        });
+      };
+      if (error) throw new Error(error);
+      return {
+        loading,
+        subjects,
+        loadData,
+        updateQuery,
+        subscribeToMore
+      };
+    }
+  })(Component);
+
+export const withSubject = Component =>
+  graphql(SUBJECT_QUERY, {
+    options: props => {
+      let id = '0';
+      if (props.match) {
+        id = props.match.params.id;
+      } else if (props.navigation) {
+        id = props.navigation.state.params.id;
+      }
+      return {
+        variables: { id: Number(id) || props.modalId }
+      };
+    },
+    props({ data: { loading, error, subject, subscribeToMore, updateQuery } }) {
+      if (error) {
+        throw new Error(error.message);
+      }
+      return { loading, subject, subscribeToMore, updateQuery };
+    }
+  })(Component);
+
+export const withEditSubject = Component =>
+  graphql(EDIT_SUBJECT, {
+    props: ({ mutate }) => ({
+      editSubject: async input => {
+        try {
+          await mutate({
+            variables: {
+              input
+            }
+          });
+        } catch (e) {
+          message.destroy();
+          message.error("Couldn't perform the action");
+          console.error(e);
+        }
+      }
+    })
   })(Component);
 
 export {
@@ -433,7 +533,7 @@ export {
   withQuestionEditing,
   withQuestionDeleting,
   withAddQuestion,
-  withQuestion,
+  withQuestion
   // withOrderByUpdating,
 };
 // export { updateListingsState };
