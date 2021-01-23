@@ -1,0 +1,3 @@
+mutation editSubject($input: EditSubjectInput!) {
+  editSubject(input: $input)
+}
