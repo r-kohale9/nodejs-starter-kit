@@ -1,0 +1,17 @@
+#import "./Chapter.graphql"
+
+query chapters($limit: Int!, $after: Int!, $filter: FilterChapterInput) {
+  chapters(limit: $limit, after: $after, filter: $filter) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...ChapterInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

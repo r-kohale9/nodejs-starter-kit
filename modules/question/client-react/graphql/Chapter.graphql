@@ -1,0 +1,6 @@
+fragment ChapterInfo on Chapter {
+  id
+  title
+  description
+  isActive
+}

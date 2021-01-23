@@ -1,0 +1,7 @@
+#import "./ChaptersState.client.graphql"
+
+query ChaptersState {
+  chaptersState @client {
+    ...ChapterStateInfo
+  }
+}

@@ -1,0 +1,5 @@
+#import "./ChaptersState.client.graphql"
+
+mutation updateChapterFilter($filter: FilterChapterInput!) {
+  updateChapterFilter(filter: $filter) @client
+}

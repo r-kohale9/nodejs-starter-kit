@@ -1,0 +1,6 @@
+fragment ChapterStateInfo on ChapterState {
+  filter {
+    searchText
+    isActive
+  }
+}
