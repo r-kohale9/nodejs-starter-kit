@@ -14,12 +14,14 @@ import CHAPTERS_QUERY from '../graphql/ChaptersQuery.graphql';
 import UPDATE_CHAPTER_FILTER from '../graphql/UpdateChapterFilter.client.graphql';
 
 const limit =
-  PLATFORM === 'web' || PLATFORM === 'server' ? settings.pagination.web.itemsNumber : settings.pagination.mobile.itemsNumber;
+  PLATFORM === 'web' || PLATFORM === 'server'
+    ? settings.pagination.web.itemsNumber
+    : settings.pagination.mobile.itemsNumber;
 
-const ChapterAutoCompleteComponent = (props) => {
+const ChapterAutoCompleteComponent = props => {
   const { name, setValue, label, defaultValue, onSearchTextChange } = props;
-  const handleChapterSelect = (value) => {
-    setValue(props.chapters.edges.filter((i) => i.node.title === value)[0].node.id);
+  const handleChapterSelect = value => {
+    setValue(props.chapters.edges.filter(i => i.node.title === value)[0].node.id);
   };
   // console.log('props', props);
   return (
@@ -27,7 +29,7 @@ const ChapterAutoCompleteComponent = (props) => {
       {/* <h1>bleh</h1> */}
       <Field
         name={name}
-        dataSource={props.chapters && props.chapters.edges.map((item) => item.node.title)}
+        dataSource={props.chapters && props.chapters.edges.map(item => item.node.title)}
         component={RenderAutoComplete}
         label={label}
         type="text"
@@ -46,14 +48,14 @@ ChapterAutoCompleteComponent.propTypes = {
   setValue: PropTypes.func,
   label: PropTypes.string,
   defaultValue: PropTypes.string,
-  onSearchTextChange: PropTypes.func,
+  onSearchTextChange: PropTypes.func
 };
 
 export default compose(
   graphql(CHAPTER_STATE_QUERY, {
     props({ data }) {
       return removeTypename(data.chaptersState);
-    },
+    }
   }),
   graphql(CHAPTERS_QUERY, {
     options: ({ orderBy, filter, subjectId }) => {
@@ -64,9 +66,9 @@ export default compose(
           limit: limit,
           after: 0,
           orderBy,
-          filter,
+          filter
         },
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'network-only'
       };
     },
     props: ({ data }) => {
@@ -75,7 +77,7 @@ export default compose(
       const loadData = (after, dataDelivery) => {
         return fetchMore({
           variables: {
-            after: after,
+            after: after
           },
 
           updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -92,10 +94,10 @@ export default compose(
                 totalCount,
                 edges: displayedEdges,
                 pageInfo,
-                __typename: 'Profiles',
-              },
+                __typename: 'Profiles'
+              }
             };
-          },
+          }
         });
       };
       if (error) throw new Error(error);
@@ -104,15 +106,15 @@ export default compose(
         chapters,
         loadData,
         updateQuery,
-        subscribeToMore,
+        subscribeToMore
       };
-    },
+    }
   }),
   graphql(UPDATE_CHAPTER_FILTER, {
     props: ({ mutate }) => ({
       onSearchTextChange(searchText) {
         mutate({ variables: { filter: { searchText } } });
-      },
-    }),
+      }
+    })
   })
 )(translate('question')(ChapterAutoCompleteComponent));

@@ -1,0 +1,3 @@
+mutation addChapter($input: AddChapterInput!) {
+  addChapter(input: $input)
+}

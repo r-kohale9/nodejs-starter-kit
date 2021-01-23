@@ -19,6 +19,7 @@ import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 
 import SubjectAutoCompleteComponent from './SubjectAutoCompleteComponent';
+import ChapterAutoCompleteComponent from './ChapterAutoCompleteComponent';
 
 const TopicFormSchema = {
   title: [required]
@@ -71,6 +72,17 @@ const TopicFormComponent = props => {
               value={values.subjectId}
               setValue={e => setFieldValue('subjectId', e)}
             />
+            {values.subjectId && (
+              <ChapterAutoCompleteComponent
+                name="chapter"
+                label={t('topicForm.chapter')}
+                defaultValue={''}
+                value={values.chapterId}
+                subjectId={values.subjectId}
+                filter={{}}
+                setValue={e => setFieldValue('chapterId', e)}
+              />
+            )}
           </Col>
           <Col md={12} xs={24} align="left">
             <Field
@@ -124,6 +136,7 @@ const TopicWithFormik = withFormik({
       title: (props.topic && props.topic.title) || '',
       description: (props.topic && props.topic.description) || '',
       subjectId: (props.topic && props.topic.subjectId) || '',
+      chapterId: (props.topic && props.topic.chapterId) || '',
       isActive: props.listing && (props.listing.isActive ? true : false)
       // subCategories: (props.topic && props.topic.subCategories) || [],
     };

@@ -1,0 +1,6 @@
+fragment TopicStateInfo on TopicState {
+  filter {
+    searchText
+    isActive
+  }
+}

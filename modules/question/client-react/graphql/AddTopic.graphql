@@ -1,0 +1,3 @@
+mutation addTopic($input: AddTopicInput!) {
+  addTopic(input: $input)
+}

@@ -1,0 +1,6 @@
+fragment TopicInfo on Topic {
+  id
+  title
+  description
+  isActive
+}

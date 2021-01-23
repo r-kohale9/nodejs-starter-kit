@@ -1,29 +1,30 @@
-import React /* , { useEffect } */ from 'react';
-// import PropTypes from 'prop-types';
-// import Helmet from 'react-helmet';
-// import { Link } from 'react-router-dom';
-// import { graphql } from 'react-apollo';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+import { Link } from 'react-router-dom';
+import { graphql } from 'react-apollo';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
-import ChapterAddView from '../components/ChapterAddView';
+import TopicAddView from '../components/TopicAddView';
 
-import { withAddChapter } from './QuestionOperations';
+import { withAddTopic } from './QuestionOperations';
 
-const ChapterAdd = props => {
-  const { t, addChapter, history } = props;
+const TopicAdd = props => {
+  const { t, addTopic, history } = props;
   // const filter = { isActive: true };
 
   const onSubmit = async values => {
     // values.id = question && question.id;
     delete values.id;
+    delete values.subjectId;
     console.log('values', values);
-    await addChapter(values);
+    await addTopic(values);
     history.push('/question/admin');
   };
 
-  console.log('props', props);
+  // console.log('props', props);
   return (
     <>
       {/* {renderMetaData()}
@@ -35,12 +36,12 @@ const ChapterAdd = props => {
 
       {/* <QuestionsFilterView {...props} filter={filter} />
       <hr />*/}
-      <ChapterAddView {...props} onSubmit={onSubmit} />
+      <TopicAddView {...props} onSubmit={onSubmit} />
     </>
   );
 };
 
-ChapterAdd.propTypes = {
+TopicAdd.propTypes = {
   // usersUpdated: PropTypes.object,
   // updateQuery: PropTypes.func,
   // t: PropTypes.func,
@@ -48,4 +49,4 @@ ChapterAdd.propTypes = {
   // filter: PropTypes.object
 };
 
-export default compose(withAddChapter)(translate('question')(ChapterAdd));
+export default compose(withAddTopic)(translate('question')(TopicAdd));
