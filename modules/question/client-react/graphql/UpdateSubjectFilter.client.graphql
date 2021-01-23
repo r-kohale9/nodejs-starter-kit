@@ -1,0 +1,5 @@
+#import "./SubjectsState.client.graphql"
+
+mutation updateSubjectFilter($filter: FilterSubjectInput!) {
+  updateSubjectFilter(filter: $filter) @client
+}

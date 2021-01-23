@@ -1,0 +1,6 @@
+fragment SubjectStateInfo on SubjectState {
+  filter {
+    searchText
+    isActive
+  }
+}

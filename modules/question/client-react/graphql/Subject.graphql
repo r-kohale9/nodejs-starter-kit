@@ -1,0 +1,6 @@
+fragment SubjectInfo on Subject {
+  id
+  title
+  description
+  isActive
+}

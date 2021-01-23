@@ -1,0 +1,17 @@
+#import "./Subject.graphql"
+
+query subjects($limit: Int!, $after: Int!, $filter: FilterSubjectInput) {
+  subjects(limit: $limit, after: $after, filter: $filter) {
+    totalCount
+    edges {
+      cursor
+      node {
+        ...SubjectInfo
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
