@@ -59,7 +59,9 @@ export default compose(
   }),
   graphql(CHAPTERS_QUERY, {
     options: ({ orderBy, filter, subjectId }) => {
-      filter.subjectId = subjectId;
+      if (filter) {
+        filter.subjectId = subjectId;
+      }
       return {
         // eslint-disable-next-line prettier/prettier
         variables: {

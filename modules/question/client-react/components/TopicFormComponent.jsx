@@ -31,7 +31,6 @@ const TopicFormComponent = (props) => {
   const chapterTitle = props.topic && props.topic.chapter && props.topic.chapter.title;
   const subjectTitle = props.topic && props.topic.chapter && props.topic.chapter.subject && props.topic.chapter.subject.title;
 
-  console.log('props', props.topic.chapter);
   return (
     <Card
       title={
