@@ -8,7 +8,9 @@ import { Icon, Button } from '@gqlapp/look-client-react';
 import { withListingBookmarkStatus } from '../containers/ListingOperations';
 
 const BookmarkStyle = styled.div`
-  position: absolute;
+  @media screen and (min-width: 769px) {
+    position: absolute;
+  }
   right: ${props => (props.right ? props.right : '6%')};
   top: 3%;
   z-index: 1;

@@ -3,7 +3,17 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 
-import { Icon, ModalDrawer, Col, Message, Button, Row, Input } from '@gqlapp/look-client-react';
+import {
+  Icon,
+  ModalDrawer,
+  Col,
+  Message,
+  Button,
+  Row,
+  Input,
+  Collapse,
+  CollapsePanel
+} from '@gqlapp/look-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 import MailButtonForm from './MailButtonForm';
 
@@ -18,7 +28,7 @@ const Img = styled.img`
 `;
 
 const SocialSharingButtons = props => {
-  const { twitterMessage, whatsappMessage, link, hideEmailButton, t } = props;
+  const { twitterMessage, whatsappMessage, link, hideEmailButton } = props;
   const sharingMenu = (
     <div>
       <Row type="flex" justify="space-between">
@@ -26,7 +36,7 @@ const SocialSharingButtons = props => {
           <Row justify="space-between">
             <Col>
               <a href={`http://www.facebook.com/share.php?u=${link}`} target="_blank" rel="noopener noreferrer">
-                <Button shape="circle" color="link" ghost size="lg" style={{ fontSize: '22px', paddingTop: '-0px' }}>
+                <Button shape="circle" color="link" ghost size="lg" style={{ fontSize: '22px' }}>
                   <Img
                     src={
                       'https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-2019-circle-64.png'
@@ -36,6 +46,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Facebook</h5>
                 </Button>
               </a>
             </Col>
@@ -55,6 +66,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Reddit</h5>
                 </Button>
               </a>
             </Col>
@@ -74,6 +86,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>twitter</h5>
                 </Button>
               </a>
             </Col>
@@ -94,6 +107,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>whatsapp</h5>
                 </Button>
               </a>
             </Col>
@@ -113,13 +127,14 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>linkedin</h5>
                 </Button>
               </a>
             </Col>
             {!hideEmailButton && (
               <>
                 <Col>
-                  <ModalDrawer
+                  {/* <ModalDrawer
                     buttonText={
                       <Img
                         src={'https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Mail-64.png'}
@@ -136,16 +151,36 @@ const SocialSharingButtons = props => {
                     ghost={true}
                     style={{ fontSize: '22px' }}
                     size="large"
-                  >
-                    <MailButtonForm {...props} />
-                  </ModalDrawer>
+                  > */}
+                  <Collapse bordered={false} ghost={true} destroyInactivePanel={true}>
+                    <CollapsePanel
+                      header={
+                        <>
+                          <Img
+                            src={'https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Mail-64.png'}
+                            height="50"
+                            width="50"
+                            align="centre"
+                            style={{ borderRadius: '90px' }}
+                          />
+                          <h5 style={{ fontSize: '10px', paddingTop: '5px', paddingLeft: '17px' }}>mail</h5>
+                        </>
+                      }
+                      forceRender={true}
+                      showArrow={false}
+                    >
+                      <MailButtonForm {...props} />
+                    </CollapsePanel>
+                  </Collapse>
+                  {/* <MailButtonForm {...props} />
+                  </ModalDrawer> */}
                 </Col>
               </>
             )}
           </Row>
         </Col>
       </Row>
-      <Row type="flex" justify="space-between" style={{ paddingTop: '15px' }}>
+      {/* <Row type="flex" justify="space-between" style={{ paddingTop: '15px' }}>
         <Col xs={0} lg={24}>
           <Row justify="space-between">
             <Col span={4}>
@@ -168,7 +203,7 @@ const SocialSharingButtons = props => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row> */}
       <Row type="flex" style={{ paddingTop: '15px' }}>
         <Col span={24}>
           <Row type="flex" gutter={24}>

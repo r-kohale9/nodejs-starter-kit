@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins&display=swap.css");
-
-
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap.css');
 
 #root {
   font-family: 'Poppins', sans-serif !important;
@@ -26,30 +24,42 @@
   }
 }
 
-
-
 // Overriding antd css
-.ant-menu-horizontal > .ant-menu-item > a::before{
+.ant-menu-horizontal > .ant-menu-item > a::before {
   margin-bottom: 0px !important;
 }
 
-.drawer >.ant-drawer-content-wrapper > .ant-drawer-content{
-  border-radius:24px 24px 0 0;
+.drawer > .ant-drawer-content-wrapper > .ant-drawer-content {
+  border-radius: 24px 24px 0 0;
 }
 .navItemLink > .ant-card > .ant-card-body {
-  padding:12px;
+  padding: 12px;
 }
 //---i18n-----//
 
-.language-picker-nav{
-  width:100px !important;
+.language-picker-nav {
+  width: 100px !important;
 }
 
-
-.ant-menu-vertical.ant-menu-sub, .ant-menu-vertical-left.ant-menu-sub, .ant-menu-vertical-right.ant-menu-sub{
+.ant-menu-vertical.ant-menu-sub,
+.ant-menu-vertical-left.ant-menu-sub,
+.ant-menu-vertical-right.ant-menu-sub {
   min-width: fit-content !important;
 }
-
+.ant-collapse
+  > .ant-collapse-item.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  padding-top: 10px;
+}
+.ant-collapse-item.ant-collapse-item-active.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  padding-top: 40px;
+}
+.ant-collapse
+  > .ant-collapse-item.ant-collapse-item-active.ant-collapse-no-arrow
+  > .ant-collapse-header {
+  padding-left: 2px;
+}
 .title-line-wrapper {
   height: 2px;
   width: 100%;
@@ -88,8 +98,7 @@
   }
 }
 
-
-// Category carousel 
+// Category carousel
 @categoryCarousel: category-carousel;
 .@{categoryCarousel}-wrapper {
   width: 100%;
