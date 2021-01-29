@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import _ from 'lodash';
+
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 
@@ -15,15 +16,31 @@ import {
 import CategoriesView from '../components/CategoriesView.web';
 import { subscribeToCategories } from './CategorySubscriptions';
 
-const Categories = props => {
+// types
+import {
+  FilterCategoryInput,
+  EditCategoryInput,
+  OrderByCategoryInput
+} from '../../../../packages/server/__generated__/globalTypes';
+
+export interface CategoriesProps {
+  filter: FilterCategoryInput;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  editCategory: (input: EditCategoryInput) => boolean | null;
+  onSearchTextChange: (serachText: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onFiltersRemove: (filter: FilterCategoryInput, orderBy: OrderByCategoryInput) => void;
+  onModalNameChange: (modalName: string) => void;
+}
+
+const Categories: React.FC<CategoriesProps> = props => {
   const { subscribeToMore, editCategory } = props;
   useEffect(() => {
     const subscribe = subscribeToCategories(subscribeToMore, props.filter);
     return () => subscribe();
   });
-  const handleToggle = (field, value, id) => {
-    const input = {};
-    input.id = id;
+  const handleToggle = (field: string, value: boolean, id: number) => {
+    const input: EditCategoryInput = { id };
     _.set(input, field, value);
     try {
       editCategory(input);
@@ -31,13 +48,9 @@ const Categories = props => {
       throw Error(e);
     }
   };
+
   // console.log('props', props);
-  return <CategoriesView onToggle={handleToggle} filter={{}} {...props} />;
-};
-Categories.propTypes = {
-  subscribeToMore: PropTypes.func,
-  filter: PropTypes.object,
-  editCategory: PropTypes.func
+  return <CategoriesView onToggle={handleToggle} {...props} />;
 };
 
 export default compose(

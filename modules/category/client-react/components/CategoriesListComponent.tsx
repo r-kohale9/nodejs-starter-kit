@@ -1,9 +1,8 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 
-import { translate } from '@gqlapp/i18n-client-react';
+import { TranslateFunction, translate } from '@gqlapp/i18n-client-react';
 import {
   Icon,
   Select,
@@ -28,12 +27,28 @@ import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
 import ROUTES from '../routes';
 // import { withCategory } from '../containers/CategoryOpertations';
 
+// types
+import { OrderByCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { categories_categories as Categories } from '../graphql/__generated__/categories';
+import { category_category as Category } from '../graphql/__generated__/category';
+
 const { itemsNumber, type } = settings.pagination.web;
 
-const CategoryListComponent = props => {
+export interface CategoryListComponentProps {
+  loading: boolean;
+  categories: Categories;
+  orderBy: OrderByCategoryInput;
+  onToggle: (field: string, value: boolean, id: number) => void;
+  onOrderBy: (orderBy: OrderByCategoryInput) => void;
+  t: TranslateFunction;
+  loadData: (endCursor: number, action: string) => void;
+  deleteCategory: (id: number) => void;
+}
+
+const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
   const { onToggle, orderBy, onOrderBy, loading, categories, t, loadData, deleteCategory /*, onDuplicate */ } = props;
 
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -44,8 +59,7 @@ const CategoryListComponent = props => {
       return <span className="badge badge-secondary">&#8645;</span>;
     }
   };
-  const handleOrderBy = (e, name) => {
-    e.preventDefault();
+  const handleOrderBy = (name: string) => {
     let order = 'asc';
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'asc') {
@@ -63,7 +77,7 @@ const CategoryListComponent = props => {
   const columns = [
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'id')} href="#">
+        <a onClick={e => handleOrderBy('id')} href="#">
           {/* {t('category.column.id')} */}
           {'Id'}
           {renderOrderByArrow('id')}
@@ -71,17 +85,17 @@ const CategoryListComponent = props => {
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text /* , record */) => displayDataCheck(text)
+      render: (text: string /* , record */) => displayDataCheck(text)
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'title')} href="#">
+        <a onClick={e => handleOrderBy('title')} href="#">
           {t('category.column.listTitle')} {renderOrderByArrow('title')}
         </a>
       ),
       dataIndex: 'title',
       key: 'title',
-      render: (text, record) => (
+      render: (text: string, record: Category) => (
         <a href={`${LISTING_ROUTES.categoryCatalogueLink}${record.id}`} rel="noopener noreferrer" target="_blank">
           <Card style={{ width: '200px', height: '60px' }} bodyStyle={{ padding: '10px' }}>
             <CardMeta
@@ -99,23 +113,23 @@ const CategoryListComponent = props => {
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'is_active')} href="#">
+        <a onClick={e => handleOrderBy('is_active')} href="#">
           {t('category.column.active')} {renderOrderByArrow('is_active')}
         </a>
       ),
       dataIndex: 'isActive',
       key: 'isActive',
-      render: (text, record) => (
+      render: (text: string, record: Category) => (
         <Select
           name="role"
           defaultValue={text}
           style={{ width: '90px' }}
-          onChange={e => onToggle('isActive', e, record.id)}
+          onChange={(e: number) => onToggle('isActive', e === 0 ? true : false, record.id)}
         >
-          <Option key={0} value={true}>
+          <Option key={0} value={0}>
             Active
           </Option>
-          <Option key={1} value={false}>
+          <Option key={1} value={1}>
             In-active
           </Option>
         </Select>
@@ -125,7 +139,7 @@ const CategoryListComponent = props => {
     {
       title: t('category.column.actions'),
       key: 'actions',
-      render: (text, record) => (
+      render: (text: string, record: Category) => (
         <div
         // align="center"
         >
@@ -145,14 +159,14 @@ const CategoryListComponent = props => {
     }
   ];
 
-  const ExpandedRowRender = ({ record /* , index */ }) => {
-    const { loading, data } = useQuery(CATEGORY_QUERY, {
+  const ExpandedRowRender = ({ record }: { record: Category }) => {
+    const { loading: categoryLoading, data } = useQuery(CATEGORY_QUERY, {
       variables: {
         id: record.id
       }
     });
     const category = data && data.category;
-    return loading ? (
+    return categoryLoading ? (
       <div align="center">
         <Spin size="small" />
       </div>
@@ -161,10 +175,16 @@ const CategoryListComponent = props => {
         showHeader={false}
         tableLayout={'auto'}
         expandable={{
-          expandedRowRender: (record, index, indent, expanded) => (
-            <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
-          ),
-          expandIcon: ({ expanded, onExpand, record }) =>
+          expandedRowRender: (rowRecord: Category) => <ExpandedRowRender record={record} />,
+          expandIcon: ({
+            expanded,
+            onExpand,
+            rowRecord
+          }: {
+            expanded: boolean;
+            onExpand: (record: Category, e) => void;
+            rowRecord: Category;
+          }) =>
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
             ) : (
@@ -175,10 +195,9 @@ const CategoryListComponent = props => {
         dataSource={category.subCategories}
       />
     );
-    // return <h1>hello</h1>
   };
 
-  const handlePageChange = (pagination, pageNumber) => {
+  const handlePageChange = (pagination: string, pageNumber: number) => {
     const {
       pageInfo: { endCursor }
     } = categories;
@@ -192,10 +211,16 @@ const CategoryListComponent = props => {
         columns={columns}
         tableLayout={'auto'}
         expandable={{
-          expandedRowRender: (record, index, indent, expanded) => (
-            <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
-          ),
-          expandIcon: ({ expanded, onExpand, record }) =>
+          expandedRowRender: (record: Category) => <ExpandedRowRender record={record} />,
+          expandIcon: ({
+            expanded,
+            onExpand,
+            record
+          }: {
+            expanded: boolean;
+            onExpand: (record: Category, e) => void;
+            record: Category;
+          }) =>
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
             ) : (
@@ -226,9 +251,7 @@ const CategoryListComponent = props => {
           tableProps={{
             scroll: { x: 1300 },
             expandable: {
-              expandedRowRender: (record, index, indent, expanded) => (
-                <ExpandedRowRender record={record} index={index} indent={indent} expanded={expanded} />
-              )
+              expandedRowRender: (record: Category) => <ExpandedRowRender record={record} />
             }
           }}
         />
@@ -241,22 +264,6 @@ const CategoryListComponent = props => {
       )}
     </div>
   );
-};
-
-CategoryListComponent.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  loadData: PropTypes.bool,
-  categories: PropTypes.object,
-  orderBy: PropTypes.object,
-  onOrderBy: PropTypes.func.isRequired,
-  deleteCategory: PropTypes.func.isRequired,
-  onToggle: PropTypes.func,
-  t: PropTypes.func,
-  onDuplicate: PropTypes.func,
-  history: PropTypes.object,
-  record: PropTypes.object,
-  expanded: PropTypes.func,
-  onExpand: PropTypes.func
 };
 
 export default translate('category')(CategoryListComponent);

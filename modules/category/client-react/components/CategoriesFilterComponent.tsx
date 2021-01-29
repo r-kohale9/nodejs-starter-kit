@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
 
 import {
@@ -16,14 +15,33 @@ import {
 } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
-const CategoriesFilterComponent = props => {
-  const { filter, onSearchTextChange, onIsActiveChange, onFiltersRemove, onModalNameChange, t } = props;
-  const { searchText, isActive, modalName = '' } = filter;
+// types
+import { FilterCategoryInput, OrderByCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+
+export interface CategoriesFilterComponentProps {
+  filter: FilterCategoryInput;
+  onSearchTextChange: (serachText: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onFiltersRemove: (filter: FilterCategoryInput, orderBy: OrderByCategoryInput) => void;
+  onModalNameChange: (modalName: string) => void;
+  t?: TranslateFunction;
+}
+
+const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = props => {
+  const {
+    filter: { searchText, isActive, modalName = '' },
+    onSearchTextChange,
+    onIsActiveChange,
+    onFiltersRemove,
+    onModalNameChange,
+    t
+  } = props;
   const handleFiltersRemove = useRef(() => {});
 
   handleFiltersRemove.current = () => {
-    const filter = {
+    const filter: FilterCategoryInput = {
       searchText: '',
       modalName: '',
       isActive: true
@@ -47,7 +65,7 @@ const CategoriesFilterComponent = props => {
       checked={isActive}
     />
   );
-  const CategorySortByField = width => {
+  const CategorySortByField = (width: string) => {
     return (
       <Field
         name="modalName"
@@ -55,12 +73,12 @@ const CategoriesFilterComponent = props => {
         component={RenderSelect}
         placeholder={t('categories.filter.modalName')}
         defaultValue={MODAL[0].value}
-        onChange={e => onModalNameChange(e)}
+        onChange={(e: string) => onModalNameChange(e)}
         label={t('categories.filter.modalName')}
         style={{ width: '100px' }}
         value={modalName}
         inFilter={true}
-        selectStyle={{ width: width }}
+        selectStyle={{ width }}
       >
         {MODAL.map((m, i) => (
           <Option key={i} value={m.value}>
@@ -71,7 +89,7 @@ const CategoriesFilterComponent = props => {
     );
   };
   return (
-    <Form /* layout="inline" */>
+    <Form onSubmit={{}} /* layout="inline" */>
       <Row type="flex" align="middle">
         <Col span={24}>
           <Row>
@@ -119,16 +137,6 @@ const CategoriesFilterComponent = props => {
       </Row>
     </Form>
   );
-};
-
-CategoriesFilterComponent.propTypes = {
-  filter: PropTypes.object.isRequired,
-  onSearchTextChange: PropTypes.func.isRequired,
-  onModalNameChange: PropTypes.func.isRequired,
-  onLabelChange: PropTypes.func.isRequired,
-  onIsActiveChange: PropTypes.func.isRequired,
-  onFiltersRemove: PropTypes.func.isRequired,
-  t: PropTypes.func
 };
 
 export default CategoriesFilterComponent;
