@@ -4,9 +4,6 @@ import { Pagination as ADPagination } from 'antd';
 
 import Button from './Button';
 
-/**
- * @return {boolean}
- */
 const Pagination = ({
   itemsPerPage,
   handlePageChange,
@@ -16,30 +13,32 @@ const Pagination = ({
   loadMoreText,
   defaultPageSize
 }) => {
-  if (pagination === 'relay') {
-    return hasNextPage ? (
-      <div>
-        <div>
-          <small>
-            ({itemsPerPage} / {total})
-          </small>
-        </div>
-        <br />
-        <Button color="primary" onClick={() => handlePageChange(pagination)}>
-          {loadMoreText}
-        </Button>
-      </div>
-    ) : null;
-  } else {
-    return (
-      <ADPagination
-        defaultCurrent={1}
-        defaultPageSize={defaultPageSize}
-        total={total}
-        onChange={pageNumber => handlePageChange(pagination, pageNumber)}
-      />
-    );
-  }
+  return (
+    <>
+      {pagination === 'relay' ? (
+        hasNextPage ? (
+          <div>
+            <div>
+              <small>
+                ({itemsPerPage} / {total})
+              </small>
+            </div>
+            <br />
+            <Button color="primary" onClick={() => handlePageChange(pagination)}>
+              {loadMoreText}
+            </Button>
+          </div>
+        ) : null
+      ) : (
+        <ADPagination
+          defaultCurrent={1}
+          defaultPageSize={defaultPageSize}
+          total={total}
+          onChange={pageNumber => handlePageChange(pagination, pageNumber)}
+        />
+      )}
+    </>
+  );
 };
 
 Pagination.propTypes = {

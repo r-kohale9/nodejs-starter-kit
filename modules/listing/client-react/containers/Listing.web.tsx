@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
+import { SubscribeToMoreOptions } from 'apollo-client';
+import { History } from 'history';
 import _ from 'lodash';
-import { PropTypes } from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
-import { translate } from '@gqlapp/i18n-client-react';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import ROUTES from '../routes';
 import ListingView from '../components/ListingView';
@@ -19,7 +20,20 @@ import {
   withDulicateListing
 } from './ListingOperations';
 
-const Listing = props => {
+// types
+import { FilterListInput, EditListingInput } from '../../../../packages/server/__generated__/globalTypes';
+
+interface ListingProps {
+  loading: boolean;
+  history: History;
+  filter: FilterListInput;
+  t: TranslateFunction;
+  editListing: (input: EditListingInput) => boolean | null;
+  duplicateListing: (id: number) => boolean | null;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+}
+
+const Listing: React.FC<ListingProps> = props => {
   const { subscribeToMore, editListing, duplicateListing, history } = props;
 
   useEffect(() => {
@@ -27,9 +41,14 @@ const Listing = props => {
     return () => subscribe();
   });
 
-  const handleToggle = (field, value, id) => {
-    const input = {};
-    input.id = id;
+  const handleToggle = (
+    field: string,
+    value: boolean | { id: number; isNew: boolean } | { id: number; isFeatured: boolean },
+    id: number
+  ) => {
+    const input: EditListingInput = {
+      id
+    };
     _.set(input, field, value);
     try {
       editListing(input);
@@ -37,7 +56,7 @@ const Listing = props => {
       throw Error(e);
     }
   };
-  const handleDuplicate = async id => {
+  const handleDuplicate = async (id: number) => {
     try {
       const newListingId = await duplicateListing(id);
       if (newListingId) {
@@ -57,14 +76,6 @@ const Listing = props => {
       {...props}
     />
   );
-};
-
-Listing.propTypes = {
-  subscribeToMore: PropTypes.func,
-  filter: PropTypes.object,
-  history: PropTypes.object,
-  editListing: PropTypes.func,
-  duplicateListing: PropTypes.func
 };
 
 export default compose(

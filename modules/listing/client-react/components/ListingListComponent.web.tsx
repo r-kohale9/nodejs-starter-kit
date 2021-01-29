@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { History } from 'history';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
@@ -18,6 +18,7 @@ import {
   Button,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 import { DiscountBtn } from '@gqlapp/discount-client-react';
 import { MODAL } from '@gqlapp/review-common';
@@ -26,12 +27,35 @@ import { USER_ROUTES } from '@gqlapp/user-client-react';
 import ROUTES from '../routes';
 import { displayDataCheck } from './functions';
 
+// types
+import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+import { listings_listings as Listings } from '../graphql/__generated__/listings';
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+
 const { itemsNumber, type } = settings.pagination.web;
 
-const ListingListComponent = props => {
+export interface ListingListComponentProps {
+  loading: boolean;
+  listings: Listings;
+  filter: FilterListInput;
+  orderBy: OrderByListInput;
+  history: History;
+  t: TranslateFunction;
+  loadData: (endCursor: number, action: string) => void;
+  onOrderBy: (orderBy: OrderByListInput) => void;
+  deleteListing: (id: number) => void;
+  onToggle: (
+    field: string,
+    value: boolean | { id: number; isNew: boolean } | { id: number; isFeatured: boolean },
+    id: number
+  ) => void;
+  onDuplicate: (id: number) => void;
+}
+
+const ListingListComponent: React.FC<ListingListComponentProps> = props => {
   const { onToggle, orderBy, onOrderBy, loading, listings, t, loadData, deleteListing, onDuplicate } = props;
 
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -42,7 +66,7 @@ const ListingListComponent = props => {
       return <span className="badge badge-secondary">&#8645;</span>;
     }
   };
-  const handleOrderBy = (e, name) => {
+  const handleOrderBy = (e: React.SyntheticEvent, name: string) => {
     e.preventDefault();
     let order = 'asc';
     if (orderBy && orderBy.column === name) {
@@ -69,7 +93,7 @@ const ListingListComponent = props => {
       fixed: 'left',
       dataIndex: 'user.username',
       key: 'user.username',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <a
           href={`${USER_ROUTES.userPublicProfileLink}${record.user && record.user.id}`}
           rel="noopener noreferrer"
@@ -89,7 +113,7 @@ const ListingListComponent = props => {
       fixed: 'left',
       dataIndex: 'title',
       key: 'title',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <a href={`${ROUTES.listingDetailLink}${record.id}`} rel="noopener noreferrer" target="_blank">
           {displayDataCheck(text)}
         </a>
@@ -105,17 +129,17 @@ const ListingListComponent = props => {
       fixed: 'left',
       dataIndex: 'isActive',
       key: 'isActive',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <Select
           name="role"
-          defaultValue={text}
+          defaultValue={text ? 0 : 1}
           style={{ width: '90px' }}
-          onChange={e => onToggle('isActive', e, record.id)}
+          onChange={(e: number) => onToggle('isActive', e === 0 ? true : false, record.id)}
         >
-          <Option key={0} value={true}>
+          <Option key={0} value={0}>
             Active
           </Option>
-          <Option key={1} value={false}>
+          <Option key={1} value={1}>
             In-active
           </Option>
         </Select>
@@ -131,9 +155,9 @@ const ListingListComponent = props => {
       fixed: 'left',
       dataIndex: 'listingCostArray.cost',
       key: 'listing_cost.cost',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <>
-          {/* {console.log('record', record)} */}
+          {/* {console.log('record', record: Listing)} */}
           &#8377;{' '}
           {record.listingCostArray &&
             record.listingCostArray.length > 0 &&
@@ -151,17 +175,19 @@ const ListingListComponent = props => {
       width: 120,
       dataIndex: 'listingFlags.isFeatured',
       key: 'listing_flag.isFeatured',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <Select
           name="role"
-          defaultValue={record.listingFlags && record.listingFlags.isFeatured}
+          defaultValue={record.listingFlags && record.listingFlags.isFeatured ? 0 : 1}
           style={{ width: '110px' }}
-          onChange={e => onToggle('listingFlags', { id: record.listingFlags.id, isFeatured: e }, record.id)}
+          onChange={(e: number) =>
+            onToggle('listingFlags', { id: record.listingFlags.id, isFeatured: e === 0 ? true : false }, record.id)
+          }
         >
-          <Option key={0} value={true}>
+          <Option key={0} value={0}>
             Featured
           </Option>
-          <Option key={1} value={false}>
+          <Option key={1} value={1}>
             Not featured
           </Option>
         </Select>
@@ -176,18 +202,20 @@ const ListingListComponent = props => {
       width: 100,
       dataIndex: 'listingFlags.isNew',
       key: 'listing_flag.isNew',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <>
           <Select
             name="role"
-            defaultValue={record.listingFlags && record.listingFlags.isNew}
+            defaultValue={record.listingFlags && record.listingFlags.isNew ? 0 : 1}
             style={{ width: '80px' }}
-            onChange={e => onToggle('listingFlags', { id: record.listingFlags.id, isNew: e }, record.id)}
+            onChange={(e: number) =>
+              onToggle('listingFlags', { id: record.listingFlags.id, isNew: e === 0 ? true : false }, record.id)
+            }
           >
-            <Option key={0} value={true}>
+            <Option key={0} value={0}>
               New
             </Option>
-            <Option key={1} value={false}>
+            <Option key={1} value={1}>
               Old
             </Option>
           </Select>
@@ -203,7 +231,7 @@ const ListingListComponent = props => {
     //   width: 120,
     //   dataIndex: 'listingFlags.isDiscount',
     //   key: 'listing_flag.isDiscount',
-    //   render: (text, record) => <>{record.listingFlags && displayDataCheck(record.listingFlags.isDiscount, true)}</>
+    //   render: (text, record: Listing) => <>{record.listingFlags && displayDataCheck(record.listingFlags.isDiscount, true)}</>
     // },
     // {
     //   title: (
@@ -214,7 +242,7 @@ const ListingListComponent = props => {
     //   width: 100,
     //   dataIndex: 'listingCostArray.discount',
     //   key: 'listing_cost.discount',
-    //   render: (text, record) => (
+    //   render: (text, record: Listing) => (
     //     <>
     //       {record.listingFlags && record.listingFlags.isDiscount
     //         ? record.listingCostArray &&
@@ -234,7 +262,7 @@ const ListingListComponent = props => {
       width: 180,
       dataIndex: 'listingOptions.fixedQuantity',
       key: 'listing_option.fixedQuantity',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <>
           {record.listingOptions &&
             (record.listingOptions.fixedQuantity === -1
@@ -252,14 +280,16 @@ const ListingListComponent = props => {
       width: 200,
       dataIndex: 'listingDetail.inventoryCount',
       key: 'listingDetail.inventoryCount',
-      render: (text, record) => <>{record.listingDetail && displayDataCheck(record.listingDetail.inventoryCount)}</>
+      render: (text: string, record: Listing) => (
+        <>{record.listingDetail && displayDataCheck(record.listingDetail.inventoryCount)}</>
+      )
     },
     {
       title: t('list.column.actions'),
       key: 'actions',
       width: 275,
       fixed: 'right',
-      render: (text, record) => (
+      render: (text: string, record: Listing) => (
         <div align="center">
           <Link className="listing-link" to={`${ROUTES.editLink}${record.id}`}>
             <EditIcon />
@@ -286,7 +316,7 @@ const ListingListComponent = props => {
     }
   ];
 
-  const handlePageChange = (pagination, pageNumber) => {
+  const handlePageChange = (pagination: string, pageNumber: number) => {
     const {
       pageInfo: { endCursor }
     } = listings;
@@ -327,19 +357,6 @@ const ListingListComponent = props => {
       )}
     </div>
   );
-};
-
-ListingListComponent.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  loadData: PropTypes.bool,
-  listings: PropTypes.object,
-  orderBy: PropTypes.object,
-  onOrderBy: PropTypes.func.isRequired,
-  deleteListing: PropTypes.func.isRequired,
-  onToggle: PropTypes.func,
-  t: PropTypes.func,
-  onDuplicate: PropTypes.func,
-  history: PropTypes.object
 };
 
 export default translate('listing')(ListingListComponent);

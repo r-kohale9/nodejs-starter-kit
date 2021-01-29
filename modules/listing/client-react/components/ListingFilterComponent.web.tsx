@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent, useState, useEffect, useRef } from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import styled from 'styled-components';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
-import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common/SortFilter';
-import { translate } from '@gqlapp/i18n-client-react';
+import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import {
   Collapse,
   CollapsePanel,
@@ -31,6 +30,10 @@ import { compose } from '@gqlapp/core-common';
 import SliderControlled from './FilterSliderControlledComponent';
 import { withGetBrandList } from '../containers/ListingOperations';
 
+// types
+import { listings_listings as Listings } from '../graphql/__generated__/listings';
+import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+
 const RateDiv = styled.div`
   height: 22px;
   cursor: pointer;
@@ -41,7 +44,33 @@ const RateDiv = styled.div`
   }
 `;
 
-const ListingsFilterComponent = props => {
+// export interface ListingsFilterComponentProps extends ListingViewProps {
+export interface ListingsFilterComponentProps {
+  categoryId: number;
+  layout: string;
+  getBrandList: string[];
+  affix: boolean;
+  loadingState: boolean;
+  showIsActive: boolean;
+  showCategoryFilter: boolean;
+  filter: FilterListInput;
+  orderBy: OrderByListInput;
+  listings: Listings;
+  onLowerCostChange: (cost: number) => void;
+  onUpperCostChange: (cost: number) => void;
+  onCategoryChange: ({ categoryId, allSubCategory }: { categoryId: number; allSubCategory: boolean }) => void;
+  onFiltersRemove: (filter: FilterListInput, orderBy: OrderByListInput) => void;
+  onBrandChange: (brand: string[]) => void;
+  onSearchTextChange: (serachText: string) => void;
+  onRoleChange: (role: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onDiscountChange: (discount: number) => void;
+  onRatedChange: (rated: number) => void;
+  onOrderBy: (orderBy: OrderByListInput) => void;
+  t: TranslateFunction;
+}
+
+const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props => {
   const {
     loadingState,
     filter: { searchText, lowerCost, upperCost, isActive, categoryFilter, discount, brand },
@@ -82,8 +111,8 @@ const ListingsFilterComponent = props => {
       },
       isActive: true
     };
-    const orderBy = { column: '', order: '' };
-    onFiltersRemove(filter, orderBy);
+    const newOrderBy: OrderByListInput = { column: '', order: '' };
+    onFiltersRemove(filter, newOrderBy);
   };
 
   useEffect(() => {
@@ -91,7 +120,7 @@ const ListingsFilterComponent = props => {
   }, []);
 
   const rangeValues = listings && listings.rangeValues;
-  const handleChangeSlider = e => {
+  const handleChangeSlider = (e: number[]) => {
     onLowerCostChange(e[0]);
     onUpperCostChange(e[1]);
     // console.log(e);
@@ -103,7 +132,7 @@ const ListingsFilterComponent = props => {
 
   const minCostRangeValues = Math.round(rangeValues && rangeValues.minCost);
   const maxCostRangeValues = Math.round(rangeValues && rangeValues.maxCost);
-  var costMarks = {
+  const costMarks = {
     [`${minCostRangeValues}`]: minCostRangeValues,
     [`${maxCostRangeValues}`]: maxCostRangeValues
   };
@@ -114,7 +143,7 @@ const ListingsFilterComponent = props => {
       // disableParent={true}
       inFilter={true}
       nullable={true}
-      onChange={e => onCategoryChange({ categoryId: e, allSubCategory: false })}
+      onChange={(e: number) => onCategoryChange({ categoryId: e, allSubCategory: false })}
       type="number"
       name="categoryId"
       placeholder="Category"
@@ -124,8 +153,10 @@ const ListingsFilterComponent = props => {
     />
   );
 
-  const listingSortBy = (width, inFilter = true) => {
-    const index = SORT_BY.findIndex(x => x.value === orderBy.column && x.sortBy === orderBy.order);
+  const listingSortBy = (width: string, inFilter = true) => {
+    const index = SORT_BY.findIndex(
+      (x: { value: string; column: string; sortBy: string }) => x.value === orderBy.column && x.sortBy === orderBy.order
+    );
     return (
       <Field
         name="sortBy"
@@ -133,7 +164,7 @@ const ListingsFilterComponent = props => {
         icon={'FilterOutlined'}
         label={t('listingFilter.sortBy')}
         // defaultValue={orderBy.order}
-        onChange={e =>
+        onChange={(e: number) =>
           SORT_BY[e].sortBy === ''
             ? onOrderBy({ order: SORT_BY[e].sortBy, column: '' })
             : onOrderBy({
@@ -149,7 +180,7 @@ const ListingsFilterComponent = props => {
         <Option key={1} value="">
           None
         </Option>
-        {SORT_BY.map((sB, i) => (
+        {SORT_BY.map((sB: { label: string }, i: number) => (
           <Option key={i + 2} value={i}>
             {sB.label}
           </Option>
@@ -158,7 +189,7 @@ const ListingsFilterComponent = props => {
     );
   };
 
-  const listingBrand = (width, inFilter = true) => {
+  const listingBrand = (width: string, inFilter = true) => {
     return (
       <Field
         name="brand"
@@ -175,7 +206,7 @@ const ListingsFilterComponent = props => {
             <Option key={1} value="">
               <CheckBox
                 checked={selectedBrand.length === 0}
-                onChange={e => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   if (e.target.checked) {
                     setSelectedBrand([]);
                     onBrandChange([]);
@@ -191,18 +222,18 @@ const ListingsFilterComponent = props => {
           </>
         )}
         {!loadingState && getBrandList ? (
-          getBrandList.map((sB, i) => (
+          getBrandList.map((sB: string, i: number) => (
             <>
               <Option key={i + 2} value={i}>
                 <CheckBox
                   checked={selectedBrand.includes(sB)}
-                  onChange={e => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     if (e.target.checked) {
                       setSelectedBrand([...selectedBrand, sB]);
                       onBrandChange([...selectedBrand, sB]);
                     } else {
-                      setSelectedBrand(selectedBrand.filter(i => i !== sB));
-                      onBrandChange(selectedBrand.filter(i => i !== sB));
+                      setSelectedBrand(selectedBrand.filter((bnd: string) => bnd !== sB));
+                      onBrandChange(selectedBrand.filter((bnd: string) => bnd !== sB));
                     }
                   }}
                 >
@@ -220,15 +251,16 @@ const ListingsFilterComponent = props => {
     );
   };
 
-  const listingDiscount = (width, inFilter = true) => {
+  const listingDiscount = (width: string, inFilter = true) => {
     return (
       <Field
         name="discount"
         component={RenderSelect}
         icon={'PercentageOutlined'}
         label={t('listingFilter.discount')}
-        onChange={e => {
-          e === '' ? onDiscountChange(0) : DISCOUNT[e] && onDiscountChange(DISCOUNT[e].value);
+        onChange={(e: string) => {
+          // tslint:disable-next-line: no-unused-expression
+          e === '' ? onDiscountChange(0) : DISCOUNT[e] ? onDiscountChange(DISCOUNT[e].value) : null;
         }}
         style={{ width: '100%' }}
         value={discount === 0 ? '' : discount}
@@ -238,7 +270,7 @@ const ListingsFilterComponent = props => {
         <Option key={1} value="">
           None
         </Option>
-        {DISCOUNT.map((d, i) => (
+        {DISCOUNT.map((d: { label: string }, i: number) => (
           <Option key={i + 2} value={i}>
             {d.label}
           </Option>
@@ -247,7 +279,7 @@ const ListingsFilterComponent = props => {
     );
   };
 
-  const listingByRating = infilter => {
+  const listingByRating = (infilter: boolean) => {
     return (
       <FormItem
         label={
@@ -259,7 +291,7 @@ const ListingsFilterComponent = props => {
         labelCol={infilter && { span: 24 }}
         wrapperCol={infilter && { span: 24 }}
       >
-        {[5, 4, 3, 2, 1].map(i => (
+        {[5, 4, 3, 2, 1].map((i: number) => (
           <RateDiv onClick={() => onRatedChange(i)}>
             <Rate disabled defaultValue={i} style={{ fontSize: '18px' }} /> &nbsp; {'& up'}
           </RateDiv>
@@ -274,7 +306,7 @@ const ListingsFilterComponent = props => {
     </Button>
   );
 
-  const sliderControlled = inFilter => (
+  const sliderControlled = (infilter: boolean) => (
     <SliderControlled
       style={{
         width: '100%',
@@ -287,13 +319,13 @@ const ListingsFilterComponent = props => {
       range
       value={[lowerCost, upperCost]}
       // disabled={false}
-      inFilter={inFilter}
-      handleSliderChange={e => handleChangeSlider(e)}
+      inFilter={infilter}
+      handleSliderChange={(e: number[]) => handleChangeSlider(e)}
     />
   );
 
-  const searchField = isFilter => {
-    const obj = isFilter
+  const searchField = (infilter: boolean) => {
+    const obj = infilter
       ? {}
       : {
           labelCol: { span: 24 },
@@ -322,7 +354,7 @@ const ListingsFilterComponent = props => {
     );
   };
 
-  const activeField = inFilter => (
+  const activeField = (infilter: boolean) => (
     <Field
       name="isActive"
       icon={'CheckCircleOutlined'}
@@ -330,7 +362,7 @@ const ListingsFilterComponent = props => {
       type="checkbox"
       onChange={() => onIsActiveChange(!isActive)}
       label={t('listingFilter.isActive')}
-      inFilter={inFilter}
+      inFilter={infilter}
       checked={isActive}
     />
   );
@@ -397,7 +429,7 @@ const ListingsFilterComponent = props => {
       {affix ? (
         <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
           <Sticky>
-            {({ style, isSticky }) => (
+            {({ style, isSticky }: { style: object; isSticky: boolean }) => (
               <div style={{ ...style }}>
                 <div style={{ height: isSticky ? '90px' : '0px' }} />
                 <Col lg={24} md={24} xs={0}>
@@ -429,31 +461,6 @@ const ListingsFilterComponent = props => {
       )}
     </>
   );
-};
-
-ListingsFilterComponent.propTypes = {
-  loadingState: PropTypes.bool,
-  filter: PropTypes.object.isRequired,
-  onLowerCostChange: PropTypes.func.isRequired,
-  onUpperCostChange: PropTypes.func.isRequired,
-  onCategoryChange: PropTypes.func.isRequired,
-  onFiltersRemove: PropTypes.func.isRequired,
-  categoryId: PropTypes.number.isRequired,
-  listings: PropTypes.object.isRequired,
-  orderBy: PropTypes.object.isRequired,
-  getBrandList: PropTypes.object.isRequired,
-  onBrandChange: PropTypes.func.isRequired,
-  onSearchTextChange: PropTypes.func.isRequired,
-  onRoleChange: PropTypes.func.isRequired,
-  showIsActive: PropTypes.bool.isRequired,
-  showCategoryFilter: PropTypes.bool.isRequired,
-  onIsActiveChange: PropTypes.func.isRequired,
-  onDiscountChange: PropTypes.func.isRequired,
-  onRatedChange: PropTypes.func.isRequired,
-  onOrderBy: PropTypes.func.isRequired,
-  t: PropTypes.func,
-  affix: PropTypes.bool,
-  layout: PropTypes.string
 };
 
 export default compose(withGetBrandList, translate('listing'))(ListingsFilterComponent);

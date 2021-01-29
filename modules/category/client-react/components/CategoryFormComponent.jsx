@@ -145,8 +145,7 @@ CategoryFormComponent.propTypes = {
   handleSubmit: PropTypes.func,
   values: PropTypes.object,
   t: PropTypes.func,
-  cardTitle: PropTypes.string,
-  showAdditional: PropTypes.bool
+  cardTitle: PropTypes.string
 };
 
 const CategoryWithFormik = withFormik({

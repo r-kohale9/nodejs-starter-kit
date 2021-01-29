@@ -9,14 +9,31 @@ import ROUTES from '../routes';
 import ListingFilterComponent from './ListingFilterComponent.web';
 import ListingListComponent from './ListingListComponent.web';
 
+// types
+import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+
 export interface ListingViewProps {
-  t: TranslateFunction;
   loading: boolean;
+  filter: FilterListInput;
+  orderBy: OrderByListInput;
+  t: TranslateFunction;
+  onToggle: (
+    field: string,
+    value: boolean | { id: number; isNew: boolean } | { id: number; isFeatured: boolean },
+    id: number
+  ) => void;
+  onDuplicate: (id: number) => void;
 }
 
 const ListingView: React.FC<ListingViewProps> = props => {
   const { t } = props;
-  // console.log(loading);
+  const listingFilterComponentProps = {
+    showCategoryFilter: true,
+    showIsActive: true,
+    affix: false,
+    ...props
+  };
+
   return (
     <PageLayout>
       <MetaTags title={t('title')} description={`${settings.app.name} - ${t('meta')}`} />
@@ -39,7 +56,7 @@ const ListingView: React.FC<ListingViewProps> = props => {
         </Col>
       </Row>
       <hr />
-      <ListingFilterComponent showCategoryFilter={true} showIsActive={true} affix={false} {...props} />
+      <ListingFilterComponent {...listingFilterComponentProps} />
       <hr />
       <ListingListComponent {...props} />
     </PageLayout>
