@@ -1,17 +1,33 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-import { PropTypes } from 'prop-types';
 
-import { withFormik } from 'formik';
+import { withFormik, FormikProps } from 'formik';
 
 import { NO_IMG } from '@gqlapp/listing-common';
 import { Form, Icon, Card } from '@gqlapp/look-client-react';
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import DetailsFormFields from './FormComponents/DetailsFormFields';
 import FlagsFormFields from './FormComponents/FlagsFormFields';
 import MediasFormFields from './FormComponents/MediasFormFields';
 
 import { displayDataCheck } from './functions';
+
+// types
+import {
+  EditListingInput,
+  ListingMediumInput,
+  ListingFlagInput,
+  ListingOptionInput,
+  ListingDetailInput,
+  ListingHighlightInput,
+  ListingCostInput
+} from '../../../../packages/server/__generated__/globalTypes';
+import {
+  listing_listing as Listing,
+  listing_listing_listingHighlight as ListingHighlight
+} from '../graphql/__generated__/listing';
 
 const LAST_STEP = 3;
 
@@ -40,7 +56,7 @@ const ListingFormSchema = [
       fixedQuantity: Yup.mixed()
         .required()
         .test('lessThanInventoryCount', 'Fixed quantity must be less than or equal to "Inventory Count"', function(
-          value
+          value: number
         ) {
           const inventoryCount = this.options.from[1].value.listingDetail.inventoryCount;
           if (value === 0) {
@@ -63,7 +79,39 @@ const ListingFormSchema = [
   })
 ];
 
-const ListingFormComponent = props => {
+export interface FormValues {
+  id: number;
+  userId?: number | null;
+  categoryId?: number | null;
+  title?: string | null;
+  description?: string | null;
+  sku?: string | null;
+  brand?: string | null;
+  listingFlags?: ListingFlagInput | null;
+  listingOptions?: ListingOptionInput | null;
+  listingMedia?: ListingMediaValues;
+  listingDetail?: ListingDetailInput | null;
+  listingHighlight?: ListingHighlightInput[];
+  listingCostArray?: ListingCostInput[];
+  isActive?: boolean | null;
+}
+
+interface ListingMediaValues {
+  image: ListingMediumInput[];
+  video: ListingMediumInput[];
+}
+
+export interface ListingFormComponentProps {
+  step: number;
+  setStep: (s: number) => void;
+  cardTitle: string;
+  listing: Listing;
+  t: TranslateFunction;
+  onSubmit: (values: EditListingInput) => void;
+  currentUser: CurrentUser;
+}
+
+const ListingFormComponent: React.FC<ListingFormComponentProps & FormikProps<FormValues>> = props => {
   const [load, setLoad] = useState(false);
   const { t, step, setStep, setFieldValue, cardTitle, values, handleSubmit, currentUser } = props;
   const videos = values.listingMedia.video;
@@ -117,49 +165,39 @@ const ListingFormComponent = props => {
   );
 };
 
-ListingFormComponent.propTypes = {
-  cardTitle: PropTypes.string,
-  step: PropTypes.number,
-  t: PropTypes.func,
-  setFieldValue: PropTypes.func,
-  setStep: PropTypes.func,
-  handleSubmit: PropTypes.func,
-  values: PropTypes.object,
-  listing: PropTypes.object,
-  modalDiscount: PropTypes.object,
-  currentUser: PropTypes.object
-};
-
-const ListingWithFormik = withFormik({
+const ListingWithFormik = withFormik<ListingFormComponentProps, FormValues>({
   enableReinitialize: true,
   mapPropsToValues: props => {
-    let listingMedia = {
+    const listingMedia: ListingMediaValues = {
       image: [],
       video: []
     };
-    function getListingImage(listingMedium) {
-      const obj = {
+    function getListingImage(listingMedium: ListingMediumInput) {
+      const obj: ListingMediumInput = {
         id: (listingMedium && listingMedium.id) || null,
         url: (listingMedium && listingMedium.url) || '',
         type: (listingMedium && listingMedium.type) || '',
         isActive: (listingMedium && listingMedium.isActive) || true
       };
-      obj.type === 'image' && listingMedia.image.push(obj);
-      obj.type === 'video' && listingMedia.video.push(obj);
+      switch (obj.type) {
+        case 'image':
+          return listingMedia.image.push(obj);
+        case 'video':
+          return listingMedia.video.push(obj);
+        default:
+          return null;
+      }
     }
-    function getCost(listingCost) {
+    function getCost(listingCost: ListingCostInput) {
       return {
         id: (listingCost && listingCost.id) || null,
-        cost: (listingCost && listingCost.cost) || '',
-        discount:
-          (listingCost && listingCost.discount !== 0 && listingCost.discount) ||
-          (props.modalDiscount && props.modalDiscount.discountPercent) ||
-          0,
+        cost: (listingCost && listingCost.cost) || 0,
+        discount: (listingCost && listingCost.discount !== 0 && listingCost.discount) || 0,
         type: (listingCost && listingCost.type) || '',
         label: (listingCost && listingCost.label) || ''
       };
     }
-    function getListingHighlight(listingHighlight) {
+    function getListingHighlight(listingHighlight: ListingHighlight) {
       return {
         id: (listingHighlight && listingHighlight.id) || null,
         highlight: (listingHighlight && listingHighlight.highlight) || ''
@@ -182,6 +220,7 @@ const ListingWithFormik = withFormik({
         props.listing.listingHighlight &&
         props.listing.listingHighlight.map(getListingHighlight)) || [
         {
+          id: null,
           highlight: 'Example highlight'
         }
       ],
@@ -190,7 +229,7 @@ const ListingWithFormik = withFormik({
         props.listing.listingCostArray.map(getCost)) || [
         {
           id: null,
-          cost: '',
+          cost: 0,
           discount: 0,
           type: '',
           label: ''
@@ -225,7 +264,7 @@ const ListingWithFormik = withFormik({
   async handleSubmit(values, { props: { onSubmit, step, setStep }, setTouched, setSubmitting }) {
     setStep(step + 1);
     if (step + 1 === LAST_STEP) {
-      const input = {
+      const input: EditListingInput = {
         id: values.id,
         userId: values.userId,
         title: values.title,
@@ -282,7 +321,7 @@ const ListingWithFormik = withFormik({
     }
   },
   // validate: values => validate(values, ListingFormSchema),
-  validationSchema: ({ step }) => ListingFormSchema[step],
+  validationSchema: ({ step }: { step: number }) => ListingFormSchema[step],
   displayName: 'Listing Form' // helps with React DevTools
 });
 

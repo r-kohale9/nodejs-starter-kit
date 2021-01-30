@@ -114,7 +114,7 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
       render: (text: string, record: Category) => (
         <Select
           name="role"
-          defaultValue={text}
+          defaultValue={text ? 0 : 1}
           style={{ width: '90px' }}
           onChange={(e: number) => onToggle('isActive', e === 0 ? true : false, record.id)}
         >
@@ -171,11 +171,11 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
           expandIcon: ({
             expanded,
             onExpand,
-            rowRecord
+            record: rowRecord
           }: {
             expanded: boolean;
             onExpand: (record: Category, e) => void;
-            rowRecord: Category;
+            record: Category;
           }) =>
             expanded ? (
               <Icon type="DownOutlined" onClick={e => onExpand(rowRecord, e)} />
@@ -219,7 +219,6 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
               !record.isLeaf && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
             )
         }}
-        // loading={true}
       />
       <div align="center">
         <Pagination

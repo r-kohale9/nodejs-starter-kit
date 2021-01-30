@@ -1,13 +1,25 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 
 import settings from '@gqlapp/config';
 import { PageLayout, MetaTags, Col, Row, Steps, Step, Spinner } from '@gqlapp/look-client-react';
 
 import ListingFormComponent from './ListingFormComponent.web';
 
-const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
+// types
+import { AddListingProps } from '../containers/AddListing.web';
+import { EditListingInput } from '../../../../packages/server/__generated__/globalTypes';
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+
+export interface AddListingViewProps extends AddListingProps {
+  onSubmit: (values: EditListingInput) => void;
+}
+
+const AddListingView: React.FC<AddListingViewProps> = props => {
+  const { t, loading, onSubmit, currentUser } = props;
   const [step, setStep] = React.useState(0);
+  // const listing: { isActive: boolean } = { isActive: true };
+  const listing: Listing = {};
+  listing.isActive = true;
   const steps = [
     {
       title: t('listAdd.steps.title1')
@@ -38,7 +50,7 @@ const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
               xs={{ span: 24, offset: 6 }}
             >
               <Steps current={step}>
-                {steps.map(item => (
+                {steps.map((item: { title: string }) => (
                   <Step key={item.title} title={item.title} />
                 ))}
               </Steps>
@@ -49,9 +61,9 @@ const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
           <div align="center">
             <ListingFormComponent
               step={step}
-              setStep={setStep}
+              setStep={(s: number) => setStep(s)}
               cardTitle={t('listAdd.cardTitle')}
-              listing={{ isActive: true }}
+              listing={listing}
               t={t}
               onSubmit={onSubmit}
               currentUser={currentUser}
@@ -61,13 +73,6 @@ const AddListingView = ({ t, loading, onSubmit, currentUser }) => {
       )}
     </PageLayout>
   );
-};
-
-AddListingView.propTypes = {
-  t: PropTypes.func,
-  loading: PropTypes.bool,
-  currentUser: PropTypes.object,
-  onSubmit: PropTypes.func
 };
 
 export default AddListingView;

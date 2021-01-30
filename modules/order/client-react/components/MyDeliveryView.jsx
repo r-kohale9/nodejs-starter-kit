@@ -38,22 +38,7 @@ const MyDeliveriesView = props => {
   }
 
   const renderFunc = (key, item) => (
-    <MyOrderItemComponent
-      grid={{
-        gutter: 24,
-        xs: 1,
-        sm: 1,
-        md: 3,
-        lg: 4,
-        xl: 5,
-        xxl: 5
-      }}
-      key={key}
-      item={item}
-      history={history}
-      currentUser={currentUser}
-      t={t}
-    />
+    <MyOrderItemComponent key={key} item={item} history={history} currentUser={currentUser} t={t} />
   );
   const Icons = [
     <Icon type="AppstoreOutlined" />,
@@ -68,7 +53,23 @@ const MyDeliveriesView = props => {
           <Spinner />
         </div>
       )}
-      {!loading && <SuggestedListComponent endText={'deliveries'} {...props} items={orders} renderFunc={renderFunc} />}
+      {!loading && (
+        <SuggestedListComponent
+          grid={{
+            gutter: 24,
+            xs: 1,
+            sm: 1,
+            md: 3,
+            lg: 4,
+            xl: 5,
+            xxl: 5
+          }}
+          endText={'deliveries'}
+          {...props}
+          items={orders}
+          renderFunc={renderFunc}
+        />
+      )}
     </div>
   );
   return (
@@ -99,7 +100,7 @@ const MyDeliveriesView = props => {
             </>
           )}
         </Col>
-        <Col lg={{ span: 16 }} md={{ span: 24 }} xs={0} align="center">
+        <Col lg={{ span: 16 }} md={{ span: 24 }} xs={0} align="right">
           {orderStates && orderStates.length !== 0 && (
             <ButtonGroup>
               <Button onClick={() => filterItems('')} type={classNamesgroup('')}>

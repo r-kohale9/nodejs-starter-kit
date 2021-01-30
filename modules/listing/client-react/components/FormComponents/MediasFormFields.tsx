@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FieldArray } from 'formik';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { IMG_ASPECT } from '@gqlapp/listing-common';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import {
   Space,
   Row,
@@ -17,10 +17,44 @@ import {
   /* RenderUploadMultiple, */
   RenderUploadMultipleWithCrop
 } from '@gqlapp/look-client-react';
+// types
+import { FormValues } from '../ListingFormComponent.web';
+import { ListingMediumInput } from '../../../../../packages/server/__generated__/globalTypes';
 
 const VIDEO = 'video';
 
-const MediasFormFields = props => {
+export interface MediasFormFieldsProps {
+  t: TranslateFunction;
+  setStep: (s: number) => void;
+  values: FormValues;
+  setFieldValue: {
+    (
+      field:
+        | 'id'
+        | 'userId'
+        | 'categoryId'
+        | 'title'
+        | 'description'
+        | 'sku'
+        | 'brand'
+        | 'listingFlags'
+        | 'listingOptions'
+        | 'listingMedia'
+        | 'listingDetail'
+        | 'listingHighlight'
+        | 'listingCostArray'
+        | 'isActive',
+      value: any,
+      shouldValidate?: boolean
+    ): void;
+    (field: string, value: any): void;
+  };
+  videos: ListingMediumInput[];
+  load: boolean;
+  setLoad: (l: boolean) => void;
+}
+
+const MediasFormFields: React.FC<MediasFormFieldsProps> = props => {
   const { values, t, setFieldValue, videos, setLoad, load, setStep } = props;
 
   let formItemsVideos = null;
@@ -98,7 +132,7 @@ const MediasFormFields = props => {
           render={arrayHelpers => (
             <RenderUploadMultipleWithCrop
               label={t('listingForm.image')}
-              setload={load => setLoad(load)}
+              setload={l => setLoad(l)}
               height={IMG_ASPECT.medium.height}
               width={IMG_ASPECT.medium.width}
               arrayHelpers={arrayHelpers}
@@ -130,16 +164,6 @@ const MediasFormFields = props => {
       </Col>
     </Row>
   );
-};
-
-MediasFormFields.propTypes = {
-  values: PropTypes.object,
-  t: PropTypes.func,
-  setFieldValue: PropTypes.func,
-  videos: PropTypes.object,
-  setLoad: PropTypes.func,
-  load: PropTypes.bool,
-  setStep: PropTypes.func
 };
 
 export default MediasFormFields;

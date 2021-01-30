@@ -18,13 +18,13 @@ import { subscribeToDiscounts } from './DiscountSubscriptions';
 
 // types
 import { FilterDiscountInput, OrderByDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
-import { discounts_discounts as Discounts } from '../graphql/__generated__/discounts';
+import { discounts_discounts as DiscountsEdge } from '../graphql/__generated__/discounts';
 
 export interface DiscountsProps {
   loading: boolean;
   orderBy: OrderByDiscountInput;
   filter: FilterDiscountInput;
-  discounts: Discounts;
+  discounts: DiscountsEdge;
   loadData: (endCursor: number, action: string) => void;
   deleteDiscount: (id: number) => void;
   onDiscountsOrderBy: (orderBy: OrderByDiscountInput) => void;

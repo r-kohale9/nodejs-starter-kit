@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { CategoryTreeComponent } from '@gqlapp/category-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
@@ -18,9 +17,43 @@ import {
 } from '@gqlapp/look-client-react';
 import { MODAL } from '@gqlapp/review-common';
 import { UserAutoCompleteComponent } from '@gqlapp/review-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
-const DetailsFormFields = props => {
-  const { values, listingHighlight, t, setFieldValue, onSearchTextChange, role } = props;
+// types
+import { FormValues } from '../ListingFormComponent.web';
+import { ListingHighlightInput } from '../../../../../packages/server/__generated__/globalTypes';
+
+export interface DetailsFormFieldsProps {
+  t: TranslateFunction;
+  values: FormValues;
+  setFieldValue: {
+    (
+      field:
+        | 'id'
+        | 'userId'
+        | 'categoryId'
+        | 'title'
+        | 'description'
+        | 'sku'
+        | 'brand'
+        | 'listingFlags'
+        | 'listingOptions'
+        | 'listingMedia'
+        | 'listingDetail'
+        | 'listingHighlight'
+        | 'listingCostArray'
+        | 'isActive',
+      value: any,
+      shouldValidate?: boolean
+    ): void;
+    (field: string, value: any): void;
+  };
+  listingHighlight: ListingHighlightInput[];
+  role: string;
+}
+
+const DetailsFormFields: React.FC<DetailsFormFieldsProps> = props => {
+  const { values, listingHighlight, t, setFieldValue, role } = props;
   let formItemsListingHighlight = null;
 
   if (listingHighlight.length > 0) {
@@ -169,7 +202,6 @@ const DetailsFormFields = props => {
             userType="user"
             value={values.userId}
             setValue={e => setFieldValue('userId', e)}
-            onSearchTextChange={onSearchTextChange}
           />
         )}
       </Col>
@@ -208,15 +240,6 @@ const DetailsFormFields = props => {
       </Col>
     </Row>
   );
-};
-
-DetailsFormFields.propTypes = {
-  values: PropTypes.object,
-  listingHighlight: PropTypes.object,
-  t: PropTypes.func,
-  setFieldValue: PropTypes.func,
-  onSearchTextChange: PropTypes.func,
-  role: PropTypes.string
 };
 
 export default DetailsFormFields;

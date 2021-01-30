@@ -23,11 +23,11 @@ import {
   EditCategoryInput,
   OrderByCategoryInput
 } from '../../../../packages/server/__generated__/globalTypes';
-import { categories_categories as Categories } from '../graphql/__generated__/categories';
+import { categories_categories as CategoriesEdge } from '../graphql/__generated__/categories';
 
 export interface CategoriesProps {
   loading: boolean;
-  categories: Categories;
+  categories: CategoriesEdge;
   filter: FilterCategoryInput;
   orderBy: OrderByCategoryInput;
   subscribeToMore: (options: SubscribeToMoreOptions) => () => void;

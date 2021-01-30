@@ -1,10 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { NextButton, Button, Icon, Row, Col, RenderCheckBox } from '@gqlapp/look-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
-const FlagsFormFields = props => {
+// types
+import { FormValues } from '../ListingFormComponent.web';
+
+export interface FlagsFormFieldsProps {
+  t: TranslateFunction;
+  setStep: (s: number) => void;
+  values: FormValues;
+}
+
+const FlagsFormFields: React.FC<FlagsFormFieldsProps> = props => {
   const { values, t, setStep } = props;
 
   return (
@@ -63,12 +72,6 @@ const FlagsFormFields = props => {
       </Col>
     </Row>
   );
-};
-
-FlagsFormFields.propTypes = {
-  values: PropTypes.object,
-  t: PropTypes.func,
-  setStep: PropTypes.func
 };
 
 export default FlagsFormFields;
