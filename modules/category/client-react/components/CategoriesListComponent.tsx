@@ -2,7 +2,7 @@
 import React, { Fragment } from 'react';
 import { useQuery } from 'react-apollo';
 
-import { TranslateFunction, translate } from '@gqlapp/i18n-client-react';
+import { translate } from '@gqlapp/i18n-client-react';
 import {
   Icon,
   Select,
@@ -28,21 +28,13 @@ import ROUTES from '../routes';
 // import { withCategory } from '../containers/CategoryOpertations';
 
 // types
-import { OrderByCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
-import { categories_categories as Categories } from '../graphql/__generated__/categories';
 import { category_category as Category } from '../graphql/__generated__/category';
+import { CategoriesViewProps } from './CategoriesView.web';
 
 const { itemsNumber, type } = settings.pagination.web;
 
-export interface CategoryListComponentProps {
-  loading: boolean;
-  categories: Categories;
-  orderBy: OrderByCategoryInput;
+export interface CategoryListComponentProps extends CategoriesViewProps {
   onToggle: (field: string, value: boolean, id: number) => void;
-  onOrderBy: (orderBy: OrderByCategoryInput) => void;
-  t: TranslateFunction;
-  loadData: (endCursor: number, action: string) => void;
-  deleteCategory: (id: number) => void;
 }
 
 const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
@@ -175,7 +167,7 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
         showHeader={false}
         tableLayout={'auto'}
         expandable={{
-          expandedRowRender: (rowRecord: Category) => <ExpandedRowRender record={record} />,
+          expandedRowRender: (rowRecord: Category) => <ExpandedRowRender record={rowRecord} />,
           expandIcon: ({
             expanded,
             onExpand,
@@ -186,9 +178,9 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
             rowRecord: Category;
           }) =>
             expanded ? (
-              <Icon type="DownOutlined" onClick={e => onExpand(record, e)} />
+              <Icon type="DownOutlined" onClick={e => onExpand(rowRecord, e)} />
             ) : (
-              !record.isLeaf && <Icon type="RightOutlined" onClick={e => onExpand(record, e)} />
+              !rowRecord.isLeaf && <Icon type="RightOutlined" onClick={e => onExpand(rowRecord, e)} />
             )
         }}
         columns={columns}

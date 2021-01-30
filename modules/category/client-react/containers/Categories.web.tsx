@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import {
   withCategoriesState,
@@ -22,15 +23,23 @@ import {
   EditCategoryInput,
   OrderByCategoryInput
 } from '../../../../packages/server/__generated__/globalTypes';
+import { categories_categories as Categories } from '../graphql/__generated__/categories';
 
 export interface CategoriesProps {
+  loading: boolean;
+  categories: Categories;
   filter: FilterCategoryInput;
+  orderBy: OrderByCategoryInput;
   subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
   editCategory: (input: EditCategoryInput) => boolean | null;
   onSearchTextChange: (serachText: string) => void;
   onIsActiveChange: (active: boolean) => void;
   onFiltersRemove: (filter: FilterCategoryInput, orderBy: OrderByCategoryInput) => void;
   onModalNameChange: (modalName: string) => void;
+  onOrderBy: (orderBy: OrderByCategoryInput) => void;
+  loadData: (endCursor: number, action: string) => void;
+  deleteCategory: (id: number) => void;
+  t: TranslateFunction;
 }
 
 const Categories: React.FC<CategoriesProps> = props => {
@@ -50,7 +59,7 @@ const Categories: React.FC<CategoriesProps> = props => {
   };
 
   // console.log('props', props);
-  return <CategoriesView onToggle={handleToggle} {...props} />;
+  return <CategoriesView onToggle={handleToggle} filter={{}} {...props} />;
 };
 
 export default compose(

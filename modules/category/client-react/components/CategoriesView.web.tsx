@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { Row, Col, Heading, Icon, PageLayout, MetaTags, AddButton } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
@@ -10,15 +9,10 @@ import CategoriesFilterComponent from './CategoriesFilterComponent';
 import CategoriesListComponent from './CategoriesListComponent';
 
 // types
-import { FilterCategoryInput, OrderByCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { CategoriesProps } from '../containers/Categories.web';
 
-export interface CategoriesViewProps {
-  t?: TranslateFunction;
+export interface CategoriesViewProps extends CategoriesProps {
   onToggle: (field: string, value: boolean, id: number) => void;
-  onSearchTextChange: (serachText: string) => void;
-  onIsActiveChange: (active: boolean) => void;
-  onFiltersRemove: (filter: FilterCategoryInput, orderBy: OrderByCategoryInput) => void;
-  onModalNameChange: (modalName: string) => void;
 }
 
 const CategoriesView: React.FC<CategoriesViewProps> = props => {
@@ -45,7 +39,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = props => {
         </Col>
       </Row>
       <hr />
-      <CategoriesFilterComponent filter={{}} {...props} />
+      <CategoriesFilterComponent {...props} />
       <hr />
       <CategoriesListComponent {...props} />
     </PageLayout>

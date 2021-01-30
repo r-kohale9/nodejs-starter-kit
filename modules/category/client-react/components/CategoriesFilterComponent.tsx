@@ -15,18 +15,13 @@ import {
 } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { MODAL } from '@gqlapp/review-common';
-import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 // types
-import { FilterCategoryInput, OrderByCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { FilterCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { CategoriesViewProps } from './CategoriesView.web';
 
-export interface CategoriesFilterComponentProps {
-  filter: FilterCategoryInput;
-  onSearchTextChange: (serachText: string) => void;
-  onIsActiveChange: (active: boolean) => void;
-  onFiltersRemove: (filter: FilterCategoryInput, orderBy: OrderByCategoryInput) => void;
-  onModalNameChange: (modalName: string) => void;
-  t?: TranslateFunction;
+export interface CategoriesFilterComponentProps extends CategoriesViewProps {
+  //
 }
 
 const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = props => {

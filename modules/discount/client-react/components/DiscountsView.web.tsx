@@ -5,11 +5,17 @@ import PropTypes from 'prop-types';
 import { Row, Col, Heading, Icon, PageLayout, MetaTags /* , AddButton  */ } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
+import { DiscountsProps } from '../containers/Discounts.web';
+
 // import ROUTES from '../routes';
 import DiscountsFilterComponent from './DiscountsFilterComponent';
 import DiscountsListComponent from './DiscountsListComponent';
 
-const DiscountsView = props => {
+export interface DiscountsViewProps extends DiscountsProps {
+  // t: TranslateFunction;
+}
+
+const DiscountsView: React.FC<DiscountsViewProps> = props => {
   const { t } = props;
 
   return (

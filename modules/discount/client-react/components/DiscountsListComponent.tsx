@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -18,12 +17,20 @@ import { displayDataCheck } from '@gqlapp/listing-client-react';
 
 import ROUTES from '../routes';
 
+// types
+import { DiscountsViewProps } from './DiscountsView.web';
+import { DiscountInfo as Discount } from '../graphql/__generated__/DiscountInfo';
+
 const { itemsNumber, type } = settings.pagination.web;
 
-const DiscountsListComponent = props => {
+export interface DiscountsListComponentProps extends DiscountsViewProps {
+  //
+}
+
+const DiscountsListComponent: React.FC<DiscountsListComponentProps> = props => {
   const { orderBy, onDiscountsOrderBy, loading, discounts, t, loadData, deleteDiscount } = props;
 
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -34,7 +41,7 @@ const DiscountsListComponent = props => {
       return <span className="badge badge-secondary">&#8645;</span>;
     }
   };
-  const handleOrderBy = (e, name) => {
+  const handleOrderBy = (e: React.SyntheticEvent, name: string) => {
     e.preventDefault();
     let order = 'asc';
     if (orderBy && orderBy.column === name) {
@@ -53,47 +60,47 @@ const DiscountsListComponent = props => {
   const columns = [
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'id')} href="#">
+        <a onClick={(e: React.SyntheticEvent) => handleOrderBy(e, 'id')} href="#">
           {t('adminPanel.discount.column1')} &nbsp;
           {renderOrderByArrow('discount.id')}
         </a>
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text, record) => <>{record && record.id && displayDataCheck(record.id)}</>
+      render: (text: string, record: Discount) => <>{record && record.id && displayDataCheck(record.id)}</>
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'modalId')} href="#">
+        <a onClick={(e: React.SyntheticEvent) => handleOrderBy(e, 'modalId')} href="#">
           {t('adminPanel.discount.column2')} &nbsp;
           {renderOrderByArrow('modalId')}
         </a>
       ),
       dataIndex: 'modalId',
       key: 'modalId',
-      render: (text, record) => <>{record && record.modalId && displayDataCheck(record.modalId)}</>
+      render: (text: string, record: Discount) => <>{record && record.modalId && displayDataCheck(record.modalId)}</>
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'discountPercent')} href="#">
+        <a onClick={(e: React.SyntheticEvent) => handleOrderBy(e, 'discountPercent')} href="#">
           {t('adminPanel.discount.column3')} &nbsp;
           {renderOrderByArrow('discountPercent')}
         </a>
       ),
       dataIndex: 'discountPercent',
       key: 'discountPercent',
-      render: text => <div>{displayDataCheck(text)} %</div>
+      render: (text: string) => <div>{displayDataCheck(text)} %</div>
     },
     {
       title: (
-        <a onClick={e => handleOrderBy(e, 'discountDuration.endDate')} href="#">
+        <a onClick={(e: React.SyntheticEvent) => handleOrderBy(e, 'discountDuration.endDate')} href="#">
           {t('adminPanel.discount.column4')} &nbsp;
           {renderOrderByArrow('discountDuration.endDate')}
         </a>
       ),
       dataIndex: 'endDate',
       key: 'endDate',
-      render: (text, record) => {
+      render: (text: string, record: Discount) => {
         const startDate = record.discountDuration && record.discountDuration.startDate;
         const endDate = record.discountDuration && record.discountDuration.endDate;
         const now = new Date().toISOString();
@@ -137,7 +144,7 @@ const DiscountsListComponent = props => {
     {
       title: t('adminPanel.discount.column5'),
       key: 'actions',
-      render: (text, record) => (
+      render: (text: string, record: Discount) => (
         <div>
           <Link className="discount-link" to={`${ROUTES.editLink}${record.modalName}/${record.modalId}`}>
             <EditIcon />
@@ -149,7 +156,7 @@ const DiscountsListComponent = props => {
     }
   ];
 
-  const handlePageChange = (pagination, pageNumber) => {
+  const handlePageChange = (pagination: string, pageNumber: number) => {
     const {
       pageInfo: { endCursor }
     } = discounts;
@@ -188,16 +195,6 @@ const DiscountsListComponent = props => {
       )}
     </div>
   );
-};
-
-DiscountsListComponent.propTypes = {
-  discounts: PropTypes.object,
-  orderBy: PropTypes.object,
-  loading: PropTypes.bool,
-  loadData: PropTypes.func,
-  onDiscountsOrderBy: PropTypes.func,
-  t: PropTypes.func,
-  deleteDiscount: PropTypes.func
 };
 
 export default translate('discount')(DiscountsListComponent);

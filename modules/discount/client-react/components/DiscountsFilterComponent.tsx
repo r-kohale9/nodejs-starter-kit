@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
@@ -17,9 +16,17 @@ import {
   RenderSelect
 } from '@gqlapp/look-client-react';
 
-const ReviewsFilterView = props => {
+// types
+import { DiscountsViewProps } from './DiscountsView.web';
+
+export interface DiscountsFilterViewProps extends DiscountsViewProps {
+  showIsActive: boolean | null;
+}
+
+const DiscountsFilterView: React.FC<DiscountsFilterViewProps> = props => {
   const {
     filter: { searchText, modalName = '', isActive },
+    showIsActive = true,
     onSearchTextChange,
     onIsActiveChange,
     onModalNameChange,
@@ -42,7 +49,7 @@ const ReviewsFilterView = props => {
     return () => handleFiltersRemove.current();
   }, []);
 
-  const modalSelectField = (width, inFilter) => {
+  const modalSelectField = (width: string, inFilter: boolean) => {
     return (
       <Field
         name="modal"
@@ -50,12 +57,12 @@ const ReviewsFilterView = props => {
         component={RenderSelect}
         placeholder={t('adminPanel.filter.field2')}
         defaultValue={MODAL[0].value}
-        onChange={e => onModalNameChange(e)}
+        onChange={(e: string) => onModalNameChange(e)}
         label={t('adminPanel.filter.field2')}
         style={{ width: '100px' }}
         value={modalName}
         inFilter={inFilter}
-        selectStyle={{ width: width }}
+        selectStyle={{ width }}
       >
         {MODAL.map((m, i) => (
           <Option key={i} value={m.value}>
@@ -90,16 +97,18 @@ const ReviewsFilterView = props => {
             </FormItem>
           </Col>
           <Col xs={24} md={12} lg={8}>
-            <Field
-              name="isActive"
-              icon={'CheckCircleOutlined'}
-              component={RenderCheckBox}
-              type="checkbox"
-              onChange={() => onIsActiveChange(!isActive)}
-              label={t('adminPanel.filter.field3')}
-              inFilter={true}
-              checked={isActive}
-            />
+            {showIsActive && (
+              <Field
+                name="isActive"
+                icon={'CheckCircleOutlined'}
+                component={RenderCheckBox}
+                type="checkbox"
+                onChange={() => onIsActiveChange(!isActive)}
+                label={t('adminPanel.filter.field3')}
+                inFilter={true}
+                checked={isActive}
+              />
+            )}
           </Col>
         </Row>
       </Col>
@@ -117,13 +126,4 @@ const ReviewsFilterView = props => {
   );
 };
 
-ReviewsFilterView.propTypes = {
-  filter: PropTypes.object.isRequired,
-  onIsActiveChange: PropTypes.func.isRequired,
-  onSearchTextChange: PropTypes.func.isRequired,
-  onModalNameChange: PropTypes.func.isRequired,
-  onFiltersRemove: PropTypes.func.isRequired,
-  t: PropTypes.func
-};
-
-export default translate('discount')(ReviewsFilterView);
+export default translate('discount')(DiscountsFilterView);

@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
+
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import {
   withDiscountsState,
@@ -14,12 +16,34 @@ import {
 import DiscountsView from '../components/DiscountsView.web';
 import { subscribeToDiscounts } from './DiscountSubscriptions';
 
-const Discounts = props => {
+// types
+import { FilterDiscountInput, OrderByDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
+import { discounts_discounts as Discounts } from '../graphql/__generated__/discounts';
+
+export interface DiscountsProps {
+  loading: boolean;
+  orderBy: OrderByDiscountInput;
+  filter: FilterDiscountInput;
+  discounts: Discounts;
+  loadData: (endCursor: number, action: string) => void;
+  deleteDiscount: (id: number) => void;
+  onDiscountsOrderBy: (orderBy: OrderByDiscountInput) => void;
+  onSearchTextChange: (serachText: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onModalNameChange: (modalName: string) => void;
+  onFiltersRemove: (filter: FilterDiscountInput, orderBy: OrderByDiscountInput) => void;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  t: TranslateFunction;
+}
+
+const Discounts: React.FC<DiscountsProps> = props => {
   const { subscribeToMore /* editDiscount */ } = props;
+
   useEffect(() => {
     const subscribe = subscribeToDiscounts(subscribeToMore, props.filter);
     return () => subscribe();
   });
+
   // const handleToggle = (field, value, id) => {
   //   const input = {};
   //   input.id = id;
@@ -33,11 +57,6 @@ const Discounts = props => {
 
   // console.log('props', props);
   return <DiscountsView /* onToggle={handleToggle} */ filter={{}} {...props} />;
-};
-Discounts.propTypes = {
-  subscribeToMore: PropTypes.func,
-  filter: PropTypes.object,
-  editDiscount: PropTypes.func
 };
 
 export default compose(
