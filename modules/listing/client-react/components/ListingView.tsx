@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Icon, MetaTags, PageLayout, AddButton, Heading, Row, Col } from '@gqlapp/look-client-react';
-import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 
 import ROUTES from '../routes';
@@ -10,13 +9,12 @@ import ListingFilterComponent from './ListingFilterComponent.web';
 import ListingListComponent from './ListingListComponent.web';
 
 // types
-import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+import { ListingProps } from '../containers/Listing.web';
 
-export interface ListingViewProps {
-  loading: boolean;
-  filter: FilterListInput;
-  orderBy: OrderByListInput;
-  t: TranslateFunction;
+export interface ListingViewProps extends ListingProps {
+  showCategoryFilter: boolean;
+  showIsActive: boolean;
+  affix: boolean;
   onToggle: (
     field: string,
     value: boolean | { id: number; isNew: boolean } | { id: number; isFeatured: boolean },
@@ -27,12 +25,6 @@ export interface ListingViewProps {
 
 const ListingView: React.FC<ListingViewProps> = props => {
   const { t } = props;
-  const listingFilterComponentProps = {
-    showCategoryFilter: true,
-    showIsActive: true,
-    affix: false,
-    ...props
-  };
 
   return (
     <PageLayout>
@@ -56,7 +48,7 @@ const ListingView: React.FC<ListingViewProps> = props => {
         </Col>
       </Row>
       <hr />
-      <ListingFilterComponent {...listingFilterComponentProps} />
+      <ListingFilterComponent {...props} />
       <hr />
       <ListingListComponent {...props} />
     </PageLayout>

@@ -5,7 +5,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common';
-import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
+import { translate } from '@gqlapp/i18n-client-react';
 import {
   Collapse,
   CollapsePanel,
@@ -31,8 +31,8 @@ import SliderControlled from './FilterSliderControlledComponent';
 import { withGetBrandList } from '../containers/ListingOperations';
 
 // types
-import { listings_listings as Listings } from '../graphql/__generated__/listings';
-import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+import { OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
+import { ListingViewProps } from './ListingView';
 
 const RateDiv = styled.div`
   height: 22px;
@@ -44,30 +44,10 @@ const RateDiv = styled.div`
   }
 `;
 
-// export interface ListingsFilterComponentProps extends ListingViewProps {
-export interface ListingsFilterComponentProps {
+export interface ListingsFilterComponentProps extends ListingViewProps {
   categoryId: number;
   layout: string;
   getBrandList: string[];
-  affix: boolean;
-  loadingState: boolean;
-  showIsActive: boolean;
-  showCategoryFilter: boolean;
-  filter: FilterListInput;
-  orderBy: OrderByListInput;
-  listings: Listings;
-  onLowerCostChange: (cost: number) => void;
-  onUpperCostChange: (cost: number) => void;
-  onCategoryChange: ({ categoryId, allSubCategory }: { categoryId: number; allSubCategory: boolean }) => void;
-  onFiltersRemove: (filter: FilterListInput, orderBy: OrderByListInput) => void;
-  onBrandChange: (brand: string[]) => void;
-  onSearchTextChange: (serachText: string) => void;
-  onRoleChange: (role: string) => void;
-  onIsActiveChange: (active: boolean) => void;
-  onDiscountChange: (discount: number) => void;
-  onRatedChange: (rated: number) => void;
-  onOrderBy: (orderBy: OrderByListInput) => void;
-  t: TranslateFunction;
 }
 
 const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props => {

@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { History } from 'history';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
@@ -18,7 +17,6 @@ import {
   Button,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
-import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import settings from '@gqlapp/config';
 import { DiscountBtn } from '@gqlapp/discount-client-react';
 import { MODAL } from '@gqlapp/review-common';
@@ -28,28 +26,13 @@ import ROUTES from '../routes';
 import { displayDataCheck } from './functions';
 
 // types
-import { FilterListInput, OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
-import { listings_listings as Listings } from '../graphql/__generated__/listings';
 import { listing_listing as Listing } from '../graphql/__generated__/listing';
+import { ListingViewProps } from './ListingView';
 
 const { itemsNumber, type } = settings.pagination.web;
 
-export interface ListingListComponentProps {
-  loading: boolean;
-  listings: Listings;
-  filter: FilterListInput;
-  orderBy: OrderByListInput;
-  history: History;
-  t: TranslateFunction;
-  loadData: (endCursor: number, action: string) => void;
-  onOrderBy: (orderBy: OrderByListInput) => void;
-  deleteListing: (id: number) => void;
-  onToggle: (
-    field: string,
-    value: boolean | { id: number; isNew: boolean } | { id: number; isFeatured: boolean },
-    id: number
-  ) => void;
-  onDuplicate: (id: number) => void;
+export interface ListingListComponentProps extends ListingViewProps {
+  //
 }
 
 const ListingListComponent: React.FC<ListingListComponentProps> = props => {

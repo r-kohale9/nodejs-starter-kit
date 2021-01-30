@@ -21,16 +21,37 @@ import {
 } from './ListingOperations';
 
 // types
-import { FilterListInput, EditListingInput } from '../../../../packages/server/__generated__/globalTypes';
+import { listings_listings as Listings } from '../graphql/__generated__/listings';
+import {
+  FilterListInput,
+  EditListingInput,
+  OrderByListInput
+} from '../../../../packages/server/__generated__/globalTypes';
 
-interface ListingProps {
+export interface ListingProps {
   loading: boolean;
+  loadingState: boolean;
+  listings: Listings;
   history: History;
   filter: FilterListInput;
-  t: TranslateFunction;
+  orderBy: OrderByListInput;
+  loadData: (endCursor: number, action: string) => void;
+  deleteListing: (id: number) => void;
   editListing: (input: EditListingInput) => boolean | null;
   duplicateListing: (id: number) => boolean | null;
   subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  t: TranslateFunction;
+  onLowerCostChange: (cost: number) => void;
+  onUpperCostChange: (cost: number) => void;
+  onCategoryChange: ({ categoryId, allSubCategory }: { categoryId: number; allSubCategory: boolean }) => void;
+  onFiltersRemove: (filter: FilterListInput, orderBy: OrderByListInput) => void;
+  onBrandChange: (brand: string[]) => void;
+  onSearchTextChange: (serachText: string) => void;
+  onRoleChange: (role: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onDiscountChange: (discount: number) => void;
+  onRatedChange: (rated: number) => void;
+  onOrderBy: (orderBy: OrderByListInput) => void;
 }
 
 const Listing: React.FC<ListingProps> = props => {
@@ -69,6 +90,9 @@ const Listing: React.FC<ListingProps> = props => {
   // console.log('props', props);
   return (
     <ListingView
+      showCategoryFilter={true}
+      showIsActive={true}
+      affix={false}
       onToggle={handleToggle}
       onDuplicate={handleDuplicate}
       filter={{ categoryFilter: {} }}
