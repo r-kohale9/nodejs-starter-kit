@@ -170,6 +170,14 @@ export const withFilterUpdating = (Component: FunctionComponent) =>
       },
       onIsActiveChange(isActive: boolean) {
         mutate({ variables: { filter: { isActive } } });
+      },
+      onFiltersRemove(filter: FilterUserInput, orderBy: OrderByUserInput) {
+        mutate({
+          variables: {
+            filter,
+            orderBy
+          }
+        });
       }
     })
   })(Component);

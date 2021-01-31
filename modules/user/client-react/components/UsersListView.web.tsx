@@ -1,14 +1,22 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
 import { translate } from '@gqlapp/i18n-client-react';
 import { Table, DeleteIcon, EditIcon, RenderTableLoading } from '@gqlapp/look-client-react';
 
-const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
-  const [errors, setErrors] = useState([]);
+// types
+import { ErrorObject, UsersProps } from '../containers/Users.web';
+import { user_user_user as User } from '../graphql/__generated__/user';
 
-  const handleDeleteUser = async id => {
+export interface UsersViewProps extends UsersProps {
+  //
+}
+
+const UsersView: React.FC<UsersViewProps> = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
+  const [errors, setErrors] = useState<ErrorObject[]>([]);
+
+  const handleDeleteUser = async (id: number) => {
     const result = await deleteUser(id);
     if (result && result.errors) {
       setErrors(result.errors);
@@ -17,7 +25,7 @@ const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
     }
   };
 
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -29,7 +37,7 @@ const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
     }
   };
 
-  const handleOrderBy = (e, name) => {
+  const handleOrderBy = (e: React.SyntheticEvent, name: string) => {
     e.preventDefault();
 
     let order = 'asc';
@@ -56,7 +64,7 @@ const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
       ),
       dataIndex: 'username',
       key: 'username',
-      render: (text, record) => (
+      render: (text: string, record: User) => (
         <Link className="user-link" to={`/users/${record.id}`}>
           {text}
         </Link>
@@ -88,12 +96,12 @@ const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
       ),
       dataIndex: 'isActive',
       key: 'isActive',
-      render: text => text.toString()
+      render: (text: string) => text.toString()
     },
     {
       title: t('users.column.actions'),
       key: 'actions',
-      render: (text, record) => (
+      render: (text: string, record: User) => (
         <div>
           <Link to={`/users/${record.id}`}>
             <EditIcon />
@@ -125,15 +133,6 @@ const UsersView = ({ deleteUser, orderBy, onOrderBy, loading, users, t }) => {
       )}
     </>
   );
-};
-
-UsersView.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  users: PropTypes.array,
-  orderBy: PropTypes.object,
-  onOrderBy: PropTypes.func.isRequired,
-  deleteUser: PropTypes.func.isRequired,
-  t: PropTypes.func
 };
 
 export default translate('user')(UsersView);
