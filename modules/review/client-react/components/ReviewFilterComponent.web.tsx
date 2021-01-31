@@ -1,35 +1,50 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { DebounceInput } from 'react-debounce-input';
 
-import { FilterLayout, RenderCheckBox, RenderSelect, Option, Row, Col } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { translate } from '@gqlapp/i18n-client-react';
+import {
+  FilterLayout,
+  Space,
+  Icon,
+  Form,
+  FormItem,
+  Option,
+  RenderCheckBox,
+  Input,
+  Col,
+  Row,
+  RenderSelect
+} from '@gqlapp/look-client-react';
 
 import ROUTES from '../routes';
 
 // types
-import { CategoriesViewProps } from './CategoriesView.web';
+import { ReviewViewProps } from './ReviewsView';
 
-export interface CategoriesFilterComponentProps extends CategoriesViewProps {
+export interface ReviewsFilterViewProps extends ReviewViewProps {
   //
 }
 
-const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = props => {
+const ReviewsFilterView: React.FC<ReviewsFilterViewProps> = props => {
   const {
-    filter: { searchText, isActive, modalName = '' },
+    filter: { searchText, modalName = '', isActive },
     onSearchTextChange,
     onIsActiveChange,
-    onFiltersRemove,
     onModalNameChange,
+    onFiltersRemove,
     t
   } = props;
 
   return (
     <FilterLayout
-      icon={'ProfileOutlined'}
+      icon={'BookOutlined'}
       addRoute={ROUTES.add}
-      title={t('category.subTitle')}
+      title={t('adminPanel.title')}
       // search
-      searchTitle={t('categories.filter.search')}
+      searchTitle={t('adminPanel.filter.field1')}
       searchText={searchText}
       onSearchTextChange={onSearchTextChange}
       // components
@@ -52,20 +67,20 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
               component={RenderCheckBox}
               type="checkbox"
               onChange={() => onIsActiveChange(!isActive)}
-              label={t('categories.filter.isActive')}
+              label={t('adminPanel.filter.field3')}
               inFilter={true}
               checked={isActive}
             />
           </Col>
           <Col lg={8} md={8} xs={24}>
             <Field
-              name="modalName"
+              name="modal"
               icon="SafetyCertificateOutlined"
               component={RenderSelect}
-              placeholder={t('categories.filter.modalName')}
-              defaultValue={modalName}
-              onChange={(e: string) => onModalNameChange(e)}
-              label={t('categories.filter.modalName')}
+              placeholder={t('adminPanel.filter.field2')}
+              defaultValue={MODAL[0].value}
+              onChange={e => onModalNameChange(e)}
+              label={t('adminPanel.filter.field2')}
               style={{ width: '100px' }}
               value={modalName}
               inFilter={true}
@@ -87,4 +102,13 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
   );
 };
 
-export default CategoriesFilterComponent;
+ReviewsFilterView.propTypes = {
+  filter: PropTypes.object.isRequired,
+  onIsActiveChange: PropTypes.func.isRequired,
+  onSearchTextChange: PropTypes.func.isRequired,
+  onModalNameChange: PropTypes.func.isRequired,
+  onFiltersRemove: PropTypes.func.isRequired,
+  t: PropTypes.func
+};
+
+export default translate('review')(ReviewsFilterView);
