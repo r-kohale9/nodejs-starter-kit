@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import {
@@ -17,11 +16,17 @@ import { displayDataCheck } from '@gqlapp/listing-client-react';
 
 import ROUTES from '../../routes';
 
+// types
+import { dynamicCarousel_dynamicCarousel as DynamicCarousel } from '../../graphql/__generated__/dynamicCarousel';
+import { DynamicCarouselViewProps } from './DynamicCarouselView';
+
 const { itemsNumber, type } = settings.pagination.web;
 
-const DynamicCarouselListView = props => {
+export interface DynamicCarouselListViewProps extends DynamicCarouselViewProps {}
+
+const DynamicCarouselListView: React.FC<DynamicCarouselListViewProps> = props => {
   const { loading, t, orderBy, onDynamicCarouselOrderBy, deleteDynamicCarousel, dynamicCarousels, loadData } = props;
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -32,7 +37,7 @@ const DynamicCarouselListView = props => {
       return <span className="badge badge-secondary">&#8645;</span>;
     }
   };
-  const handleOrderBy = (e, name) => {
+  const handleOrderBy = (e: React.SyntheticEvent, name: string) => {
     e.preventDefault();
     let order = 'asc';
     if (orderBy && orderBy.column === name) {
@@ -57,7 +62,7 @@ const DynamicCarouselListView = props => {
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text, record) => <>{record.id}</>
+      render: (text: string, record: DynamicCarousel) => <>{record.id}</>
     },
     {
       title: (
@@ -68,7 +73,7 @@ const DynamicCarouselListView = props => {
       ),
       dataIndex: 'title',
       key: 'title',
-      render: (text, record) => <>{record.title}</>
+      render: (text: string, record: DynamicCarousel) => <>{record.title}</>
     },
     {
       title: (
@@ -79,7 +84,7 @@ const DynamicCarouselListView = props => {
       ),
       dataIndex: 'imageUrl',
       key: 'imageUrl',
-      render: (text, record) => (
+      render: (text: string, record: DynamicCarousel) => (
         <>
           <img src={record.imageUrl} width="200px" />
         </>
@@ -94,7 +99,7 @@ const DynamicCarouselListView = props => {
       ),
       dataIndex: 'label',
       key: 'label',
-      render: (text, record) => <>{displayDataCheck(record.label)}</>
+      render: (text: string, record: DynamicCarousel) => <>{displayDataCheck(record.label)}</>
     },
     {
       title: (
@@ -105,12 +110,12 @@ const DynamicCarouselListView = props => {
       ),
       dataIndex: 'link',
       key: 'link',
-      render: (text, record) => <>{displayDataCheck(record.link)}</>
+      render: (text: string, record: DynamicCarousel) => <>{displayDataCheck(record.link)}</>
     },
     {
       title: t('dynamicCarousel.columns.actions'),
       key: 'actions',
-      render: (text, record) => (
+      render: (text: string, record: DynamicCarousel) => (
         <div align="center">
           <Link to={`${ROUTES.editLink}${record.id}`}>
             <EditIcon shape="circle" size="large" />
@@ -121,7 +126,7 @@ const DynamicCarouselListView = props => {
       )
     }
   ];
-  const handlePageChange = (pagination, pageNumber) => {
+  const handlePageChange = (pagination: string, pageNumber: number) => {
     const {
       pageInfo: { endCursor }
     } = dynamicCarousels;
@@ -155,16 +160,6 @@ const DynamicCarouselListView = props => {
       )}
     </div>
   );
-};
-
-DynamicCarouselListView.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  deleteDynamicCarousel: PropTypes.func,
-  loadData: PropTypes.func,
-  dynamicCarousels: PropTypes.object,
-  t: PropTypes.func,
-  orderBy: PropTypes.object,
-  onDynamicCarouselOrderBy: PropTypes.func
 };
 
 export default DynamicCarouselListView;
