@@ -51,6 +51,7 @@ const Categories: React.FC<CategoriesProps> = props => {
   const handleToggle = (field: string, value: boolean, id: number) => {
     const input: EditCategoryInput = { id };
     _.set(input, field, value);
+    // console.log(input);
     try {
       editCategory(input);
     } catch (e) {

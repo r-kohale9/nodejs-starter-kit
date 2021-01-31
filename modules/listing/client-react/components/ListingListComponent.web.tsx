@@ -274,12 +274,14 @@ const ListingListComponent: React.FC<ListingListComponentProps> = props => {
       fixed: 'right',
       render: (text: string, record: Listing) => (
         <div align="center">
-          <Link className="listing-link" to={`${ROUTES.editLink}${record.id}`}>
-            <EditIcon />
-          </Link>
+          <Tooltip title="Edit listing">
+            <Link className="listing-link" to={`${ROUTES.editLink}${record.id}`}>
+              <EditIcon />
+            </Link>
+          </Tooltip>
           <Divider type="vertical" />
           <DiscountBtn modalName={MODAL[1].value} modalId={record.id} />
-          <Tooltip title="View listing review ">
+          <Tooltip title="View listing review">
             <a href={`${ROUTES.listingReviewLink}${record.id}`}>
               <Button shape="circle" color="primary">
                 <Icon type="BookOutlined" />
@@ -293,7 +295,9 @@ const ListingListComponent: React.FC<ListingListComponentProps> = props => {
             </Button>
           </Tooltip>
           <Divider type="vertical" />
-          <DeleteIcon onClick={() => deleteListing(record.id)} title="Are you sure delete this listing?" />
+          <Tooltip title="Delete listing">
+            <DeleteIcon onClick={() => deleteListing(record.id)} title="Are you sure delete this listing?" />
+          </Tooltip>
         </div>
       )
     }

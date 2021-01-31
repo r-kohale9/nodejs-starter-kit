@@ -7,6 +7,7 @@ import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import {
+  Affix,
   Collapse,
   CollapsePanel,
   CheckBox,
@@ -423,21 +424,23 @@ const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props =>
           </Col>
         </StickyContainer>
       ) : (
-        <Collapse>
-          <CollapsePanel
-            header={
-              <div style={{ position: 'absolute', top: '33%' }}>
-                <Space align="center">
-                  <Icon type="FilterOutlined" />
-                  Listing Filters
-                </Space>
-              </div>
-            }
-            extra={searchField(true)}
-          >
-            {filterItems}
-          </CollapsePanel>
-        </Collapse>
+        <Affix offsetTop={44}>
+          <Collapse>
+            <CollapsePanel
+              header={
+                <div style={{ position: 'absolute', top: '33%' }}>
+                  <Space align="center">
+                    <Icon type="FilterOutlined" />
+                    Listing Filters
+                  </Space>
+                </div>
+              }
+              extra={searchField(true)}
+            >
+              {filterItems}
+            </CollapsePanel>
+          </Collapse>
+        </Affix>
       )}
     </>
   );
