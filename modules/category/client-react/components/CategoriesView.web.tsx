@@ -18,7 +18,6 @@ const CategoriesView: React.FC<CategoriesViewProps> = props => {
   return (
     <PageLayout>
       <MetaTags title={t('title')} description={`${settings.app.name} - ${t('meta')}`} />
-
       <CategoriesFilterComponent {...props} />
       <Divider />
       <CategoriesListComponent {...props} />
