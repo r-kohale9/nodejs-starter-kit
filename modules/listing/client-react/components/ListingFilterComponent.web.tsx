@@ -1,38 +1,33 @@
-import React, { ChangeEvent, useState, useEffect, useRef } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { DebounceInput } from 'react-debounce-input';
 import styled from 'styled-components';
-import { StickyContainer, Sticky } from 'react-sticky';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import {
-  Affix,
-  Collapse,
-  CollapsePanel,
   CheckBox,
   Space,
-  Card,
   Option,
   FormItem,
   Input,
   Row,
   Col,
-  Button,
   RenderSelect,
   Icon,
   RenderCheckBox,
-  Rate
+  Rate,
+  FilterLayout
 } from '@gqlapp/look-client-react';
 import { CategoryTreeComponent } from '@gqlapp/category-client-react';
 import { MODAL } from '@gqlapp/review-common';
 import { compose } from '@gqlapp/core-common';
 
+import ROUTES from '../routes';
 import SliderControlled from './FilterSliderControlledComponent';
 import { withGetBrandList } from '../containers/ListingOperations';
 
 // types
-import { OrderByListInput } from '../../../../packages/server/__generated__/globalTypes';
 import { ListingViewProps } from './ListingView';
 
 const RateDiv = styled.div`
@@ -56,7 +51,6 @@ const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props =>
     loadingState,
     filter: { searchText, lowerCost, upperCost, isActive, categoryFilter, discount, brand },
     getBrandList,
-    affix = true,
     onIsActiveChange,
     onCategoryChange,
     onSearchTextChange,
@@ -75,30 +69,6 @@ const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props =>
     layout
   } = props;
   const [selectedBrand, setSelectedBrand] = useState(brand || []);
-  // console.log(selectedBrand);
-  const handleFiltersRemove = useRef(() => {});
-
-  handleFiltersRemove.current = () => {
-    const filter = {
-      searchText: '',
-      lowerCost: 0,
-      upperCost: 0,
-      discount: 0,
-      popularity: 0,
-      categoryFilter: {
-        categoryId: 0,
-        allSubCategory: true,
-        __typename: 'ListingFilter'
-      },
-      isActive: true
-    };
-    const newOrderBy: OrderByListInput = { column: '', order: '' };
-    onFiltersRemove(filter, newOrderBy);
-  };
-
-  useEffect(() => {
-    return () => handleFiltersRemove.current();
-  }, []);
 
   const rangeValues = listings && listings.rangeValues;
   const handleChangeSlider = (e: number[]) => {
@@ -281,12 +251,6 @@ const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props =>
     );
   };
 
-  const handleResetBtn = (
-    <Button block color="primary" onClick={handleFiltersRemove.current}>
-      <Icon type={'UndoOutlined'} /> {t('listingFilter.btn.reset')}
-    </Button>
-  );
-
   const sliderControlled = (infilter: boolean) => (
     <SliderControlled
       style={{
@@ -348,101 +312,87 @@ const ListingsFilterComponent: React.FC<ListingsFilterComponentProps> = props =>
     />
   );
 
-  const filterItems =
-    layout === 'vertical' ? (
-      <Row type="flex" align="middle">
-        <Col span={24}>
-          <Row gutter={24}>
-            <Col span={24}>{searchField(false)}</Col>
-            <Col span={24}>{showIsActive && activeField(false)}</Col>
-            <Col span={24}>{categoryTreeField}</Col>
-            <Col span={24}>{listingSortBy('100%', false)}</Col>
-            <Col span={24}>{listingDiscount('100%', false)}</Col>
-            <Col span={24}>{listingBrand('100%', false)}</Col>
-            <Col span={24}>{listingByRating(true)}</Col>
-            <Col span={22}>{sliderControlled(false)}</Col>
+  return (
+    <FilterLayout
+      verticalLayout={layout === 'vertical'}
+      icon={'SolutionOutlined'}
+      addRoute={ROUTES.add}
+      title={t('list.subTitle')}
+      // search
+      searchTitle={t('listingFilter.search')}
+      searchText={searchText}
+      onSearchTextChange={onSearchTextChange}
+      // components
+      onFiltersRemove={() =>
+        onFiltersRemove(
+          {
+            searchText: '',
+            lowerCost: 0,
+            upperCost: 0,
+            discount: 0,
+            popularity: 0,
+            categoryFilter: {
+              categoryId: 0,
+              allSubCategory: true
+            },
+            isActive: true
+          },
+          { column: '', order: '' }
+        )
+      }
+      expandChildren={(resetBtn: JSX.Element) =>
+        layout === 'vertical' ? (
+          <Row type="flex" align="middle">
             <Col span={24}>
-              <br />
-              {handleResetBtn}
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    ) : (
-      <Row gutter={48}>
-        <Col span={19}>
-          <Row gutter={24}>
-            <Col span={8}>{searchField(true)}</Col>
-            <Col span={8}>{categoryTreeField}</Col>
-            <Col span={8}>{showIsActive && activeField(true)}</Col>
-            <Col lg={24} xs={24} md={12}>
-              <Row type="flex" gutter={24}>
-                <Col lg={8} md={8} xs={24}>
-                  {listingBrand('100%', true)}
-                </Col>
-                <Col lg={8} md={8} xs={24}>
-                  {listingSortBy('100%')}
-                </Col>
-                <Col lg={8} md={8} xs={24}>
-                  {listingDiscount('100%')}
-                </Col>
-                <Col lg={24} md={24} xs={24} align="left">
-                  {sliderControlled(false)}
+              <Row gutter={24}>
+                <Col span={24}>{searchField(false)}</Col>
+                <Col span={24}>{showIsActive && activeField(false)}</Col>
+                <Col span={24}>{categoryTreeField}</Col>
+                <Col span={24}>{listingSortBy('100%', false)}</Col>
+                <Col span={24}>{listingDiscount('100%', false)}</Col>
+                <Col span={24}>{listingBrand('100%', false)}</Col>
+                <Col span={24}>{listingByRating(true)}</Col>
+                <Col span={22}>{sliderControlled(false)}</Col>
+                <Col span={24}>
+                  <br />
+                  {resetBtn}
                 </Col>
               </Row>
             </Col>
           </Row>
-        </Col>
-        <Col span={5}>
-          {listingByRating(true)}
-          {/* <Col lg={24} md={24} xs={0}>
-                <br />
-                <br />
-                <br />
-                <br />
-              </Col> */}
-          {handleResetBtn}
-        </Col>
-      </Row>
-    );
-  return (
-    <>
-      {affix ? (
-        <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
-          <Sticky>
-            {({ style, isSticky }: { style: object; isSticky: boolean }) => (
-              <div style={{ ...style }}>
-                <div style={{ height: isSticky ? '90px' : '0px' }} />
-                <Col lg={24} md={24} xs={0}>
-                  <Card>{filterItems}</Card>
+        ) : (
+          <Row gutter={48}>
+            <Col span={19}>
+              <Row gutter={24}>
+                <Col span={8}>{searchField(true)}</Col>
+                <Col span={8}>{categoryTreeField}</Col>
+                <Col span={8}>{showIsActive && activeField(true)}</Col>
+                <Col lg={24} xs={24} md={12}>
+                  <Row type="flex" gutter={24}>
+                    <Col lg={8} md={8} xs={24}>
+                      {listingBrand('100%', true)}
+                    </Col>
+                    <Col lg={8} md={8} xs={24}>
+                      {listingSortBy('100%')}
+                    </Col>
+                    <Col lg={8} md={8} xs={24}>
+                      {listingDiscount('100%')}
+                    </Col>
+                    <Col lg={24} md={24} xs={24} align="left">
+                      {sliderControlled(false)}
+                    </Col>
+                  </Row>
                 </Col>
-              </div>
-            )}
-          </Sticky>
-          <Col lg={0} md={0} xs={24}>
-            <Card>{filterItems}</Card>
-          </Col>
-        </StickyContainer>
-      ) : (
-        <Affix offsetTop={44}>
-          <Collapse>
-            <CollapsePanel
-              header={
-                <div style={{ position: 'absolute', top: '33%' }}>
-                  <Space align="center">
-                    <Icon type="FilterOutlined" />
-                    Listing Filters
-                  </Space>
-                </div>
-              }
-              extra={searchField(true)}
-            >
-              {filterItems}
-            </CollapsePanel>
-          </Collapse>
-        </Affix>
-      )}
-    </>
+              </Row>
+            </Col>
+            <Col span={5}>
+              {listingByRating(true)}
+              {resetBtn}
+            </Col>
+          </Row>
+        )
+      }
+    />
   );
 };
 

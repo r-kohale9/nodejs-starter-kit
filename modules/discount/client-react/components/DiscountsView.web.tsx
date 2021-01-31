@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { PageLayout, MetaTags, Divider } from '@gqlapp/look-client-react';
+import { PageLayout, MetaTags } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
 import { DiscountsProps } from '../containers/Discounts.web';
@@ -21,7 +21,6 @@ const DiscountsView: React.FC<DiscountsViewProps> = props => {
       <MetaTags title={t('title')} description={`${settings.app.name} - ${t('meta')}`} />
 
       <DiscountsFilterComponent showIsActive={true} {...props} />
-      <Divider />
       <DiscountsListComponent {...props} />
     </PageLayout>
   );

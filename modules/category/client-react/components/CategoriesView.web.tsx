@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageLayout, MetaTags, Divider } from '@gqlapp/look-client-react';
+import { PageLayout, MetaTags } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
 import CategoriesFilterComponent from './CategoriesFilterComponent';
@@ -19,7 +19,6 @@ const CategoriesView: React.FC<CategoriesViewProps> = props => {
     <PageLayout>
       <MetaTags title={t('title')} description={`${settings.app.name} - ${t('meta')}`} />
       <CategoriesFilterComponent {...props} />
-      <Divider />
       <CategoriesListComponent {...props} />
     </PageLayout>
   );
