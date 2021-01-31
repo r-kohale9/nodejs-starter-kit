@@ -15,7 +15,8 @@ import {
   FormItem,
   Input,
   Row,
-  Col
+  Col,
+  Button
 } from '@gqlapp/look-client-react';
 
 const FilterTitle = styled.div`
@@ -24,17 +25,18 @@ const FilterTitle = styled.div`
 `;
 
 export interface FilterLayoutProps {
+  icon: string;
   title: string;
   searchTitle: string;
   searchText: string;
-  addRoute: string;
-  expandChildren: JSX.Element;
+  addRoute?: string;
+  expandChildren: (resetBtn: JSX.Element) => JSX.Element;
   onFiltersRemove: () => void;
   onSearchTextChange: (searchText: string) => void;
 }
 
 const FilterLayout: React.FC<FilterLayoutProps> = props => {
-  const { title, searchTitle, searchText, onSearchTextChange, addRoute, expandChildren, onFiltersRemove } = props;
+  const { icon, title, searchTitle, searchText, onSearchTextChange, addRoute, expandChildren, onFiltersRemove } = props;
 
   const handleFilterRemove = useRef(() => {});
 
@@ -46,7 +48,13 @@ const FilterLayout: React.FC<FilterLayoutProps> = props => {
     return () => handleFilterRemove.current();
   }, []);
 
-  const AddBtn = (
+  const resetBtn = (
+    <Button block color="primary" onClick={handleFilterRemove.current}>
+      <Icon type={'UndoOutlined'} /> Reset
+    </Button>
+  );
+
+  const AddBtn = addRoute && (
     <Link to={addRoute}>
       <AddIcon shape="sqaure" /* color="default" */ />
     </Link>
@@ -58,7 +66,7 @@ const FilterLayout: React.FC<FilterLayoutProps> = props => {
           header={
             <FilterTitle>
               <Heading type="2">
-                <Icon type="ProfileOutlined" />
+                <Icon type={icon} />
                 &nbsp;
                 {title}
               </Heading>
@@ -118,7 +126,7 @@ const FilterLayout: React.FC<FilterLayoutProps> = props => {
                 </FormItem>
               </Col>
             </Row>
-            {expandChildren}
+            {expandChildren(resetBtn)}
           </Form>
         </CollapsePanel>
       </Collapse>

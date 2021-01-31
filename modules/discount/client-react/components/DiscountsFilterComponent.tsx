@@ -1,20 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { DebounceInput } from 'react-debounce-input';
+import React from 'react';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { MODAL } from '@gqlapp/review-common';
 import { translate } from '@gqlapp/i18n-client-react';
-import {
-  RenderCheckBox,
-  Icon,
-  Space,
-  FormItem,
-  Option,
-  Input,
-  Col,
-  Row,
-  RenderSelect
-} from '@gqlapp/look-client-react';
+import { RenderCheckBox, Option, Col, Row, RenderSelect, FilterLayout } from '@gqlapp/look-client-react';
+
+// import ROUTES from '../routes';
 
 // types
 import { DiscountsViewProps } from './DiscountsView.web';
@@ -33,21 +24,6 @@ const DiscountsFilterView: React.FC<DiscountsFilterViewProps> = props => {
     onFiltersRemove,
     t
   } = props;
-  const handleFiltersRemove = useRef(() => {});
-
-  handleFiltersRemove.current = () => {
-    const filter = {
-      searchText: '',
-      modalName: '',
-      isActive: true
-    };
-    const orderBy = { column: '', order: '' };
-    onFiltersRemove(filter, orderBy);
-  };
-
-  useEffect(() => {
-    return () => handleFiltersRemove.current();
-  }, []);
 
   const modalSelectField = (width: string, inFilter: boolean) => {
     return (
@@ -56,7 +32,7 @@ const DiscountsFilterView: React.FC<DiscountsFilterViewProps> = props => {
         icon="SafetyCertificateOutlined"
         component={RenderSelect}
         placeholder={t('adminPanel.filter.field2')}
-        defaultValue={MODAL[0].value}
+        defaultValue={modalName}
         onChange={(e: string) => onModalNameChange(e)}
         label={t('adminPanel.filter.field2')}
         style={{ width: '100px' }}
@@ -73,31 +49,29 @@ const DiscountsFilterView: React.FC<DiscountsFilterViewProps> = props => {
     );
   };
   return (
-    <Row>
-      <Col lg={18} md={14} xs={24}>
+    <FilterLayout
+      icon={'PercentageOutlined'}
+      title={t('discount.subTitle')}
+      // addRoute={ROUTES.add}
+      // search
+      searchTitle={t('adminPanel.filter.field1')}
+      searchText={searchText}
+      onSearchTextChange={onSearchTextChange}
+      // components
+      onFiltersRemove={() =>
+        onFiltersRemove(
+          {
+            searchText: '',
+            modalName: '',
+            isActive: true
+          },
+          { column: '', order: '' }
+        )
+      }
+      expandChildren={resetBtn => (
         <Row gutter={24}>
-          <Col lg={16} md={12} xs={24}>
-            <FormItem
-              label={
-                <Space align="center">
-                  <Icon type="SearchOutlined" />
-                  {t('adminPanel.filter.field1')}
-                </Space>
-              }
-              style={{ width: '100%' }}
-            >
-              <DebounceInput
-                minLength={2}
-                debounceTimeout={300}
-                placeholder={t('adminPanel.filter.field1')}
-                element={Input}
-                value={searchText}
-                onChange={e => onSearchTextChange(e.target.value)}
-              />
-            </FormItem>
-          </Col>
-          <Col xs={24} md={12} lg={8}>
-            {showIsActive && (
+          {showIsActive && (
+            <Col xs={24} md={8} lg={8}>
               <Field
                 name="isActive"
                 icon={'CheckCircleOutlined'}
@@ -108,21 +82,22 @@ const DiscountsFilterView: React.FC<DiscountsFilterViewProps> = props => {
                 inFilter={true}
                 checked={isActive}
               />
-            )}
+            </Col>
+          )}
+          <Col lg={8} xs={24} md={8}>
+            <Col lg={0} md={0} xs={24}>
+              {modalSelectField('100%', false)}
+            </Col>
+            <Col xs={0} md={24} lg={24}>
+              {modalSelectField('100', true)}
+            </Col>
+          </Col>
+          <Col lg={8} md={8} xs={24}>
+            {resetBtn}
           </Col>
         </Row>
-      </Col>
-      <Col lg={6} xs={24} md={10}>
-        <Col lg={0} md={0} xs={24}>
-          {modalSelectField('100%', false)}
-        </Col>
-        <Col xs={0} md={24} lg={24}>
-          <Row type="flex" justify="end">
-            {modalSelectField('170px', true)}
-          </Row>
-        </Col>
-      </Col>
-    </Row>
+      )}
+    />
   );
 };
 

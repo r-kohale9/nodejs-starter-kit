@@ -25,12 +25,14 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
 
   return (
     <FilterLayout
+      icon={'ProfileOutlined'}
       addRoute={ROUTES.add}
       title={t('category.subTitle')}
       // search
       searchTitle={t('categories.filter.search')}
       searchText={searchText}
       onSearchTextChange={onSearchTextChange}
+      // components
       onFiltersRemove={() =>
         onFiltersRemove(
           {
@@ -41,9 +43,9 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
           { column: '', order: '' }
         )
       }
-      expandChildren={
+      expandChildren={resetBtn => (
         <Row gutter={24}>
-          <Col lg={12} xs={24} md={14}>
+          <Col lg={8} md={8} xs={24}>
             <Field
               name="isActive"
               icon={'CheckCircleOutlined'}
@@ -55,7 +57,7 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
               checked={isActive}
             />
           </Col>
-          <Col lg={12} xs={24} md={10}>
+          <Col lg={8} md={8} xs={24}>
             <Field
               name="modalName"
               icon="SafetyCertificateOutlined"
@@ -76,8 +78,11 @@ const CategoriesFilterComponent: React.FC<CategoriesFilterComponentProps> = prop
               ))}
             </Field>
           </Col>
+          <Col lg={8} md={8} xs={24}>
+            {resetBtn}
+          </Col>
         </Row>
-      }
+      )}
     />
   );
 };
