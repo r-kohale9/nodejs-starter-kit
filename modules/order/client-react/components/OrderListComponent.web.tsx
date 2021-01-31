@@ -1,6 +1,5 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -24,12 +23,20 @@ import settings from '@gqlapp/config';
 import OrderStatusMail from '../containers/OrderStatusMail';
 import ROUTES from '../routes';
 
+// types
+import { order_order as Order } from '../graphql/__generated__/order';
+import { OrderViewProps } from './OrdersView';
+
 const { itemsNumber, type } = settings.pagination.web;
 
-const OrderListComponent = props => {
+export interface OrderListComponentProps extends OrderViewProps {
+  //
+}
+
+const OrderListComponent: React.FC<OrderListComponentProps> = props => {
   const { onPatchOrderState, orderBy, onOrderBy, loading, orders, t, loadData, onDelete, orderStates } = props;
 
-  const renderOrderByArrow = name => {
+  const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
       if (orderBy.order === 'desc') {
         return <span className="badge badge-primary">&#8595;</span>;
@@ -40,7 +47,7 @@ const OrderListComponent = props => {
       return <span className="badge badge-secondary">&#8645;</span>;
     }
   };
-  const handleOrderBy = (e, name) => {
+  const handleOrderBy = (e: React.SyntheticEvent, name: string) => {
     e.preventDefault();
     let order = 'asc';
     if (orderBy && orderBy.column === name) {
@@ -66,7 +73,7 @@ const OrderListComponent = props => {
       ),
       dataIndex: 'id',
       key: 'id',
-      render: (text, record) => <div>{record && displayDataCheck(record.id)}</div>
+      render: (text: string, record: Order) => <div>{record && displayDataCheck(record.id)}</div>
     },
     {
       title: (
@@ -76,7 +83,7 @@ const OrderListComponent = props => {
       ),
       dataIndex: 'consumer',
       key: 'consumer',
-      render: (text, record) => (
+      render: (text: string, record: Order) => (
         <a
           href={`${USER_ROUTES.userPublicProfileLink}${record.consumer.id}`}
           target={'_blank'}
@@ -94,7 +101,7 @@ const OrderListComponent = props => {
       ),
       dataIndex: 'state',
       key: 'state',
-      render: (text, record) => (
+      render: (text: string, record: Order) => (
         <Select
           name="state"
           defaultValue={record.orderState && record.orderState.state}
@@ -102,7 +109,7 @@ const OrderListComponent = props => {
           onChange={e => onPatchOrderState(record.id, e)}
         >
           {orderStates &&
-            orderStates.map((oS, i) => (
+            orderStates.map((oS: { state: string }, i: number) => (
               <Option key={i + 1} value={oS.state}>
                 {oS.state}
               </Option>
@@ -119,12 +126,12 @@ const OrderListComponent = props => {
       ),
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (text, record) => <>{displayDateCheck(record.createdAt)}</>
+      render: (text: string, record: Order) => <>{displayDateCheck(record.createdAt)}</>
     },
     {
       title: t('orders.column.actions'),
       key: 'actions',
-      render: (text, record) => (
+      render: (text: string, record: Order) => (
         <div
           style={{
             display: 'flex'
@@ -144,7 +151,7 @@ const OrderListComponent = props => {
     }
   ];
 
-  const handlePageChange = (pagination, pageNumber) => {
+  const handlePageChange = (pagination: string, pageNumber: number) => {
     const {
       pageInfo: { endCursor }
     } = orders;
@@ -170,7 +177,7 @@ const OrderListComponent = props => {
   );
 
   return (
-    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ overflowX: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main order content */}
@@ -181,19 +188,6 @@ const OrderListComponent = props => {
       )}
     </div>
   );
-};
-
-OrderListComponent.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  loadData: PropTypes.bool,
-  orders: PropTypes.object,
-  orderBy: PropTypes.object,
-  onOrderBy: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onPatchOrderState: PropTypes.func,
-  t: PropTypes.func,
-  history: PropTypes.object,
-  orderStates: PropTypes.object
 };
 
 export default translate('order')(OrderListComponent);
