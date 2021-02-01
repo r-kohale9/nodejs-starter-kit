@@ -103,6 +103,7 @@ const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
     },
     {
       title: t('adminPanel.list.column4'),
+      align: 'end',
       key: 'actions',
       width: 200,
       render: (text: string, record: Review) => (

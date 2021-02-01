@@ -110,6 +110,7 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
         </a>
       ),
       dataIndex: 'isActive',
+      align: 'center',
       key: 'isActive',
       render: (text: string, record: Category) => (
         <Select
@@ -130,6 +131,7 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
 
     {
       title: t('category.column.actions'),
+      align: 'end',
       key: 'actions',
       render: (text: string, record: Category) => (
         <div

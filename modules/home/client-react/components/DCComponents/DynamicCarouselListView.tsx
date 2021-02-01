@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -114,6 +114,7 @@ const DynamicCarouselListView: React.FC<DynamicCarouselListViewProps> = props =>
     },
     {
       title: t('dynamicCarousel.columns.actions'),
+      align: 'end',
       key: 'actions',
       render: (text: string, record: DynamicCarousel) => (
         <div align="center">
@@ -133,22 +134,24 @@ const DynamicCarouselListView: React.FC<DynamicCarouselListViewProps> = props =>
     pagination === 'relay' ? loadData(endCursor + 1, 'add') : loadData((pageNumber - 1) * itemsNumber, 'replace');
   };
   const RenderDynamicCarousels = () => (
-    <Fragment>
+    <>
       <Table dataSource={dynamicCarousels.edges.map(({ node }) => node)} columns={columns} />
-      <Pagination
-        itemsPerPage={dynamicCarousels.edges.length}
-        handlePageChange={handlePageChange}
-        hasNextPage={dynamicCarousels.pageInfo.hasNextPage}
-        pagination={type}
-        total={dynamicCarousels.totalCount}
-        loadMoreText="Load more"
-        defaultPageSize={itemsNumber}
-      />
-    </Fragment>
+      <div align="center">
+        <Pagination
+          itemsPerPage={dynamicCarousels.edges.length}
+          handlePageChange={handlePageChange}
+          hasNextPage={dynamicCarousels.pageInfo.hasNextPage}
+          pagination={type}
+          total={dynamicCarousels.totalCount}
+          loadMoreText="Load more"
+          defaultPageSize={itemsNumber}
+        />
+      </div>
+    </>
   );
 
   return (
-    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ overflowX: 'auto', minHeight: '100vh', position: 'relative' }}>
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main listing content */}
       {dynamicCarousels && dynamicCarousels.totalCount ? (

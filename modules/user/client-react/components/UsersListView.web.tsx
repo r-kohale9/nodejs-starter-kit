@@ -100,6 +100,7 @@ const UsersView: React.FC<UsersViewProps> = ({ deleteUser, orderBy, onOrderBy, l
     },
     {
       title: t('users.column.actions'),
+      align: 'end',
       key: 'actions',
       render: (text: string, record: User) => (
         <div>

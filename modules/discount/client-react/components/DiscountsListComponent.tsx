@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
@@ -143,6 +143,7 @@ const DiscountsListComponent: React.FC<DiscountsListComponentProps> = props => {
     },
     {
       title: t('adminPanel.discount.column5'),
+      align: 'end',
       key: 'actions',
       render: (text: string, record: Discount) => (
         <div>
@@ -164,10 +165,8 @@ const DiscountsListComponent: React.FC<DiscountsListComponentProps> = props => {
   };
 
   const RenderDiscounts = () => (
-    <Fragment>
+    <>
       <Table dataSource={discounts.edges.map(({ node }) => node)} columns={columns} />
-      <hr />
-      <br />
       <div align="center">
         <Pagination
           itemsPerPage={discounts.edges.length}
@@ -180,11 +179,11 @@ const DiscountsListComponent: React.FC<DiscountsListComponentProps> = props => {
         />
       </div>
       <br />
-    </Fragment>
+    </>
   );
 
   return (
-    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ overflowX: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main discount content */}

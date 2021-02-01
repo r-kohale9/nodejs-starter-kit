@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
+  Space,
   Divider,
   Select,
   Option,
@@ -130,13 +131,10 @@ const OrderListComponent: React.FC<OrderListComponentProps> = props => {
     },
     {
       title: t('orders.column.actions'),
+      align: 'end',
       key: 'actions',
       render: (text: string, record: Order) => (
-        <div
-          style={{
-            display: 'flex'
-          }}
-        >
+        <Space align="center">
           {record.orderState.state !== ORDER_STATES.STALE && (
             <Link to={`${ROUTES.orderDetailLink}${record.id}`}>
               <ViewIcon />
@@ -146,7 +144,7 @@ const OrderListComponent: React.FC<OrderListComponentProps> = props => {
           <OrderStatusMail orderId={record.id} disabled={record.orderState.state !== ORDER_STATES.DISPATCHED} />
           <Divider type="vertical" />
           <DeleteIcon title="Are you sure delete this order?" onClick={() => onDelete(record.id)} />
-        </div>
+        </Space>
       )
     }
   ];

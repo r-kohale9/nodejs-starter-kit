@@ -271,6 +271,7 @@ const ListingListComponent: React.FC<ListingListComponentProps> = props => {
       title: t('list.column.actions'),
       key: 'actions',
       width: 275,
+      align: 'end',
       fixed: 'right',
       render: (text: string, record: Listing) => (
         <div align="center">
