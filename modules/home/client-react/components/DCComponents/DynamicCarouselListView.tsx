@@ -19,6 +19,7 @@ import ROUTES from '../../routes';
 // types
 import { dynamicCarousel_dynamicCarousel as DynamicCarousel } from '../../graphql/__generated__/dynamicCarousel';
 import { DynamicCarouselViewProps } from './DynamicCarouselView';
+import { handleDelete } from '@gqlapp/listing-client-react';
 
 const { itemsNumber, type } = settings.pagination.web;
 
@@ -122,7 +123,10 @@ const DynamicCarouselListView: React.FC<DynamicCarouselListViewProps> = props =>
             <EditIcon shape="circle" size="large" />
           </Link>
           <Divider type="vertical" />
-          <DeleteIcon onClick={() => deleteDynamicCarousel(record.id)} title="Are you sure delete this listing?" />
+          <DeleteIcon
+            onClick={() => handleDelete(deleteDynamicCarousel, record.id)}
+            title="Are you sure delete this listing?"
+          />
         </div>
       )
     }

@@ -159,16 +159,9 @@ export const withDeleteDynamicCarousel = (Component: FunctionComponent) =>
   graphql<{}, deleteDynamicCarouselResponse, deleteDynamicCarouselVariables, {}>(DELETE_DYNAMIC_CAROUSEL, {
     props: ({ mutate }) => ({
       deleteDynamicCarousel: async (id: number) => {
-        const {
-          data: { deleteDynamicCarousel }
-        } = await mutate({
+        await mutate({
           variables: { id }
         });
-        if (deleteDynamicCarousel) {
-          Message.warning('Banner deleted.');
-        } else {
-          Message.warning('Try again!');
-        }
       }
     })
   })(Component);

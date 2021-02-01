@@ -23,7 +23,7 @@ import { MODAL } from '@gqlapp/review-common';
 import { USER_ROUTES } from '@gqlapp/user-client-react';
 
 import ROUTES from '../routes';
-import { displayDataCheck } from './functions';
+import { displayDataCheck, handleDelete } from './functions';
 
 // types
 import { listing_listing as Listing } from '../graphql/__generated__/listing';
@@ -297,7 +297,10 @@ const ListingListComponent: React.FC<ListingListComponentProps> = props => {
           </Tooltip>
           <Divider type="vertical" />
           <Tooltip title="Delete listing">
-            <DeleteIcon onClick={() => deleteListing(record.id)} title="Are you sure delete this listing?" />
+            <DeleteIcon
+              onClick={() => handleDelete(deleteListing, record.id)}
+              title="Are you sure delete this listing?"
+            />
           </Tooltip>
         </div>
       )

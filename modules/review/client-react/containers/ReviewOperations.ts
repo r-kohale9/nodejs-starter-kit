@@ -180,7 +180,6 @@ export const withReviewsDeleting = (Component: FunctionComponent) =>
         mutate({
           variables: { id }
         });
-        Message.error('Review deleted.');
       }
     })
   })(Component);

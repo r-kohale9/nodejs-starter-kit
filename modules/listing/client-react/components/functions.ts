@@ -1,4 +1,5 @@
 import React from 'react';
+import { Message } from '@gqlapp/look-client-react';
 
 export const displayDataCheck = (text: string, bool = false) => {
   if (bool) {
@@ -37,4 +38,18 @@ export const removeEmpty = (obj: object) => {
 
 export const priceCommaSeparator = (value: number) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+export const handleDelete = (deleteFunc: (id: number) => void, deleteId: number) => {
+  Message.destroy();
+  Message.error('Processing...');
+  try {
+    deleteFunc(deleteId);
+  } catch (e) {
+    Message.destroy();
+    Message.error("Couldn't perform the action!");
+    throw Error(e);
+  }
+  Message.destroy();
+  Message.error('Deleted!');
 };

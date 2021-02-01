@@ -27,6 +27,7 @@ import ROUTES from '../routes';
 // types
 import { order_order as Order } from '../graphql/__generated__/order';
 import { OrderViewProps } from './OrdersView';
+import { handleDelete } from '@gqlapp/listing-client-react';
 
 const { itemsNumber, type } = settings.pagination.web;
 
@@ -35,7 +36,7 @@ export interface OrderListComponentProps extends OrderViewProps {
 }
 
 const OrderListComponent: React.FC<OrderListComponentProps> = props => {
-  const { onPatchOrderState, orderBy, onOrderBy, loading, orders, t, loadData, onDelete, orderStates } = props;
+  const { onPatchOrderState, orderBy, onOrderBy, loading, orders, t, loadData, deleteOrder, orderStates } = props;
 
   const renderOrderByArrow = (name: string) => {
     if (orderBy && orderBy.column === name) {
@@ -143,7 +144,7 @@ const OrderListComponent: React.FC<OrderListComponentProps> = props => {
           <Divider type="vertical" />
           <OrderStatusMail orderId={record.id} disabled={record.orderState.state !== ORDER_STATES.DISPATCHED} />
           <Divider type="vertical" />
-          <DeleteIcon title="Are you sure delete this order?" onClick={() => onDelete(record.id)} />
+          <DeleteIcon title="Are you sure delete this order?" onClick={() => handleDelete(deleteOrder, record.id)} />
         </Space>
       )
     }

@@ -143,8 +143,6 @@ export const withAddCategory = (Component: FunctionComponent) =>
           });
           return true;
         } catch (e) {
-          Message.destroy();
-          Message.error("Couldn't perform the action");
           console.error(e);
         }
       }
@@ -158,7 +156,6 @@ export const withCategoryDeleting = (Component: FunctionComponent) =>
         mutate({
           variables: { id }
         });
-        Message.warning('Category deleted.');
       }
     })
   })(Component);

@@ -40,7 +40,7 @@ export interface OrdersProps {
 }
 
 const Orders: React.FC<OrdersProps> = props => {
-  const { deleteOrder, ordersSubscribeToMore, patchOrderState } = props;
+  const { ordersSubscribeToMore, patchOrderState } = props;
 
   useEffect(() => {
     const subscribe = subscribeToOrders(ordersSubscribeToMore, props.filter);
@@ -59,19 +59,7 @@ const Orders: React.FC<OrdersProps> = props => {
     }
   };
 
-  const handleDelete = (id: number) => {
-    try {
-      Message.destroy();
-      Message.error('Processing.');
-      deleteOrder(id);
-      Message.destroy();
-      Message.error('Order deleted.');
-    } catch (e) {
-      throw Error(e);
-    }
-  };
-
-  return <OrdersView onDelete={handleDelete} onPatchOrderState={handlePatchOrderState} filter={{}} {...props} />;
+  return <OrdersView onPatchOrderState={handlePatchOrderState} filter={{}} {...props} />;
 };
 
 export default compose(

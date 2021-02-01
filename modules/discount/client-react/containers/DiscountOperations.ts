@@ -173,7 +173,6 @@ export const withDiscountDeleting = (Component: FunctionComponent) =>
         mutate({
           variables: { id }
         });
-        Message.warning('Discount deleted.');
       }
     })
   })(Component);

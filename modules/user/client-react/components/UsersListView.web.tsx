@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
-import { Table, DeleteIcon, EditIcon, RenderTableLoading } from '@gqlapp/look-client-react';
+import { Divider, Table, DeleteIcon, EditIcon, RenderTableLoading } from '@gqlapp/look-client-react';
 
 // types
 import { ErrorObject, UsersProps } from '../containers/Users.web';
 import { user_user_user as User } from '../graphql/__generated__/user';
+import { handleDelete } from '@gqlapp/listing-client-react';
 
 export interface UsersViewProps extends UsersProps {
   //
@@ -103,12 +104,12 @@ const UsersView: React.FC<UsersViewProps> = ({ deleteUser, orderBy, onOrderBy, l
       align: 'end',
       key: 'actions',
       render: (text: string, record: User) => (
-        <div>
+        <div align="center">
           <Link to={`/users/${record.id}`}>
             <EditIcon />
           </Link>
-          &nbsp;&nbsp;
-          <DeleteIcon onClick={() => handleDeleteUser(record.id)} />
+          <Divider type="vertical" />
+          <DeleteIcon onClick={() => handleDelete(handleDeleteUser, record.id)} />
         </div>
       )
     }

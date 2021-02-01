@@ -20,6 +20,7 @@ import ROUTES from '../routes';
 // types
 import { DiscountsViewProps } from './DiscountsView.web';
 import { DiscountInfo as Discount } from '../graphql/__generated__/DiscountInfo';
+import { handleDelete } from '@gqlapp/listing-client-react';
 
 const { itemsNumber, type } = settings.pagination.web;
 
@@ -151,7 +152,7 @@ const DiscountsListComponent: React.FC<DiscountsListComponentProps> = props => {
             <EditIcon />
           </Link>
           <Divider type="vertical" />
-          <DeleteIcon onClick={() => deleteDiscount(record.id)} />
+          <DeleteIcon onClick={() => handleDelete(deleteDiscount, record.id)} />
         </div>
       )
     }

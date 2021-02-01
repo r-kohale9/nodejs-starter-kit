@@ -87,6 +87,7 @@ const Listing: React.FC<ListingProps> = props => {
       throw Error(e);
     }
   };
+
   // console.log('props', props);
   return (
     <ListingView

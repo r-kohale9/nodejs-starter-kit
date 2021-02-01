@@ -20,7 +20,7 @@ import {
   Card
 } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-import { LISTING_ROUTES, displayDataCheck } from '@gqlapp/listing-client-react';
+import { LISTING_ROUTES, displayDataCheck, handleDelete } from '@gqlapp/listing-client-react';
 import { NO_IMG } from '@gqlapp/listing-common';
 
 import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
@@ -147,7 +147,10 @@ const CategoryListComponent: React.FC<CategoryListComponentProps> = props => {
             </Button>
           </Tooltip> */}
           {/* <Divider type="vertical" /> */}
-          <DeleteIcon onClick={() => deleteCategory(record.id)} title="Are you sure delete this listing?" />
+          <DeleteIcon
+            onClick={() => handleDelete(deleteCategory, record.id)}
+            title="Are you sure delete this listing?"
+          />
         </div>
       )
     }

@@ -352,7 +352,6 @@ export const withListingsDeleting = (Component: FunctionComponent) =>
             }
           }
         });
-        Message.warning('Listing deleted.');
       }
     })
   })(Component);

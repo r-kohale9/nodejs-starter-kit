@@ -22,6 +22,7 @@ const { itemsNumber, type } = settings.pagination.web;
 // types
 import { review_review as Review } from '../graphql/__generated__/review';
 import { ReviewViewProps } from './ReviewsView';
+import { handleDelete } from '@gqlapp/listing-client-react';
 
 export interface ReviewListComponentProps extends ReviewViewProps {
   //
@@ -112,7 +113,7 @@ const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
             <EditIcon />
           </Link>
           <Divider type="vertical" />
-          <DeleteIcon onClick={() => deleteReview(record.id)} />
+          <DeleteIcon onClick={() => handleDelete(deleteReview, record.id)} />
         </div>
       )
     }
