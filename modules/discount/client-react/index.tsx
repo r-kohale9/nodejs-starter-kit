@@ -6,6 +6,8 @@ import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import loadable from '@loadable/component';
 import { Icon, MenuItem, Spinner } from '@gqlapp/look-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react';
+import { UserRoleObject } from '@gqlapp/user-common/';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import resources from './locales';
 import resolvers from './resolvers';
@@ -26,20 +28,23 @@ export default new ClientModule({
   route: [
     <AuthRoute
       exact
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       path={ROUTES.adminPanel}
       component={loadable(() => import('./containers/Discounts.web').then(c => c.default), { fallback: <Spinner /> })}
     />,
 
     <AuthRoute
       exact
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.add}
       component={loadable(() => import('./containers/AddDiscount.web').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.edit}
       component={loadable(() => import('./containers/EditDiscount.web').then(c => c.default), {
         fallback: <Spinner />

@@ -10,6 +10,8 @@ import { AuthRoute, IfLoggedIn, USER_ROUTES } from '@gqlapp/user-client-react';
 import { withPlatform } from '@gqlapp/setting-client-react/containers/SettingOperations';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 import { PLATFORM_TYPE } from '@gqlapp/setting-common';
+import { UserRoleObject } from '@gqlapp/user-common/';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import resolvers from './resolvers';
 import resources from './locales';
@@ -61,8 +63,8 @@ export default new ClientModule({
     <AuthRoute
       exact
       path={ROUTES.adminPanel}
-      redirect={USER_ROUTES.profile}
-      role="admin"
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       component={loadable(() => import('./containers/Orders.web').then(c => c.default), { fallback: <Spinner /> })}
     />,
 
@@ -80,13 +82,17 @@ export default new ClientModule({
       })}
     />,
 
-    <Route
+    <AuthRoute
       exact
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.myOrder}
       component={loadable(() => import('./containers/MyOrder').then(c => c.default), { fallback: <Spinner /> })}
     />,
-    <Route
+    <AuthRoute
       exact
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.myDelivery}
       component={loadable(() => import('./containers/MyDelivery').then(c => c.default), { fallback: <Spinner /> })}
     />,
@@ -95,7 +101,7 @@ export default new ClientModule({
     <AuthRoute
       exact
       redirect={USER_ROUTES.profile}
-      role={['admin', 'user']}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.checkoutCart}
       component={loadable(() => import('./containers/CheckoutCart.web').then(c => c.default), {
         fallback: <Spinner />
@@ -104,7 +110,7 @@ export default new ClientModule({
     <AuthRoute
       exact
       redirect={USER_ROUTES.profile}
-      role={['admin', 'user']}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.checkoutBill}
       component={loadable(() => import('./containers/CheckoutBill.web').then(c => c.default), {
         fallback: <Spinner />
@@ -113,7 +119,7 @@ export default new ClientModule({
     <AuthRoute
       exact
       redirect={USER_ROUTES.profile}
-      role={['admin', 'user']}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.checkoutOrder}
       component={loadable(() => import('./containers/CheckoutOrder.web').then(c => c.default), {
         fallback: <Spinner />

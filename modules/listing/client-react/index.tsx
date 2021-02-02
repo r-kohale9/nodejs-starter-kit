@@ -7,10 +7,12 @@ import loadable from '@loadable/component';
 import { compose } from '@gqlapp/core-common';
 import { Route, NavLink } from 'react-router-dom';
 import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
-import { IfLoggedIn, AuthRoute, USER_ROUTES } from '@gqlapp/user-client-react/';
+import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
+import { UserRoleObject } from '@gqlapp/user-common/';
 import { withPlatform } from '@gqlapp/setting-client-react/containers/SettingOperations';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 import { PLATFORM_TYPE } from '@gqlapp/setting-common';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import resolvers from './resolvers';
 import resources from './locales';
@@ -91,7 +93,8 @@ export default new ClientModule({
   route: [
     <AuthRoute
       exact
-      role={['admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       path={ROUTES.adminPanel}
       component={loadable(() => import('./containers/Listing.web').then(c => c.default), { fallback: <Spinner /> })}
     />,
@@ -118,8 +121,8 @@ export default new ClientModule({
       })}
     />,
     <AuthRoute
-      redirect={USER_ROUTES.profile}
-      role={['user', 'admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.user, UserRoleObject.admin]}
       exact
       path={ROUTES.myListing}
       component={loadable(() => import('./containers/MyListings').then(c => c.default), { fallback: <Spinner /> })}
@@ -130,8 +133,8 @@ export default new ClientModule({
       component={loadable(() => import('./containers/ListingDetail').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
-      redirect={USER_ROUTES.profile}
-      role={['user', 'admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.user, UserRoleObject.admin]}
       exact
       path={ROUTES.listingBookmark}
       component={loadable(() => import('./containers/MyListingBookmarks').then(c => c.default), {
@@ -141,13 +144,15 @@ export default new ClientModule({
 
     <AuthRoute
       exact
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.user, UserRoleObject.admin]}
       path={ROUTES.add}
       component={loadable(() => import('./containers/AddListing.web').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.user, UserRoleObject.admin]}
       path={ROUTES.edit}
       component={loadable(() => import('./containers/EditListing.web').then(c => c.default), { fallback: <Spinner /> })}
     />

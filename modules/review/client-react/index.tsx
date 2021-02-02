@@ -4,8 +4,10 @@ import loadable from '@loadable/component';
 
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import ClientModule from '@gqlapp/module-client-react';
-import { IfLoggedIn, AuthRoute, USER_ROUTES } from '@gqlapp/user-client-react';
+import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react';
 import { MenuItem, Icon, Spinner } from '@gqlapp/look-client-react';
+import { UserRoleObject } from '@gqlapp/user-common/';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import resolvers from './resolvers';
 import resources from './locales';
@@ -44,29 +46,29 @@ export default new ClientModule({
     />,
     <AuthRoute
       exact
-      redirect={USER_ROUTES.profile}
-      role={['admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.add}
       component={loadable(() => import('./containers/AddReview').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
-      redirect={USER_ROUTES.profile}
-      role={['admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.edit}
       component={loadable(() => import('./containers/EditReview').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
-      redirect={USER_ROUTES.profile}
-      role={['admin', 'user']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.myReview}
       component={loadable(() => import('./containers/MyReview').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
-      redirect={USER_ROUTES.profile}
-      role={['admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       path={ROUTES.adminPanel}
       component={loadable(() => import('./containers/Reviews.web').then(c => c.default), { fallback: <Spinner /> })}
     />
