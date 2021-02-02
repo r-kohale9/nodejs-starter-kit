@@ -4,14 +4,12 @@ import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import loadable from '@loadable/component';
 
-import { compose } from '@gqlapp/core-common';
 import { Route, NavLink } from 'react-router-dom';
 import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
 import { IfLoggedIn, AuthRoute } from '@gqlapp/user-client-react/';
 import { UserRoleObject } from '@gqlapp/user-common/';
-import { withPlatform } from '@gqlapp/setting-client-react/containers/SettingOperations';
-import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
-import { PLATFORM_TYPE } from '@gqlapp/setting-common';
+import { PlatformType } from '@gqlapp/setting-client-react/containers/PlatformType';
+import { PLATFORM_TYPE_OBJECT } from '@gqlapp/setting-common';
 import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import resolvers from './resolvers';
@@ -21,52 +19,6 @@ import ROUTES from './routes';
 export { default as LISTING_ROUTES } from './routes';
 export * from './containers';
 export * from './components';
-
-const NavLinkUsertWithI18n = compose(
-  withCurrentUser,
-  withPlatform
-)(({ platform, currentUser }: { platform: any; currentUser: any }) => {
-  return (
-    <>
-      {platform.type === PLATFORM_TYPE[1] ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.add}>
-            <Icon type="SolutionOutlined" />
-            {'Create listing'}
-          </NavLink>
-        </MenuItem>
-      ) : currentUser.role === 'admin' ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.add}>
-            <Icon type="SolutionOutlined" />
-            {'Create listing'}
-          </NavLink>
-        </MenuItem>
-      ) : null}
-      <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-        <NavLink to={ROUTES.listingBookmark}>
-          <Icon type="StarOutlined" />
-          {'My Bookmarks'}
-        </NavLink>
-      </MenuItem>
-      {platform.type === PLATFORM_TYPE[1] ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.myListing}>
-            <Icon type="SolutionOutlined" />
-            {'My Listings'}
-          </NavLink>
-        </MenuItem>
-      ) : currentUser.role === 'admin' ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.myListing}>
-            <Icon type="SolutionOutlined" />
-            {'My Listings'}
-          </NavLink>
-        </MenuItem>
-      ) : null}
-    </>
-  );
-});
 
 // const NavLinkMyListingsWithI18n = translate('listing')(({ t }) => (
 //   <NavLink to={ROUTES.myListing} className=" AccDetItem" activeClassName="AccDetItemSelected">
@@ -184,7 +136,52 @@ export default new ClientModule({
         </>
       }
     >
-      <NavLinkUsertWithI18n />
+      <PlatformType
+        type={PLATFORM_TYPE_OBJECT.multiVendor}
+        elseComponent={
+          <IfLoggedIn role={UserRoleObject.admin}>
+            <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+              <NavLink to={ROUTES.add}>
+                <Icon type="SolutionOutlined" />
+                {'Create listing'}
+              </NavLink>
+            </MenuItem>
+          </IfLoggedIn>
+        }
+      >
+        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+          <NavLink to={ROUTES.add}>
+            <Icon type="SolutionOutlined" />
+            {'Create listing'}
+          </NavLink>
+        </MenuItem>
+      </PlatformType>
+      <MenuItem>
+        <NavLink to={ROUTES.listingBookmark}>
+          <Icon type="StarOutlined" />
+          {'My Bookmarks'}
+        </NavLink>
+      </MenuItem>
+      <PlatformType
+        type={PLATFORM_TYPE_OBJECT.multiVendor}
+        elseComponent={
+          <IfLoggedIn role={UserRoleObject.admin}>
+            <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+              <NavLink to={ROUTES.myListing}>
+                <Icon type="SolutionOutlined" />
+                {'My Listings'}
+              </NavLink>
+            </MenuItem>
+          </IfLoggedIn>
+        }
+      >
+        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+          <NavLink to={ROUTES.myListing}>
+            <Icon type="SolutionOutlined" />
+            {'My Listings'}
+          </NavLink>
+        </MenuItem>
+      </PlatformType>
     </SubMenu>
   ],
   // navItemAccount: [

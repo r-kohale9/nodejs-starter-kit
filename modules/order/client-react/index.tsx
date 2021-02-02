@@ -2,14 +2,12 @@ import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-import { compose } from '@gqlapp/core-common';
 import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
 import { AuthRoute, IfLoggedIn, USER_ROUTES } from '@gqlapp/user-client-react';
-import { withPlatform } from '@gqlapp/setting-client-react/containers/SettingOperations';
-import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
-import { PLATFORM_TYPE } from '@gqlapp/setting-common';
+import { PLATFORM_TYPE_OBJECT } from '@gqlapp/setting-common';
+import { PlatformType } from '@gqlapp/setting-client-react/containers/PlatformType';
 import { UserRoleObject } from '@gqlapp/user-common/';
 import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
@@ -19,37 +17,6 @@ import ROUTES from './routes';
 import NavItemCart from './containers/NavItemCart.web';
 
 export { default as ORDER_ROUTES } from './routes';
-
-const NavLinkUsertWithI18n = compose(
-  withCurrentUser,
-  withPlatform
-)(({ platform, currentUser }: { platform: any; currentUser: any }) => {
-  return (
-    <>
-      <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-        <NavLink to={ROUTES.myOrder} className="nav-link" activeClassName="active">
-          <Icon type="FileOutlined" />
-          {'My Orders'}
-        </NavLink>
-      </MenuItem>
-      {platform.type === PLATFORM_TYPE[1] ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.myDelivery} className="nav-link" activeClassName="active">
-            <Icon type="CarOutlined" />
-            {'My Deliveries'}
-          </NavLink>
-        </MenuItem>
-      ) : currentUser.role === 'admin' ? (
-        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
-          <NavLink to={ROUTES.myDelivery} className="nav-link" activeClassName="active">
-            <Icon type="CarOutlined" />
-            {'My Deliveries'}
-          </NavLink>
-        </MenuItem>
-      ) : null}
-    </>
-  );
-});
 
 const NavLinkOrdersWithI18n = translate('order')(({ t }: { t: TranslateFunction }) => (
   <NavLink to={ROUTES.adminPanel} className="nav-link" activeClassName="active">
@@ -134,18 +101,41 @@ export default new ClientModule({
     </IfLoggedIn>
   ],
   navItemUser: [
-    <IfLoggedIn key={ROUTES.myOrder}>
-      <SubMenu
-        key={ROUTES.order}
-        title={
-          <>
-            <Icon type="SolutionOutlined" /> Order
-          </>
+    <SubMenu
+      key={ROUTES.order}
+      title={
+        <>
+          <Icon type="SolutionOutlined" /> Order
+        </>
+      }
+    >
+      <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+        <NavLink to={ROUTES.myOrder} className="nav-link" activeClassName="active">
+          <Icon type="FileOutlined" />
+          {'My Orders'}
+        </NavLink>
+      </MenuItem>
+      <PlatformType
+        type={PLATFORM_TYPE_OBJECT.multiVendor}
+        elseComponent={
+          <IfLoggedIn role={UserRoleObject.admin}>
+            <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+              <NavLink to={ROUTES.myDelivery} className="nav-link" activeClassName="active">
+                <Icon type="CarOutlined" />
+                {'My Deliveries'}
+              </NavLink>
+            </MenuItem>
+          </IfLoggedIn>
         }
       >
-        <NavLinkUsertWithI18n />
-      </SubMenu>
-    </IfLoggedIn>
+        <MenuItem className="ant-dropdown-menu-item ant-dropdown-menu-item-only-child">
+          <NavLink to={ROUTES.myDelivery} className="nav-link" activeClassName="active">
+            <Icon type="CarOutlined" />
+            {'My Deliveries'}
+          </NavLink>
+        </MenuItem>
+      </PlatformType>
+    </SubMenu>
   ],
   navItemAdmin: [
     <IfLoggedIn key={ROUTES.adminPanel} role="admin">
