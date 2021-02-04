@@ -6,13 +6,19 @@ import { Icon, Steps, Card, Step } from '@gqlapp/look-client-react';
 
 const OrderTrackCardComponent = props => {
   const { t, orderStatus } = props;
-
   function getStep() {
     const status = orderStatus;
     if (status === ORDER_STATES.STALE) {
       return 0;
-    } else if (status === ORDER_STATES.COMPLETED) {
-      return 6;
+    }
+    if (status === ORDER_STATES.CONFIRMED) {
+      return 1;
+    }
+    if (status === ORDER_STATES.DISPATCHED) {
+      return 2;
+    }
+    if (status === ORDER_STATES.COMPLETED) {
+      return 3;
     }
   }
   function IconCheck(val) {
