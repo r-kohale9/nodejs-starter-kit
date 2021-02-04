@@ -41,13 +41,13 @@ const MyOrdersContainer = compose(withOrders)(props => {
 });
 
 const MyOrders = props => {
-  const { currentUser, filter, currentUserLoading } = props;
+  const { currentUser, filter, currentUserLoading, t } = props;
 
   // console.log('props', props);
   return (
     !currentUserLoading && (
       <MyOrdersContainer filter={{ consumerId: currentUser && currentUser.id, ...filter }}>
-        <MyOrdersView {...props} />
+        <MyOrdersView title={{ icon: 'FileOutlined', text: t('myOrders')}} {...props} />
       </MyOrdersContainer>
     )
   );

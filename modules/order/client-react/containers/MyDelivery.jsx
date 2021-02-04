@@ -8,9 +8,9 @@ import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperat
 import { withOrdersState, withFilterUpdating, withOrderStates, withOrders } from './OrderOperations';
 import { subscribeToOrders } from './OrderSubscriptions';
 
-import MyDeliveryView from '../components/MyDeliveryView';
+import MyOrdersView from '../components/MyOrdersView';
 
-const MyDeliveryContainer = compose(withOrders)(props => {
+const MyDeliveryContainer = compose(withOrders)((props) => {
   const { ordersSubscribeToMore, refetch } = props;
   useEffect(() => {
     const subscribe = subscribeToOrders(ordersSubscribeToMore, props.filter);
@@ -22,14 +22,14 @@ const MyDeliveryContainer = compose(withOrders)(props => {
   return React.cloneElement(props.children, { ...props });
 });
 
-const MyDelivery = props => {
-  const { currentUser, filter, currentUserLoading } = props;
+const MyDelivery = (props) => {
+  const { currentUser, filter, currentUserLoading, t } = props;
 
   // console.log('props', props);
   return (
     !currentUserLoading && (
       <MyDeliveryContainer filter={{ vendorId: currentUser && currentUser.id, ...filter }} {...props}>
-        <MyDeliveryView {...props} />
+        <MyOrdersView title={{ icon: 'SolutionOutlined', text: t('myDeliveries') }} {...props} />
       </MyDeliveryContainer>
     )
   );
@@ -39,13 +39,7 @@ MyDelivery.propTypes = {
   currentUserLoading: PropTypes.bool,
   filter: PropTypes.object,
   currentUser: PropTypes.object,
-  t: PropTypes.func
+  t: PropTypes.func,
 };
 
-export default compose(
-  withCurrentUser,
-  withOrdersState,
-  withFilterUpdating,
-  withOrderStates,
-  translate('order')
-)(MyDelivery);
+export default compose(withCurrentUser, withOrdersState, withFilterUpdating, withOrderStates, translate('order'))(MyDelivery);

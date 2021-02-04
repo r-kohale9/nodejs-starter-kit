@@ -13,16 +13,16 @@ import {
   SuggestedListComponent,
   Spinner,
   Button,
-  ButtonGroup
+  ButtonGroup,
 } from '@gqlapp/look-client-react';
 // eslint-disable-next-line import/no-named-default
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import MyOrderItemComponent from './MyOrderItemComponent';
 
-const MyOrdersView = props => {
+const MyOrdersView = (props) => {
   const [status, setStatus] = React.useState('');
-  const { loading, orders, t, history, currentUser, orderStates, onUserStateChange } = props;
+  const { loading, orders, t, title, history, currentUser, orderStates, onUserStateChange } = props;
 
   function filterItems(e) {
     setStatus(e.toUpperCase());
@@ -45,7 +45,7 @@ const MyOrdersView = props => {
     <Icon type="HddOutlined" />,
     <Icon type="ShopOutlined" />,
     <Icon type="ToTopOutlined" />,
-    <Icon type="DeleteOutlined" />
+    <Icon type="DeleteOutlined" />,
   ];
   const RenderMyOrders = () => (
     <div>
@@ -58,7 +58,7 @@ const MyOrdersView = props => {
             md: 3,
             lg: 4,
             xl: 5,
-            xxl: 5
+            xxl: 5,
           }}
           endText={'orders'}
           {...props}
@@ -75,8 +75,8 @@ const MyOrdersView = props => {
       <Row>
         <Col lg={{ span: 8 }} md={{ span: 8 }} xs={{ span: 24 }}>
           <Heading type="2" className="headingTop">
-            <Icon type="FileOutlined" />
-            {t('myOrders')}
+            <Icon type={title.icon} />
+            {title.text}
           </Heading>
           <br />
         </Col>
@@ -141,7 +141,7 @@ MyOrdersView.propTypes = {
   currentUser: PropTypes.object,
   orderStates: PropTypes.array,
   onUserStateChange: PropTypes.func,
-  t: PropTypes.func
+  t: PropTypes.func,
 };
 
 export default MyOrdersView;
