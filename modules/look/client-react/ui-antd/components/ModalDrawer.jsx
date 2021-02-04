@@ -28,7 +28,6 @@ const ModalDrawer = props => {
   } = props;
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleDrawer, setVisibleDrawer] = useState(false);
-  // console.log(children);
   return (
     <Row>
       <Col lg={24} md={24} sm={24} xs={0}>
@@ -64,7 +63,7 @@ const ModalDrawer = props => {
           size={size}
           {...style}
           disabled={disabled}
-          block
+          block={block}
           onClick={() => setVisibleDrawer(true)}
         >
           {buttonText}

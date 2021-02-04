@@ -29,7 +29,7 @@ const ListingDetailImgCarousel = props => {
   const { images, youtubeUrl, carouselLayout = true } = props;
   const [visibleImgIdx, setVisibleImgIdx] = useState(images.length > 0 ? [true] : []);
   const [visibleVidIdx, setVisibleVidIdx] = useState(images.length === 0 ? [true] : []);
-
+  console.log(visibleImgIdx);
   useEffect(() => {});
 
   let carouselThumbnail = [];
