@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { translate } from '@gqlapp/i18n-client-react';
 import { Divider, Table, DeleteIcon, EditIcon, RenderTableLoading } from '@gqlapp/look-client-react';
 
+import ROUTES from '../routes';
+
 // types
 import { ErrorObject, UsersProps } from '../containers/Users.web';
 import { user_user_user as User } from '../graphql/__generated__/user';
@@ -105,7 +107,7 @@ const UsersView: React.FC<UsersViewProps> = ({ deleteUser, orderBy, onOrderBy, l
       key: 'actions',
       render: (text: string, record: User) => (
         <div align="center">
-          <Link to={`/users/${record.id}`}>
+          <Link to={`${ROUTES.editLink}${record.id}`}>
             <EditIcon />
           </Link>
           <Divider type="vertical" />
