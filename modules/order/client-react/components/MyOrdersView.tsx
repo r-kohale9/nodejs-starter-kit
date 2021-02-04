@@ -50,9 +50,9 @@ const MyOrdersView: React.FC<MyOrdersViewProps> = props => {
     <Icon type="AppstoreOutlined" />,
     <Icon type="HddOutlined" />,
     <Icon type="CheckOutlined" />,
-    <Icon type="ShopOutlined" />,
     <Icon type="ToTopOutlined" />,
-    <Icon type="DeleteOutlined" />
+    <Icon type="DeleteOutlined" />,
+    <Icon type="ShopOutlined" />
   ];
   const RenderMyOrders = () => (
     <div>
@@ -64,8 +64,8 @@ const MyOrdersView: React.FC<MyOrdersViewProps> = props => {
             sm: 1,
             md: 3,
             lg: 4,
-            xl: 5,
-            xxl: 5
+            xl: 6,
+            xxl: 6
           }}
           endText={'orders'}
           {...props}

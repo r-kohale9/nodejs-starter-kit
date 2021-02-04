@@ -15,16 +15,16 @@ const Price = styled(Row)`
   background-color: #1890ff;
 `;
 const StatusText = styled.div`
-  color: ${(props) => props.status === 'completed' && '#2aa952'};
-  color: ${(props) => props.status === 'initiated' && '#F79E1B'};
-  color: ${(props) => props.status === 'cancelled' && 'red'};
+  color: ${props => props.status === 'completed' && '#2aa952'};
+  color: ${props => props.status === 'initiated' && '#F79E1B'};
+  color: ${props => props.status === 'cancelled' && 'red'};
 `;
 
-const OrderItemComponent = (props) => {
+const OrderItemComponent = props => {
   const [ref, loaded, onLoad] = useImageLoaded();
   const {
     item,
-    t,
+    t
     // edit,
   } = props;
   const order_img = (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].imageUrl) || NO_IMG;
@@ -34,11 +34,11 @@ const OrderItemComponent = (props) => {
       <Card
         style={{
           marginBottom: '24px',
-          display: !loaded && 'none',
+          display: !loaded && 'none'
         }}
         hoverable
         bodyStyle={{
-          padding: '0px',
+          padding: '0px'
         }}
       >
         <Row type="flex">
@@ -48,14 +48,14 @@ const OrderItemComponent = (props) => {
               onLoad={onLoad}
               src={order_img}
               style={{
-                width: '100%',
+                width: '100%'
               }}
             />
           </Col>
           <Col span={18}>
             <div
               style={{
-                padding: '10px 15px',
+                padding: '10px 15px'
               }}
             >
               <Row>
@@ -75,11 +75,11 @@ const OrderItemComponent = (props) => {
                 </Col>
                 <Col span={12}>
                   <Row type="flex" justify="end">
-                    <h3>
+                    <h4>
                       <StatusText status={item.orderState && item.orderState.state.toLowerCase()}>
                         {item.orderState && displayDataCheck(item.orderState.state)}
                       </StatusText>
-                    </h3>
+                    </h4>
                   </Row>
                 </Col>
               </Row>
@@ -106,12 +106,12 @@ const OrderItemComponent = (props) => {
 OrderItemComponent.propTypes = {
   item: PropTypes.object,
   deleteProduct: PropTypes.func,
-  t: PropTypes.func,
+  t: PropTypes.func
 };
 
 export default OrderItemComponent;
 
-const OrderItemSkeleton = (props) => {
+const OrderItemSkeleton = props => {
   const { componentStyle } = props;
   return (
     <Card
@@ -126,7 +126,7 @@ const OrderItemSkeleton = (props) => {
             height: '230px',
             borderRadius: '8px 8px 0px 0px',
             background: 'linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%)',
-            animation: 'ant-skeleton-loading 1.4s ease infinite',
+            animation: 'ant-skeleton-loading 1.4s ease infinite'
           }}
           align="center"
         ></div>
@@ -151,4 +151,8 @@ const OrderItemSkeleton = (props) => {
       </Row>
     </Card>
   );
+};
+
+OrderItemSkeleton.propTypes = {
+  componentStyle: PropTypes.object
 };

@@ -1,26 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { NextButton, Col, Row, Card, Divider, RenderSelect, Option, Icon } from '@gqlapp/look-client-react';
+import { NextButton, Col, Row, Card, Divider, RenderSelect, Option, Icon, Space } from '@gqlapp/look-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { MODAL } from '@gqlapp/review-common';
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { displayDataCheck } from '@gqlapp/listing-client-react';
+import { IfLoggedIn } from '@gqlapp/user-client-react';
+import { UserRoleObject } from '@gqlapp/user-common/';
 
 import CartItemComponent from './CartItemComponent';
 import { TotalPrice } from './function';
+
+// types
+import { order_order as Order } from '../graphql/__generated__/order';
+import { orderStates_orderStates } from '../graphql/__generated__/orderStates';
+import OrderStatusMail from '../containers/OrderStatusMail';
+import { ORDER_STATES } from '@gqlapp/order-common';
 
 const StatusText = styled.div`
   color: ${props => props.status === 'completed' && '#2aa952'};
   color: ${props => props.status === 'initiated' && '#F79E1B'};
   color: ${props => props.status === 'cancelled' && 'red'};
 `;
-
-// types
-import { order_order as Order } from '../graphql/__generated__/order';
-import { orderStates_orderStates } from '../graphql/__generated__/orderStates';
-import { IfLoggedIn } from '@gqlapp/user-client-react';
-import { UserRoleObject } from '@gqlapp/user-common/';
 
 export interface CheckoutCardComponentProps {
   order: Order;
@@ -54,9 +56,9 @@ const CheckoutCardComponent: React.FC<CheckoutCardComponentProps> = props => {
     <Icon type="AppstoreOutlined" />,
     <Icon type="HddOutlined" />,
     <Icon type="CheckOutlined" />,
-    <Icon type="ShopOutlined" />,
     <Icon type="ToTopOutlined" />,
-    <Icon type="DeleteOutlined" />
+    <Icon type="DeleteOutlined" />,
+    <Icon type="ShopOutlined" />
   ];
   return (
     <Card align="left" style={{ height: '100%' }}>
@@ -76,34 +78,34 @@ const CheckoutCardComponent: React.FC<CheckoutCardComponentProps> = props => {
                 </h3>
               }
             >
-              <div align="left">
-                {orderStates && orderStates.length !== 0 && (
-                  <Field
-                    name="AimOutlined"
-                    icon={'FilterOutlined'}
-                    component={RenderSelect}
-                    placeholder={t('orders.column.state')}
-                    defaultValue={order.orderState.state}
-                    onChange={(e: string) => onPatchOrderState(order.id, e)}
-                    label={t('orders.column.state')}
-                    style={{ width: '100px' }}
-                    value={order.orderState.state}
-                    inFilter={true}
-                    noBotMarging={true}
-                    selectStyle={{ width: '100%' }}
-                  >
-                    <Option key={1} value="">
-                      {Icons[0]} &nbsp; ALL
-                    </Option>
-                    {orderStates.map((oS, i) => (
-                      <Option key={i + 2} value={oS.state}>
-                        {Icons[i + 1]} &nbsp;
-                        {oS.state}
-                      </Option>
-                    ))}
-                  </Field>
-                )}
-              </div>
+              <Space align="center">
+                <div align="left">
+                  {orderStates && orderStates.length !== 0 && (
+                    <Field
+                      name="Order state"
+                      icon={'AimOutlined'}
+                      component={RenderSelect}
+                      placeholder={t('orders.column.state')}
+                      defaultValue={order.orderState.state}
+                      onChange={(e: string) => onPatchOrderState(order.id, e)}
+                      label={t('orders.column.state')}
+                      style={{ width: '100px' }}
+                      value={order.orderState.state}
+                      inFilter={true}
+                      noBotMarging={true}
+                      selectStyle={{ width: '100%' }}
+                    >
+                      {orderStates.map((oS, i) => (
+                        <Option key={i + 2} value={oS.state}>
+                          {Icons[i + 1]} &nbsp;
+                          {oS.state}
+                        </Option>
+                      ))}
+                    </Field>
+                  )}
+                </div>
+                <OrderStatusMail orderId={order.id} disabled={order.orderState.state !== ORDER_STATES.DISPATCHED} />
+              </Space>
             </IfLoggedIn>
           </Col>
         )}

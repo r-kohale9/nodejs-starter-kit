@@ -37,7 +37,7 @@ const MyDelivery: React.FC<MyDeliveryProps> = props => {
   return (
     !currentUserLoading && (
       <MyDeliveryContainer filter={{ vendorId: currentUser && currentUser.id, ...filter }} {...props}>
-        <MyOrdersView title={{ icon: 'SolutionOutlined', text: t('myDeliveries') }} {...props} />
+        <MyOrdersView title={{ icon: 'CarOutlined', text: t('myDeliveries') }} {...props} />
       </MyDeliveryContainer>
     )
   );
