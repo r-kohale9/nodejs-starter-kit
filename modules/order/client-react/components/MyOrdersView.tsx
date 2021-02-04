@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {
   Icon,
@@ -13,23 +12,30 @@ import {
   SuggestedListComponent,
   Spinner,
   Button,
-  ButtonGroup,
+  ButtonGroup
 } from '@gqlapp/look-client-react';
-// eslint-disable-next-line import/no-named-default
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import MyOrderItemComponent from './MyOrderItemComponent';
+import { MyOrdersProps, MyOrdersContainerProps } from '../containers/MyOrder';
 
-const MyOrdersView = (props) => {
+// types
+import { order_order as Order } from '../graphql/__generated__/order';
+
+export interface MyOrdersViewProps extends MyOrdersProps, MyOrdersContainerProps {
+  //
+}
+
+const MyOrdersView: React.FC<MyOrdersViewProps> = props => {
   const [status, setStatus] = React.useState('');
   const { loading, orders, t, title, history, currentUser, orderStates, onUserStateChange } = props;
 
-  function filterItems(e) {
+  function filterItems(e: string) {
     setStatus(e.toUpperCase());
     onUserStateChange(currentUser && currentUser.id, e);
   }
 
-  function classNamesgroup(e) {
+  function classNamesgroup(e: string) {
     if (status === e.toUpperCase()) {
       return 'primary';
     } else {
@@ -37,15 +43,16 @@ const MyOrdersView = (props) => {
     }
   }
 
-  const renderFunc = (key, item) => (
+  const renderFunc = (key: string, item: Order) => (
     <MyOrderItemComponent key={key} item={item} history={history} currentUser={currentUser} t={t} />
   );
   const Icons = [
     <Icon type="AppstoreOutlined" />,
     <Icon type="HddOutlined" />,
+    <Icon type="CheckOutlined" />,
     <Icon type="ShopOutlined" />,
     <Icon type="ToTopOutlined" />,
-    <Icon type="DeleteOutlined" />,
+    <Icon type="DeleteOutlined" />
   ];
   const RenderMyOrders = () => (
     <div>
@@ -58,7 +65,7 @@ const MyOrdersView = (props) => {
             md: 3,
             lg: 4,
             xl: 5,
-            xxl: 5,
+            xxl: 5
           }}
           endText={'orders'}
           {...props}
@@ -132,16 +139,6 @@ const MyOrdersView = (props) => {
         ))}
     </PageLayout>
   );
-};
-
-MyOrdersView.propTypes = {
-  loading: PropTypes.bool,
-  orders: PropTypes.object,
-  history: PropTypes.object,
-  currentUser: PropTypes.object,
-  orderStates: PropTypes.array,
-  onUserStateChange: PropTypes.func,
-  t: PropTypes.func,
 };
 
 export default MyOrdersView;

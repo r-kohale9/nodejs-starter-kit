@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { SubscribeToMoreOptions, ApolloQueryResult } from 'apollo-client';
+import { History } from 'history';
 
 import { compose } from '@gqlapp/core-common';
-import { translate } from '@gqlapp/i18n-client-react';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import { withOrdersState, withFilterUpdating, withOrderStates, withOrders } from './OrderOperations';
@@ -10,7 +11,22 @@ import { withOrdersState, withFilterUpdating, withOrderStates, withOrders } from
 import MyOrdersView from '../components/MyOrdersView';
 import { subscribeToOrders } from './OrderSubscriptions';
 
-const MyOrdersContainer = compose(withOrders)(props => {
+// types
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { FilterOrderInput } from '../../../../packages/server/__generated__/globalTypes';
+import { orders as ordersResponse, ordersVariables } from '../graphql/__generated__/orders';
+import { orders_orders as OrdersEdges } from '../graphql/__generated__/orders';
+import { orderStates_orderStates as OrderStates } from '../graphql/__generated__/orderStates';
+
+export interface MyOrdersContainerProps /* extends MyOrdersProps */ {
+  loading?: boolean;
+  orders?: OrdersEdges;
+  filter: FilterOrderInput;
+  ordersSubscribeToMore?: (options: SubscribeToMoreOptions) => () => void;
+  refetch?: (variables?: ordersVariables) => Promise<ApolloQueryResult<ordersResponse>>;
+}
+
+const MyOrdersContainer: React.FC<MyOrdersContainerProps> = compose(withOrders)(props => {
   const { ordersSubscribeToMore, refetch } = props;
 
   // const listingsUpdated = SubscribeToOrdersForMyOrders(ordersSubscribeToMore, props.filter);
@@ -40,27 +56,28 @@ const MyOrdersContainer = compose(withOrders)(props => {
   return React.cloneElement(props.children, { ...props });
 });
 
-const MyOrders = props => {
+export interface MyOrdersProps {
+  title: { text: string; icon: string };
+  history: History;
+  currentUserLoading: boolean;
+  orderStates: OrderStates[];
+  currentUser: CurrentUser;
+  filter: FilterOrderInput;
+  onUserStateChange: (currentUserId: number, state: string) => void;
+  t: TranslateFunction;
+}
+
+const MyOrders: React.FC<MyOrdersProps> = props => {
   const { currentUser, filter, currentUserLoading, t } = props;
 
   // console.log('props', props);
   return (
     !currentUserLoading && (
       <MyOrdersContainer filter={{ consumerId: currentUser && currentUser.id, ...filter }}>
-        <MyOrdersView title={{ icon: 'FileOutlined', text: t('myOrders')}} {...props} />
+        <MyOrdersView title={{ icon: 'FileOutlined', text: t('myOrders') }} {...props} />
       </MyOrdersContainer>
     )
   );
-};
-
-MyOrders.propTypes = {
-  currentUserLoading: PropTypes.bool,
-  filter: PropTypes.object,
-  //   updateQuery: PropTypes.func,
-  currentUser: PropTypes.object,
-  t: PropTypes.func
-  // ordersSubscribeToMore: PropTypes.func,
-  //   filter: PropTypes.object
 };
 
 export default compose(

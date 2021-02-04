@@ -1,7 +1,7 @@
 import React from 'react';
 import { Message } from '@gqlapp/look-client-react';
 
-export const displayDataCheck = (text: string, bool = false) => {
+export const displayDataCheck = (text: string | number, bool = false) => {
   if (bool) {
     return text ? 'True' : 'False';
   }

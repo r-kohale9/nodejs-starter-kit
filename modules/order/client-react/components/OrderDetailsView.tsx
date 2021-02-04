@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { PageLayout, MetaTags, Row, Col, Card, Divider, Spinner } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
@@ -8,8 +7,15 @@ import AddressItemComponent from '@gqlapp/addresses-client-react/components//Add
 import CheckoutCardComponent from './CheckoutCardComponent';
 import OrderTrackCardComponent from './OrderTrackCardComponent';
 
-const OrderDetailsView = props => {
-  const { order, onSubmit, loading, t } = props;
+// types
+import { OrderDetailsProps } from '../containers/OrderDetails.web';
+
+export interface OrderDetailsViewProps extends OrderDetailsProps {
+  onPatchOrderState: (orderId: number, state: string) => void;
+}
+
+const OrderDetailsView: React.FC<OrderDetailsViewProps> = props => {
+  const { order, loading, t, orderStates, onPatchOrderState } = props;
   const address =
     order &&
     order.orderDetails &&
@@ -44,8 +50,8 @@ const OrderDetailsView = props => {
                       <Col span={24}>
                         <OrderTrackCardComponent
                           t={t}
-                          orderPayment={order.orderPayment}
-                          orderStatus={order.state}
+                          // orderPayment={order.orderPayment}
+                          orderStatus={order.orderState.state}
                           // status={state.status}
                           completed={3}
                         />
@@ -66,12 +72,13 @@ const OrderDetailsView = props => {
                 {!loading && order && (
                   <CheckoutCardComponent
                     t={t}
-                    onSubmit={onSubmit}
                     order={order}
                     product={3}
                     showState={true}
                     showBtn={false}
                     paid={true}
+                    orderStates={orderStates}
+                    onPatchOrderState={onPatchOrderState}
                     buttonText={'View All Orders'}
                   />
                 )}
@@ -82,13 +89,6 @@ const OrderDetailsView = props => {
       )}
     </PageLayout>
   );
-};
-
-OrderDetailsView.propTypes = {
-  loading: PropTypes.bool,
-  order: PropTypes.object,
-  onSubmit: PropTypes.func,
-  t: PropTypes.func
 };
 
 export default OrderDetailsView;

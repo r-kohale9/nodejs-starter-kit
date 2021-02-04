@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
@@ -9,8 +8,13 @@ import { withOrdersState, withFilterUpdating, withOrderStates, withOrders } from
 import { subscribeToOrders } from './OrderSubscriptions';
 
 import MyOrdersView from '../components/MyOrdersView';
+import { MyOrdersProps, MyOrdersContainerProps } from './MyOrder';
 
-const MyDeliveryContainer = compose(withOrders)((props) => {
+export interface MyDeliveryContainerProps extends MyOrdersContainerProps {
+  //
+}
+
+const MyDeliveryContainer: React.SFC<MyDeliveryContainerProps> = compose(withOrders)(props => {
   const { ordersSubscribeToMore, refetch } = props;
   useEffect(() => {
     const subscribe = subscribeToOrders(ordersSubscribeToMore, props.filter);
@@ -22,7 +26,11 @@ const MyDeliveryContainer = compose(withOrders)((props) => {
   return React.cloneElement(props.children, { ...props });
 });
 
-const MyDelivery = (props) => {
+export interface MyDeliveryProps extends MyOrdersProps {
+  //
+}
+
+const MyDelivery: React.FC<MyDeliveryProps> = props => {
   const { currentUser, filter, currentUserLoading, t } = props;
 
   // console.log('props', props);
@@ -35,11 +43,10 @@ const MyDelivery = (props) => {
   );
 };
 
-MyDelivery.propTypes = {
-  currentUserLoading: PropTypes.bool,
-  filter: PropTypes.object,
-  currentUser: PropTypes.object,
-  t: PropTypes.func,
-};
-
-export default compose(withCurrentUser, withOrdersState, withFilterUpdating, withOrderStates, translate('order'))(MyDelivery);
+export default compose(
+  withCurrentUser,
+  withOrdersState,
+  withFilterUpdating,
+  withOrderStates,
+  translate('order')
+)(MyDelivery);
