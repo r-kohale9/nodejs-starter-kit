@@ -1,5 +1,5 @@
 import { returnId, truncateTables } from '@gqlapp/database-server-ts';
-import { PLATFORM_TYPE } from '@gqlapp/setting-common';
+import { PLATFORM_TYPE_OBJECT } from '@gqlapp/setting-common';
 
 exports.seed = async function(knex) {
   await truncateTables(knex, Promise, ['platform', 'platform_info', 'platform_social']);
@@ -9,7 +9,7 @@ exports.seed = async function(knex) {
       const platformId = await returnId(knex('platform')).insert({
         name: 'Approxyma',
         logo: 'https://res.cloudinary.com/www-lenshood-in/image/upload/v1580224348/nodejs-starterkit/untitled_5.svg',
-        type: PLATFORM_TYPE[1]
+        type: PLATFORM_TYPE_OBJECT.multiVendor
       });
       await returnId(knex('platform_info')).insert({
         platform_id: platformId[0],

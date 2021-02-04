@@ -1,9 +1,0 @@
-query ratings($bakerId: Int!) {
-  ratings(bakerId: $bakerId) {
-    one
-    two
-    three
-    four
-    five
-  }
-}

@@ -2,7 +2,7 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
+import { translate } from '@gqlapp/i18n-client-react';
 import {
   EditIcon,
   Table,
@@ -10,29 +10,22 @@ import {
   Pagination,
   DeleteIcon,
   Divider,
-  Button,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
 
 import settings from '@gqlapp/config';
-import { Reviews, Review } from '../containers/Reviews.web';
 import ROUTES from '../routes/index';
 import { displayDataCheck } from '@gqlapp/listing-client-react';
 
 const { itemsNumber, type } = settings.pagination.web;
 
-export interface ReviewListComponentProps {
-  loading: boolean;
-  loadData: (cursor: number, action: string) => boolean;
-  reviews: Reviews;
-  orderBy: {
-    column: string;
-    order: string;
-  };
-  onReviewsOrderBy: ({ column, order }: { column: string; order: string }) => null;
-  deleteReview: (id: number) => boolean;
-  t: TranslateFunction;
-  history: object;
+// types
+import { review_review as Review } from '../graphql/__generated__/review';
+import { ReviewViewProps } from './ReviewsView';
+import { handleDelete } from '@gqlapp/listing-client-react';
+
+export interface ReviewListComponentProps extends ReviewViewProps {
+  //
 }
 
 const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
@@ -111,6 +104,7 @@ const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
     },
     {
       title: t('adminPanel.list.column4'),
+      align: 'end',
       key: 'actions',
       width: 200,
       render: (text: string, record: Review) => (
@@ -119,7 +113,7 @@ const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
             <EditIcon />
           </Link>
           <Divider type="vertical" />
-          <DeleteIcon onClick={() => deleteReview(record.id)} />
+          <DeleteIcon onClick={() => handleDelete(deleteReview, record.id)} />
         </div>
       )
     }
@@ -153,7 +147,7 @@ const ReviewListComponent: React.FC<ReviewListComponentProps> = props => {
   );
 
   return (
-    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
+    <div style={{ overflowX: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main review content */}
