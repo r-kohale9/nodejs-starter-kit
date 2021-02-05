@@ -96,7 +96,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = props => {
           >
             <br />
             <Row gutter={[24, 24]}>
-              <Col lg={11} md={11} xs={24}>
+              <Col lg={11} md={11} xs={0}>
                 <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
                   <Sticky>
                     {({ style, isSticky }: { isSticky: boolean; style: object }) => (
@@ -116,6 +116,18 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = props => {
                     )}
                   </Sticky>
                 </StickyContainer>
+              </Col>
+              <Col lg={0} md={0} xs={24}>
+                <ListingDetailImgCarousel images={images} youtubeUrl={youtubeUrl} carouselLayout={false} />
+                <Divider />
+                <AddToCart
+                  listing={listing}
+                  history={history}
+                  currentUser={currentUser}
+                  modalId={listing && listing.id}
+                  modalName={MODAL[1].value}
+                  // catalogueCard={true}
+                />
               </Col>
               <Col lg={13} md={13} xs={24}>
                 <Row /*  type="flex" align="end" */>
