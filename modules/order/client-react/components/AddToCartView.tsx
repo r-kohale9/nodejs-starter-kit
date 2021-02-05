@@ -1,9 +1,21 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 
 import AddToCartForm from './AddToCartForm';
 
-const AddToCartView = props => {
+// types
+import { AddToCartProps } from '../containers/AddToCart';
+import { order_order_orderDetails as OrderDetails } from '../graphql/__generated__/order';
+import { AddToCartFormValues } from './AddToCartForm';
+
+export interface AddToCartViewProps extends AddToCartProps {
+  showBtn?: boolean;
+  catalogueCard?: boolean;
+  item?: OrderDetails;
+  onSubmit: (values: AddToCartFormValues, redirect: boolean) => void;
+  onDelete: (id: number) => void;
+}
+
+const AddToCartView: React.FC<AddToCartViewProps> = props => {
   const { currentUser, listing, onSubmit, onDelete, showBtn, item, getCart, cartLoading, t, catalogueCard } = props;
   const listingOwned = (listing && listing.user && listing.user.id) === (currentUser && currentUser.id);
   const cartItemArray = getCart ? getCart.orderDetails.filter(oD => oD.modalId === listing.id) : [];
@@ -30,19 +42,6 @@ const AddToCartView = props => {
       onDelete={() => onDelete(cartItemArray[0].id)}
     />
   );
-};
-
-AddToCartView.propTypes = {
-  onSubmit: PropTypes.func,
-  onDelete: PropTypes.func,
-  showBtn: PropTypes.bool,
-  cartLoading: PropTypes.bool,
-  catalogueCard: PropTypes.bool,
-  currentUser: PropTypes.object,
-  item: PropTypes.object,
-  listing: PropTypes.object,
-  getCart: PropTypes.object,
-  t: PropTypes.func
 };
 
 export default AddToCartView;

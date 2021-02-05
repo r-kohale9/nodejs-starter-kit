@@ -1,12 +1,23 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
-import { translate } from '@gqlapp/i18n-client-react';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import { Icon, Row, Col, Button, Tooltip } from '@gqlapp/look-client-react';
 
 import ROUTES from '../routes';
 
-const AddToCartFormBtns = props => {
+export interface AddToCartFormBtnsProps {
+  title: string;
+  inCart: boolean;
+  loading: boolean;
+  disabled: boolean;
+  catalogueCard: boolean;
+  onSubmit: () => void;
+  onSubmitRedirect: () => void;
+  onDelete: () => void;
+  t: TranslateFunction;
+}
+
+const AddToCartFormBtns: React.FC<AddToCartFormBtnsProps> = props => {
   const { t, inCart, onSubmit, loading, disabled, onSubmitRedirect, onDelete, title, catalogueCard = false } = props;
   const customGridLG = !catalogueCard
     ? {
@@ -96,18 +107,6 @@ const AddToCartFormBtns = props => {
       )}
     </Tooltip>
   );
-};
-
-AddToCartFormBtns.propTypes = {
-  inCart: PropTypes.bool,
-  onSubmit: PropTypes.func,
-  loading: PropTypes.bool,
-  disabled: PropTypes.bool,
-  onSubmitRedirect: PropTypes.func,
-  onDelete: PropTypes.func,
-  title: PropTypes.string,
-  catalogueCard: PropTypes.bool,
-  t: PropTypes.func
 };
 
 export default translate('order')(AddToCartFormBtns);

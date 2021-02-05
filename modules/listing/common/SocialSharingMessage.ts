@@ -2,9 +2,9 @@
 import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
 
 // eslint-disable-next-line import/prefer-default-export
-export function ListingShareMessage(id, username, title) {
-  const link = typeof window !== 'undefined' && window.location.origin,
-    listingLink = `${link}${LISTING_ROUTES.listingDetailLink}${id}`;
+export function ListingShareMessage(id: number, username: string, title: string) {
+  const link = typeof window !== 'undefined' && window.location.origin;
+  const listingLink = `${link}${LISTING_ROUTES.listingDetailLink}${id}`;
 
   const whatsappMessage = `Hey, check out this listing - ${title} by ${username}, you can check it here ${listingLink}. Checkout other listings at ${link}.`;
   const twitterMessage = {

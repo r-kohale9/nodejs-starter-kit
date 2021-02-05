@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
@@ -8,8 +7,19 @@ import { Rate } from '@gqlapp/look-client-react';
 import { withRating } from './ReviewOperations';
 import { avgRating } from '../components/AvgRatingComponent';
 
-const ReviewStar = props => {
-  const { loading, ratingAverage = {}, suffix } = props;
+// types
+import { ratingAverage_ratingAverage as RatingAverage } from '../graphql/__generated__/ratingAverage';
+import { FilterListInput } from '../../../../packages/server/__generated__/globalTypes';
+
+export interface ReviewStarProps {
+  filter: FilterListInput;
+  loading?: boolean;
+  ratingAverage?: RatingAverage;
+  suffix?: string;
+}
+
+const ReviewStar: React.FC<ReviewStarProps> = props => {
+  const { loading, ratingAverage, suffix } = props;
   const one = ratingAverage && ratingAverage.one;
   const two = ratingAverage && ratingAverage.two;
   const three = ratingAverage && ratingAverage.three;
@@ -25,12 +35,6 @@ const ReviewStar = props => {
   ) : (
     <br />
   );
-};
-
-ReviewStar.propTypes = {
-  loading: PropTypes.bool,
-  ratingAverage: PropTypes.object,
-  suffix: PropTypes.string
 };
 
 export default compose(withRating, translate('review'))(ReviewStar);

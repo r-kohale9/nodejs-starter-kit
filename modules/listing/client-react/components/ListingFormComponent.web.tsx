@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-
 import { withFormik, FormikProps } from 'formik';
 
 import { NO_IMG } from '@gqlapp/listing-common';

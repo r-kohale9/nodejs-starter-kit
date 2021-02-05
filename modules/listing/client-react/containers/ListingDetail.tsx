@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Message } from '@gqlapp/look-client-react';
-import PropTypes from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
+import { History } from 'history';
 
-import { translate } from '@gqlapp/i18n-client-react';
+import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
+import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
 import { withGetCart, withDeleteCartItem } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { subscribeToCart } from '@gqlapp/order-client-react/containers/OrderSubscriptions';
@@ -18,7 +19,29 @@ import {
 import ListingDetailView from '../components/ListingDetailView';
 import { subscribeToListing, subscribeToListingReview } from './ListingSubscriptions';
 
-const ListingDetail = props => {
+// types
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+import { getCart_getCart as GetCart } from '@gqlapp/order-client-react/graphql/__generated__/getCart';
+import { ShareListingByEmailInput } from '../../../../packages/server/__generated__/globalTypes';
+
+export interface ListingDetailProps {
+  getCart: GetCart;
+  currentUser: CurrentUser;
+  loading: boolean;
+  listing: Listing;
+  history: History;
+  location: Location;
+  canUserReview: boolean;
+  shareListingByEmail: (values: ShareListingByEmailInput) => void;
+  addOrRemoveListingBookmark: (listingId: number, userId: number) => void;
+  canUserReviewsubscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  deleteOrderDetail: (id: number) => void;
+  t: TranslateFunction;
+}
+
+const ListingDetail: React.FC<ListingDetailProps> = props => {
   const {
     subscribeToMore,
     listing,
@@ -37,13 +60,13 @@ const ListingDetail = props => {
     const subscribeAddReview = subscribeToListingReview(canUserReviewsubscribeToMore, listing && listing.id);
     const subscribeCart = subscribeToCart(subscribeToMore, getCart && getCart.id, {});
     return () => {
-      () => subscribe();
-      () => subscribeAddReview();
-      () => subscribeCart();
+      subscribe();
+      subscribeAddReview();
+      subscribeCart();
     };
   }, [history, subscribeToMore, listing, location, canUserReviewsubscribeToMore, getCart]);
 
-  const bookmarkListing = async (id, userId) => {
+  const bookmarkListing = async (id: number, userId: number) => {
     try {
       await addOrRemoveListingBookmark(id, userId);
     } catch (e) {
@@ -51,18 +74,18 @@ const ListingDetail = props => {
     }
   };
 
-  const handleShare = async values => {
+  const handleShare = async (values: ShareListingByEmailInput) => {
     try {
       await shareListingByEmail(values);
     } catch (e) {
       Message.destroy();
       Message.error('Message sending failed');
-      throw new Error('Message sending failed', e);
+      throw new Error(e);
     }
     Message.destroy();
     Message.success('Email sent!');
   };
-  const handleDelete = id => {
+  const handleDelete = (id: number) => {
     try {
       deleteOrderDetail(id);
       Message.error('Removed from Cart.');
@@ -74,21 +97,6 @@ const ListingDetail = props => {
   return (
     <ListingDetailView onDelete={handleDelete} onShare={handleShare} handleBookmark={bookmarkListing} {...props} />
   );
-};
-
-ListingDetail.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  updateQuery: PropTypes.func,
-  subscribeToMore: PropTypes.func,
-  canUserReviewsubscribeToMore: PropTypes.func,
-  listing: PropTypes.object,
-  history: PropTypes.object,
-  getCart: PropTypes.object,
-  navigation: PropTypes.object,
-  location: PropTypes.object,
-  addOrRemoveListingBookmark: PropTypes.func,
-  shareListingByEmail: PropTypes.func,
-  deleteOrderDetail: PropTypes.func
 };
 
 export default compose(

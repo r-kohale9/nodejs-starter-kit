@@ -1,15 +1,19 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
-import { withFormik } from 'formik';
+import { withFormik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { Form, RenderField, Row, Col, Button } from '@gqlapp/look-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import AddToCartFormBtns from './AddToCartFormBtns';
 
+// types
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { order_order_orderDetails as OrderDetails } from '../graphql/__generated__/order';
+
 const AddToCartFormSchema = Yup.object().shape({
-  quantity: Yup.number().test('quantityValidCheck', 'Invalid quantity.', function(value) {
+  quantity: Yup.number().test('quantityValidCheck', 'Invalid quantity.', function(value: number) {
     const inventoryCount = this.options.from[0].value.inventoryCount;
     if (value === 0) {
       return this.createError({ message: 'Quantity is required' });
@@ -18,7 +22,26 @@ const AddToCartFormSchema = Yup.object().shape({
   })
 });
 
-const AddToCartForm = props => {
+export interface AddToCartFormProps {
+  listingOwned: boolean;
+  showBtn: boolean;
+  inCart: boolean;
+  loading: boolean;
+  catalogueCard: boolean;
+  max: number;
+  item: OrderDetails;
+  currentUser: CurrentUser;
+  onDelete: (id: number) => void;
+  onSubmit: (values: AddToCartFormValues, redirect?: boolean) => void;
+  t: TranslateFunction;
+}
+
+export interface AddToCartFormValues {
+  inventoryCount: number;
+  quantity: number;
+}
+
+const AddToCartForm: React.FC<AddToCartFormProps & FormikProps<AddToCartFormValues>> = props => {
   const {
     values,
     handleSubmit,
@@ -88,22 +111,7 @@ const AddToCartForm = props => {
   );
 };
 
-AddToCartForm.propTypes = {
-  onSubmit: PropTypes.func,
-  onDelete: PropTypes.func,
-  currentUser: PropTypes.object,
-  values: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  max: PropTypes.number,
-  listingOwned: PropTypes.bool,
-  loading: PropTypes.bool,
-  showBtn: PropTypes.bool,
-  inCart: PropTypes.bool,
-  catalogueCard: PropTypes.bool,
-  t: PropTypes.func
-};
-
-const AddToCartWithFormik = withFormik({
+const AddToCartWithFormik = withFormik<AddToCartFormProps, AddToCartFormValues>({
   mapPropsToValues: props => {
     return {
       inventoryCount: (props.max && props.max) || 0,

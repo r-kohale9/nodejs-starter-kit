@@ -1,5 +1,4 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 
 import { Statistic } from '@gqlapp/look-client-react';
 
@@ -12,11 +11,18 @@ const symbols = {
   RUB: <>&#8381;</>
 };
 
-const currencyDisplayComponent = props => {
+export interface CurrencyDisplayComponentProps {
+  precision: number;
+  input: string;
+  valueStyle: object;
+  style?: object;
+}
+
+const CurrencyDisplayComponent: React.FC<CurrencyDisplayComponentProps> = props => {
   const { /* value, currency, */ precision = 2, input, valueStyle, style } = props;
 
-  const displayAmount = input * 1;
-  const currentCurrency = symbols['INR'];
+  const displayAmount = Number(input) * 1;
+  const currentCurrency = symbols.INR;
   return (
     <Statistic
       title=""
@@ -28,11 +34,5 @@ const currencyDisplayComponent = props => {
     />
   );
 };
-currencyDisplayComponent.propTypes = {
-  input: PropTypes.number,
-  valueStyle: PropTypes.object,
-  currency: PropTypes.number,
-  precision: PropTypes.number,
-  style: PropTypes.object
-};
-export default currencyDisplayComponent;
+
+export default CurrencyDisplayComponent;

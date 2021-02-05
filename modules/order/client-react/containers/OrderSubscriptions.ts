@@ -20,7 +20,7 @@ import { order_order as Order } from '../graphql/__generated__/order';
 export const subscribeToCart = (
   subscribeToMore: (options: SubscribeToMoreOptions) => () => void,
   orderId: number,
-  history: History
+  history: History | object
 ) =>
   subscribeToMore({
     document: ORDER_SUBSCRIPTION,
@@ -54,13 +54,15 @@ function onEditCart(prev: { getCart: GetCart }, node: GetCart) {
   });
 }
 
-const onDeleteCart = (history: History) => {
+const onDeleteCart = (history: History | object) => {
   Message.info('This cart has been deleted!');
   Message.warn('Redirecting to my orders');
-  if (history) {
+  if (Object.keys(history).length !== 0) {
     return history.push(`${ROUTES.myOrder}`);
   } else {
-    return history.push(`${HOME_ROUTES.home}`);
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   }
 };
 

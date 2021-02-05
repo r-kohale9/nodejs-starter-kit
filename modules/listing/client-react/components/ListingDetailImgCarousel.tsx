@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
 import ReactImageMagnify from 'react-image-magnify';
 import styled from 'styled-components';
 
 import { NO_IMG } from '@gqlapp/listing-common';
 import { Row, Col, Carousel, Spinner, Icon } from '@gqlapp/look-client-react';
 import { useImageLoaded } from '@gqlapp/listing-client-react';
+
+// types
+import { listing_listing_listingMedia as ListingMedia } from '../graphql/__generated__/listing';
 
 const Hover = styled.div`
   position: relative;
@@ -18,32 +20,38 @@ const Hover = styled.div`
   }
 `;
 
-const getYoutubeUrl = url => {
+const getYoutubeUrl = (url: string) => {
   // console.log('url', url);
   const newUrl = url.replace('watch?v=', 'embed/');
 
   return newUrl;
 };
 
-const ListingDetailImgCarousel = props => {
+export interface ListingDetailImgCarouselProps {
+  images: ListingMedia[];
+  youtubeUrl: ListingMedia[];
+  carouselLayout: boolean;
+}
+
+const ListingDetailImgCarousel: React.FC<ListingDetailImgCarouselProps> = props => {
   const { images, youtubeUrl, carouselLayout = true } = props;
   const [visibleImgIdx, setVisibleImgIdx] = useState(images.length > 0 ? [true] : []);
   const [visibleVidIdx, setVisibleVidIdx] = useState(images.length === 0 ? [true] : []);
-  console.log(visibleImgIdx);
+  // console.log(visibleImgIdx);
   useEffect(() => {});
 
-  let carouselThumbnail = [];
+  let carouselThumbnail: ListingMedia[] | [] = [];
   carouselThumbnail = youtubeUrl && youtubeUrl.length !== 0 ? [...carouselThumbnail, ...youtubeUrl] : [];
   carouselThumbnail =
     images && images.length !== 0
       ? [...carouselThumbnail, ...images]
       : carouselThumbnail.length !== 0
       ? [...carouselThumbnail]
-      : [{ url: NO_IMG, type: 'image' }];
+      : [{ url: NO_IMG, type: 'image', id: null, isActive: true, __typename: 'ListingMedium' }];
 
   const status = {
     // eslint-disable-next-line react/display-name
-    customPaging: function(i) {
+    customPaging(i) {
       return (
         <a>
           <img
@@ -58,7 +66,7 @@ const ListingDetailImgCarousel = props => {
               }/sddefault.jpg` ||
               'https://res.cloudinary.com/approxyma/image/upload/v1596703877/3721679-youtube_108064_ratbaa.png'
             }
-            style={{ width: '30px', height: '30px', zIndex: '1' }}
+            style={{ width: '30px', height: '30px', zIndex: 1 }}
           />
         </a>
       );
@@ -71,7 +79,7 @@ const ListingDetailImgCarousel = props => {
     dots: false
   };
 
-  const showImg = (type, idx) => {
+  const showImg = (type: string, idx: number) => {
     const visImg = [...Array(images.length).keys()].map(() => false);
     const visVid = [...Array(youtubeUrl.length).keys()].map(() => false);
     if (type === 'img') {
@@ -123,7 +131,7 @@ const ListingDetailImgCarousel = props => {
                     />
                   </div>
                 ))}
-              {youtubeUrl.length > 0 && youtubeUrl.map(yT => <VideoComponent yT={yT} />)}
+              {youtubeUrl.length > 0 && youtubeUrl.map((yT, key) => <VideoComponent key={key} yT={yT} />)}
             </Carousel>
           </div>
         </div>
@@ -187,15 +195,14 @@ const ListingDetailImgCarousel = props => {
   );
 };
 
-ListingDetailImgCarousel.propTypes = {
-  images: PropTypes.array,
-  youtubeUrl: PropTypes.array,
-  carouselLayout: PropTypes.bool
-};
-
 export default ListingDetailImgCarousel;
 
-const VideoComponent = ({ key, yT }) => {
+export interface VideoComponentProps {
+  key: number;
+  yT: ListingMedia;
+}
+
+const VideoComponent: React.FC<VideoComponentProps> = ({ key, yT }) => {
   const [ref, loaded, onLoad] = useImageLoaded();
   return (
     <>
@@ -215,9 +222,4 @@ const VideoComponent = ({ key, yT }) => {
       </div>
     </>
   );
-};
-
-VideoComponent.propTypes = {
-  key: PropTypes.number,
-  yT: PropTypes.object
 };

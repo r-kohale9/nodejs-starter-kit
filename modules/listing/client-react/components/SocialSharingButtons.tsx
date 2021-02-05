@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import { withFormik } from 'formik';
 
 import {
   Icon,
@@ -14,12 +12,12 @@ import {
   Collapse,
   CollapsePanel
 } from '@gqlapp/look-client-react';
-import { required, validate } from '@gqlapp/validation-common-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
+
 import MailButtonForm from './MailButtonForm';
 
-const SocialSharingButtonsSchema = {
-  inviteVal: [required]
-};
+// types
+import { ShareListingByEmailInput } from '../../../../packages/server/__generated__/globalTypes';
 
 const Img = styled.img`
   &:hover {
@@ -27,8 +25,23 @@ const Img = styled.img`
   }
 `;
 
-const SocialSharingButtons = props => {
-  const { twitterMessage, whatsappMessage, link, hideEmailButton } = props;
+export interface SocialSharingButtonsProps {
+  hideEmailButton?: boolean;
+  whatsappMessage: string;
+  twitterMessage: {
+    text: string;
+    hashtag: string;
+    link: string;
+  };
+  link: string;
+  onShare: (values: ShareListingByEmailInput) => void;
+  emailMessage: string;
+  t: TranslateFunction;
+}
+
+const SocialSharingButtons: React.FC<SocialSharingButtonsProps> = props => {
+  const [activeKey, setActiveKey] = React.useState('');
+  const { twitterMessage, whatsappMessage, link, hideEmailButton, t } = props;
   const sharingMenu = (
     <div>
       <Row type="flex" justify="space-between">
@@ -86,7 +99,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
-                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>twitter</h5>
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Twitter</h5>
                 </Button>
               </a>
             </Col>
@@ -107,7 +120,7 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
-                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>whatsapp</h5>
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Whatsapp</h5>
                 </Button>
               </a>
             </Col>
@@ -127,106 +140,69 @@ const SocialSharingButtons = props => {
                     align="centre"
                     style={{ borderRadius: '90px' }}
                   />
-                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>linkedin</h5>
+                  <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Linkedin</h5>
                 </Button>
               </a>
             </Col>
             {!hideEmailButton && (
               <>
                 <Col>
-                  {/* <ModalDrawer
-                    buttonText={
-                      <Img
-                        src={'https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Mail-64.png'}
-                        height="50"
-                        width="50"
-                        align="centre"
-                        style={{ borderRadius: '90px' }}
-                      />
-                    }
-                    type="link"
+                  <Button
                     shape="circle"
-                    modalTitle={t('socialSharingButton.title')}
-                    height="auto"
-                    ghost={true}
+                    color="link"
+                    ghost
+                    size="lg"
                     style={{ fontSize: '22px' }}
-                    size="large"
-                  > */}
-                  <Collapse bordered={false} ghost={true} destroyInactivePanel={true}>
-                    <CollapsePanel
-                      header={
-                        <>
-                          <Img
-                            src={'https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Mail-64.png'}
-                            height="50"
-                            width="50"
-                            align="centre"
-                            style={{ borderRadius: '90px' }}
-                          />
-                          <h5 style={{ fontSize: '10px', paddingTop: '5px', paddingLeft: '17px' }}>mail</h5>
-                        </>
-                      }
-                      forceRender={true}
-                      showArrow={false}
-                    >
-                      <MailButtonForm {...props} />
-                    </CollapsePanel>
-                  </Collapse>
-                  {/* <MailButtonForm {...props} />
-                  </ModalDrawer> */}
+                    onClick={() => setActiveKey(activeKey === 'mail' ? '' : 'mail')}
+                  >
+                    <Img
+                      src={'https://cdn4.iconfinder.com/data/icons/web-ui-color/128/Mail-64.png'}
+                      height="50"
+                      width="50"
+                      align="centre"
+                      style={{ borderRadius: '90px' }}
+                    />
+                    <h5 style={{ fontSize: '10px', paddingTop: '10px' }}>Mail</h5>
+                  </Button>
                 </Col>
               </>
             )}
           </Row>
+          <br />
+          {!hideEmailButton && (
+            <Collapse bordered={false} ghost={true} destroyInactivePanel={true} activeKey={activeKey}>
+              <CollapsePanel
+                key="mail"
+                header={<div style={{ display: activeKey !== 'mail' && 'none' }}>{t('socialSharingButton.title')}</div>}
+                showArrow={false}
+              >
+                <MailButtonForm {...props} />
+              </CollapsePanel>
+            </Collapse>
+          )}
         </Col>
       </Row>
-      {/* <Row type="flex" justify="space-between" style={{ paddingTop: '15px' }}>
-        <Col xs={0} lg={24}>
-          <Row justify="space-between">
-            <Col span={4}>
-              <h5>FaceBook</h5>
-            </Col>
-            <Col span={4}>
-              <h5 style={{ paddingLeft: '15px' }}>Reddit</h5>
-            </Col>
-            <Col span={4}>
-              <h5 style={{ paddingLeft: '20px' }}>Twitter</h5>
-            </Col>
-            <Col span={4}>
-              <h5 style={{ paddingLeft: '15px' }}>Whatsapp</h5>
-            </Col>
-            <Col span={4}>
-              <h5 style={{ paddingLeft: '25px' }}>Linkedin</h5>
-            </Col>
-            <Col span={4}>
-              <h5 style={{ paddingLeft: '40px' }}>Mail</h5>
-            </Col>
-          </Row>
-        </Col>
-      </Row> */}
       <Row type="flex" style={{ paddingTop: '15px' }}>
         <Col span={24}>
           <Row type="flex" gutter={24}>
-            <Col lg={20} xs={24}>
+            <Col lg={18} xs={24}>
               <Input value={link} />
             </Col>
             <Col xs={24} lg={0}>
               <br />
             </Col>
-            <Col lg={4} xs={24}>
-              <div>
-                <Button
-                  color="primary"
-                  ghost={true}
-                  block
-                  onClick={async () => {
-                    await window.navigator.clipboard.writeText(link);
-                    Message.success('Copied to clipboard!');
-                  }}
-                >
-                  Copy
-                </Button>
-              </div>
+            <Col lg={6} xs={24}>
+              <Button
+                color="primary"
+                ghost={true}
+                block
+                onClick={async () => {
+                  await window.navigator.clipboard.writeText(link);
+                  Message.success('Copied to clipboard!');
+                }}
+              >
+                Copy
+              </Button>
             </Col>
           </Row>
         </Col>
@@ -251,45 +227,4 @@ const SocialSharingButtons = props => {
   );
 };
 
-SocialSharingButtons.propTypes = {
-  twitterMessage: PropTypes.object,
-  whatsappMessage: PropTypes.string,
-  emailMessage: PropTypes.string,
-  link: PropTypes.string,
-  handleSubmit: PropTypes.func,
-  onShare: PropTypes.func,
-  submitting: PropTypes.bool,
-  errors: PropTypes.object,
-  hideEmailButton: PropTypes.bool,
-  values: PropTypes.object,
-  history: PropTypes.object,
-  t: PropTypes.func
-};
-
-const SocialSharingButtonsWithFormik = withFormik({
-  mapPropsToValues: () => ({
-    inviteVal: []
-  }),
-  validate: values => validate(values, SocialSharingButtonsSchema),
-  async handleSubmit(values, { props: { onShare, emailMessage } }) {
-    if (!values.inviteVal.number && !values.inviteVal.email) {
-      Message.warn('No One to Share with!');
-    }
-
-    if (values.inviteVal.number) {
-      let x = values.inviteVal.number.toString();
-      x.length >= 10 ? Message.warn('Function not defined yet!') : Message.warn('Enter a valid Phone Number');
-    }
-
-    if (values.inviteVal.email) {
-      // delete values["inviteVal"];
-      onShare({ email: values.inviteVal.email, Message: emailMessage });
-      Message.warn('Sending email!');
-    }
-    console.log(values);
-  },
-  enableReinitialize: true,
-  displayName: 'ShareForm' // helps with React DevTools
-});
-
-export default SocialSharingButtonsWithFormik(SocialSharingButtons);
+export default SocialSharingButtons;

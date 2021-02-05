@@ -1,12 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Tag, Icon, Space, Row, Col, Skeleton, Tooltip } from '@gqlapp/look-client-react';
 import { translate } from '@gqlapp/i18n-client-react';
 
 import CurrencyDisplay from './CurrencyDisplay';
 
-const DiscountComponent = props => {
+// types
+import { DiscountComponentProps } from '../containers/DiscountComponent';
+
+export interface DiscountComponentViewProps extends DiscountComponentProps {
+  cost?: number;
+  NavitemCart?: boolean;
+  isDiscount: boolean;
+  discount: number | null;
+}
+
+const DiscountComponentView: React.FC<DiscountComponentViewProps> = props => {
   const { loading, cost, isDiscount, discount, modalDiscount, NavitemCart } = props;
   const now = new Date().toISOString();
   const discountDuration = modalDiscount && modalDiscount.discountDuration;
@@ -124,14 +133,4 @@ const DiscountComponent = props => {
   );
 };
 
-DiscountComponent.propTypes = {
-  modalDiscount: PropTypes.object,
-  loading: PropTypes.bool,
-  isDiscount: PropTypes.bool,
-  discount: PropTypes.number,
-  t: PropTypes.func,
-  NavitemCart: PropTypes.bool,
-  cost: PropTypes.number
-};
-
-export default translate('discount')(DiscountComponent);
+export default translate('discount')(DiscountComponentView);

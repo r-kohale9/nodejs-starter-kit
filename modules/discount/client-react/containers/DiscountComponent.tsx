@@ -1,5 +1,4 @@
 import React /* , { useEffect } */ from 'react';
-import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
@@ -8,7 +7,18 @@ import { translate } from '@gqlapp/i18n-client-react';
 import { withModalDiscount } from './DiscountOperations';
 import DiscountComponentView from '../components/DiscountComponentView';
 
-const DiscountComponent = props => {
+// types
+import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
+
+export interface DiscountComponentProps {
+  modalId: number;
+  modalName: string;
+  cost: number;
+  loading?: boolean;
+  modalDiscount?: ModalDiscount;
+}
+
+const DiscountComponent: React.FC<DiscountComponentProps> = props => {
   const { modalDiscount /* , modalId, discountSubscribeToMore  */ } = props;
   const now = new Date().toISOString();
   const startDate = modalDiscount && modalDiscount.discountDuration && modalDiscount.discountDuration.startDate;
@@ -28,12 +38,6 @@ const DiscountComponent = props => {
 
   // console.log('props', props);
   return <DiscountComponentView isDiscount={isDiscountPercent} discount={discountPercent} {...props} />;
-};
-
-DiscountComponent.propTypes = {
-  modalDiscount: PropTypes.object,
-  discountSubscribeToMore: PropTypes.func,
-  modalId: PropTypes.number
 };
 
 export default compose(withModalDiscount, translate('discount'))(DiscountComponent);

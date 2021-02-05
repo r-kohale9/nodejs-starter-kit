@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { Icon, Button } from '@gqlapp/look-client-react';
 
 import { withListingBookmarkStatus } from '../containers/ListingOperations';
 
-const BookmarkStyle = styled.div`
+const BookmarkStyle = styled.div<{ right: string }>`
   @media screen and (min-width: 769px) {
     position: absolute;
   }
@@ -16,7 +15,13 @@ const BookmarkStyle = styled.div`
   z-index: 1;
 `;
 
-const BookmarkComponent = props => {
+export interface BookmarkComponentProps {
+  handleBookmark: () => void;
+  listingBookmarkStatus: boolean;
+  right: string;
+}
+
+const BookmarkComponent: React.FC<BookmarkComponentProps> = props => {
   const { handleBookmark, listingBookmarkStatus, right } = props;
   const [status, setStatus] = useState(listingBookmarkStatus);
 
@@ -45,12 +50,6 @@ const BookmarkComponent = props => {
       </Button>
     </BookmarkStyle>
   );
-};
-
-BookmarkComponent.propTypes = {
-  handleBookmark: PropTypes.func,
-  listingBookmarkStatus: PropTypes.bool,
-  right: PropTypes.string
 };
 
 export default compose(withListingBookmarkStatus)(BookmarkComponent);

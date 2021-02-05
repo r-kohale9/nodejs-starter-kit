@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -21,7 +20,7 @@ import { IfLoggedIn } from '@gqlapp/user-client-react';
 import AddToCart from '@gqlapp/order-client-react/containers/AddToCart';
 import { Review, ReviewStar } from '@gqlapp/review-client-react';
 import { DiscountComponent } from '@gqlapp/discount-client-react';
-import { ListingShareMessage } from '@gqlapp/listing-common/SocialSharingMessage';
+import { ListingShareMessage } from '@gqlapp/listing-common';
 import { HOME_ROUTES } from '@gqlapp/home-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
@@ -32,18 +31,19 @@ import BookmarkComponent from './BookmarkComponent';
 import SocialSharingButtons from './SocialSharingButtons';
 import { displayDataCheck } from './functions';
 
-const ListingDetailView = props => {
-  const {
-    listing,
-    loading,
-    history,
-    currentUser,
-    handleBookmark,
-    listingBookmarkStatus,
-    t,
-    onShare,
-    canUserReview
-  } = props;
+// types
+import { ListingDetailProps } from '../containers/ListingDetail';
+import { ShareListingByEmailInput } from '../../../../packages/server/__generated__/globalTypes';
+import { listing_listing_listingMedia as ListingMedia } from '../graphql/__generated__/listing';
+
+export interface ListingDetailViewProps extends ListingDetailProps {
+  onDelete: (id: number) => void;
+  onShare: (values: ShareListingByEmailInput) => void;
+  handleBookmark: (id: number, userId: number) => void;
+}
+
+const ListingDetailView: React.FC<ListingDetailViewProps> = props => {
+  const { listing, loading, history, currentUser, handleBookmark, t, onShare, canUserReview } = props;
 
   const isDiscount = listing && listing.listingFlags && listing.listingFlags.isDiscount;
   // const discount =
@@ -51,18 +51,27 @@ const ListingDetailView = props => {
   const cost =
     listing && listing.listingCostArray && listing.listingCostArray.length > 0 && listing.listingCostArray[0].cost;
   // const inventoryCount = listing && listing.listingDetail && listing.listingDetail.inventoryCount;
-  const images =
+  const images: ListingMedia[] =
     listing &&
     listing.listingMedia &&
     listing.listingMedia.length > 0 &&
     listing.listingMedia.filter(lM => lM.type === 'image');
-  const youtubeUrl =
+  const youtubeUrl: ListingMedia[] =
     listing &&
     listing.listingMedia &&
     listing.listingMedia.length > 0 &&
     listing.listingMedia.filter(lM => lM.type === 'video');
 
-  const message = listing && ListingShareMessage(listing.id, listing.user.username, listing.title);
+  const message: {
+    whatsappMessage: string;
+    twitterMessage: {
+      text: string;
+      hashtag: string;
+      link: string;
+    };
+    link: string;
+    emailMessage: string;
+  } = listing && ListingShareMessage(listing.id, listing.user.username, listing.title);
 
   return (
     <PageLayout>
@@ -86,11 +95,11 @@ const ListingDetailView = props => {
             }}
           >
             <br />
-            <Row gutter={24}>
+            <Row gutter={[24, 24]}>
               <Col lg={11} md={11} xs={24}>
                 <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
                   <Sticky>
-                    {({ style, isSticky }) => (
+                    {({ style, isSticky }: { isSticky: boolean; style: object }) => (
                       <div style={{ ...style }}>
                         <div style={{ height: isSticky ? '60px' : '0px' }} />
                         <ListingDetailImgCarousel images={images} youtubeUrl={youtubeUrl} carouselLayout={false} />
@@ -137,13 +146,12 @@ const ListingDetailView = props => {
                         </Col>
                       </Row>
                       <ReviewStar
+                        suffix="reviews"
                         filter={{
                           isActive: true,
                           modalId: listing && listing.id,
                           modalName: MODAL[1].value
                         }}
-                        currentUser={currentUser}
-                        suffix={'reviews'}
                       />
                     </Col>
                   </Col>
@@ -155,7 +163,6 @@ const ListingDetailView = props => {
                             {/* <div style={{ marginTop: '4px' }}> */}
                             <BookmarkComponent
                               handleBookmark={() => handleBookmark(listing.id, listing.user.id)}
-                              bookmarkStatus={listingBookmarkStatus && listingBookmarkStatus}
                               listing={listing}
                               right={'12%'}
                             />
@@ -163,10 +170,11 @@ const ListingDetailView = props => {
                           </IfLoggedIn>
                         )}
                       </Col>
-                      {/* </Row> */}
-                      {/* <Row> */}
+                      <Col md={0} xs={24}>
+                        <br />
+                      </Col>
                       <Col lg={12} xs={24} align="right">
-                        <SocialSharingButtons {...message} onShare={onShare} t={t} />
+                        <SocialSharingButtons onShare={onShare} t={t} {...message} />
                       </Col>
                     </Row>
                   </Col>
@@ -251,24 +259,6 @@ const ListingDetailView = props => {
       )}
     </PageLayout>
   );
-};
-
-ListingDetailView.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  canUserReview: PropTypes.bool,
-  listing: PropTypes.object,
-  reviews: PropTypes.array,
-  location: PropTypes.object.isRequired,
-  t: PropTypes.func,
-  onShare: PropTypes.func,
-  user: PropTypes.object,
-  history: PropTypes.object,
-  navigation: PropTypes.object,
-  currentUser: PropTypes.object,
-  handleBookmark: PropTypes.func,
-  listingBookmarkStatus: PropTypes.bool,
-  showArrow: PropTypes.bool,
-  listingBookmarkStatusLoading: PropTypes.bool
 };
 
 export default translate('listing')(ListingDetailView);
