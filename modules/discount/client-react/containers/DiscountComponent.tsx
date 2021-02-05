@@ -13,7 +13,7 @@ import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__gener
 export interface DiscountComponentProps {
   modalId: number;
   modalName: string;
-  cost: number;
+  cost?: number;
   loading?: boolean;
   modalDiscount?: ModalDiscount;
 }
