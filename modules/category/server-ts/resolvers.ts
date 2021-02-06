@@ -1,5 +1,5 @@
-import { CategoryInput, Identifier } from './sql';
 import { withFilter } from 'graphql-subscriptions';
+import { CategoryInput, Identifier } from './sql';
 
 interface Edges {
   cursor: number;

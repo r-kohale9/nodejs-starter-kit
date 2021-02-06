@@ -32,7 +32,6 @@ const CategoryFormComponent = props => {
   const { cardTitle, handleSubmit, values, t } = props;
   const [load, setLoad] = useState(false);
 
-  // console.log('props form component', props.values.imageUrl);
   return (
     <Card
       title={
@@ -110,13 +109,26 @@ const CategoryFormComponent = props => {
             />
             <Row type="flex">
               <Col md={12} xs={24} align="left">
-                <Field
-                  name="isNavbar"
-                  component={RenderCheckBox}
-                  type="checkbox"
-                  label={t('categoryForm.isNavbar')}
-                  checked={values.isNavbar}
-                />
+                <Row type="flex">
+                  <Col md={24} xs={24} align="left">
+                    <Field
+                      name="isNavbar"
+                      component={RenderCheckBox}
+                      type="checkbox"
+                      label={t('categoryForm.isNavbar')}
+                      checked={values.isNavbar}
+                    />
+                  </Col>
+                  <Col md={24} xs={24} align="left">
+                    <Field
+                      name="isActive"
+                      component={RenderCheckBox}
+                      type="checkbox"
+                      label={t('categoryForm.isActive')}
+                      checked={values.isActive}
+                    />
+                  </Col>
+                </Row>
               </Col>
               <Col md={12} xs={24} align="left">
                 <Field
@@ -158,6 +170,7 @@ const CategoryWithFormik = withFormik({
       parentCategoryId: (props.category && props.category.parentCategoryId) || null,
       description: (props.category && props.category.description) || '',
       isNavbar: (props.category && props.category.isNavbar) || false,
+      isActive: (props.category && props.category.isActive) || false,
       imageUrl: (props.category && props.category.imageUrl) || ''
       // subCategories: (props.category && props.category.subCategories) || [],
     };
