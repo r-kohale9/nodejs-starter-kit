@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from '@gqlapp/core-common';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { enquireScreen } from 'enquire-js';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import { Affix, DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
@@ -25,6 +26,11 @@ const WhiteDiv = styled.div`
   background: white;
   padding: 5px;
 `;
+
+let isMobile;
+enquireScreen(b => {
+  isMobile = b;
+});
 
 const NavItemCart = props => {
   const [visible, setVisible] = useState(false);
@@ -83,7 +89,7 @@ const NavItemCart = props => {
                   <StyleCard
                     hoverable
                     bodyStyle={{
-                      padding: '12px'
+                      padding: '12px 12px 12px 0px'
                     }}
                     onMouseEnter={() => setVisible(true)}
                     onMouseLeave={() => setVisible(false)}
@@ -101,6 +107,7 @@ const NavItemCart = props => {
               placement="bottomRight"
               className="navbar-cart-dropdown"
               noicon
+              disabled={isMobile}
             >
               <Affix offsetTop={52}>
                 <WhiteDiv>
