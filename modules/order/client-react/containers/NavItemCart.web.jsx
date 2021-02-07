@@ -86,22 +86,30 @@ const NavItemCart = props => {
               style={{ backgroundColor: 'whitesmoke' }}
               content={
                 <NavLink to={ROUTES.checkoutCart} className="nav-link" activeClassName="active" visible={visible}>
-                  <StyleCard
-                    hoverable
-                    bodyStyle={{
-                      padding: '12px 12px 12px 0px'
-                    }}
-                    onMouseEnter={() => setVisible(true)}
-                    onMouseLeave={() => setVisible(false)}
-                  >
-                    <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} size="small">
-                      {visible ? (
-                        <Icon type="ShoppingFilled" style={{ fontSize: '20px' }} />
-                      ) : (
-                        <Icon type="ShoppingOutlined" style={{ fontSize: '20px' }} />
-                      )}
-                    </Badge>
-                  </StyleCard>
+                  {isMobile ? (
+                    <div>
+                      <Icon type="ShoppingOutlined" style={{ fontSize: '16px' }} />
+                      My Cart&nbsp;
+                      <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} />
+                    </div>
+                  ) : (
+                    <StyleCard
+                      hoverable
+                      bodyStyle={{
+                        padding: '12px'
+                      }}
+                      onMouseEnter={() => setVisible(true)}
+                      onMouseLeave={() => setVisible(false)}
+                    >
+                      <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} size="small">
+                        {visible ? (
+                          <Icon type="ShoppingFilled" style={{ fontSize: '16px' }} />
+                        ) : (
+                          <Icon type="ShoppingOutlined" style={{ fontSize: '16px' }} />
+                        )}
+                      </Badge>
+                    </StyleCard>
+                  )}
                 </NavLink>
               }
               placement="bottomRight"

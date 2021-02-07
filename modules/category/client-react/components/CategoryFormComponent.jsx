@@ -56,17 +56,110 @@ const CategoryFormComponent = props => {
       <Form onSubmit={handleSubmit} align="left">
         <Row type="flex" gutter={24}>
           <Col md={12} xs={24} align="left">
-            <Field
-              name="title"
-              icon="FontSizeOutlined"
-              component={RenderField}
-              placeholder={t('categoryForm.title')}
-              type="text"
-              label={t('categoryForm.title')}
-              value={values.title}
-            />
+            <Col md={24} xs={24} align="left">
+              <Field
+                name="title"
+                icon="FontSizeOutlined"
+                component={RenderField}
+                placeholder={t('categoryForm.title')}
+                type="text"
+                label={t('categoryForm.title')}
+                value={values.title}
+              />
+            </Col>
+            <Col md={24} xs={24} align="left">
+              <Field
+                name="description"
+                icon="FileOutlined"
+                component={RenderField}
+                placeholder={t('categoryForm.description')}
+                type="textarea"
+                label={t('categoryForm.description')}
+                value={values.description}
+              />
+            </Col>
+            <Col md={24} xs={24} align="left">
+              <Row type="flex">
+                <Col md={12} xs={24} align="left">
+                  <Field
+                    name="isNavbar"
+                    component={RenderCheckBox}
+                    type="checkbox"
+                    label={t('categoryForm.isNavbar')}
+                    checked={values.isNavbar}
+                  />
+                </Col>
+                <Col md={12} xs={24} align="left">
+                  <Field
+                    name="isActive"
+                    component={RenderCheckBox}
+                    type="checkbox"
+                    label={t('categoryForm.isActive')}
+                    checked={values.isActive}
+                  />
+                </Col>
+              </Row>
+            </Col>
           </Col>
+
           <Col md={12} xs={24} align="left">
+            <Col md={24} xs={24} align="left">
+              <Field
+                name="modalName"
+                icon="SafetyCertificateOutlined"
+                component={RenderSelect}
+                placeholder={t('categoryForm.modalName')}
+                defaultValue={values.modalName}
+                label={t('categoryForm.modalName')}
+                style={{ width: '100px' }}
+                value={values.modalName}
+              >
+                {MODAL.map((m, i) => (
+                  <Option key={i} value={m.value}>
+                    {m.label}
+                  </Option>
+                ))}
+              </Field>
+            </Col>
+            <Col md={24} xs={24} align="left">
+              <Field
+                component={CategoryTreeComponent}
+                nullable={true}
+                // disableParent={false}
+                filter={{ modalName: values.modalName }}
+                type="number"
+                name="parentCategoryId"
+                placeholder="category"
+                label={t('categoryForm.select')}
+                value={values.parentCategoryId}
+              />
+            </Col>
+            <Col md={24} xs={24} align="left">
+              <Row type="flex" align="bottom">
+                <Col md={12} xs={24} align="left">
+                  <Field
+                    name="imageUrl"
+                    component={RenderUpload}
+                    type="text"
+                    setload={setLoad}
+                    label={t('categoryForm.imageUrl')}
+                    value={values.imageUrl}
+                  />
+                </Col>
+
+                <Col md={12} xs={24} align="right">
+                  <Row type="flex" align="bottom" justify="end">
+                    <Col span={24}>
+                      <Button color="primary" type="submit" disabled={load}>
+                        {t('categoryForm.btn.submit')}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Col>
+          {/* <Col md={12} xs={24} align="left">
             <Field
               name="modalName"
               icon="SafetyCertificateOutlined"
@@ -83,8 +176,8 @@ const CategoryFormComponent = props => {
                 </Option>
               ))}
             </Field>
-          </Col>
-          <Col md={12} xs={24} align="left">
+          </Col> */}
+          {/* <Col md={12} xs={24} align="left">
             <Field
               name="description"
               icon="FileOutlined"
@@ -94,42 +187,71 @@ const CategoryFormComponent = props => {
               label={t('categoryForm.description')}
               value={values.description}
             />
-          </Col>
-          <Col md={12} xs={24} align="left">
-            <Field
-              component={CategoryTreeComponent}
-              nullable={true}
-              // disableParent={false}
-              filter={{ modalName: values.modalName }}
-              type="number"
-              name="parentCategoryId"
-              placeholder="category"
-              label={t('categoryForm.select')}
-              value={values.parentCategoryId}
-            />
+          </Col> */}
+          {/* <Col md={12} xs={24} align="left">
+            <Col md={24} xs={24} align="left">
+              <Field
+                component={CategoryTreeComponent}
+                nullable={true}
+                // disableParent={false}
+                filter={{ modalName: values.modalName }}
+                type="number"
+                name="parentCategoryId"
+                placeholder="category"
+                label={t('categoryForm.select')}
+                value={values.parentCategoryId}
+              />
+            </Col>
+            <Col md={24} xs={24} align="left">
+              <Row type="flex" align="bottom">
+                <Col md={12} xs={24} align="left">
+                  <Field
+                    name="imageUrl"
+                    component={RenderUpload}
+                    type="text"
+                    setload={setLoad}
+                    label={t('categoryForm.imageUrl')}
+                    value={values.imageUrl}
+                  />
+                </Col>
+
+                <Col md={12} xs={24} align="right">
+                  <Row type="flex" align="bottom" justify="end">
+                    <Col span={24}>
+                      <Button color="primary" type="submit" disabled={load}>
+                        {t('categoryForm.btn.submit')}
+                      </Button>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Col> */}
+
+          {/* <Col md={12} xs={24} align="left">
             <Row type="flex">
               <Col md={12} xs={24} align="left">
-                <Row type="flex">
-                  <Col md={24} xs={24} align="left">
-                    <Field
-                      name="isNavbar"
-                      component={RenderCheckBox}
-                      type="checkbox"
-                      label={t('categoryForm.isNavbar')}
-                      checked={values.isNavbar}
-                    />
-                  </Col>
-                  <Col md={24} xs={24} align="left">
-                    <Field
-                      name="isActive"
-                      component={RenderCheckBox}
-                      type="checkbox"
-                      label={t('categoryForm.isActive')}
-                      checked={values.isActive}
-                    />
-                  </Col>
-                </Row>
+                <Field
+                  name="isNavbar"
+                  component={RenderCheckBox}
+                  type="checkbox"
+                  label={t('categoryForm.isNavbar')}
+                  checked={values.isNavbar}
+                />
               </Col>
+              <Col md={12} xs={24} align="left">
+                <Field
+                  name="isActive"
+                  component={RenderCheckBox}
+                  type="checkbox"
+                  label={t('categoryForm.isActive')}
+                  checked={values.isActive}
+                />
+              </Col>
+            </Row>
+          </Col> */}
+          {/* <Col md={12} xs={24} align="left">
+            <Row type="flex">
               <Col md={12} xs={24} align="left">
                 <Field
                   name="imageUrl"
@@ -140,13 +262,14 @@ const CategoryFormComponent = props => {
                   value={values.imageUrl}
                 />
               </Col>
+
+              <Col md={12} xs={24} align="right">
+                <Button color="primary" type="submit" disabled={load}>
+                  {t('categoryForm.btn.submit')}
+                </Button>
+              </Col>
             </Row>
-          </Col>
-          <Col span={24} align="right">
-            <Button color="primary" type="submit" disabled={load}>
-              {t('categoryForm.btn.submit')}
-            </Button>
-          </Col>
+          </Col> */}
         </Row>
       </Form>
     </Card>
