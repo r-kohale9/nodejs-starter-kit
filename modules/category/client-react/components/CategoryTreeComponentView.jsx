@@ -22,7 +22,7 @@ const CategoryTreeComponentView = props => {
       id: 'abc',
       pId: 0,
       title: 'Parent Category',
-      value: 0,
+      value: null,
       isLeaf: true
     },
     ...(categories.edges &&
