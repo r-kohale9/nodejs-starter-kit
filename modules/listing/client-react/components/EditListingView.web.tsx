@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
-import { PropTypes } from 'prop-types';
 
 import { PageLayout, MetaTags, Spinner, Steps, Step } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
 import ListingFormComponent from './ListingFormComponent.web';
 
-const EditListingView = props => {
+// types
+import { EditListingInput } from '../../../../packages/server/__generated__/globalTypes';
+import { EditListingProps } from '../containers/EditListing.web';
+
+export interface EditListingViewProps extends EditListingProps {
+  onSubmit: (values: EditListingInput) => void;
+}
+
+const EditListingView: React.FC<EditListingViewProps> = props => {
   const { t, listing, loading, onSubmit, currentUser } = props;
   const [step, setStep] = useState(0);
 
@@ -54,14 +61,6 @@ const EditListingView = props => {
       )}
     </PageLayout>
   );
-};
-
-EditListingView.propTypes = {
-  t: PropTypes.func,
-  loading: PropTypes.bool,
-  listing: PropTypes.object,
-  currentUser: PropTypes.object,
-  onSubmit: PropTypes.func
 };
 
 export default EditListingView;
