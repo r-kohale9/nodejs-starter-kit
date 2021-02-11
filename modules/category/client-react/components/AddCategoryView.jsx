@@ -16,12 +16,7 @@ const AddCategoryView = props => {
       ) : (
         <>
           <div align="center">
-            <CategoryFormComponent
-              cardTitle={t('categoryAdd.cardTitle')}
-              onSubmit={onSubmit}
-              t={t}
-              showAdditional={true}
-            />
+            <CategoryFormComponent cardTitle={t('categoryAdd.cardTitle')} onSubmit={onSubmit} t={t} />
           </div>
         </>
       )}

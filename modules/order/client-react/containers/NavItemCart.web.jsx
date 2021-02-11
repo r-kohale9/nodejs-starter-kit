@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from '@gqlapp/core-common';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { enquireScreen } from 'enquire-js';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import { Affix, DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
@@ -25,6 +26,11 @@ const WhiteDiv = styled.div`
   background: white;
   padding: 5px;
 `;
+
+let isMobile;
+enquireScreen(b => {
+  isMobile = b;
+});
 
 const NavItemCart = props => {
   const [visible, setVisible] = useState(false);
@@ -80,27 +86,36 @@ const NavItemCart = props => {
               style={{ backgroundColor: 'whitesmoke' }}
               content={
                 <NavLink to={ROUTES.checkoutCart} className="nav-link" activeClassName="active" visible={visible}>
-                  <StyleCard
-                    hoverable
-                    bodyStyle={{
-                      padding: '12px'
-                    }}
-                    onMouseEnter={() => setVisible(true)}
-                    onMouseLeave={() => setVisible(false)}
-                  >
-                    <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} size="small">
-                      {visible ? (
-                        <Icon type="ShoppingFilled" style={{ fontSize: '20px' }} />
-                      ) : (
-                        <Icon type="ShoppingOutlined" style={{ fontSize: '20px' }} />
-                      )}
-                    </Badge>
-                  </StyleCard>
+                  {isMobile ? (
+                    <div>
+                      <Icon type="ShoppingOutlined" style={{ fontSize: '16px' }} />
+                      My Cart&nbsp;
+                      <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} />
+                    </div>
+                  ) : (
+                    <StyleCard
+                      hoverable
+                      bodyStyle={{
+                        padding: '12px'
+                      }}
+                      onMouseEnter={() => setVisible(true)}
+                      onMouseLeave={() => setVisible(false)}
+                    >
+                      <Badge count={getCart && getCart.orderDetails && getCart.orderDetails.length} size="small">
+                        {visible ? (
+                          <Icon type="ShoppingFilled" style={{ fontSize: '16px' }} />
+                        ) : (
+                          <Icon type="ShoppingOutlined" style={{ fontSize: '16px' }} />
+                        )}
+                      </Badge>
+                    </StyleCard>
+                  )}
                 </NavLink>
               }
               placement="bottomRight"
               className="navbar-cart-dropdown"
               noicon
+              disabled={isMobile}
             >
               <Affix offsetTop={52}>
                 <WhiteDiv>

@@ -10,7 +10,11 @@ const { itemsNumber } = settings.pagination.web;
 
 const RenderTableLoading = ({ columns, tableProps = {} }) => {
   const { expandable, ...restTableProps } = tableProps;
-  const renderSkeleton = () => <Skeleton title={{ width: '60%' }} paragraph={false} active />;
+  const renderSkeleton = align => (
+    <div align={align}>
+      <Skeleton title={{ width: '60%' }} paragraph={false} active />
+    </div>
+  );
   const loadingColumn = columns.map(i => {
     return {
       title: i.title,
@@ -18,7 +22,8 @@ const RenderTableLoading = ({ columns, tableProps = {} }) => {
       key: i.key,
       fixed: i.fixed,
       width: i.width,
-      render: renderSkeleton
+      align: i.align,
+      render: () => renderSkeleton(i.align)
     };
   });
   return (

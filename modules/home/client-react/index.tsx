@@ -3,9 +3,11 @@ import { Route, NavLink } from 'react-router-dom';
 
 import ClientModule from '@gqlapp/module-client-react';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
-import { USER_ROUTES, AuthRoute, IfLoggedIn } from '@gqlapp/user-client-react';
+import { AuthRoute, IfLoggedIn } from '@gqlapp/user-client-react';
 import loadable from '@loadable/component';
 import { Icon, MenuItem, Spinner, SubMenu } from '@gqlapp/look-client-react';
+import { UserRoleObject } from '@gqlapp/user-common/';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import ROUTES from './routes';
 import resolvers from './resolvers';
@@ -63,21 +65,24 @@ export default new ClientModule({
     <AuthRoute
       exact
       path={ROUTES.adminPanel}
-      redirect={USER_ROUTES.profile}
-      role="admin"
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       component={loadable(() => import('./containers/DCComponents/DynamicCarousel.web').then(c => c.default), {
         fallback: <Spinner />
       })}
     />,
-    <Route
+    <AuthRoute
       exact
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.add}
       component={loadable(() => import('./containers/DCComponents/AddDynamicCarousel').then(c => c.default), {
         fallback: <Spinner />
       })}
     />,
-    <Route
+    <AuthRoute
       exact
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       path={ROUTES.edit}
       component={loadable(() => import('./containers/DCComponents/EditDynamicCarousel').then(c => c.default), {
         fallback: <Spinner />

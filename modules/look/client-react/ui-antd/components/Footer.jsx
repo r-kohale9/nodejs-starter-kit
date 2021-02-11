@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import TweenOne from 'rc-tween-one';
-import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
-import QueueAnim from 'rc-queue-anim';
+// import TweenOne from 'rc-tween-one';
+// import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
+// import QueueAnim from 'rc-queue-anim';
 import { Button } from 'antd';
 
 import { PAGES_ROUTES } from '@gqlapp/pages-client-react';
@@ -276,20 +276,39 @@ class Footer extends React.Component {
 
     return (
       <div {...props} {...dataSource.wrapper}>
-        <OverPack {...dataSource.OverPack}>
-          <QueueAnim type="bottom" key="ul" leaveReverse component={Row} {...dataSource.block}>
-            {childrenToRender}
-          </QueueAnim>
-          <TweenOne
-            animation={{ y: '+=30', opacity: 0, type: 'from' }}
-            key="copyright"
-            {...dataSource.copyrightWrapper}
-          >
+        {/* {typeof window !== 'undefined' && window.location.pathname === '/' ? (
+          <OverPack {...dataSource.OverPack}>
+            <QueueAnim type="bottom" key="ul" leaveReverse component={Row} {...dataSource.block}>
+              {childrenToRender}
+            </QueueAnim>
+            <TweenOne
+              animation={{ y: '+=30', opacity: 0, type: 'from' }}
+              key="copyright"
+              {...dataSource.copyrightWrapper}
+            >
+              <div {...dataSource.copyrightPage}>
+                <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
+              </div>
+            </TweenOne>
+          </OverPack>
+        ) : (
+          <>
+            <Row {...dataSource.block}>{childrenToRender}</Row>
+            <div {...dataSource.copyrightWrapper}>
+              <div {...dataSource.copyrightPage}>
+                <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
+              </div>
+            </div>
+          </>
+        )} */}
+        <>
+          <Row {...dataSource.block}>{childrenToRender}</Row>
+          <div {...dataSource.copyrightWrapper}>
             <div {...dataSource.copyrightPage}>
               <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
             </div>
-          </TweenOne>
-        </OverPack>
+          </div>
+        </>
       </div>
     );
   }

@@ -13,6 +13,7 @@ const RenderSelect = props => {
     label,
     type,
     children,
+    noBotMarging = false,
     meta: { touched, error },
     onChange,
     selectStyle,
@@ -50,7 +51,13 @@ const RenderSelect = props => {
       }
     : {};
   return (
-    <FormItem {...labelObj} validateStatus={validateStatus} help={error} style={{ width: '100%' }} {...labels}>
+    <FormItem
+      {...labelObj}
+      validateStatus={validateStatus}
+      help={error}
+      style={{ width: '100%', marginBottom: noBotMarging && '0px' }}
+      {...labels}
+    >
       <Select type={type} style={selectStyle} {...input} onChange={handleChange}>
         {children}
       </Select>
@@ -69,6 +76,7 @@ RenderSelect.propTypes = {
   children: PropTypes.node,
   selectStyle: PropTypes.object,
   inFilter: PropTypes.bool,
+  noBotMarging: PropTypes.bool,
   icon: PropTypes.string
 };
 
