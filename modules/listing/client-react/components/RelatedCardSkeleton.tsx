@@ -1,9 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Row, Col, Card, Skeleton } from '@gqlapp/look-client-react';
 
-const RelatedCardSkeleton = props => {
+export interface RelatedCardSkeletonProps {
+  componentStyle?: object;
+}
+
+const RelatedCardSkeleton: React.FC<RelatedCardSkeletonProps> = props => {
   const { componentStyle } = props;
   return (
     <Card
@@ -40,10 +43,6 @@ const RelatedCardSkeleton = props => {
       </Row>
     </Card>
   );
-};
-
-RelatedCardSkeleton.propTypes = {
-  componentStyle: PropTypes.object
 };
 
 export default RelatedCardSkeleton;

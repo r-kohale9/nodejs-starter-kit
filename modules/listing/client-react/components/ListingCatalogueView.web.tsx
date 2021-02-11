@@ -15,13 +15,26 @@ import { ListingsCatalogueProps } from '../containers/ListingCatalogue.web';
 
 export interface ListingCatalogueViewProps extends ListingsCatalogueProps {
   title: string;
-  onDelete: (id: number) => void;
+  onDelete?: (id: number) => void;
   emptyLink: string;
   showFilter: boolean;
 }
 
 const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
-  const { t, listings, history, title, getCart, currentUser, cartLoading, onDelete } = props;
+  const {
+    t,
+    loading,
+    showFilter,
+    listings,
+    history,
+    title,
+    getCart,
+    currentUser,
+    cartLoading,
+    onDelete,
+    emptyLink,
+    loadData
+  } = props;
 
   const renderFunc = (key: number, listing: Listing) => {
     const cartItemArray =
@@ -62,7 +75,19 @@ const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
         </Col>
       </Row>
       <Divider style={{ margin: '5px 0px 10px' }} />
-      <RenderCatalogue layout={'vertical'} renderFunc={renderFunc} {...props} />
+      <RenderCatalogue
+        loading={loading}
+        showFilter={showFilter}
+        layout={'vertical'}
+        emptyLink={emptyLink}
+        history={history}
+        currentUser={currentUser}
+        listings={listings}
+        renderFunc={renderFunc}
+        loadData={loadData}
+        onDelete={onDelete}
+        t={t}
+      />
     </PageLayout>
   );
 };

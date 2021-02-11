@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
 
 import ListingCatalogueView from '../components/ListingCatalogueView.web';
-
 import {
   withMyListingsBookmark,
   withFilterUpdating,
@@ -16,7 +15,17 @@ import {
 import { subscribeToListingsBookmark } from './ListingSubscriptions';
 import ROUTES from '../routes';
 
-const MyListingsBookmark = props => {
+// types
+import { listings_listings as Listings } from '../graphql/__generated__/listings';
+import { FilterListInput } from '../../../../packages/server/__generated__/globalTypes';
+
+export interface MyListingsBookmarkProps {
+  filter: FilterListInput;
+  myListingsBookmark: Listings;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+}
+
+const MyListingsBookmark: React.FC<MyListingsBookmarkProps> = props => {
   const { subscribeToMore } = props;
 
   useEffect(() => {
@@ -34,13 +43,6 @@ const MyListingsBookmark = props => {
       {...props}
     />
   );
-};
-
-MyListingsBookmark.propTypes = {
-  subscribeToMore: PropTypes.func,
-  myListingsBookmark: PropTypes.object,
-  filter: PropTypes.object,
-  updateQuery: PropTypes.func
 };
 
 export default compose(

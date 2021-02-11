@@ -39,7 +39,7 @@ const MyListingsView: React.FC<MyListingsViewProps> = props => {
   return (
     <PageLayout>
       <MetaTags title={t('myListings.title')} description={`${settings.app.name} - ${t('myListings.title')})}`} />
-      <Row type="flex" align="middle">
+      <Row>
         <Col lg={12} md={12} xs={24}>
           <Heading type="2">
             <Icon type="SolutionOutlined" /> &nbsp; {t('myListings.heading')}
