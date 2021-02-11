@@ -15,7 +15,7 @@ import {
   SubMenu,
   MenuItem,
   Button,
-  Menu,
+  Menu
 } from '@gqlapp/look-client-react';
 
 // types
@@ -73,7 +73,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
         } else {
           setColWidth([
             ...[...Array(8).keys()].map(() => 3),
-            ...[...Array(catLength - 8).keys()].map(() => parseInt(24 / (catLength - 8))),
+            ...[...Array(catLength - 8).keys()].map(() => parseInt(24 / (catLength - 8)))
           ]);
         }
       } else {
@@ -81,7 +81,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
         // console.log([...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8))));
         setColWidth([
           ...[...Array(catLength - (catLength % 8)).keys()].map(() => 3),
-          ...[...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8))),
+          ...[...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8)))
         ]);
       }
     } else {
@@ -149,7 +149,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
           <ScrollParallax
             location="page-layout"
             animation={{
-              translateY: '-24px',
+              translateY: '-24px'
             }}
             align="center"
             className="navbar-category-strip"
@@ -204,21 +204,21 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
                                       // style={{ height: '145px' }}
                                       bodyStyle={{
                                         margin: '0px',
-                                        padding: '0px',
+                                        padding: '0px'
                                       }}
                                       hoverable
                                     >
                                       <Card
                                         bordered={false}
                                         style={{
-                                          width: '120px',
+                                          width: '120px'
                                           /* height: 'fit-content' */
                                           /* border: '0px', borderRadius: '0px !important' */
                                         }}
                                         bodyStyle={{
                                           // margin: showImg && '0px',
                                           padding: showImg && '0px',
-                                          textAlign: 'center',
+                                          textAlign: 'center'
                                         }}
                                         // hoverable
                                         cover={
@@ -232,7 +232,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
                                                     borderRadius: '8px 8px 0px 0px',
                                                     background:
                                                       'linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%)',
-                                                    animation: 'ant-skeleton-loading 1.4s ease infinite',
+                                                    animation: 'ant-skeleton-loading 1.4s ease infinite'
                                                   }}
                                                   align="center"
                                                 ></div>
@@ -244,7 +244,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
                                                 src={sC.imageUrl}
                                                 style={{
                                                   // width: 'fit-content',
-                                                  display: !loaded && 'none',
+                                                  display: !loaded && 'none'
                                                 }}
                                               />
                                             </>
@@ -269,7 +269,7 @@ const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = 
                 {[...Array(6).keys()].map(() => {
                   return (
                     <Col span={24 / 6}>
-                      <Skeleton active title={{ width: '50%' }} />
+                      <Skeleton active title={{ width: '50%' }} paragraph={false} />
                     </Col>
                   );
                 })}
