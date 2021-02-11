@@ -7,8 +7,10 @@ import { CategoryNavBarComponent } from '@gqlapp/category-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
 import RenderCatalogue from './RenderCatalogue';
+import RelatedCardComponent from './RelatedCardComponent';
 
 // types
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
 import { ListingsCatalogueProps } from '../containers/ListingCatalogue.web';
 
 export interface ListingCatalogueViewProps extends ListingsCatalogueProps {
@@ -19,7 +21,27 @@ export interface ListingCatalogueViewProps extends ListingsCatalogueProps {
 }
 
 const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
-  const { t, listings, title } = props;
+  const { t, listings, history, title, getCart, currentUser, cartLoading, onDelete } = props;
+
+  const renderFunc = (key: number, listing: Listing) => {
+    const cartItemArray =
+      getCart && getCart.orderDetails && getCart.orderDetails.length > 0
+        ? getCart.orderDetails.filter(oD => oD.modalId === listing.id)
+        : [];
+    return (
+      <RelatedCardComponent
+        key={key}
+        listing={listing}
+        history={history}
+        modalName={MODAL[1].value}
+        modalId={listing.id}
+        currentUser={currentUser}
+        inCart={cartItemArray.length === 0}
+        loading={cartLoading}
+        onDelete={() => onDelete(cartItemArray[0].id)}
+      />
+    );
+  };
 
   return (
     <PageLayout>
@@ -40,7 +62,7 @@ const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
         </Col>
       </Row>
       <Divider style={{ margin: '5px 0px 10px' }} />
-      <RenderCatalogue layout={'vertical'} {...props} />
+      <RenderCatalogue layout={'vertical'} renderFunc={renderFunc} {...props} />
     </PageLayout>
   );
 };

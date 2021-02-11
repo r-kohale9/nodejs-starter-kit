@@ -10,13 +10,16 @@ import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
 import { withGetCart, withDeleteCartItem } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { subscribeToCart } from '@gqlapp/order-client-react/containers/OrderSubscriptions';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
+import { MODAL } from '@gqlapp/review-common';
 
+import RelatedCardComponent from '../components/RelatedCardComponent';
 import { subscribeToListings } from './ListingSubscriptions';
 import { withListings, withFilterUpdating, withListingsState, withOrderByUpdating } from './ListingOperations';
 import ROUTES from '../routes';
 import RenderCatalogue from '../components/RenderCatalogue';
 
 // types
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
 import { getCart_getCart as GetCart } from '@gqlapp/order-client-react/graphql/__generated__/getCart';
 import { listings_listings as Listings } from '../graphql/__generated__/listings';
 import { FilterListInput } from '../../../../packages/server/__generated__/globalTypes';
@@ -39,7 +42,7 @@ export interface ListingsCatalogueProps {
 }
 
 const ListingsCatalogue: React.FC<ListingsCatalogueProps> = props => {
-  const { subscribeToMore, filter, deleteOrderDetail, getCart } = props;
+  const { subscribeToMore, filter, deleteOrderDetail, getCart, history, cartLoading, currentUser } = props;
 
   useEffect(() => {
     const subscribe = subscribeToListings(subscribeToMore, filter);
@@ -58,6 +61,27 @@ const ListingsCatalogue: React.FC<ListingsCatalogueProps> = props => {
       throw Error(e);
     }
   };
+
+  const renderFunc = (key: number, listing: Listing) => {
+    const cartItemArray =
+      getCart && getCart.orderDetails && getCart.orderDetails.length > 0
+        ? getCart.orderDetails.filter(oD => oD.modalId === listing.id)
+        : [];
+    return (
+      <RelatedCardComponent
+        key={key}
+        listing={listing}
+        history={history}
+        modalName={MODAL[1].value}
+        modalId={listing.id}
+        currentUser={currentUser}
+        inCart={cartItemArray.length === 0}
+        loading={cartLoading}
+        onDelete={() => handleDelete(cartItemArray[0].id)}
+      />
+    );
+  };
+
   // console.log('props', props);
   return (
     <RenderCatalogue
@@ -65,6 +89,7 @@ const ListingsCatalogue: React.FC<ListingsCatalogueProps> = props => {
       onDelete={handleDelete}
       emptyLink={`${ROUTES.add}`}
       showFilter={true}
+      renderFunc={renderFunc}
       {...props}
     />
   );
