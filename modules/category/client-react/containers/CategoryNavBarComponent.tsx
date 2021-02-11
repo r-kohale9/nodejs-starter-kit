@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { compose } from '@gqlapp/core-common';
 
@@ -8,7 +8,18 @@ import { subscribeToCategories } from './CategorySubscriptions';
 
 import CategoryNavBarComponentView from '../components/CategoryNavBarComponentView';
 
-const CategoryNavBarComponent = props => {
+// types
+import { FilterCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { categories_categories as CategoriesEdge } from '../graphql/__generated__/categories';
+
+export interface CategoryNavBarComponentProps {
+  loading: boolean;
+  categories: CategoriesEdge;
+  filter: FilterCategoryInput;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+}
+
+const CategoryNavBarComponent: React.FC<CategoryNavBarComponentProps> = props => {
   const { subscribeToMore } = props;
 
   useEffect(() => {
@@ -18,8 +29,4 @@ const CategoryNavBarComponent = props => {
   return <CategoryNavBarComponentView {...props} />;
 };
 
-CategoryNavBarComponent.propTypes = {
-  subscribeToMore: PropTypes.func,
-  filter: PropTypes.object
-};
 export default compose(withCategories)(CategoryNavBarComponent);

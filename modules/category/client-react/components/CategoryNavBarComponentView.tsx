@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import ScrollParallax from 'rc-scroll-anim/lib/ScrollParallax';
 
 import { useImageLoaded, LISTING_ROUTES } from '@gqlapp/listing-client-react';
@@ -16,15 +15,23 @@ import {
   SubMenu,
   MenuItem,
   Button,
-  Menu
+  Menu,
 } from '@gqlapp/look-client-react';
+
+// types
+import { CategoryNavBarComponentProps } from '../containers/CategoryNavBarComponent';
+import { category_category as Category } from '../graphql/__generated__/category';
 
 const WhiteDiv = styled.div`
   background: white;
   padding: 5px;
 `;
 
-const CategoryNavBarComponentView = props => {
+export interface CategoryNavBarComponentViewProps extends CategoryNavBarComponentProps {
+  //
+}
+
+const CategoryNavBarComponentView: React.FC<CategoryNavBarComponentViewProps> = props => {
   const [ref, loaded, onLoad] = useImageLoaded();
   const [visible, setVisible] = useState(false);
   const [showImg, setShowImg] = useState(true);
@@ -33,7 +40,7 @@ const CategoryNavBarComponentView = props => {
   const [activeCategory, setActiveCategory] = useState([]);
   const { loading, categories } = props;
 
-  const setDropDownMenu = category => {
+  const setDropDownMenu = (category: Category) => {
     const catLength = category.subCategories.filter(sC => sC.isNavbar && sC).length;
     if (category.subCategories && catLength > 0) {
       setVisible(true);
@@ -66,15 +73,15 @@ const CategoryNavBarComponentView = props => {
         } else {
           setColWidth([
             ...[...Array(8).keys()].map(() => 3),
-            ...[...Array(catLength - 8).keys()].map(() => parseInt(24 / (catLength - 8)))
+            ...[...Array(catLength - 8).keys()].map(() => parseInt(24 / (catLength - 8))),
           ]);
         }
       } else {
         setShowImg(false);
-        console.log([...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8))));
+        // console.log([...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8))));
         setColWidth([
           ...[...Array(catLength - (catLength % 8)).keys()].map(() => 3),
-          ...[...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8)))
+          ...[...Array(catLength % 8).keys()].map(() => parseInt(24 / (catLength % 8))),
         ]);
       }
     } else {
@@ -142,7 +149,7 @@ const CategoryNavBarComponentView = props => {
           <ScrollParallax
             location="page-layout"
             animation={{
-              translateY: '-24px'
+              translateY: '-24px',
             }}
             align="center"
             className="navbar-category-strip"
@@ -163,7 +170,7 @@ const CategoryNavBarComponentView = props => {
                         return (
                           <Col
                             key={i}
-                            span={parseInt(24 / parseInt(categories.edges.filter(c => c.node.isNavbar && c).length))}
+                            span={parseInt(24 / parseInt(categories.edges.filter(cH => cH.node.isNavbar && cH).length))}
                           >
                             <a
                               // href="#"
@@ -197,21 +204,21 @@ const CategoryNavBarComponentView = props => {
                                       // style={{ height: '145px' }}
                                       bodyStyle={{
                                         margin: '0px',
-                                        padding: '0px'
+                                        padding: '0px',
                                       }}
                                       hoverable
                                     >
                                       <Card
                                         bordered={false}
                                         style={{
-                                          width: '120px'
+                                          width: '120px',
                                           /* height: 'fit-content' */
                                           /* border: '0px', borderRadius: '0px !important' */
                                         }}
                                         bodyStyle={{
                                           // margin: showImg && '0px',
                                           padding: showImg && '0px',
-                                          textAlign: 'center'
+                                          textAlign: 'center',
                                         }}
                                         // hoverable
                                         cover={
@@ -225,7 +232,7 @@ const CategoryNavBarComponentView = props => {
                                                     borderRadius: '8px 8px 0px 0px',
                                                     background:
                                                       'linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%)',
-                                                    animation: 'ant-skeleton-loading 1.4s ease infinite'
+                                                    animation: 'ant-skeleton-loading 1.4s ease infinite',
                                                   }}
                                                   align="center"
                                                 ></div>
@@ -237,7 +244,7 @@ const CategoryNavBarComponentView = props => {
                                                 src={sC.imageUrl}
                                                 style={{
                                                   // width: 'fit-content',
-                                                  display: !loaded && 'none'
+                                                  display: !loaded && 'none',
                                                 }}
                                               />
                                             </>
@@ -260,9 +267,11 @@ const CategoryNavBarComponentView = props => {
             ) : (
               <Row type="flex" justify="center" style={{ lineHeight: '40px' }}>
                 {[...Array(6).keys()].map(() => {
-                  <Col span={24 / 6}>
-                    <Skeleton active title={{ width: '50%' }} />
-                  </Col>;
+                  return (
+                    <Col span={24 / 6}>
+                      <Skeleton active title={{ width: '50%' }} />
+                    </Col>
+                  );
                 })}
               </Row>
             )}
@@ -271,13 +280,6 @@ const CategoryNavBarComponentView = props => {
       </Col>
     </Row>
   );
-};
-
-CategoryNavBarComponentView.propTypes = {
-  t: PropTypes.func,
-  loading: PropTypes.bool,
-  categories: PropTypes.object,
-  mobile: PropTypes.bool
 };
 
 export default CategoryNavBarComponentView;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
@@ -21,7 +20,19 @@ import { MODAL } from '@gqlapp/review-common';
 import RelatedCardComponent from './RelatedCardComponent';
 import ListingFilterComponent from './ListingFilterComponent.web';
 
-const ListingCatalogueView = props => {
+// types
+import { ListingsCatalogueProps } from '../containers/ListingCatalogue.web';
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+// import { listings_listings as Listings } from '../graphql/__generated__/listings';
+
+export interface ListingCatalogueViewProps extends ListingsCatalogueProps {
+  title: string;
+  onDelete: (id: number) => void;
+  emptyLink: string;
+  showFilter: boolean;
+}
+
+const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
   const {
     t,
     loading,
@@ -33,10 +44,11 @@ const ListingCatalogueView = props => {
     getCart,
     cartLoading,
     onDelete,
-    emptyLink
+    emptyLink,
+    loadData
   } = props;
 
-  const renderFunc = (key, listing) => {
+  const renderFunc = (key: number, listing: Listing) => {
     const cartItemArray =
       getCart && getCart.orderDetails && getCart.orderDetails.length > 0
         ? getCart.orderDetails.filter(oD => oD.modalId === listing.id)
@@ -55,28 +67,45 @@ const ListingCatalogueView = props => {
       />
     );
   };
-  const RenderListings = ({ layout }) => (
+  const RenderListings = ({ layout }: { layout: string }) => (
     <div>
-      <SuggestedListComponent
-        {...props}
+      {/* <SuggestedListComponent<Listings>
         endText={'listing'}
         grid={
           layout === 'vertical' && {
-            gutter: 24,
+            gutter: 18,
             xs: 1,
             sm: 1,
             md: 2,
             lg: 3,
             xl: 4,
-            xxl: 4
+            xxl: 5,
           }
         }
         items={listings}
         renderFunc={renderFunc}
+        loadData={loadData}
+        // itemName={'listings'}
+      /> */}
+      <SuggestedListComponent
+        endText={'listing'}
+        grid={
+          layout === 'vertical' && {
+            gutter: 18,
+            xs: 1,
+            sm: 1,
+            md: 2,
+            lg: 3,
+            xl: 4,
+            xxl: 5
+          }
+        }
+        items={listings}
+        renderFunc={renderFunc}
+        loadData={loadData}
       />
     </div>
   );
-  RenderListings.propTypes = { layout: PropTypes.string };
 
   const renderChildren = (layout = 'horizontal') => {
     const span =
@@ -123,7 +152,7 @@ const ListingCatalogueView = props => {
         <Col lg={12} md={12} xs={24}>
           <Heading type="2">
             <Icon type="SolutionOutlined" /> &nbsp; {title}
-          </Heading>{' '}
+          </Heading>
         </Col>
         <Col lg={12} md={12} xs={0}>
           <Row justify="end">
@@ -138,20 +167,6 @@ const ListingCatalogueView = props => {
       {/* {renderChildren()} */}
     </PageLayout>
   );
-};
-
-ListingCatalogueView.propTypes = {
-  t: PropTypes.func,
-  title: PropTypes.string,
-  loading: PropTypes.bool,
-  showFilter: PropTypes.bool,
-  listings: PropTypes.object,
-  history: PropTypes.object,
-  currentUser: PropTypes.object,
-  getCart: PropTypes.object,
-  cartLoading: PropTypes.bool,
-  onDelete: PropTypes.func,
-  emptyLink: PropTypes.string
 };
 
 export default translate('listing')(ListingCatalogueView);
