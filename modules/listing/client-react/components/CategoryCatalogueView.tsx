@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 import {
@@ -19,7 +18,14 @@ import { MODAL } from '@gqlapp/review-common';
 import { CategoryListingsCatalogue, LISTING_ROUTES } from '@gqlapp/listing-client-react';
 import { CategoryCarousel, CategoryNavBarComponent } from '@gqlapp/category-client-react';
 
-const CategoryCatalogueView = props => {
+// types
+import { CategoryCatalogueProps } from '../containers/CategoryCatalogue';
+
+export interface CategoryCatalogueViewProps extends CategoryCatalogueProps {
+  //
+}
+
+const CategoryCatalogueView: React.FC<CategoryCatalogueViewProps> = props => {
   const { loading, category, navigation, match, t } = props;
   return (
     <PageLayout>
@@ -69,14 +75,6 @@ const CategoryCatalogueView = props => {
       )}
     </PageLayout>
   );
-};
-
-CategoryCatalogueView.propTypes = {
-  loading: PropTypes.bool,
-  category: PropTypes.object,
-  match: PropTypes.object,
-  navigation: PropTypes.object,
-  t: PropTypes.fuc
 };
 
 export default CategoryCatalogueView;

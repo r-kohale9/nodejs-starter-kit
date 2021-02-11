@@ -1,7 +1,6 @@
 export { default as AddListingView } from './AddListingView.web';
 export { default as BookmarkComponent } from './BookmarkComponent';
 export { default as CategoryCatalogueView } from './CategoryCatalogueView';
-export { default as CategoryListingsCatalogueView } from './CategoryListingsCatalogueView';
 export { default as EditListingView } from './EditListingView.web';
 export { default as FilterSliderControlledComponent } from './FilterSliderControlledComponent';
 export { default as ListingCarousel } from './ListingCarousel';
