@@ -69,24 +69,6 @@ const ListingCatalogueView: React.FC<ListingCatalogueViewProps> = props => {
   };
   const RenderListings = ({ layout }: { layout: string }) => (
     <div>
-      {/* <SuggestedListComponent<Listings>
-        endText={'listing'}
-        grid={
-          layout === 'vertical' && {
-            gutter: 18,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 3,
-            xl: 4,
-            xxl: 5,
-          }
-        }
-        items={listings}
-        renderFunc={renderFunc}
-        loadData={loadData}
-        // itemName={'listings'}
-      /> */}
       <SuggestedListComponent
         endText={'listing'}
         grid={
