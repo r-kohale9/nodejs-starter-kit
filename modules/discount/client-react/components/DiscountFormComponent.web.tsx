@@ -22,7 +22,7 @@ import { displayDataCheck } from '@gqlapp/listing-client-react';
 
 // types
 import { EditDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
-import { modalDiscount_modalDiscount as modalDiscount } from '../graphql/__generated__/modalDiscount';
+import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
 
 const DiscountFormSchema = {
   discountPercent: [required]
@@ -31,7 +31,7 @@ export interface DiscountFormComponentProps {
   cardTitle: string;
   t: TranslateFunction;
   onSubmit: (values: EditDiscountInput) => void;
-  modalDiscount: modalDiscount;
+  modalDiscount: ModalDiscount;
 }
 export interface FormValues {
   id: number;
