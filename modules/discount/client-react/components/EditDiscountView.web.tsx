@@ -1,16 +1,23 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 
 import settings from '@gqlapp/config';
 import { PageLayout, MetaTags, Spinner } from '@gqlapp/look-client-react';
 
 import DiscountFormComponent from './DiscountFormComponent.web';
+import { EditDiscountProps } from '../containers/EditDiscount.web';
+import { EditDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
+import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
 
-const EditDiscountView = ({ t, loading, onSubmit, modalDiscount }) => {
+interface EditDiscountViewProps extends EditDiscountProps {
+  onSubmit: (values: EditDiscountInput) => void;
+  modalDiscount?: ModalDiscount;
+}
+
+const EditDiscountView: React.FunctionComponent<EditDiscountViewProps> = props => {
+  const { t, loading, onSubmit, modalDiscount } = props;
   return (
     <PageLayout type="forms">
       <MetaTags title={t('discountEdit.title')} description={`${settings.app.name} - ${t('discountEdit.meta')}`} />
-
       {loading ? (
         <Spinner />
       ) : (
@@ -32,13 +39,6 @@ const EditDiscountView = ({ t, loading, onSubmit, modalDiscount }) => {
       )}
     </PageLayout>
   );
-};
-
-EditDiscountView.propTypes = {
-  t: PropTypes.func,
-  loading: PropTypes.bool,
-  modalDiscount: PropTypes.object,
-  onSubmit: PropTypes.func
 };
 
 export default EditDiscountView;

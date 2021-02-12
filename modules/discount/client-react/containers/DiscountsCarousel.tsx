@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
@@ -8,7 +8,19 @@ import { withDiscounts } from './DiscountOperations';
 import DiscountsCarouselView from '../components/DiscountsCarouselView';
 import { subscribeToDiscounts } from './DiscountSubscriptions';
 
-const DiscountsCarousel = props => {
+// types
+import { FilterDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
+import { discounts_discounts as DiscountsEdge } from '../graphql/__generated__/discounts';
+
+export interface DiscountsCarouselProps {
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  loading: boolean;
+  filter: FilterDiscountInput;
+  title: string;
+  discounts: DiscountsEdge;
+}
+
+const DiscountsCarousel: React.FunctionComponent<DiscountsCarouselProps> = props => {
   const { subscribeToMore, loading, discounts, title, filter } = props;
   useEffect(() => {
     const subscribe = subscribeToDiscounts(subscribeToMore, filter);
@@ -18,14 +30,6 @@ const DiscountsCarousel = props => {
 
   // console.log('props', props);
   return loading ? null : <DiscountsCarouselView title={title} ids={ids} {...props} />;
-};
-
-DiscountsCarousel.propTypes = {
-  title: PropTypes.string,
-  loading: PropTypes.bool,
-  discounts: PropTypes.object,
-  subscribeToMore: PropTypes.func,
-  filter: PropTypes.object
 };
 
 export default compose(withDiscounts, translate('discount'))(DiscountsCarousel);
