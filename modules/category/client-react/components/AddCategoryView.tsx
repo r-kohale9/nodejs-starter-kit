@@ -1,12 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { PageLayout, MetaTags, Spinner } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 
 import CategoryFormComponent from './CategoryFormComponent';
+// types
+import { AddCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { AddCategoryProps } from '../containers/AddCategory';
+interface AddCategoryViewProps extends AddCategoryProps {
+  loading: boolean;
+  t: TranslateFunction;
+  onSubmit: (values: AddCategoryInput) => void;
+}
 
-const AddCategoryView = props => {
+const AddCategoryView: React.FunctionComponent<AddCategoryViewProps> = props => {
   const { loading, t, onSubmit } = props;
   return (
     <PageLayout type="forms">
@@ -22,12 +30,6 @@ const AddCategoryView = props => {
       )}
     </PageLayout>
   );
-};
-
-AddCategoryView.propTypes = {
-  loading: PropTypes.bool,
-  t: PropTypes.func,
-  onSubmit: PropTypes.func
 };
 
 export default AddCategoryView;

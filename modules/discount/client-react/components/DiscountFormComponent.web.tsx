@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withFormik, FormikProps } from 'formik';
 import moment from 'moment';
 
@@ -31,7 +30,7 @@ export interface DiscountFormComponentProps {
   cardTitle: string;
   t: TranslateFunction;
   onSubmit: (values: EditDiscountInput) => void;
-  modalDiscount: ModalDiscount;
+  modalDiscount?: ModalDiscount;
 }
 export interface FormValues {
   id: number;

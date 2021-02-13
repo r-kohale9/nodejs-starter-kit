@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
+import { History } from 'history';
 
 import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
@@ -10,21 +11,33 @@ import EditCategoryView from '../components/EditCategoryView';
 import { withEditCategory, withCategory } from './CategoryOpertations';
 import { subscribeToCategory } from './CategorySubscriptions';
 
-const EditCategory = props => {
+// types
+import { EditCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { category_category as Category } from '../graphql/__generated__/category';
+
+export interface EditCategoryProps {
+  loading: boolean;
+  editCategory: (values: EditCategoryInput) => void;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  history: History;
+  category: Category;
+}
+
+const EditCategory: React.FunctionComponent<EditCategoryProps> = props => {
   const { editCategory, history, subscribeToMore, category } = props;
   useEffect(() => {
     const subscribe = subscribeToCategory(subscribeToMore, category && category.id, history);
     return () => subscribe();
   });
 
-  const handleSubmit = values => {
+  const handleSubmit = (values: EditCategoryInput) => {
     try {
       Message.destroy();
       Message.loading('Please wait...', 0);
       if (values.parentCategoryId === 0) {
         values.parentCategoryId = null;
       }
-      console.log(values);
+      // console.log(values);
       editCategory(values);
       Message.destroy();
       Message.success('Category edited.');
@@ -36,13 +49,6 @@ const EditCategory = props => {
 
   // console.log('props', props);
   return <EditCategoryView onSubmit={handleSubmit} {...props} />;
-};
-
-EditCategory.propTypes = {
-  editCategory: PropTypes.func,
-  subscribeToMore: PropTypes.func,
-  history: PropTypes.object,
-  category: PropTypes.object
 };
 
 export default compose(withEditCategory, withCategory, translate('category'))(EditCategory);
