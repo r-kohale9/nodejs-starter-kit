@@ -11,7 +11,6 @@ import { EditCategoryProps } from '../containers/EditCategory';
 import { EditCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
 
 interface EditCategoryViewProps extends EditCategoryProps {
-  loading: boolean;
   t: TranslateFunction;
   onSubmit: (values: EditCategoryInput) => void;
 }

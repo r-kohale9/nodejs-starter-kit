@@ -5,6 +5,7 @@ import { History } from 'history';
 import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import ROUTES from '../routes';
 import EditCategoryView from '../components/EditCategoryView';
@@ -21,6 +22,7 @@ export interface EditCategoryProps {
   subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
   history: History;
   category: Category;
+  t: TranslateFunction;
 }
 
 const EditCategory: React.FunctionComponent<EditCategoryProps> = props => {

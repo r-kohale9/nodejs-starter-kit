@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {
   NextButton,
@@ -19,8 +18,12 @@ import OrderSummary from './OrderSummary';
 import CheckoutLayout from './CheckoutLayout';
 import CartItemComponent from './CartItemComponent';
 import ROUTES from '../routes';
+// types
+import { CheckoutCartProps } from '../containers/CheckoutCart.web';
 
-const CheckoutCartView = props => {
+interface CheckoutCartViewProps extends CheckoutCartProps {}
+
+const CheckoutCartView: React.FunctionComponent<CheckoutCartViewProps> = props => {
   const [checkout, setCheckout] = React.useState(false);
   const { t, history, cartLoading, onSubmit, getCart, onDelete, currentUser, onEdit } = props;
 
@@ -89,9 +92,7 @@ const CheckoutCartView = props => {
         }
         Col2={
           <OrderSummary
-            t={t}
             getCart={getCart}
-            history={history}
             btn={
               <Tooltip title={!checkout && 'Accept privacy policy.'}>
                 <CheckBox onChange={e => setCheckout(e.target.checked)}>{t('checkoutCart.checkbox')}</CheckBox>
@@ -107,17 +108,6 @@ const CheckoutCartView = props => {
       />
     </PageLayout>
   );
-};
-
-CheckoutCartView.propTypes = {
-  history: PropTypes.object,
-  getCart: PropTypes.object,
-  currentUser: PropTypes.object,
-  cartLoading: PropTypes.bool,
-  onSubmit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  t: PropTypes.func
 };
 
 export default CheckoutCartView;

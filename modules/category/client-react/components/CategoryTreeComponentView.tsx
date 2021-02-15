@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { ApolloClient } from 'apollo-client';
 import { withApollo } from 'react-apollo';
 
 import { FormItem, TreeSelect, Space, Icon } from '@gqlapp/look-client-react';
 
 import CATEGORY_QUERY from '../graphql/CategoryQuery.graphql';
+// type
+import { CategoryTreeComponentProps } from '../containers/CategoryTreeComponent';
 
-const CategoryTreeComponentView = props => {
+interface CategoryTreeComponentViewProps extends CategoryTreeComponentProps {
+  client: ApolloClient<any>;
+  icon: string;
+  nullable: boolean;
+  disableParent: boolean;
+  inFilter: boolean;
+  name: string | null;
+  label: string | null;
+  value: string | null;
+  onChange: (value: any) => void;
+}
+
+const CategoryTreeComponentView: React.FunctionComponent<CategoryTreeComponentViewProps> = props => {
   const {
     icon = 'ProfileOutlined',
     categories,
@@ -38,10 +52,10 @@ const CategoryTreeComponentView = props => {
         };
       }))
   ]);
-  const onChange = value => {
-    const { onChange } = props;
-    if (onChange) {
-      onChange(value);
+  const onChange = (value: any) => {
+    const { onChange: onTextChange } = props;
+    if (onTextChange) {
+      onTextChange(value);
     } else {
       formik.setFieldValue(name, value);
     }
@@ -57,24 +71,45 @@ const CategoryTreeComponentView = props => {
         id: treeNode.id
       }
     });
-    !loading &&
-      setData(
-        data.concat(
-          category.subCategories.map(sC => {
-            return {
-              id: sC.id,
-              pId: sC.parentCategoryId,
-              value: sC.id,
-              title: sC.title,
-              isLeaf: sC.isLeaf,
-              disabled: disableParent && !sC.isLeaf
-            };
-          })
-        )
-      );
+    loading
+      ? setData([
+          nullable && {
+            id: 'abc',
+            pId: 0,
+            title: 'Parent Category',
+            value: null,
+            isLeaf: true
+          },
+          ...(categories.edges &&
+            categories.totalCount > 0 &&
+            categories.edges.map(c => {
+              return {
+                id: c.node.id,
+                pId: c.node.parentCategoryId ? c.node.parentCategoryId : 0,
+                title: c.node.title,
+                value: c.node.id,
+                isLeaf: c.node.isLeaf,
+                disabled: disableParent && !c.node.isLeaf
+              };
+            }))
+        ])
+      : setData(
+          data.concat(
+            category.subCategories.map(sC => {
+              return {
+                id: sC.id,
+                pId: sC.parentCategoryId,
+                value: sC.id,
+                title: sC.title,
+                isLeaf: sC.isLeaf,
+                disabled: disableParent && !sC.isLeaf
+              };
+            })
+          )
+        );
   };
 
-  let labels = inFilter
+  const labels = inFilter
     ? {}
     : {
         labelCol: { span: 24 },
@@ -107,20 +142,6 @@ const CategoryTreeComponentView = props => {
       />
     </FormItem>
   );
-};
-
-CategoryTreeComponentView.propTypes = {
-  categories: PropTypes.object,
-  formik: PropTypes.object,
-  name: PropTypes.string,
-  label: PropTypes.string,
-  value: PropTypes.number,
-  client: PropTypes.object,
-  disableParent: PropTypes.bool,
-  nullable: PropTypes.bool,
-  inFilter: PropTypes.bool,
-  icon: PropTypes.string,
-  onChange: PropTypes.func
 };
 
 export default withApollo(CategoryTreeComponentView);
