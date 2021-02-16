@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PropTypes } from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
 import { Badge, DeleteIcon, Row, Col, ModalDrawer, Icon } from '@gqlapp/look-client-react';
@@ -13,7 +12,21 @@ import { DiscountComponentView, withModalDiscount } from '@gqlapp/discount-clien
 import EditCartQuantity from './EditCartQuantity';
 import EditCart from './EditCart';
 
-const CartItemComponent = props => {
+// types
+import { listing_listing as Listing } from '@gqlapp/listing-client-react/graphql/__generated__/listing';
+import { CheckoutCartProps } from '../containers/CheckoutCart.web';
+import { order_order_orderDetails as OrderDetails } from '../graphql/__generated__/order';
+import { modalDiscount_modalDiscount as ModalDiscount } from '@gqlapp/discount-client-react/graphql/__generated__/modalDiscount';
+
+interface CartItemComponentProps extends CheckoutCartProps {
+  loading: boolean;
+  listing: Listing;
+  item: OrderDetails;
+  modalDiscount: ModalDiscount;
+  state: string;
+}
+
+const CartItemComponent: React.FunctionComponent<CartItemComponentProps> = props => {
   const { loading, listing, t, item, onEdit, onDelete, currentUser, state, modalDiscount } = props;
   const now = new Date().toISOString();
 
@@ -145,20 +158,6 @@ const CartItemComponent = props => {
       <Col span={1} />
     </Row>
   );
-};
-
-CartItemComponent.propTypes = {
-  loading: PropTypes.bool,
-  listing: PropTypes.object,
-  item: PropTypes.object,
-  currentUser: PropTypes.object,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  onSubmit: PropTypes.func,
-  mobile: PropTypes.func,
-  t: PropTypes.func,
-  state: PropTypes.string,
-  modalDiscount: PropTypes.object
 };
 
 export default compose(withListing, withModalDiscount)(CartItemComponent);

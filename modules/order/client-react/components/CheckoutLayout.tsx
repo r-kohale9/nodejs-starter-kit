@@ -16,13 +16,13 @@ const CustomBody = styled.div`
 
 interface CheckoutLayoutProps {
   t: TranslateFunction;
-  cartLoading: boolean;
+  cartLoading?: boolean;
   loading: boolean;
   title: string;
   step: number;
   Col1: JSX.Element;
   Col2: JSX.Element;
-  extra: JSX.Element;
+  extra?: JSX.Element;
 }
 
 const CheckoutLayout: React.FunctionComponent<CheckoutLayoutProps> = props => {

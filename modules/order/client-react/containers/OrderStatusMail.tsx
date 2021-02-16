@@ -1,14 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose } from '@gqlapp/core-common';
 
 import OrderStatusMailView from '../components/OrderStatusMailView';
 import { withOrderStatusMail } from './OrderOperations';
 
-const OrderStatusMail = props => {
+interface OrderStatusMailProps {
+  orderStatusMail: (orderId: number, note: string) => void;
+}
+
+const OrderStatusMail: React.FunctionComponent<OrderStatusMailProps> = props => {
   const { orderStatusMail } = props;
 
-  const handleSubmit = (orderId, note) => {
+  const handleSubmit = (orderId: number, note: string) => {
     try {
       orderStatusMail(orderId, note);
     } catch (e) {
@@ -17,10 +20,6 @@ const OrderStatusMail = props => {
   };
   // console.log('props', props);
   return <OrderStatusMailView onSubmit={handleSubmit} {...props} />;
-};
-
-OrderStatusMail.propTypes = {
-  orderStatusMail: PropTypes.func
 };
 
 export default compose(withOrderStatusMail)(OrderStatusMail);

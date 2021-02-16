@@ -1,13 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-import { withFormik } from 'formik';
+import { withFormik, FormikProps } from 'formik';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { Form, Icon, RenderField, ModalDrawer, Button, Col } from '@gqlapp/look-client-react';
 import { displayDataCheck } from '@gqlapp/listing-client-react';
 
-const OrderStatusMailView = props => {
+interface OrderStatusMailFormValues {
+  note: string;
+}
+interface OrderStatusMailFormProps {
+  onSubmit: (orderId: number, note: string) => void;
+  orderId: number;
+  disabled: boolean;
+}
+interface StatusMailFormProps {
+  values: OrderStatusMailFormValues;
+  handleSubmit: () => void;
+  hideModal?: () => void;
+}
+
+const OrderStatusMailView: React.FC<OrderStatusMailFormProps & FormikProps<OrderStatusMailFormValues>> = props => {
   const { disabled = false } = props;
   return (
     <>
@@ -30,7 +42,7 @@ const OrderStatusMailView = props => {
   );
 };
 
-const StatusMailForm = props => {
+const StatusMailForm: React.FC<StatusMailFormProps> = props => {
   const { values, handleSubmit, hideModal } = props;
   const handleOnSubmit = () => {
     handleSubmit();
@@ -56,20 +68,8 @@ const StatusMailForm = props => {
     </Form>
   );
 };
-StatusMailForm.propTypes = {
-  values: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  hideModal: PropTypes.func
-};
 
-OrderStatusMailView.propTypes = {
-  orderId: PropTypes.number,
-  values: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  disabled: PropTypes.bool
-};
-
-const OrderStatusMailWithFormik = withFormik({
+const OrderStatusMailWithFormik = withFormik<OrderStatusMailFormProps, OrderStatusMailFormValues>({
   enableReinitialize: true,
   mapPropsToValues: () => ({
     note: ''
