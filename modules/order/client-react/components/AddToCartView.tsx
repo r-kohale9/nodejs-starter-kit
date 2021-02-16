@@ -1,18 +1,27 @@
 import React from 'react';
 
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
+
 import AddToCartForm from './AddToCartForm';
 
 // types
-import { AddToCartProps } from '../containers/AddToCart';
 import { order_order_orderDetails as OrderDetails } from '../graphql/__generated__/order';
 import { AddToCartFormValues } from './AddToCartForm';
+import { getCart_getCart as GetCart } from '@gqlapp/order-client-react/graphql/__generated__/getCart';
+import { listing_listing as Listing } from '@gqlapp/listing-client-react/graphql/__generated__/listing';
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
 
-export interface AddToCartViewProps extends AddToCartProps {
+export interface AddToCartViewProps {
+  t: TranslateFunction;
+  cartLoading?: boolean;
+  currentUser?: CurrentUser;
+  listing: Listing;
   showBtn?: boolean;
   catalogueCard?: boolean;
   item?: OrderDetails;
-  onSubmit: (values: AddToCartFormValues, redirect: boolean) => void;
-  onDelete: (id: number) => void;
+  onSubmit: (values: AddToCartFormValues, redirect?: boolean) => void;
+  onDelete?: (id: number) => void;
+  getCart?: GetCart;
 }
 
 const AddToCartView: React.FC<AddToCartViewProps> = props => {

@@ -1,14 +1,35 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { compose } from '@gqlapp/core-common';
 import { Spinner } from '@gqlapp/look-client-react';
 import { withListing } from '@gqlapp/listing-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { withModalDiscount, subscribeToDiscount } from '@gqlapp/discount-client-react';
 
 import AddToCartView from './AddToCartView';
+// types
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { listing_listing as Listing } from '@gqlapp/listing-client-react/graphql/__generated__/listing';
+import { modalDiscount_modalDiscount as ModalDiscount } from '@gqlapp/discount-client-react/graphql/__generated__/modalDiscount';
+import { OrderOptionsInput } from '../../../../packages/server/__generated__/globalTypes';
+import { order_order_orderDetails as OrderDetails } from '../graphql/__generated__/order';
+import { AddToCartFormValues } from './AddToCartForm';
 
-const EditCart = props => {
+interface EditCartProps {
+  t: TranslateFunction;
+  loading: boolean;
+  currentUser: CurrentUser;
+  modalId: number;
+  listing: Listing;
+  discountSubscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  hideModal: () => void;
+  modalDiscount: ModalDiscount;
+  onEdit: (id: number, optionsId: number, listingCost: number, values: OrderOptionsInput) => void;
+  item?: OrderDetails;
+}
+
+const EditCart: React.FunctionComponent<EditCartProps> = props => {
   const {
     t,
     loading,
@@ -27,7 +48,7 @@ const EditCart = props => {
     return () => subscribe();
   }, [discountSubscribeToMore, modalId]);
 
-  const handleSubmit = values => {
+  const handleSubmit = (values: AddToCartFormValues) => {
     const cost = listing && listing.listingCostArray && listing.listingCostArray[0].cost;
     const now = new Date().toISOString();
     const startDate = modalDiscount && modalDiscount.discountDuration && modalDiscount.discountDuration.startDate;
@@ -47,6 +68,7 @@ const EditCart = props => {
     onEdit(
       item.id,
       item.orderOptions && item.orderOptions.id,
+      // tslint:disable-next-line:radix
       isDiscount ? parseInt(cost && (cost - cost * (discount / 100)).toFixed()) : parseInt(cost.toFixed(2)),
       values
     );
@@ -69,19 +91,6 @@ const EditCart = props => {
       )}
     </>
   );
-};
-
-EditCart.propTypes = {
-  listing: PropTypes.object,
-  item: PropTypes.object,
-  currentUser: PropTypes.object,
-  modalDiscount: PropTypes.object,
-  loading: PropTypes.bool,
-  onEdit: PropTypes.func,
-  discountSubscribeToMore: PropTypes.func,
-  t: PropTypes.func,
-  hideModal: PropTypes.func,
-  modalId: PropTypes.number
 };
 
 export default compose(withListing, withModalDiscount)(EditCart);

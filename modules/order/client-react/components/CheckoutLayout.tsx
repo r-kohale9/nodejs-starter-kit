@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { EmptyComponent, AddButton, Heading, Row, Col } from '@gqlapp/look-client-react';
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import CheckoutStepsComponent from './CheckoutStepsComponent';
 
@@ -13,7 +13,19 @@ const CustomBody = styled.div`
   padding: 0 24px;
   min-height: 80vh;
 `;
-const CheckoutLayout = props => {
+
+interface CheckoutLayoutProps {
+  t: TranslateFunction;
+  cartLoading: boolean;
+  loading: boolean;
+  title: string;
+  step: number;
+  Col1: JSX.Element;
+  Col2: JSX.Element;
+  extra: JSX.Element;
+}
+
+const CheckoutLayout: React.FunctionComponent<CheckoutLayoutProps> = props => {
   const { cartLoading, loading, t, title, extra, step, Col1, Col2 } = props;
   return loading ? (
     <>
@@ -66,17 +78,6 @@ const CheckoutLayout = props => {
       </div>
     )
   );
-};
-
-CheckoutLayout.propTypes = {
-  cartLoading: PropTypes.bool,
-  loading: PropTypes.bool,
-  step: PropTypes.number,
-  t: PropTypes.func,
-  title: PropTypes.string,
-  extra: PropTypes.node,
-  Col1: PropTypes.node,
-  Col2: PropTypes.node
 };
 
 export default CheckoutLayout;
