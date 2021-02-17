@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { compose } from '@gqlapp/core-common';
+import { History } from 'history';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { enquireScreen } from 'enquire-js';
 
-import { translate } from '@gqlapp/i18n-client-react';
+import { compose } from '@gqlapp/core-common';
+import { TranslateFunction, translate } from '@gqlapp/i18n-client-react';
 import { Affix, DropDown, Card, Icon, Message, Badge, EmptyComponent } from '@gqlapp/look-client-react';
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
@@ -15,6 +16,10 @@ import { subscribeToCart } from './OrderSubscriptions';
 import NavItemCartLayout from '../components/NavItemCartLayout';
 import NavItemCartComponent from '../components/NavItemCartComponent';
 import ROUTES from '../routes';
+
+// type
+import { getCart_getCart as GetCart } from '../graphql/__generated__/getCart';
+import { EditOrderDetailInput } from '../../../../packages/server/__generated__/globalTypes';
 
 const StyleCard = styled(Card)`
   border: 0px !important;
@@ -27,12 +32,23 @@ const WhiteDiv = styled.div`
   padding: 5px;
 `;
 
-let isMobile;
-enquireScreen(b => {
+let isMobile: boolean;
+enquireScreen((b: boolean) => {
   isMobile = b;
 });
 
-const NavItemCart = props => {
+interface NavItemCartProps {
+  loading: boolean;
+  history: History;
+  t: TranslateFunction;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  getCart: GetCart;
+  currentUserLoading: boolean;
+  editOrderDetail: (input: EditOrderDetailInput) => boolean;
+  deleteOrderDetail: (id: number) => void;
+}
+
+const NavItemCart: React.FunctionComponent<NavItemCartProps> = props => {
   const [visible, setVisible] = useState(false);
   const {
     loading,
@@ -50,7 +66,7 @@ const NavItemCart = props => {
     return () => subscribe();
   });
 
-  const handleEdit = (id, optionsId, quantity) => {
+  const handleEdit = (id: number, optionsId: number, quantity: number) => {
     // console.log(id, optionsId, quantity);
     try {
       const input = {
@@ -67,7 +83,7 @@ const NavItemCart = props => {
       throw Error(e);
     }
   };
-  const handleDelete = id => {
+  const handleDelete = (id: number) => {
     try {
       deleteOrderDetail(id);
       Message.error('Removed from Cart.');
@@ -152,17 +168,6 @@ const NavItemCart = props => {
       )}
     </>
   );
-};
-
-NavItemCart.propTypes = {
-  currentUserLoading: PropTypes.bool.isRequired,
-  getCart: PropTypes.object,
-  history: PropTypes.object,
-  editOrderDetail: PropTypes.func,
-  deleteOrderDetail: PropTypes.func,
-  subscribeToMore: PropTypes.func,
-  t: PropTypes.func,
-  loading: PropTypes.bool
 };
 
 export default compose(

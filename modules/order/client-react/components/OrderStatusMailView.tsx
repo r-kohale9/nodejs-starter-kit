@@ -10,8 +10,8 @@ interface OrderStatusMailFormValues {
 }
 interface OrderStatusMailFormProps {
   onSubmit: (orderId: number, note: string) => void;
-  orderId: number;
-  disabled: boolean;
+  orderId?: number;
+  disabled?: boolean;
 }
 interface StatusMailFormProps {
   values: OrderStatusMailFormValues;

@@ -1,15 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-// import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import { Row, Col, Divider, Button } from '@gqlapp/look-client-react';
 import { priceCommaSeparator } from '@gqlapp/listing-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import { TotalPrice } from './function';
 import ROUTES from '../routes/index';
+// types
+import { getCart_getCart_orderDetails } from '../graphql/__generated__/getCart';
 
-const NavItemCartLayout = props => {
+interface NavItemCartLayoutProps {
+  Compo: React.ElementType;
+  onDelete: (id: number) => void;
+  width: string;
+  height: string;
+  itemName: string;
+  data: Array<getCart_getCart_orderDetails | null> | null;
+  onEdit: (id: number, optionsId: number, quantity: number) => void;
+  componentProps: { mobile: boolean; t: TranslateFunction };
+  node?: getCart_getCart_orderDetails;
+}
+
+const NavItemCartLayout: React.FunctionComponent<NavItemCartLayoutProps> = props => {
   // console.log('carousel', props);
   const { Compo, itemName, height, width, onEdit, onDelete } = props;
 
@@ -17,7 +30,7 @@ const NavItemCartLayout = props => {
     <>
       <div style={{ position: 'relative', width }}>
         <div style={{ maxHeight: height, overflow: 'hidden', overflowY: 'auto' }}>
-          {props.data.map((item, key) => {
+          {props.data.map((item: getCart_getCart_orderDetails, key: number) => {
             const obj = {};
             obj[itemName] = props.node ? item.node : item;
             return (
@@ -77,18 +90,6 @@ const NavItemCartLayout = props => {
       </div>
     </>
   );
-};
-
-NavItemCartLayout.propTypes = {
-  node: PropTypes.object,
-  height: PropTypes.string,
-  Compo: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
-  onDelete: PropTypes.func,
-  getCart: PropTypes.object,
-  width: PropTypes.string,
-  itemName: PropTypes.string,
-  onEdit: PropTypes.func
 };
 
 export default NavItemCartLayout;
