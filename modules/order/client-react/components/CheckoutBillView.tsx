@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { NextButton, MetaTags, PageLayout, Row, Col, Spinner, Tooltip } from '@gqlapp/look-client-react';
 import SelectAddress from '@gqlapp/addresses-client-react/containers/SelectAddress';
 import AddAddressBtn from '@gqlapp/addresses-client-react/containers/AddAddressBtn';
@@ -8,9 +8,22 @@ import settings from '@gqlapp/config';
 
 import CheckoutLayout from './CheckoutLayout';
 import OrderSummary from './OrderSummary';
+// types
+import { CheckoutBillProps } from '../containers/CheckoutBill.web';
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
 
-const CheckoutBillView = props => {
-  const { t, onSelect, onSubmit, cartLoading, currentUser, btnDisabled, history } = props;
+interface CheckoutBillViewProps extends CheckoutBillProps {
+  t: TranslateFunction;
+  cartLoading: boolean;
+  currentUser: CurrentUser;
+  loading: boolean;
+  onSubmit: () => void;
+  btnDisabled: boolean;
+  onSelect: (addressId: number) => void;
+}
+
+const CheckoutBillView: React.FunctionComponent<CheckoutBillViewProps> = props => {
+  const { t, onSelect, onSubmit, cartLoading, currentUser, btnDisabled } = props;
   const getCart = !props.loading && props.getCart;
 
   return (
@@ -35,9 +48,7 @@ const CheckoutBillView = props => {
           }
           Col2={
             <OrderSummary
-              t={t}
               getCart={getCart}
-              history={history}
               btn={
                 <Tooltip title={btnDisabled && 'Select delivery address.'}>
                   <NextButton onClick={onSubmit} loading={cartLoading} disabled={btnDisabled} size="lg">
@@ -51,18 +62,6 @@ const CheckoutBillView = props => {
       )}
     </PageLayout>
   );
-};
-
-CheckoutBillView.propTypes = {
-  currentUser: PropTypes.object,
-  onSubmit: PropTypes.func,
-  cartLoading: PropTypes.bool,
-  btnDisabled: PropTypes.bool,
-  loading: PropTypes.bool,
-  t: PropTypes.func,
-  onSelect: PropTypes.func,
-  getCart: PropTypes.object,
-  history: PropTypes.object
 };
 
 export default CheckoutBillView;

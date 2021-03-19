@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { History } from 'history';
 
 import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
@@ -8,11 +8,17 @@ import { translate } from '@gqlapp/i18n-client-react';
 import ROUTES from '../routes';
 import AddCategoryView from '../components/AddCategoryView';
 import { withAddCategory } from './CategoryOpertations';
+import { AddCategoryInput, EditCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
 
-const AddCategory = props => {
+export interface AddCategoryProps {
+  history: History;
+  addCategory: (values: AddCategoryInput) => void;
+}
+
+const AddCategory: React.FunctionComponent<AddCategoryProps> = props => {
   const { addCategory, history } = props;
-  const handleSubmit = values => {
-    console.log(values);
+  const handleSubmit = (values: EditCategoryInput) => {
+    // console.log(values);
     try {
       Message.destroy();
       Message.loading('Please wait...', 0);
@@ -31,11 +37,6 @@ const AddCategory = props => {
 
   // console.log('props', props);
   return <AddCategoryView onSubmit={handleSubmit} {...props} />;
-};
-
-AddCategory.propTypes = {
-  addCategory: PropTypes.func,
-  history: PropTypes.object
 };
 
 export default compose(withAddCategory, translate('category'))(AddCategory);

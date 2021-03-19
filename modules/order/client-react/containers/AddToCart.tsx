@@ -28,7 +28,7 @@ export interface AddToCartProps {
   cartLoading: boolean;
   modalId: number;
   history: History;
-  currentUser: CurrentUser;
+  currentUser?: CurrentUser;
   listing: Listing;
   getCart: GetCart;
   modalDiscount: ModalDiscount;
@@ -62,7 +62,7 @@ const AddToCart: React.FC<AddToCartProps> = props => {
     };
   });
 
-  const onSubmit = (values: AddToCartFormValues, redirect = false) => {
+  const onSubmit = (values: AddToCartFormValues, redirect: boolean = false): any => {
     const max = listing && listing.listingDetail && listing.listingDetail.inventoryCount;
     const cost = listing && listing.listingCostArray && listing.listingCostArray[0].cost;
     const now = new Date().toISOString();

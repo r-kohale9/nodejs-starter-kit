@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 // import styled from 'styled-components';
-import { PropTypes } from 'prop-types';
 
 import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 import { Row, Col, Card, Tooltip } from '@gqlapp/look-client-react';
 import { NO_IMG } from '@gqlapp/listing-common';
 import { DiscountComponentView, withModalDiscount } from '@gqlapp/discount-client-react';
+// types
+import { getCart_getCart_orderDetails } from '../graphql/__generated__/getCart';
+import { modalDiscount_modalDiscount } from '@gqlapp/discount-client-react/graphql/__generated__/modalDiscount';
 
 // const AlignButton = styled.div`
 //   position: absolute;
@@ -15,7 +17,12 @@ import { DiscountComponentView, withModalDiscount } from '@gqlapp/discount-clien
 //   margin: 80px 110px;
 // `;
 
-const CartItemComponent = props => {
+interface CartItemComponentProps {
+  item: getCart_getCart_orderDetails;
+  modalDiscount: modalDiscount_modalDiscount;
+}
+
+const CartItemComponent: React.FunctionComponent<CartItemComponentProps> = props => {
   const { item, /* onEdit, onDelete, */ modalDiscount } = props;
   // const handleQuantity = ele => {
   //   let quantity = item.orderOptions.quantity;
@@ -160,16 +167,5 @@ const CartItemComponent = props => {
 //     </div>
 //   );
 // };
-
-CartItemComponent.propTypes = {
-  item: PropTypes.object,
-  currentUser: PropTypes.object,
-  onDelete: PropTypes.func,
-  onEdit: PropTypes.func,
-  onSubmit: PropTypes.func,
-  modalDiscount: PropTypes.object,
-  mobile: PropTypes.func,
-  t: PropTypes.func
-};
 
 export default withModalDiscount(CartItemComponent);

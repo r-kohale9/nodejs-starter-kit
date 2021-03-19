@@ -1,12 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Card, Row, Col } from '@gqlapp/look-client-react';
 import { displayDataCheck, priceCommaSeparator } from '@gqlapp/listing-client-react';
 
 import { TotalPrice } from './function';
+// types
+import { getCart_getCart as GetCart } from '../graphql/__generated__/getCart';
 
-const OrderSummary = props => {
+interface OrderSummaryProps {
+  getCart: GetCart;
+  btn: object;
+}
+
+const OrderSummary: React.FunctionComponent<OrderSummaryProps> = props => {
   const { getCart, btn } = props;
 
   return (
@@ -45,11 +51,6 @@ const OrderSummary = props => {
       {btn}
     </Card>
   );
-};
-
-OrderSummary.propTypes = {
-  getCart: PropTypes.object,
-  btn: PropTypes.node
 };
 
 export default OrderSummary;

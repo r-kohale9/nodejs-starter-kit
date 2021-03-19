@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Message } from '@gqlapp/look-client-react';
+import { SubscribeToMoreOptions } from 'apollo-client';
+import { History } from 'history';
 
+import { Message } from '@gqlapp/look-client-react';
 import { compose } from '@gqlapp/core-common';
 import { translate } from '@gqlapp/i18n-client-react';
 import { withCurrentUser } from '@gqlapp/user-client-react/containers/UserOperations';
@@ -10,8 +11,17 @@ import ROUTES from '../routes';
 import CheckoutBillView from '../components/CheckoutBillView';
 import { withGetCart, withPatchAddress } from './OrderOperations';
 import { subscribeToCart } from './OrderSubscriptions';
+// types
+import { getCart_getCart as GetCart } from '@gqlapp/order-client-react/graphql/__generated__/getCart';
 
-const CheckoutBill = props => {
+export interface CheckoutBillProps {
+  history: History;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+  getCart: GetCart;
+  patchAddress: (addressId: number) => boolean;
+}
+
+const CheckoutBill: React.FunctionComponent<CheckoutBillProps> = props => {
   const { history, patchAddress, subscribeToMore, getCart } = props;
   const [addressId, setAddressId] = React.useState(0);
 
@@ -32,17 +42,8 @@ const CheckoutBill = props => {
       throw Error(e);
     }
   }
-
   // console.log('props', props);
   return <CheckoutBillView onSubmit={onSubmit} btnDisabled={addressId === 0} onSelect={setAddressId} {...props} />;
-};
-
-CheckoutBill.propTypes = {
-  getCart: PropTypes.object,
-  addresses: PropTypes.object,
-  patchAddress: PropTypes.func,
-  subscribeToMore: PropTypes.func,
-  history: PropTypes.object
 };
 
 export default compose(withCurrentUser, withGetCart, withPatchAddress)(translate('order')(CheckoutBill));

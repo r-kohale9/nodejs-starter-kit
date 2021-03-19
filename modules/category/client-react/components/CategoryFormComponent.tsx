@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { withFormik } from 'formik';
+import { withFormik, FormikProps } from 'formik';
 
 import {
   Row,
@@ -15,20 +14,42 @@ import {
   RenderField,
   Form
 } from '@gqlapp/look-client-react';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 import { displayDataCheck } from '@gqlapp/listing-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
 import CategoryTreeComponent from '../containers/CategoryTreeComponent';
+
+// types
+import { EditCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+import { CategoryInfo as Category } from '../graphql/__generated__/CategoryInfo';
 // import RendersubCategories from './RendersubCategories';
 
+interface CategoryFormComponentProps {
+  cardTitle: string;
+  t: TranslateFunction;
+  onSubmit: (values: EditCategoryInput) => void;
+  category?: Category;
+}
+
+interface FormValues {
+  id: number;
+  title: string;
+  modalName: string;
+  parentCategoryId: number;
+  description: string | null;
+  isNavbar: boolean;
+  isActive: boolean;
+  imageUrl: string | null;
+}
 const CategoryFormSchema = {
   title: [required],
   modalName: [required]
 };
 
-const CategoryFormComponent = props => {
+const CategoryFormComponent: React.FC<CategoryFormComponentProps & FormikProps<FormValues>> = props => {
   const { cardTitle, handleSubmit, values, t } = props;
   const [load, setLoad] = useState(false);
 
@@ -165,14 +186,7 @@ const CategoryFormComponent = props => {
   );
 };
 
-CategoryFormComponent.propTypes = {
-  handleSubmit: PropTypes.func,
-  values: PropTypes.object,
-  t: PropTypes.func,
-  cardTitle: PropTypes.string
-};
-
-const CategoryWithFormik = withFormik({
+const CategoryWithFormik = withFormik<CategoryFormComponentProps, FormValues>({
   enableReinitialize: true,
   mapPropsToValues: props => {
     return {

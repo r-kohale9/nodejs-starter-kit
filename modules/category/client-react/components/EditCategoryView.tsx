@@ -1,12 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { PageLayout, MetaTags, Spinner } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 
 import CategoryFormComponent from './CategoryFormComponent';
 
-const EditCategoryView = props => {
+// types
+import { EditCategoryProps } from '../containers/EditCategory';
+import { EditCategoryInput } from '../../../../packages/server/__generated__/globalTypes';
+
+interface EditCategoryViewProps extends EditCategoryProps {
+  t: TranslateFunction;
+  onSubmit: (values: EditCategoryInput) => void;
+}
+
+const EditCategoryView: React.FunctionComponent<EditCategoryViewProps> = props => {
   const { loading, t, onSubmit, category } = props;
   return (
     <PageLayout type="forms">
@@ -27,13 +36,6 @@ const EditCategoryView = props => {
       )}
     </PageLayout>
   );
-};
-
-EditCategoryView.propTypes = {
-  loading: PropTypes.bool,
-  t: PropTypes.func,
-  onSubmit: PropTypes.func,
-  category: PropTypes.object
 };
 
 export default EditCategoryView;

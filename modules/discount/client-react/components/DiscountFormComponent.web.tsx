@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withFormik } from 'formik';
+import { withFormik, FormikProps } from 'formik';
 import moment from 'moment';
 
+import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { required, validate } from '@gqlapp/validation-common-react';
 import {
@@ -19,19 +19,37 @@ import {
 import { displayDataCheck } from '@gqlapp/listing-client-react';
 // import { LABEL } from '@gqlapp/home-common';
 
+// types
+import { EditDiscountInput } from '../../../../packages/server/__generated__/globalTypes';
+import { modalDiscount_modalDiscount as ModalDiscount } from '../graphql/__generated__/modalDiscount';
+
 const DiscountFormSchema = {
   discountPercent: [required]
 };
-
-const DiscountFormComponent = props => {
+export interface DiscountFormComponentProps {
+  cardTitle: string;
+  t: TranslateFunction;
+  onSubmit: (values: EditDiscountInput) => void;
+  modalDiscount?: ModalDiscount;
+}
+export interface FormValues {
+  id: number;
+  discountPercent: number | null;
+  isTimeStamp: boolean | null;
+  isActive?: boolean | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  discountDurationId?: number | null;
+}
+const DiscountFormComponent: React.FC<DiscountFormComponentProps & FormikProps<FormValues>> = props => {
   const { t, values, handleSubmit, setFieldValue, cardTitle } = props;
 
-  function disabledStartDate(current) {
+  function disabledStartDate(current: any) {
     // Can not select days before today and today
     return current && current < moment().startOf('day');
   }
 
-  function disabledEndDate(current) {
+  function disabledEndDate(current: any) {
     const startDate = moment(values.startDate ? moment(values.startDate) : moment());
     // Can not select days before today and today
     return current && current < startDate.startOf('day');
@@ -143,15 +161,7 @@ const DiscountFormComponent = props => {
   );
 };
 
-DiscountFormComponent.propTypes = {
-  values: PropTypes.object,
-  handleSubmit: PropTypes.func,
-  setFieldValue: PropTypes.func,
-  t: PropTypes.func,
-  cardTitle: PropTypes.string
-};
-
-const DiscountWithFormik = withFormik({
+const DiscountWithFormik = withFormik<DiscountFormComponentProps, FormValues>({
   enableReinitialize: true,
   mapPropsToValues: props => {
     return {
@@ -174,7 +184,7 @@ const DiscountWithFormik = withFormik({
   },
   handleSubmit(values, { props: { onSubmit } }) {
     const now = new Date().toISOString();
-    const discountInput = {
+    const discountInput: EditDiscountInput = {
       id: values.id,
       discountPercent: values.discountPercent,
       discountDuration: {
