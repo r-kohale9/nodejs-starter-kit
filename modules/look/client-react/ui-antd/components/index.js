@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
 export { default as PageLayout } from './PageLayout';
+export { default as FilterLayout } from './FilterLayout';
 export { default as Button } from './Button';
 export { default as MenuItem } from './MenuItem';
 export { default as Form } from './Form';

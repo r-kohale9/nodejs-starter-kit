@@ -34,6 +34,7 @@
     "description":"Description",
     "select":"Select a category",
     "isNavbar":"Is Navbar",
+    "isActive":"Is Active",
     "imageUrl":"Image url",
     "btn":{
       "submit":"Submit"

@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { PropTypes } from 'prop-types';
 
 import { NO_IMG } from '@gqlapp/listing-common';
-import { displayDataCheck } from '@gqlapp/listing-client-react';
-import { Row, Col, Card } from '@gqlapp/look-client-react';
+import { displayDataCheck, useImageLoaded } from '@gqlapp/listing-client-react';
+import { Row, Col, Card, Skeleton } from '@gqlapp/look-client-react';
 import { TotalPrice } from './function';
 import ROUTES from '../routes';
 
@@ -21,16 +21,20 @@ const StatusText = styled.div`
 `;
 
 const OrderItemComponent = props => {
+  const [ref, loaded, onLoad] = useImageLoaded();
   const {
     item,
     t
     // edit,
   } = props;
+  const order_img = (item.orderDetails && item.orderDetails[0] && item.orderDetails[0].imageUrl) || NO_IMG;
   return (
     <Link to={`${ROUTES.orderDetailLink}${item.id}`}>
+      {!loaded && <OrderItemSkeleton />}
       <Card
         style={{
-          marginBottom: '24px'
+          marginBottom: '24px',
+          display: !loaded && 'none'
         }}
         hoverable
         bodyStyle={{
@@ -40,9 +44,12 @@ const OrderItemComponent = props => {
         <Row type="flex">
           <Col span={24} align="center" style={{ height: 'fit-content' /* , overflow: 'hidden' */ }}>
             <img
-              alt=""
-              src={(item.orderDetails && item.orderDetails[0] && item.orderDetails[0].imageUrl) || NO_IMG}
-              width="100%"
+              ref={ref}
+              onLoad={onLoad}
+              src={order_img}
+              style={{
+                width: '100%'
+              }}
             />
           </Col>
           <Col span={18}>
@@ -68,11 +75,11 @@ const OrderItemComponent = props => {
                 </Col>
                 <Col span={12}>
                   <Row type="flex" justify="end">
-                    <h3>
+                    <h4>
                       <StatusText status={item.orderState && item.orderState.state.toLowerCase()}>
                         {item.orderState && displayDataCheck(item.orderState.state)}
                       </StatusText>
-                    </h3>
+                    </h4>
                   </Row>
                 </Col>
               </Row>
@@ -103,3 +110,49 @@ OrderItemComponent.propTypes = {
 };
 
 export default OrderItemComponent;
+
+const OrderItemSkeleton = props => {
+  const { componentStyle } = props;
+  return (
+    <Card
+      align="left"
+      style={componentStyle}
+      bodyStyle={{ margin: '0px' }}
+      hoverable
+      cover={
+        <div
+          style={{
+            overflow: 'hidden',
+            height: '230px',
+            borderRadius: '8px 8px 0px 0px',
+            background: 'linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%)',
+            animation: 'ant-skeleton-loading 1.4s ease infinite'
+          }}
+          align="center"
+        ></div>
+      }
+    >
+      <Row type="flex" gutter={24}>
+        <Col span={18}>
+          <Skeleton active title={{ width: '80%' }} paragraph={false} />
+          <Row type="flex" gutter={24}>
+            <Col span={12}>
+              <Skeleton active title={{ width: '100%' }} paragraph={false} />
+            </Col>
+            <Col span={12}>
+              <Skeleton active title={{ width: '100%' }} paragraph={false} />
+            </Col>
+          </Row>
+        </Col>
+        <Col span={6}>
+          <Skeleton active title={{ width: '100%' }} paragraph={false} />
+          <Skeleton active title={{ width: '100%' }} paragraph={false} />
+        </Col>
+      </Row>
+    </Card>
+  );
+};
+
+OrderItemSkeleton.propTypes = {
+  componentStyle: PropTypes.object
+};

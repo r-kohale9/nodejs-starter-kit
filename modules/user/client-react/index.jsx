@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-default */
 import React from 'react';
 import styled from 'styled-components';
 import { CookiesProvider } from 'react-cookie';
@@ -7,8 +8,9 @@ import loadable from '@loadable/component';
 import { translate } from '@gqlapp/i18n-client-react';
 import { Icon, MenuItem, Spinner } from '@gqlapp/look-client-react';
 import ClientModule from '@gqlapp/module-client-react';
-// eslint-disable-next-line import/no-named-default
 import { default as HOME_ROUTES } from '@gqlapp/home-client-react/routes';
+import { UserRoleObject } from '@gqlapp/user-common/';
+import { default as PNF_ROUTES } from '@gqlapp/page-not-found-client-react/routes';
 
 import ROUTES from './routes';
 import resolvers from './resolvers';
@@ -80,27 +82,28 @@ export default new ClientModule({
     <AuthRoute
       exact
       path={ROUTES.profile}
-      role={['user', 'admin']}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       redirect={ROUTES.login}
       component={loadable(() => import('./containers/Profile').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
       path={ROUTES.adminPanel}
-      redirect={ROUTES.profile}
-      role="admin"
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       component={loadable(() => import('./containers/Users').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       exact
       path={ROUTES.add}
-      role={['admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin]}
       component={loadable(() => import('./containers/UserAdd').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
       path={ROUTES.edit}
-      redirect={ROUTES.profile}
-      role={['user', 'admin']}
+      redirect={PNF_ROUTES.notAuthorized}
+      role={[UserRoleObject.admin, UserRoleObject.user]}
       component={loadable(() => import('./containers/UserEdit').then(c => c.default), { fallback: <Spinner /> })}
     />,
     <AuthRoute
@@ -122,6 +125,13 @@ export default new ClientModule({
       path={ROUTES.logoutPage}
       redirect={HOME_ROUTES.home}
       component={loadable(() => import('./containers/LogoutPage').then(c => c.default), { fallback: <Spinner /> })}
+    />,
+    <Route
+      exact
+      path={ROUTES.emailVerified}
+      component={loadable(() => import('./containers/EmailVerifiedPage').then(c => c.default), {
+        fallback: <Spinner />
+      })}
     />,
     <AuthRoute
       exact
@@ -151,7 +161,7 @@ export default new ClientModule({
     />
   ],
   navItemAdmin: [
-    <IfLoggedIn key={ROUTES.adminPanel} role="admin">
+    <IfLoggedIn key={ROUTES.adminPanel} role={UserRoleObject.admin}>
       <MenuItem>
         <NavLinkUsersWithI18n />
       </MenuItem>

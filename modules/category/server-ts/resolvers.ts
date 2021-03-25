@@ -1,5 +1,5 @@
-import { CategoryInput, Identifier } from './sql';
 import { withFilter } from 'graphql-subscriptions';
+import { CategoryInput, Identifier } from './sql';
 
 interface Edges {
   cursor: number;
@@ -56,7 +56,7 @@ export default (pubsub: any) => ({
         return e;
       }
     },
-    async editCategory(obj: any, { input }: { input: CategoryInput }, { Category }: any) {
+    async editCategory(obj: any, { input }: { input: CategoryInput & Identifier }, { Category }: any) {
       try {
         await Category.editCategory(input);
         const category = await Category.category(input.id);

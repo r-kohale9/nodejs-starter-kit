@@ -67,7 +67,7 @@ const SuggestedListComponent = props => {
 };
 
 SuggestedListComponent.propTypes = {
-  items: PropTypes.array,
+  items: PropTypes.object,
   grid: PropTypes.object,
   loadData: PropTypes.func,
   renderFunc: PropTypes.func,

@@ -8,6 +8,7 @@
     "lint": "yarn eslint && yarn tslint"
   },
   "dependencies": {
+    "@gqlapp/listing-common": "^1.0.0",
     "apollo-cache-inmemory": "1.4.2",
     "apollo-cache-router": "^1.1.6",
     "apollo-client": "^2.6.4",

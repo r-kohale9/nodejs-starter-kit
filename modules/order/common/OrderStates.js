@@ -5,6 +5,9 @@ export const ORDER_STATES = {
   // Checkout Process Completed
   INITIATED: 'INITIATED',
 
+  // Confirmed
+  CONFIRMED: 'CONFIRMED',
+
   // Order Completed
   COMPLETED: 'COMPLETED',
   //
@@ -14,4 +17,4 @@ export const ORDER_STATES = {
   CANCELLED: 'CANCELLED'
 };
 
-export const ORDER_STATES_ARRAY = ['STALE', 'INITIATED', 'COMPLETED', 'DISPATCHED', 'CANCELLED'];
+export const ORDER_STATES_ARRAY = ['STALE', 'INITIATED', 'CONFIRMED', 'COMPLETED', 'DISPATCHED', 'CANCELLED'];

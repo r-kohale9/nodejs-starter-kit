@@ -2,9 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { PageLayout, Icon, Row, Col, Button, Result } from '@gqlapp/look-client-react';
+import { MetaTags, PageLayout, Icon, Row, Col, Button, Result } from '@gqlapp/look-client-react';
 import { HOME_ROUTES } from '@gqlapp/home-client-react';
 import { USER_ROUTES } from '@gqlapp/user-client-react';
+import settings from '@gqlapp/config';
 
 const LOGOUT_PAGE_GIF =
   'https://res.cloudinary.com/nodejs-starter-kit/image/upload/v1601824605/cwy15kfennovwu6j4noe.webp';
@@ -13,6 +14,7 @@ const LogoutPageView = props => {
   const { history } = props;
   return (
     <PageLayout>
+      <MetaTags title={'Logged Out'} description={`${settings.app.name} - Logged Out}`} />
       <div align="center">
         <Row>
           <Col xs={0} sm={0} md={24} lg={24}>

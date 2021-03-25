@@ -7,17 +7,17 @@ const ImagesSlickComponent = props => {
   // console.log('props', props);
   const itemLength = images && images.length;
 
-  const SlickComponent = ({ listing }) => (
+  const SlickComponent = ({ img }) => (
     <Row align="middle" type="flex" justify="center">
       <Col span={24}>
-        {listing.type === 'image' ? (
-          <img alt="" style={{ height: '100px' }} src={listing.url} />
+        {img.type === 'image' ? (
+          <img alt="" style={{ height: '100px' }} src={img.url} />
         ) : (
           <div key="video">
             <iframe
               width="100px"
               height="100px"
-              src={listing.url.replace('watch?v=', 'embed/')}
+              src={img.url.replace('watch?v=', 'embed/')}
               frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -94,7 +94,7 @@ const ImagesSlickComponent = props => {
 };
 ImagesSlickComponent.propTypes = {
   images: PropTypes.array,
-  listing: PropTypes.obj
+  img: PropTypes.obj
 };
 
 export default ImagesSlickComponent;

@@ -111,7 +111,6 @@ export default class CategoryDAO extends Model {
     const allcategories = camelizeKeys(await queryBuilder);
     const total = allcategories.length;
     const res = camelizeKeys(await queryBuilder.limit(limit).offset(after));
-    // console.log(res);
     return {
       categories: res,
       total
@@ -125,13 +124,12 @@ export default class CategoryDAO extends Model {
       .orderBy('id', 'desc');
 
     const res = camelizeKeys(await queryBuilder);
-    // console.log(res);
     return res;
   }
 
   public async addCategory(params: CategoryInput) {
     const isLeaf = true;
-    if (params.parentCategoryId !== null) {
+    if (params.parentCategoryId !== undefined) {
       await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
     }
     const res = camelizeKeys(
@@ -195,7 +193,7 @@ export default class CategoryDAO extends Model {
         }
       }
       // after edit, parentCategory to isLeaf to false since adding a leaf to it
-      if (params.parentCategoryId !== null) {
+      if (params.parentCategoryId !== undefined) {
         await CategoryDAO.query().upsertGraph(decamelizeKeys({ id: params.parentCategoryId, isLeaf: false }));
       }
     }

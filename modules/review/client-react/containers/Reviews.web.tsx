@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { SubscribeToMoreOptions } from 'apollo-client';
 
 import { compose } from '@gqlapp/core-common';
 import { translate, TranslateFunction } from '@gqlapp/i18n-client-react';
@@ -13,49 +14,28 @@ import {
   subscribeToReviews
 } from './ReviewOperations';
 
-export interface Reviews {
-  totalCount: number;
-  edges: [ReviewEdges];
-  pageInfo: ReviewPageInfo;
-}
-interface ReviewPageInfo {
-  endCursor: number;
-  hasNextPage: boolean;
-}
-interface ReviewEdges {
-  node: Review;
-  cursor: number;
-}
-export interface Review {
-  id: number;
-  user: {
-    id: number;
-    username: string;
-  };
-  rating: string;
-  feedback: string;
-  isActive: boolean;
-  reviewMedia: ReviewMedia[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ReviewMedia {
-  id: number;
-  url: string;
-  type: string;
-}
+// types
+import { reviews_reviews as Reviews } from '../graphql/__generated__/reviews';
+import { OrderByReviewInput, FilterReviewInput } from './../../../../packages/server/__generated__/globalTypes';
 
 export interface ReviewProps {
-  subscribeToMore: () => object;
-  updateQuery: () => object;
+  loading: boolean;
+  reviews: Reviews;
+  orderBy: OrderByReviewInput;
+  filter: FilterReviewInput;
+  deleteReview: (id: number) => void;
+  onSearchTextChange: (serachText: string) => void;
+  onIsActiveChange: (active: boolean) => void;
+  onFiltersRemove: (filter: FilterReviewInput, orderBy: OrderByReviewInput) => void;
+  onModalNameChange: (modalName: string) => void;
+  onReviewsOrderBy: (orderBy: OrderByReviewInput) => void;
+  loadData: (endCursor: number, action: string) => void;
+  subscribeToMore: (options: SubscribeToMoreOptions) => () => void;
   t: TranslateFunction;
-  filter: object;
 }
 
 const Review: React.FC<ReviewProps> = props => {
   const { subscribeToMore } = props;
-  const filter = {};
 
   useEffect(() => {
     const subscribe = subscribeToReviews(subscribeToMore, props.filter);
@@ -63,7 +43,7 @@ const Review: React.FC<ReviewProps> = props => {
   });
 
   // console.log('props', props);
-  return <ReviewsView filter={filter} {...props} />;
+  return <ReviewsView filter={{}} {...props} />;
 };
 
 export default compose(

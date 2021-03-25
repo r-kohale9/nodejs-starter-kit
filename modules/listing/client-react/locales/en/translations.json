@@ -84,6 +84,7 @@
     "brand":"Brand",
     "fixedQuantity":"Fixed Quantity",
     "tooltip":"Enter -1 for false",
+    "username":"UserName",
     "btn":{
       "next":"Next",
       "previous":"Previous",

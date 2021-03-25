@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import TweenOne from 'rc-tween-one';
-import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
-import QueueAnim from 'rc-queue-anim';
+// import TweenOne from 'rc-tween-one';
+// import OverPack from 'rc-scroll-anim/lib/ScrollOverPack';
+// import QueueAnim from 'rc-queue-anim';
 import { Button } from 'antd';
 
 import { PAGES_ROUTES } from '@gqlapp/pages-client-react';
@@ -72,7 +72,7 @@ class Footer extends React.Component {
             </h2>
             <ChildLink {...childWrapper}>{childWrapper.children.map(getChildrenToRender)}</ChildLink>
           </Col>
-          <Col lg={0} md={0} xs={24}>
+          <Col lg={0} md={0} xs={24} align="left">
             {item.name === 'dropdownable' ? (
               <Collapse
                 expandIconPosition={'right'}
@@ -91,7 +91,7 @@ class Footer extends React.Component {
                 </CollapsePanel>
               </Collapse>
             ) : (
-              <>
+              <div align="center">
                 <h2 {...title}>
                   {typeof title.children === 'string' && title.children.match(isImg) ? (
                     <img src={title.children} width="100%" alt="img" />
@@ -100,7 +100,7 @@ class Footer extends React.Component {
                   )}
                 </h2>
                 <ChildLink {...childWrapper}>{childWrapper.children.map(getChildrenToRender)}</ChildLink>
-              </>
+              </div>
             )}
           </Col>
         </Col>
@@ -134,7 +134,12 @@ class Footer extends React.Component {
               children: [
                 {
                   name: 'content0',
-                  children: 'An all js stater-kit for all app needs.'
+                  children: (
+                    <>
+                      <br />
+                      {'An all js stater-kit for all app needs.'}
+                    </>
+                  )
                 },
                 {
                   name: 'content0',
@@ -151,7 +156,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -164,7 +168,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -177,7 +180,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -190,7 +192,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                         <Container
@@ -203,7 +204,6 @@ class Footer extends React.Component {
                             }
                             height="30"
                             width="30"
-                            align="centre"
                           />
                         </Container>
                       </div>
@@ -281,20 +281,39 @@ class Footer extends React.Component {
 
     return (
       <div {...props} {...dataSource.wrapper}>
-        <OverPack {...dataSource.OverPack}>
-          <QueueAnim type="bottom" key="ul" leaveReverse component={Row} {...dataSource.block}>
-            {childrenToRender}
-          </QueueAnim>
-          <TweenOne
-            animation={{ y: '+=30', opacity: 0, type: 'from' }}
-            key="copyright"
-            {...dataSource.copyrightWrapper}
-          >
+        {/* {typeof window !== 'undefined' && window.location.pathname === '/' ? (
+          <OverPack {...dataSource.OverPack}>
+            <QueueAnim type="bottom" key="ul" leaveReverse component={Row} {...dataSource.block}>
+              {childrenToRender}
+            </QueueAnim>
+            <TweenOne
+              animation={{ y: '+=30', opacity: 0, type: 'from' }}
+              key="copyright"
+              {...dataSource.copyrightWrapper}
+            >
+              <div {...dataSource.copyrightPage}>
+                <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
+              </div>
+            </TweenOne>
+          </OverPack>
+        ) : (
+          <>
+            <Row {...dataSource.block}>{childrenToRender}</Row>
+            <div {...dataSource.copyrightWrapper}>
+              <div {...dataSource.copyrightPage}>
+                <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
+              </div>
+            </div>
+          </>
+        )} */}
+        <>
+          <Row {...dataSource.block}>{childrenToRender}</Row>
+          <div {...dataSource.copyrightWrapper}>
             <div {...dataSource.copyrightPage}>
               <div {...dataSource.copyright}>{dataSource.copyright.children}</div>
             </div>
-          </TweenOne>
-        </OverPack>
+          </div>
+        </>
       </div>
     );
   }

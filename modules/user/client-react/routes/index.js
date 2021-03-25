@@ -13,6 +13,8 @@ const ROUTES = {
   resetPassword: base + '/reset-password/:token',
   forgotPassword: base + '/forgot-password',
 
+  emailVerified: base + '/email-verified',
+
   userList: base + '/user-list',
 
   userPublicProfile: base + '/public-profile/:id',
