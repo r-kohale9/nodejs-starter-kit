@@ -1,12 +1,12 @@
-/* eslint-disable import/no-named-default */
 import React, { useEffect } from 'react';
+import { SubscribeToMoreOptions } from 'apollo-client';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { History } from 'history';
 import { Link } from 'react-router-dom';
 
+import { Icon, Button, Ribbon, Message, Card, CardMeta, Tooltip } from '@gqlapp/look-client-react';
 import { NO_IMG } from '@gqlapp/listing-common';
 import { compose } from '@gqlapp/core-common';
-import { Icon, Button, Ribbon, Message, Card, CardMeta, Tooltip } from '@gqlapp/look-client-react';
 import { IfLoggedIn } from '@gqlapp/user-client-react/containers/Auth';
 import { withAddToCart } from '@gqlapp/order-client-react/containers/OrderOperations';
 import { ORDER_ROUTES } from '@gqlapp/order-client-react';
@@ -15,12 +15,18 @@ import AddToCartFormBtns from '@gqlapp/order-client-react/components/AddToCartFo
 import { DiscountComponentView, withModalDiscount, subscribeToDiscount } from '@gqlapp/discount-client-react';
 import { ReviewStar } from '@gqlapp/review-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { currentUser_currentUser as CurrentUser } from '@gqlapp/user-client-react/graphql/__generated__/currentUser';
+import { modalDiscount_modalDiscount as ModalDiscount } from '@gqlapp/modal-client-react/graphql/__generated__/modalDiscount';
 
 import { withToogleListingBookmark } from '../containers/ListingOperations';
 import ROUTES from '../routes';
 import { useImageLoaded } from './functions';
 import RelatedCardSkeleton from './RelatedCardSkeleton';
 import BookmarkComponent from './BookmarkComponent';
+
+// types
+import { listing_listing as Listing } from '../graphql/__generated__/listing';
+import { AddToCartInput } from '../../../../packages/server/__generated__/globalTypes';
 
 const DealDiv = styled.div`
   position: absolute;
@@ -50,7 +56,24 @@ const ListingWraper = styled.div`
   }
 `;
 
-const RelatedCardComponent = props => {
+export interface RelatedCardComponentProps {
+  inCart: boolean;
+  loading: boolean;
+  key: string;
+  modalId: number;
+  modalName: string;
+  componentStyle: object;
+  history: History;
+  listing: Listing;
+  currentUser: CurrentUser;
+  modalDiscount: ModalDiscount;
+  addOrRemoveListingBookmark: (listingId: number, userId: number) => void;
+  addToCart: (input: AddToCartInput) => void;
+  onDelete: (id: number) => void;
+  discountSubscribeToMore: (options: SubscribeToMoreOptions) => () => void;
+}
+
+const RelatedCardComponent: React.FC<RelatedCardComponentProps> = props => {
   const [ref, loaded, onLoad] = useImageLoaded();
   useEffect(
     () => {
@@ -64,6 +87,7 @@ const RelatedCardComponent = props => {
     currentUser,
     history,
     addToCart,
+    addOrRemoveListingBookmark,
     discountSubscribeToMore,
     componentStyle,
     inCart,
@@ -73,16 +97,16 @@ const RelatedCardComponent = props => {
   } = props;
   const now = new Date().toISOString();
 
-  let listing = props.listing;
+  const listing = props.listing;
   // console.log(props);
-  const listing_id = listing && listing.id;
-  const listing_is_new = listing && listing.listingFlags && listing.listingFlags.isNew;
-  const listing_media =
+  const listingId = listing && listing.id;
+  const listingIsNew = listing && listing.listingFlags && listing.listingFlags.isNew;
+  const listingMedia =
     listing &&
     listing.listingMedia &&
     listing.listingMedia.length > 0 &&
     listing.listingMedia.filter(lM => lM.type === 'image');
-  const listing_img = listing_media && listing_media.length > 0 ? listing_media[0].url : NO_IMG;
+  const listingImg = listingMedia && listingMedia.length > 0 ? listingMedia[0].url : NO_IMG;
   const fixedQuantity = listing && listing.listingOptions && listing.listingOptions.fixedQuantity;
   const startDate = modalDiscount && modalDiscount.discountDuration && modalDiscount.discountDuration.startDate;
   const endDate = modalDiscount && modalDiscount.discountDuration && modalDiscount.discountDuration.endDate;
@@ -122,7 +146,7 @@ const RelatedCardComponent = props => {
         modalId: listing && listing.id,
 
         title: listing && listing.title,
-        imageUrl: listing_img,
+        imageUrl: listingImg,
         cost: isDiscount ? parseInt(cost && (cost - cost * (discount / 100)).toFixed()) : parseInt(cost.toFixed(2)),
         orderOptions: {
           quantity: fixedQuantity === -1 ? 1 : fixedQuantity
@@ -144,19 +168,19 @@ const RelatedCardComponent = props => {
     // Add Message
     Message.success('Success! Complete your Order.');
   };
-  const bookmarkListing = async (id, userId) => {
+  const bookmarkListing = async (id: number, userId: number) => {
     try {
-      await props.addOrRemoveListingBookmark(id, userId);
+      await addOrRemoveListingBookmark(id, userId);
     } catch (e) {
       throw Error(e);
     }
   };
 
-  const cardImg = listing_img && (
+  const cardImg = listingImg && (
     <img
       ref={ref}
       onLoad={onLoad}
-      src={listing_img}
+      src={listingImg}
       style={{
         width: '100%'
       }}
@@ -183,7 +207,7 @@ const RelatedCardComponent = props => {
           </Link>
         </div>
       )}
-      <Link className="listing-link" to={`${ROUTES.listingDetailLink}${listing_id}`}>
+      <Link className="listing-link" to={`${ROUTES.listingDetailLink}${listingId}`}>
         {listing && listing.listingDetail && listing.listingDetail.inventoryCount <= 0 && (
           <>
             <div className={'HVCenter'}>
@@ -337,7 +361,7 @@ const RelatedCardComponent = props => {
             catalogueCard={true}
           />
         </div>
-        {listing_is_new ? (
+        {listingIsNew ? (
           <Ribbon placement={'start'} text={'New'}>
             {listingCard}
           </Ribbon>
@@ -347,22 +371,6 @@ const RelatedCardComponent = props => {
       </ListingWraper>
     </>
   );
-};
-
-RelatedCardComponent.propTypes = {
-  listing: PropTypes.object.isRequired,
-  history: PropTypes.object,
-  componentStyle: PropTypes.object,
-  addToCart: PropTypes.func,
-  addOrRemoveListingBookmark: PropTypes.func,
-  onDelete: PropTypes.func,
-  currentUser: PropTypes.object,
-  modalDiscount: PropTypes.object,
-  listingBookmarkStatus: PropTypes.bool,
-  discountSubscribeToMore: PropTypes.func,
-  inCart: PropTypes.bool,
-  loading: PropTypes.bool,
-  modalId: PropTypes.number
 };
 
 export default compose(withAddToCart, withToogleListingBookmark, withModalDiscount)(RelatedCardComponent);
