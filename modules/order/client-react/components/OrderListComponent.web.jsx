@@ -5,41 +5,26 @@ import { Link } from 'react-router-dom';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
-  Button,
   Divider,
   Select,
   Option,
   Table,
   Pagination,
   ViewIcon,
+  EmptyComponent,
   DeleteIcon,
-  Empty,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
 import { ORDER_STATES } from '@gqlapp/order-common';
-import USER_ROUTES from '@gqlapp/user-client-react/routes';
-import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
-import { displayDateCheck } from '@gqlapp/review-client-react/components/functions';
+import { USER_ROUTES } from '@gqlapp/user-client-react';
+import { displayDataCheck } from '@gqlapp/listing-client-react';
+import { displayDateCheck } from '@gqlapp/review-client-react';
 import settings from '@gqlapp/config';
 
 import OrderStatusMail from '../containers/OrderStatusMail';
 import ROUTES from '../routes';
 
 const { itemsNumber, type } = settings.pagination.web;
-
-const NoOrdersMessage = ({ t }) => (
-  <div align="center">
-    <br />
-    <br />
-    <br />
-    <Empty description={t('noOrdersMsg')}>
-      <Link to={`${ROUTES.add}`}>
-        <Button color="primary">{t('noOrdersMsg')}</Button>
-      </Link>
-    </Empty>
-  </div>
-);
-NoOrdersMessage.propTypes = { t: PropTypes.func };
 
 const OrderListComponent = props => {
   const { onPatchOrderState, orderBy, onOrderBy, loading, orders, t, loadData, onDelete, orderStates } = props;
@@ -185,11 +170,15 @@ const OrderListComponent = props => {
   );
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} />}
       {/* Render main order content */}
-      {orders && orders.totalCount ? <RenderOrders /> : !loading && <NoOrdersMessage t={t} />}
+      {orders && orders.totalCount ? (
+        <RenderOrders />
+      ) : (
+        !loading && <EmptyComponent description={t('noOrdersMsg')} emptyLink={`${ROUTES.add}`} />
+      )}
     </div>
   );
 };

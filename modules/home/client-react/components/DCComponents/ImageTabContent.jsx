@@ -1,23 +1,32 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { useImageLoaded } from '@gqlapp/listing-client-react/components/functions';
+import { useImageLoaded } from '@gqlapp/listing-client-react';
 import { compose } from '@gqlapp/core-common';
-import { List, ListItem, Title } from '@gqlapp/look-client-react';
+import { List, ListItem, Spinner, EmptyComponent } from '@gqlapp/look-client-react';
 
 import { withDynamicCarousels } from '../../containers/DCComponents/DynamicCarouselOperations';
 
+const Text = styled.span`
+  width: 65%;
+  color: white;
+  font-weight: bold;
+  font-size: 3vh;
+  @media screen and (min-width: 320px) {
+    width: 70%;
+  }
+`;
+
 const ImageTabContent = props => {
   const [ref, loaded, onLoad] = useImageLoaded();
-  const { loading, dynamicCarousels } = props;
+  const { t, loading, dynamicCarousels } = props;
 
   const image = item => (
     <div style={{ position: 'relative' }}>
       <div className={'HVCenter'} style={{ background: 'black', opacity: '0.5' }} />
       <div className={'HVCenter'}>
-        <Title level={3} style={{ width: '65%', color: 'white' }}>
-          {item.title}
-        </Title>
+        <Text>{item.title}</Text>
       </div>
       {!loaded && (
         <div
@@ -44,23 +53,29 @@ const ImageTabContent = props => {
     </div>
   );
 
-  console.log('props', props);
+  // console.log('props', props);
   return (
-    !loading &&
-    dynamicCarousels &&
-    dynamicCarousels.totalCount > 0 && (
-      <List
-        grid={{ /* gutter: 16, */ xs: 3, sm: 3, md: 3, lg: 4, xl: 4, xxl: 4 }}
-        dataSource={dynamicCarousels.edges.map(({ node }) => node)}
-        renderItem={item => <ListItem>{item.link ? <a href={item.link}>{image(item)}</a> : image(item)}</ListItem>}
-      />
-    )
+    <div align="center">
+      {loading && <Spinner size="small" />}
+      {!loading && dynamicCarousels && dynamicCarousels.totalCount > 0 ? (
+        <List
+          grid={{ /* gutter: 16, */ xs: 3, sm: 3, md: 3, lg: 4, xl: 5, xxl: 6 }}
+          dataSource={dynamicCarousels.edges.map(({ node }) => node)}
+          renderItem={item => <ListItem>{item.link ? <a href={item.link}>{image(item)}</a> : image(item)}</ListItem>}
+        />
+      ) : (
+        <div style={{ height: '60vh', position: 'relative' }}>
+          <EmptyComponent description={t('dynamicCarousel.adminPanel.noBannersMsg')} /* emptyLink={emptyLink} */ />
+        </div>
+      )}
+    </div>
   );
 };
 
 ImageTabContent.propTypes = {
   loading: PropTypes.bool,
-  dynamicCarousels: PropTypes.object
+  dynamicCarousels: PropTypes.object,
+  t: PropTypes.func
 };
 
 export default compose(withDynamicCarousels)(ImageTabContent);

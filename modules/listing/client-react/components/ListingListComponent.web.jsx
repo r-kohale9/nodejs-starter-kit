@@ -11,35 +11,22 @@ import {
   Table,
   Pagination,
   EditIcon,
+  EmptyComponent,
   DeleteIcon,
-  Empty,
   Divider,
   Tooltip,
   Button,
   RenderTableLoading
 } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
-import DiscountBtn from '@gqlapp/discount-client-react/containers/DiscountBtn';
+import { DiscountBtn } from '@gqlapp/discount-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { USER_ROUTES } from '@gqlapp/user-client-react';
 
 import ROUTES from '../routes';
 import { displayDataCheck } from './functions';
 
 const { itemsNumber, type } = settings.pagination.web;
-
-const NoListingsMessage = ({ t }) => (
-  <div align="center">
-    <br />
-    <br />
-    <br />
-    <Empty description={t('listing.noListingsMsg')}>
-      <Link to={`${ROUTES.add}`}>
-        <Button color="primary">Add</Button>
-      </Link>
-    </Empty>
-  </div>
-);
-NoListingsMessage.propTypes = { t: PropTypes.func };
 
 const ListingListComponent = props => {
   const { onToggle, orderBy, onOrderBy, loading, listings, t, loadData, deleteListing, onDuplicate } = props;
@@ -82,7 +69,15 @@ const ListingListComponent = props => {
       fixed: 'left',
       dataIndex: 'user.username',
       key: 'user.username',
-      render: (text, record) => <div>{record.user && displayDataCheck(record.user.username)}</div>
+      render: (text, record) => (
+        <a
+          href={`${USER_ROUTES.userPublicProfileLink}${record.user && record.user.id}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {record.user && displayDataCheck(record.user.username)}
+        </a>
+      )
     },
     {
       title: (
@@ -321,11 +316,15 @@ const ListingListComponent = props => {
   );
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowY: 'auto', minHeight: '100vh', position: 'relative' }}>
       {/* Render loader */}
       {loading && <RenderTableLoading columns={columns} tableProps={{ scroll: { x: 1300 } }} />}
       {/* Render main listing content */}
-      {listings && listings.totalCount ? <RenderListings /> : !loading && <NoListingsMessage t={t} />}
+      {listings && listings.totalCount ? (
+        <RenderListings />
+      ) : (
+        !loading && <EmptyComponent description={t('listing.noListingsMsg')} emptyLink={`${ROUTES.add}`} />
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 import { translate } from '@gqlapp/i18n-client-react';
 import {
@@ -9,37 +10,27 @@ import {
   Row,
   Col,
   Text,
-  Carousel,
   Badge,
   Divider,
   BreadcrumbItem,
   Breadcrumb,
-  Tooltip,
   Spinner,
-  Icon,
-  Image
+  Icon
 } from '@gqlapp/look-client-react';
 import { IfLoggedIn } from '@gqlapp/user-client-react';
 import AddToCart from '@gqlapp/order-client-react/containers/AddToCart';
-import Review from '@gqlapp/review-client-react/containers/Review';
-import DiscountComponent from '@gqlapp/discount-client-react/containers/DiscountComponent';
-// import { CurrencyCostDisplay } from '@gqlapp/discount-client-react/components/DiscountComponentView';
-import { NO_IMG } from '@gqlapp/listing-common';
-import ReviewStar from '@gqlapp/review-client-react/containers/ReviewStar';
+import { Review, ReviewStar } from '@gqlapp/review-client-react';
+import { DiscountComponent } from '@gqlapp/discount-client-react';
 import { ListingShareMessage } from '@gqlapp/listing-common/SocialSharingMessage';
-import HOME_ROUTES from '@gqlapp/home-client-react/routes';
+import { HOME_ROUTES } from '@gqlapp/home-client-react';
 import { MODAL } from '@gqlapp/review-common';
 
 import ROUTES from '../routes';
 import ListingCarousel from './ListingCarousel';
+import ListingDetailImgCarousel from './ListingDetailImgCarousel';
 import BookmarkComponent from './BookmarkComponent';
 import SocialSharingButtons from './SocialSharingButtons';
 import { displayDataCheck } from './functions';
-
-// const { TabPane } = Tabs;
-// const { Meta } = Card;
-
-// const AVATAR = 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png';
 
 const ListingDetailView = props => {
   const {
@@ -70,48 +61,6 @@ const ListingDetailView = props => {
     listing.listingMedia &&
     listing.listingMedia.length > 0 &&
     listing.listingMedia.filter(lM => lM.type === 'video');
-  let carouselThumbnail = [];
-  carouselThumbnail = youtubeUrl && youtubeUrl.length !== 0 ? [...carouselThumbnail, ...youtubeUrl] : [];
-  carouselThumbnail =
-    images && images.length !== 0
-      ? [...carouselThumbnail, ...images]
-      : carouselThumbnail.length !== 0
-      ? [...carouselThumbnail]
-      : [{ url: NO_IMG, type: 'image' }];
-
-  const status = {
-    // eslint-disable-next-line react/display-name
-    customPaging: function(i) {
-      return (
-        <a>
-          <img
-            src={
-              (carouselThumbnail &&
-                carouselThumbnail.length !== 0 &&
-                carouselThumbnail[i] &&
-                carouselThumbnail[i].type === 'image' &&
-                carouselThumbnail[i].url) ||
-              'https://res.cloudinary.com/approxyma/image/upload/v1596703877/3721679-youtube_108064_ratbaa.png'
-            }
-            style={{ width: '30px', height: '30px', zIndex: '10' }}
-          />
-        </a>
-      );
-    },
-    // autoplay: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    dots: false
-  };
-
-  const getYoutubeUrl = url => {
-    // console.log('url', url);
-    const newUrl = url.replace('watch?v=', 'embed/');
-
-    return newUrl;
-  };
 
   const message = listing && ListingShareMessage(listing.id, listing.user.username, listing.title);
 
@@ -129,67 +78,39 @@ const ListingDetailView = props => {
       {loading && <Spinner />}
       {!loading && listing && (
         <>
-          <div style={{ background: 'white', margin: '0 -200%', padding: '0 200%' }}>
+          <div
+            style={{
+              background: 'white',
+              margin: '0 -200%',
+              padding: '0 200%'
+            }}
+          >
             <br />
             <Row gutter={24}>
               <Col lg={11} md={11} xs={24}>
-                <Row gutter={4}>
-                  <Col lg={4} md={4} xs={0}>
-                    {images &&
-                      images.map((item, id) => (
-                        <div key={id} style={{ marginBottom: '5px' }} align="center">
-                          <Image src={item.url} width={80} />
-                        </div>
-                      ))}
-                  </Col>
-                  <Col lg={20} md={20} xs={24}>
-                    <div align="center">
-                      <div
-                        style={{
-                          height: '300px',
-                          position: 'relative',
-                          marginBottom: '30px'
-                        }}
-                      >
-                        <Carousel showArrow={false} {...status}>
-                          {images &&
-                            images.map((item, id) => (
-                              <div key={id} align="center">
-                                <Tooltip title="click to zoom" placement="bottom">
-                                  <Image src={item.url} height={300} />
-                                </Tooltip>
-                              </div>
-                            ))}
-                          {youtubeUrl.length > 0 &&
-                            youtubeUrl.map(yT => (
-                              <div key="video">
-                                <iframe
-                                  width="100%"
-                                  height="300px"
-                                  src={getYoutubeUrl(yT.url)}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                ></iframe>
-                              </div>
-                            ))}
-                        </Carousel>
+                <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
+                  <Sticky>
+                    {({ style, isSticky }) => (
+                      <div style={{ ...style }}>
+                        <div style={{ height: isSticky ? '60px' : '0px' }} />
+                        <ListingDetailImgCarousel images={images} youtubeUrl={youtubeUrl} carouselLayout={false} />
+                        <Divider />
+                        <AddToCart
+                          listing={listing}
+                          history={history}
+                          currentUser={currentUser}
+                          modalId={listing && listing.id}
+                          modalName={MODAL[1].value}
+                          // catalogueCard={true}
+                        />
                       </div>
-                    </div>
-                    <AddToCart
-                      listing={listing}
-                      history={history}
-                      currentUser={currentUser}
-                      modalId={listing && listing.id}
-                      modalName={MODAL[1].value}
-                      // catalogueCard={true}
-                    />
-                  </Col>
-                </Row>
+                    )}
+                  </Sticky>
+                </StickyContainer>
               </Col>
               <Col lg={13} md={13} xs={24}>
                 <Row /*  type="flex" align="end" */>
-                  <Col lg={20} md={20} xs={21}>
+                  <Col lg={22} md={22} xs={21}>
                     <Breadcrumb separator=">">
                       <BreadcrumbItem key="home">
                         <NavLink to={`${HOME_ROUTES.home}`}>
@@ -210,7 +131,11 @@ const ListingDetailView = props => {
                         <h4>&nbsp;{listing.brand}</h4>
                       </div>
                       {isDiscount && <Text type="success">Special Price</Text>}
-                      <DiscountComponent modalId={listing && listing.id} modalName={MODAL[1].value} cost={cost} />
+                      <Row>
+                        <Col span={15}>
+                          <DiscountComponent modalId={listing && listing.id} modalName={MODAL[1].value} cost={cost} />
+                        </Col>
+                      </Row>
                       <ReviewStar
                         filter={{
                           isActive: true,
@@ -222,20 +147,28 @@ const ListingDetailView = props => {
                       />
                     </Col>
                   </Col>
-                  <Col span={3}>
-                    {currentUser && (
-                      <IfLoggedIn>
-                        <div style={{ marginTop: '4px' }}>
-                          <BookmarkComponent
-                            handleBookmark={() => handleBookmark(listing.id, listing.user.id)}
-                            bookmarkStatus={listingBookmarkStatus && listingBookmarkStatus}
-                            listing={listing}
-                            right={'12%'}
-                          />
-                        </div>
-                      </IfLoggedIn>
-                    )}
-                    <SocialSharingButtons {...message} onShare={onShare} t={t} />
+                  <Col lg={2} md={2} xs={3}>
+                    <Row>
+                      <Col lg={12} xs={24} align="right">
+                        {currentUser && (
+                          <IfLoggedIn>
+                            {/* <div style={{ marginTop: '4px' }}> */}
+                            <BookmarkComponent
+                              handleBookmark={() => handleBookmark(listing.id, listing.user.id)}
+                              bookmarkStatus={listingBookmarkStatus && listingBookmarkStatus}
+                              listing={listing}
+                              right={'12%'}
+                            />
+                            {/* </div> */}
+                          </IfLoggedIn>
+                        )}
+                      </Col>
+                      {/* </Row> */}
+                      {/* <Row> */}
+                      <Col lg={12} xs={24} align="right">
+                        <SocialSharingButtons {...message} onShare={onShare} t={t} />
+                      </Col>
+                    </Row>
                   </Col>
 
                   <Col span={24}>
@@ -309,6 +242,7 @@ const ListingDetailView = props => {
             onFilter={c => c.node.user.id === listing.user.id}
             currentUser={currentUser}
             title={'Similar Listing (same user)'}
+            alignTitle="left"
             history={history}
             // style={{ backgroundColor: 'white' }}
             {...props}

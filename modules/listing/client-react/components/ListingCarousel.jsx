@@ -1,12 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { compose } from '@gqlapp/core-common';
-import { Button, Empty, Spinner, SlickCarousel } from '@gqlapp/look-client-react';
-import { displayDataCheck } from '@gqlapp/listing-client-react/components/functions';
+import { Button, EmptyComponent, Spinner, SlickCarousel } from '@gqlapp/look-client-react';
+import { translate } from '@gqlapp/i18n-client-react';
 
-import ROUTES from '../routes';
 import { withListings } from '../containers/ListingOperations';
 import RelatedCardComponent from './RelatedCardComponent';
 import { subscribeToListings } from '../containers/ListingSubscriptions';
@@ -39,6 +37,7 @@ const ListingCarousel = props => {
     onDelete,
     getCart,
     filter,
+    t,
     onFilter = () => {
       return true;
     }
@@ -54,6 +53,9 @@ const ListingCarousel = props => {
     OverPack: { playScale: 0.3, className: '' },
     titleWrapper: {
       className: 'title-wrapper',
+      style: {
+        textAlign: props.alignTitle || 'center'
+      },
       children: [
         {
           name: 'title',
@@ -64,8 +66,12 @@ const ListingCarousel = props => {
           name: 'content',
           className: 'content-underline',
           children: (
-            <div align="center">
-              <div key="line" className="title-line-wrapper" align="left">
+            <div align={props.alignTitle || 'center'}>
+              <div
+                key="line"
+                className="title-line-wrapper"
+                // style={{ textAlign: props.alignTitle || 'center', maxWidth: props.alignTitle && '500px' }}
+              >
                 <div
                   className="title-line"
                   // style={{ transform: "translateX(-64px)" }}
@@ -84,7 +90,7 @@ const ListingCarousel = props => {
 
   delete props.isMobile;
 
-  const itemLength = listings && listings.edges && displayDataCheck(listings.edges.filter(onFilter).length);
+  const itemLength = listings && listings.edges && listings.edges.filter(onFilter).length;
   const carouselSettings = itemLength => {
     return {
       className: 'slider variable-width',
@@ -94,7 +100,7 @@ const ListingCarousel = props => {
       infinite: true,
       speed: 500,
       autoplaySpeed: 2000,
-      slidesToShow: itemLength >= 4 ? 3.5 : itemLength,
+      slidesToShow: itemLength >= 5 ? 4.5 : itemLength,
       slidesToScroll: 1,
       swipeToSlide: true,
       lazyLoad: true,
@@ -105,7 +111,7 @@ const ListingCarousel = props => {
         {
           breakpoint: 1440,
           settings: {
-            slidesToShow: itemLength >= 4 ? 3.5 : itemLength,
+            slidesToShow: itemLength >= 5 ? 4.5 : itemLength,
             slidesToScroll: 1
           }
         },
@@ -140,7 +146,7 @@ const ListingCarousel = props => {
           {dataSource.titleWrapper.children.map(getChildrenToRender)}
         </div>
         {(loading1 || currentUserLoading) && <Spinner size="small" />}
-        {listings && listings.totalCount ? (
+        {listings && listings.totalCount > 0 ? (
           <SlickCarousel
             Compo={RelatedCardComponent}
             settings={carouselSettings(itemLength)}
@@ -162,13 +168,9 @@ const ListingCarousel = props => {
             }}
           />
         ) : (
-          !loading1 && (
-            <div align="center">
-              <Empty description={'No Listings.'}>
-                <Link to={`${ROUTES.add}`}>
-                  <Button color="primary">Add</Button>
-                </Link>
-              </Empty>
+          !(loading1 || currentUserLoading) && (
+            <div style={{ height: '60vh', position: 'relative' }}>
+              <EmptyComponent description={t('listing.noListingsMsg')} /* emptyLink={emptyLink} */ />
             </div>
           )
         )}
@@ -190,7 +192,9 @@ ListingCarousel.propTypes = {
   isMobile: PropTypes.bool,
   subscribeToMore: PropTypes.func,
   onFilter: PropTypes.func,
-  filter: PropTypes.object
+  t: PropTypes.func,
+  filter: PropTypes.object,
+  alignTitle: PropTypes.string
 };
 
-export default compose(withListings)(ListingCarousel);
+export default compose(withListings, translate('listing'))(ListingCarousel);

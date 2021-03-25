@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { TranslateFunction } from '@gqlapp/i18n-client-react';
 import {
   Heading,
   Row,
   Col,
-  Empty,
-  Button,
+  EmptyComponent,
   Spin,
   SuggestedListComponent,
   ModalDrawer,
   CheckBox
 } from '@gqlapp/look-client-react';
-import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
+// eslint-disable-next-line import/no-named-default
+import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import { Reviews, Review } from '../containers/Reviews.web';
 import ReviewsItemComponent from './ReviewsItemComponent';
 import AvgRatingComponent from './AvgRatingComponent';
 import ReviewFormComponent from './ReviewFormComponent';
+
 interface ReviewViewProps {
   t: TranslateFunction;
   filter: {
@@ -41,19 +41,6 @@ interface ReviewViewProps {
   deleteReview: (id: number) => null;
   handleHelpful: (id: number, value: number) => Promise<void>;
 }
-
-export const NoReviews: React.FC = ({ t }: { t: TranslateFunction }) => (
-  <div align="center">
-    <br />
-    <br />
-    <br />
-    <Empty description={'No Review'}>
-      <Link to={`${LISTING_ROUTES.add}`}>
-        <Button color="primary">{'Review listings'}</Button>
-      </Link>
-    </Empty>
-  </div>
-);
 
 const ReviewView: React.FC<ReviewViewProps> = props => {
   const {
@@ -107,7 +94,7 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
         <Col lg={14} md={15} sm={15} xs={14}>
           <Heading type="1"> {t('review.heading')}</Heading>
         </Col>
-        <Col lg={5} md={4} sm={4} xs={10}>
+        <Col lg={showAdd ? 5 : 10} md={4} sm={4} xs={10} align="right">
           <CheckBox onChange={() => setPhoto(!photo)}>
             <strong>{t('review.withPhoto')}</strong>
           </CheckBox>
@@ -115,15 +102,15 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
         <Col lg={0} md={0} sm={0} xs={24}>
           <br />
         </Col>
-        <Col lg={5} md={5} sm={5} xs={24}>
-          {showAdd && (
+        {showAdd && (
+          <Col lg={5} md={5} sm={5} xs={24}>
             <>
               <ModalDrawer buttonText={t('addReview')} modalTitle={t('addReview')} height="80%">
                 <ReviewFormComponent listing={listing} t={t} onSubmit={addReview} modalData={{ modalName, modalId }} />
               </ModalDrawer>
             </>
-          )}
-        </Col>
+          </Col>
+        )}
       </Row>
       <Row>
         <br />
@@ -152,7 +139,18 @@ const ReviewView: React.FC<ReviewViewProps> = props => {
             </div>
           )}
         </Col>
-        <Col span={24}>{reviews && reviews.totalCount ? <RenderReviews /> : !loading && <NoReviews t={t} />}</Col>
+        <Col span={24}>
+          {reviews && reviews.totalCount ? (
+            <RenderReviews />
+          ) : (
+            !loading && (
+              <EmptyComponent
+                description={t('adminPanel.noReviewsMsg')}
+                emptyLink={`${LISTING_ROUTES.listingCatalogue}`}
+              />
+            )
+          )}
+        </Col>
       </Row>
     </>
   );

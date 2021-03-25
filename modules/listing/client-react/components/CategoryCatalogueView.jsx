@@ -16,11 +16,8 @@ import {
 } from '@gqlapp/look-client-react';
 import settings from '@gqlapp/config';
 import { MODAL } from '@gqlapp/review-common';
-import CategoryListingsCatalogue from '@gqlapp/listing-client-react/containers/CategoryListingsCatalogue';
-import CategoryNavBarComponent from '@gqlapp/category-client-react/containers/CategoryNavBarComponent';
-import CategoryCarousel from '@gqlapp/category-client-react/components/CategoryCarousel';
-// eslint-disable-next-line import/no-named-default
-import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
+import { CategoryListingsCatalogue, LISTING_ROUTES } from '@gqlapp/listing-client-react';
+import { CategoryCarousel, CategoryNavBarComponent } from '@gqlapp/category-client-react';
 
 const CategoryCatalogueView = props => {
   const { loading, category, navigation, match, t } = props;
@@ -57,6 +54,7 @@ const CategoryCatalogueView = props => {
               </BreadcrumbItem>
             )}
           </Breadcrumb>
+          <hr />
           {category && category.subCategories && category.subCategories.length !== 0 && (
             <>
               <br />

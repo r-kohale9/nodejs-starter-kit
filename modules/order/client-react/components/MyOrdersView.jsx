@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -10,14 +9,14 @@ import {
   Row,
   Col,
   Divider,
-  Empty,
+  EmptyComponent,
   SuggestedListComponent,
   Spinner,
   Button,
   ButtonGroup
 } from '@gqlapp/look-client-react';
 // eslint-disable-next-line import/no-named-default
-import { default as LISTING_ROUTES } from '@gqlapp/listing-client-react/routes';
+import { LISTING_ROUTES } from '@gqlapp/listing-client-react';
 
 import MyOrderItemComponent from './MyOrderItemComponent';
 
@@ -38,18 +37,6 @@ const MyOrdersView = props => {
     }
   }
 
-  const NoMyOrdersMessage = () => (
-    <div align="center">
-      <br />
-      <br />
-      <Empty description={t('noOrdersMsg')}>
-        <Link to={`${LISTING_ROUTES.listingCatalogue}`}>
-          <Button type="primary">Add</Button>
-        </Link>
-      </Empty>
-    </div>
-  );
-
   const renderFunc = (key, item) => (
     <MyOrderItemComponent key={key} item={item} history={history} currentUser={currentUser} t={t} />
   );
@@ -62,7 +49,23 @@ const MyOrdersView = props => {
   ];
   const RenderMyOrders = () => (
     <div>
-      {!loading && <SuggestedListComponent endText={'orders'} {...props} items={orders} renderFunc={renderFunc} />}
+      {!loading && (
+        <SuggestedListComponent
+          grid={{
+            gutter: 24,
+            xs: 1,
+            sm: 1,
+            md: 3,
+            lg: 4,
+            xl: 5,
+            xxl: 5
+          }}
+          endText={'orders'}
+          {...props}
+          items={orders}
+          renderFunc={renderFunc}
+        />
+      )}
     </div>
   );
   return (
@@ -93,7 +96,7 @@ const MyOrdersView = props => {
             </>
           )}
         </Col>
-        <Col lg={{ span: 16 }} md={{ span: 24 }} xs={0} align="center">
+        <Col lg={{ span: 16 }} md={{ span: 24 }} xs={0} align="right">
           {orderStates && orderStates.length !== 0 && (
             <ButtonGroup>
               <Button onClick={() => filterItems('')} type={classNamesgroup('')}>
@@ -111,8 +114,22 @@ const MyOrdersView = props => {
         </Col>
       </Row>
       <Divider />
-      {loading && <Spinner />}
-      {!loading && (orders && orders.totalCount ? <RenderMyOrders /> : <NoMyOrdersMessage />)}
+
+      {loading && (
+        <div style={{ height: '100vh', position: 'relative' }}>
+          <Spinner />
+        </div>
+      )}
+      {!loading &&
+        (orders && orders.totalCount ? (
+          <RenderMyOrders />
+        ) : (
+          !loading && (
+            <div style={{ height: '100vh', position: 'relative' }}>
+              <EmptyComponent description={t('noOrdersMsg')} emptyLink={`${LISTING_ROUTES.listingCatalogue}`} />
+            </div>
+          )
+        ))}
     </PageLayout>
   );
 };

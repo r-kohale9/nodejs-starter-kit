@@ -1,14 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DebounceInput } from 'react-debounce-input';
 import styled from 'styled-components';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 import { FieldAdapter as Field } from '@gqlapp/forms-client-react';
 import { SORT_BY, DISCOUNT } from '@gqlapp/listing-common/SortFilter';
 import { translate } from '@gqlapp/i18n-client-react';
 import {
+  Collapse,
+  CollapsePanel,
+  CheckBox,
   Space,
-  Affix,
   Card,
   Option,
   FormItem,
@@ -21,10 +24,12 @@ import {
   RenderCheckBox,
   Rate
 } from '@gqlapp/look-client-react';
-import CategoryTreeComponent from '@gqlapp/category-client-react/containers/CategoryTreeComponent';
+import { CategoryTreeComponent } from '@gqlapp/category-client-react';
 import { MODAL } from '@gqlapp/review-common';
+import { compose } from '@gqlapp/core-common';
 
-import SliderControlled from './FIlterSliderControlledComponent';
+import SliderControlled from './FilterSliderControlledComponent';
+import { withGetBrandList } from '../containers/ListingOperations';
 
 const RateDiv = styled.div`
   height: 22px;
@@ -37,9 +42,10 @@ const RateDiv = styled.div`
 `;
 
 const ListingsFilterComponent = props => {
-  // console.log('listings filter component', props);
   const {
-    filter: { searchText, lowerCost, upperCost, isActive, categoryFilter, discount },
+    loadingState,
+    filter: { searchText, lowerCost, upperCost, isActive, categoryFilter, discount, brand },
+    getBrandList,
     affix = true,
     onIsActiveChange,
     onCategoryChange,
@@ -48,6 +54,7 @@ const ListingsFilterComponent = props => {
     onUpperCostChange,
     onFiltersRemove,
     onDiscountChange,
+    onBrandChange,
     onRatedChange,
     listings,
     showIsActive = false,
@@ -57,7 +64,8 @@ const ListingsFilterComponent = props => {
     t,
     layout
   } = props;
-  // console.log(props.filter);
+  const [selectedBrand, setSelectedBrand] = useState(brand || []);
+  // console.log(selectedBrand);
   const handleFiltersRemove = useRef(() => {});
 
   handleFiltersRemove.current = () => {
@@ -150,6 +158,68 @@ const ListingsFilterComponent = props => {
     );
   };
 
+  const listingBrand = (width, inFilter = true) => {
+    return (
+      <Field
+        name="brand"
+        component={RenderSelect}
+        icon={'FireOutlined'}
+        label={t('listingFilter.brand')}
+        style={{ width: '100%' }}
+        inFilter={inFilter}
+        selectStyle={{ width }}
+        onChange={() => {}}
+      >
+        {(getBrandList || loadingState) && (
+          <>
+            <Option key={1} value="">
+              <CheckBox
+                checked={selectedBrand.length === 0}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setSelectedBrand([]);
+                    onBrandChange([]);
+                  } else {
+                    setSelectedBrand([]);
+                    onBrandChange([]);
+                  }
+                }}
+              >
+                None
+              </CheckBox>
+            </Option>
+          </>
+        )}
+        {!loadingState && getBrandList ? (
+          getBrandList.map((sB, i) => (
+            <>
+              <Option key={i + 2} value={i}>
+                <CheckBox
+                  checked={selectedBrand.includes(sB)}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      setSelectedBrand([...selectedBrand, sB]);
+                      onBrandChange([...selectedBrand, sB]);
+                    } else {
+                      setSelectedBrand(selectedBrand.filter(i => i !== sB));
+                      onBrandChange(selectedBrand.filter(i => i !== sB));
+                    }
+                  }}
+                >
+                  {sB}
+                </CheckBox>
+              </Option>
+            </>
+          ))
+        ) : (
+          <Option key={0} value="">
+            <Icon type="LoadingOutlined" />
+          </Option>
+        )}
+      </Field>
+    );
+  };
+
   const listingDiscount = (width, inFilter = true) => {
     return (
       <Field
@@ -237,7 +307,7 @@ const ListingsFilterComponent = props => {
             {t('listingFilter.search')}
           </Space>
         }
-        style={{ height: '60px', width: '100%' }}
+        style={{ /* height: '60px', */ width: '100%', marginBottom: '0px' }}
         {...obj}
       >
         <DebounceInput
@@ -272,9 +342,10 @@ const ListingsFilterComponent = props => {
           <Row gutter={24}>
             <Col span={24}>{searchField(false)}</Col>
             <Col span={24}>{showIsActive && activeField(false)}</Col>
-            <Col>{categoryTreeField}</Col>
+            <Col span={24}>{categoryTreeField}</Col>
             <Col span={24}>{listingSortBy('100%', false)}</Col>
             <Col span={24}>{listingDiscount('100%', false)}</Col>
+            <Col span={24}>{listingBrand('100%', false)}</Col>
             <Col span={24}>{listingByRating(true)}</Col>
             <Col span={22}>{sliderControlled(false)}</Col>
             <Col span={24}>
@@ -285,65 +356,83 @@ const ListingsFilterComponent = props => {
         </Col>
       </Row>
     ) : (
-      <Row /* type="flex" */ /* align="middle" */>
-        <Col span={24} /* style={{ height: '60px' }} */>
+      <Row gutter={48}>
+        <Col span={19}>
           <Row gutter={24}>
-            <Col span={19}>
-              <Row gutter={24}>
-                <Col span={12}>{searchField(true)}</Col>
-                <Col span={12}>{showIsActive && activeField(true)}</Col>
-                <Col lg={24} xs={24} md={12}>
-                  <Row type="flex" gutter={24}>
-                    <Col lg={24} md={8} xs={24}>
-                      {categoryTreeField}
-                    </Col>
-                    <Col lg={12} md={8} xs={24}>
-                      {listingSortBy('100%')}
-                    </Col>
-                    <Col lg={12} md={8} xs={24}>
-                      {listingDiscount('100%')}
-                    </Col>
-                    <Col lg={24} md={24} xs={24} align="left">
-                      {sliderControlled(false)}
-                    </Col>
-                  </Row>
+            <Col span={8}>{searchField(true)}</Col>
+            <Col span={8}>{categoryTreeField}</Col>
+            <Col span={8}>{showIsActive && activeField(true)}</Col>
+            <Col lg={24} xs={24} md={12}>
+              <Row type="flex" gutter={24}>
+                <Col lg={8} md={8} xs={24}>
+                  {listingBrand('100%', true)}
+                </Col>
+                <Col lg={8} md={8} xs={24}>
+                  {listingSortBy('100%')}
+                </Col>
+                <Col lg={8} md={8} xs={24}>
+                  {listingDiscount('100%')}
+                </Col>
+                <Col lg={24} md={24} xs={24} align="left">
+                  {sliderControlled(false)}
                 </Col>
               </Row>
             </Col>
-            <Col span={5}>
-              {listingByRating(true)}
-              <Col lg={24} md={24} xs={0}>
-                <br />
-                <br />
-                <br />
-                <br />
-              </Col>
-              {handleResetBtn}
-            </Col>
           </Row>
+        </Col>
+        <Col span={5}>
+          {listingByRating(true)}
+          {/* <Col lg={24} md={24} xs={0}>
+                <br />
+                <br />
+                <br />
+                <br />
+              </Col> */}
+          {handleResetBtn}
         </Col>
       </Row>
     );
-
   return (
-    <Row>
-      <Col lg={24} md={24} xs={0}>
-        {affix ? (
-          <Affix offsetTop={layout === 'vertical' ? 110 : 43}>
+    <>
+      {affix ? (
+        <StickyContainer style={{ height: '100%' /* , zIndex: '1' */ }}>
+          <Sticky>
+            {({ style, isSticky }) => (
+              <div style={{ ...style }}>
+                <div style={{ height: isSticky ? '90px' : '0px' }} />
+                <Col lg={24} md={24} xs={0}>
+                  <Card>{filterItems}</Card>
+                </Col>
+              </div>
+            )}
+          </Sticky>
+          <Col lg={0} md={0} xs={24}>
             <Card>{filterItems}</Card>
-          </Affix>
-        ) : (
-          <Card>{filterItems}</Card>
-        )}
-      </Col>
-      <Col lg={0} md={0} xs={24}>
-        <Card>{filterItems}</Card>
-      </Col>
-    </Row>
+          </Col>
+        </StickyContainer>
+      ) : (
+        <Collapse>
+          <CollapsePanel
+            header={
+              <div style={{ position: 'absolute', top: '33%' }}>
+                <Space align="center">
+                  <Icon type="FilterOutlined" />
+                  Listing Filters
+                </Space>
+              </div>
+            }
+            extra={searchField(true)}
+          >
+            {filterItems}
+          </CollapsePanel>
+        </Collapse>
+      )}
+    </>
   );
 };
 
 ListingsFilterComponent.propTypes = {
+  loadingState: PropTypes.bool,
   filter: PropTypes.object.isRequired,
   onLowerCostChange: PropTypes.func.isRequired,
   onUpperCostChange: PropTypes.func.isRequired,
@@ -352,6 +441,8 @@ ListingsFilterComponent.propTypes = {
   categoryId: PropTypes.number.isRequired,
   listings: PropTypes.object.isRequired,
   orderBy: PropTypes.object.isRequired,
+  getBrandList: PropTypes.object.isRequired,
+  onBrandChange: PropTypes.func.isRequired,
   onSearchTextChange: PropTypes.func.isRequired,
   onRoleChange: PropTypes.func.isRequired,
   showIsActive: PropTypes.bool.isRequired,
@@ -365,4 +456,4 @@ ListingsFilterComponent.propTypes = {
   layout: PropTypes.string
 };
 
-export default translate('listing')(ListingsFilterComponent);
+export default compose(withGetBrandList, translate('listing'))(ListingsFilterComponent);
